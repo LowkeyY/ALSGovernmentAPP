@@ -1,0 +1,45 @@
+@PrefixCls:taskdetails;
+.tasktitle{
+  margin-left: 40px;
+  font-size: 36px;
+  font-weight: normal;
+  color: #108ee9;
+}
+.titlebox{
+  padding:20px 40px;
+  font-size: 46px;
+  font-weight: bold;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+}
+.@{PrefixCls}-outer{
+  background: #fff;
+
+  &-title{
+    padding:20px 40px;
+    font-size: 46px;
+    font-weight: bold;
+    border-bottom: 1px solid #ddd;
+  }
+  &-content{
+   .titlebox;
+
+    & span{
+      .tasktitle;
+    }
+  }
+  &-details{
+    padding: 40px 80px;
+    font-size: 36px;
+    line-height: 1.5em;
+    &-title{
+      .tasktitle;
+    }
+  }
+  &-chat{
+    border-top: 1px solid #ddd;
+    .titlebox;
+
+  }
+}

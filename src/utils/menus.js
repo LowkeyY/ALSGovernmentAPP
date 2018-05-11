@@ -1,0 +1,48 @@
+const menus = [{
+	icon:require('themes/images/menu/warning.png'),
+	name:'一键报警',
+  route:'warning'
+}
+,{
+    icon:require('themes/images/menu/location.png'),
+    name:'地理定位',
+    route:'position'
+}
+,{
+    icon:require('themes/images/menu/contacts.png'),
+    name:'联系人',
+    route:'contacts'
+ }
+ ,{
+    icon:require('themes/images/menu/message.png'),
+    name:'对话信息',
+    route:'message'
+ }
+  ,{
+    icon:require('themes/images/menu/patry.png'),
+    name:'党建宣传',
+    route:'patry'
+  }
+  ,{
+    icon:require('themes/images/menu/notice.png'),
+    name:'平台通知',
+    route:'notice'
+  }
+  ,{
+    icon:require('themes/images/menu/task.png'),
+    name:'任务处理',
+    route:'task'
+  }
+  ,{
+    icon:require('themes/images/menu/route.png'),
+    name:'巡逻路线',
+    route:'route'
+  }
+  ,{
+    icon:require('themes/images/menu/convenient.png'),
+    name:'普惠便民',
+    route:'convenient'
+  }
+]
+
+export default menus

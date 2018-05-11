@@ -1,0 +1,99 @@
+@PrefixCls: bubble;
+
+.icon {//图片
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.contentbox(@float,@border) {//气泡
+  min-height: 60px;
+  float: @float;
+  padding: 10px 30px;
+  table-layout: fixed;
+  word-break: break-all;
+  position: relative;
+  border: 1px solid @border;
+  border-radius: 8px;
+}
+
+.iconbox(@float) {
+  width: 80px;
+  height: 80px;
+  display: block;
+  float: @float;
+  overflow: hidden;
+}
+
+.left { //左气泡
+  display: inline-block;
+  box-shadow: 2px 2px 2px #ccc;
+  margin-left: 25px;
+  max-width: 60%;
+  position: relative;
+  background: #9ee62a;
+}
+.right {//左气泡
+  display: inline-block;
+  box-shadow: -2px 2px 5px #CCC;
+  margin-right: 25px;
+  max-width: 65%;
+  float: right;
+  background:#fff;
+}
+
+.arrow(@turn){//三角
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  top: 10px;
+  border: 15px solid;
+  border-color: @turn;
+}
+
+.@{PrefixCls}-left {
+  clear: both;
+  float: left;
+  margin-bottom: 60px;
+  margin-left: 10px;
+  &-iconbox {
+    .iconbox(left);
+    & img {
+      .icon;
+    }
+  }
+  &-contentbox {
+    .contentbox(left, #9ee62a);
+    .left;
+
+
+    &:before {
+      .arrow(transparent #9ee62a transparent transparent);
+      left: -28px;
+    }
+  }
+}
+
+.@{PrefixCls}-right {
+  clear: both;
+  float: right;
+  margin-bottom: 60px;
+  margin-right: 10px;
+  &-iconbox {
+    .iconbox(right);
+    & img {
+      .icon;
+    }
+  }
+  &-contentbox {
+    .contentbox(right, #fff);
+    .right;
+
+
+    &:before {
+      .arrow(transparent transparent transparent #fff);
+      right: -30px;
+    }
+  }
+}
