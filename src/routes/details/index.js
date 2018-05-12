@@ -8,8 +8,7 @@ import styles from './index.less'
 const PrefixCls ='details'
 function Details({location,dispatch,details}) {
   const {name=''}=location.query,
-    {content}=details
-  
+    {currentData:{content,title,date}}=details
  const getContents = () => {
     return {
       __html: content
@@ -20,8 +19,9 @@ function Details({location,dispatch,details}) {
       <Nav title={name} dispatch={dispatch}/>
       <div className={styles[`${PrefixCls}-outer`]}>
           <div className={styles[`${PrefixCls}-outer-title`]}>
-            dsfsdfsdfdsf
+            {title}
           </div>
+        <div className={styles[`${PrefixCls}-outer-date`]}>{date}</div>
         <WhiteSpace size="sm"/>
         <div className={styles[`${PrefixCls}-outer-content`]}>
           <div dangerouslySetInnerHTML={ getContents() } />

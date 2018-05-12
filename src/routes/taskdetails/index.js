@@ -29,7 +29,6 @@ function TaskDetails({location,dispatch,taskdetails}) {
             <span className={styles[`${PrefixCls}-outer-details-title`]}>【任务汇报】</span>
           </div>
       </div>
-      <WhiteSpace size="md"/>
       <ChartRoom dispatch={dispatch}/>
     </div>
   )

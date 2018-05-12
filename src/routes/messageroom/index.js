@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import {connect} from 'dva';
 import Nav from 'components/nav'
 import styles from './index.less'
-import {ReceiveBubble,ReplyBubble} from 'components/chatbubble'
+import {ReceiveBubble,ReplyBubble} from 'components/chatroom/chatbubble'
 import InputBox from 'components/inputbox'
 
 const PrefixCls = 'messageroom'

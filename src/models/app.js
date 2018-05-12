@@ -12,6 +12,7 @@ export default {
   namespace: 'app',
   state: {
     spinning:false,
+    isLogin:false,
     tabs:[]
   },
   subscriptions: {

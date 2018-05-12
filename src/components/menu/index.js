@@ -15,8 +15,8 @@ const Menu = (props) => {
               }
             }
             renderItem={dataItem => (
-              <div style={{ padding: '0.25rem' }}>
-                <img src={dataItem.icon} style={{ width: '1.2rem', height: '1.2rem' }} alt="icon" />
+              <div style={{ paddingTop:'20%' }}>
+                <img src={dataItem.icon} style={{ width: '0.9rem', height: '0.9rem' }} alt="icon" />
                 <div style={{ color: '#888', fontSize: '0.28rem', marginTop: '0.14rem' }}>
                   <span>{dataItem.name}</span>
                 </div>

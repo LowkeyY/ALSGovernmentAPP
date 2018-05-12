@@ -95,7 +95,7 @@ function Patry({location,dispatch,patry,app}) {
       dispatch(routerRedux.push({
         pathname: "/details",
         query: {
-          id
+          dataId:id
         }
       }))
     },

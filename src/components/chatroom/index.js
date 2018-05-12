@@ -28,7 +28,6 @@ class ChatRoom  extends Component {
   }
 
   render(){
-    console.log(this.state.height)
     return(
       <div>
         <div className={styles[`${PrefixCls}-outer`]} ref={ el => this.lv = el } style={{height:this.state.height}}>

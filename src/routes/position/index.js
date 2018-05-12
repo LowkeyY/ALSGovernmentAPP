@@ -6,11 +6,11 @@ import Ifreams from 'components/ifream'
 
 function Position({location,dispatch,position}) {
   const {name=''}=location.query,
-    {src}=position
+    {src}=position,_stamp = `?stamp=${new Date().getTime()}`
   return (
     <div>
       <Nav title={name} dispatch={dispatch}/>
-      <Ifreams  dispatch={dispatch} src={src}/>
+      <Ifreams  dispatch={dispatch} src={`${src}${_stamp}`}/>
     </div>
   )
 }

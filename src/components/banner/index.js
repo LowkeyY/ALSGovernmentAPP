@@ -18,6 +18,7 @@ class Banner extends React.Component {
         <Carousel
           autoplay={true}
           infinite
+          easing="ease-in-out"
           selectedIndex={1}
           style={{ height:'100%', verticalAlign: 'top'}}
         >
@@ -27,7 +28,7 @@ class Banner extends React.Component {
               key={i}
               src={`${data.url}?v=${new Date().getTime()}`}
               alt=""
-              style={{width:'100%',height:'100%', verticalAlign: 'top'}}
+              style={{width:'100%',height:'3rem', verticalAlign: 'top'}}
               onLoad={() => {
                 // fire window resize event to change height
                 window.dispatchEvent(new Event('resize'));

@@ -7,6 +7,7 @@ module.exports = {
   api:{
     QueryPartyDataApi:`/cphsc/interface/huoqugaojian.jcp`,
     QueryPartyTabsApi:`/cphsc/interface/huoqufenlei.jcp`,
-    LoginApi:'/login/login.jcp'
+    LoginApi:'/login/login.jcp',
+    DetailsApi:'/cphsc/interface/getGaoJianInfo.jcp'
   }
 }

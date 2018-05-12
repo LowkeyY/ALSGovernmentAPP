@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {createForm} from 'rc-form';
 import {connect} from 'dva';
 import {routerRedux} from 'dva/router';
-import {InputItem, WhiteSpace, WingBlank, Button, Checkbox, Flex, Toast,ActivityIndicator } from 'antd-mobile';
+import {InputItem, WhiteSpace, WingBlank, Button, Checkbox, Flex, Toast, ActivityIndicator} from 'antd-mobile';
 import {config} from 'utils';
 import {_cg} from 'utils/cookie';
 import styles from './index.less';
@@ -11,7 +11,8 @@ import user from 'themes/images/login/user.png'
 import pwd from 'themes/images/login/锁.png'
 import img from 'themes/images/login/loginicon.png'
 import bg from 'themes/images/login/loginbg.png'
-const PrefixCls = "login" , AgreeItem = Checkbox.AgreeItem
+
+const PrefixCls = "login", AgreeItem = Checkbox.AgreeItem
 
 class Login extends React.Component {
   // const handleLogin = () =>{
@@ -25,17 +26,10 @@ class Login extends React.Component {
   // };
   constructor(props) {
     super()
-    this.state = {
-      isAgreement: true,
-    }
+    this.state = {}
 
   }
 
-  handleDisabled() {
-    this.setState({
-      isAgreement: !this.state.isAgreement
-    })
-  }
 
   onSubmit = () => {
     this.props.form.validateFields({
@@ -44,7 +38,7 @@ class Login extends React.Component {
       if (!error) {
         this.props.dispatch({
           type: 'login/login',
-          payload:{
+          payload: {
             ... this.props.form.getFieldsValue()
           }
         })
@@ -53,34 +47,36 @@ class Login extends React.Component {
       }
     });
   }
-  goAgreement=(e)=>{
-    this.props.dispatch(
-      routerRedux.push({
-        pathname: "/agreement",
-      })
-    )
-  }
+
   moveInput = () => {//解决android键盘挡住input
     this.refs.span.scrollIntoView(true)
   }
+  handlerVisitorsLogin=() => {
+    this.props.dispatch(
+      routerRedux.push({
+        pathname:'/'
+      })
+    )
+  }
 
   render() {
+    console.log(this.props.login.buttonState)
     const {getFieldProps, getFieldError} = this.props.form,
       userKey = "usrMail",
       powerKey = "usrPwd";
     return (
-      <div className={styles[`${PrefixCls}-container`]} style={{backgroundImage:"url("+bg+")"}}>
+      <div className={styles[`${PrefixCls}-container`]} style={{backgroundImage: "url(" + bg + ")"}}>
         <div className={styles[`${PrefixCls}-form`]}>
           <form ref="form">
-            <WingBlank size="lg">
+            <WingBlank size="md">
               <InputItem placeholder="用户名"
                          onFocus={this.moveInput.bind(this)}
                          {...getFieldProps(userKey, {
-                initialValue: _cg(userKey), rules: [{required: true, message: '用户名必须输入'}, {
-                  min: 2, message:
-                    '用户名小于2个字符'
-                }]
-              })} clear error={!!getFieldError(userKey)} onErrorClick={() => {
+                           initialValue: _cg(userKey), rules: [{required: true, message: '用户名必须输入'}, {
+                             min: 2, message:
+                               '用户名小于2个字符'
+                           }]
+                         })} clear error={!!getFieldError(userKey)} onErrorClick={() => {
                 Toast.fail(getFieldError(userKey));
               }}>
                 <div style={{
@@ -91,14 +87,14 @@ class Login extends React.Component {
                 }}/>
               </InputItem>
             </WingBlank>
-            <WingBlank size="lg">
+            <WingBlank size="md">
               <WhiteSpace size="sm"/>
               <InputItem
                 type="password"
                 placeholder="密码"
                 onFocus={this.moveInput.bind(this)}
                 {...getFieldProps(powerKey, {
-                  initialValue:this.props.login.loadPwd, rules: [{required: true, message: '密码必须输入'}, {
+                  initialValue: this.props.login.loadPwd, rules: [{required: true, message: '密码必须输入'}, {
                     min: 1, message:
                       '密码小于1个字符'
                   }]
@@ -115,35 +111,38 @@ class Login extends React.Component {
                   width: '22px'
                 }}/>
               </InputItem>
-              <WhiteSpace size="sm"/>
-              <div className={styles[`${PrefixCls}-check`]}>
-                <Flex>
-                  <Flex.Item>
-                    <AgreeItem data-seed="logId" onChange={this.handleDisabled.bind(this)}>
-                            <span onClick={(e) => {
-                              // e.preventDefault();
-                            }}><span ref="span" className={styles[`${PrefixCls}-agreement`]}><span>我已阅读并同意</span></span>
-                            </span>
-                    </AgreeItem>
-                  </Flex.Item>
-                </Flex>
-                <span className={styles[`${PrefixCls}-agreement-text`]}
-                      onClick={this.goAgreement.bind(this)}
-                >《用户保密协议》</span>
-              </div>
-              <WhiteSpace size="sm"/>
+              <WhiteSpace size="lg"/>
+              <WhiteSpace size="lg"/>
             </WingBlank>
-            <WingBlank size="lg">
+            <WingBlank size="md">
               {
-                this.props.login.isLogin?(
-                  <Button  type="primary" className="am-button-borderfix" disabled={this.state.isAgreement}
-                            onClick={this.onSubmit.bind(this)}>
+                this.props.login.buttonState ? (
+                  <Button type="primary"  className="am-button-borderfix"
+                          onClick={this.onSubmit.bind(this)}>
                     登录
                   </Button>
-                ):<Button  loading type="ghost" className="am-button-borderfix" disabled={true}>
-                  登录
+                ) : <Button loading type="primary" className="am-button-borderfix" disabled={true}>
+                  <span style={{color: '#108ee9'}}>登录中...</span>
                 </Button>
               }
+            </WingBlank>
+            <span ref="span"></span>
+            <WhiteSpace size="lg"/>
+
+            <WingBlank size="md">
+              <Flex>
+                <Flex.Item>
+                  <Button type="ghost" className="am-button-borderfix">
+                    <span style={{color: '#108ee9'}}>注册</span>
+                  </Button>
+                </Flex.Item>
+                <Flex.Item>
+                  <Button type="ghost" className="am-button-borderfix" onClick={this.handlerVisitorsLogin}>
+                    <span style={{color: '#108ee9'}}>游客登录</span>
+                  </Button>
+                </Flex.Item>
+              </Flex>
+
             </WingBlank>
           </form>
         </div>
@@ -153,8 +152,9 @@ class Login extends React.Component {
 };
 
 
-export default connect(({login, loading,agreement}) => ({
+export default connect(({login, loading, agreement, app}) => ({
   login,
   loading,
-  agreement
+  agreement,
+  app
 }))(createForm()(Login));

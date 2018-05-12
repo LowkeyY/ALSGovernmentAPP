@@ -6,7 +6,6 @@ import {pageModel} from './common'
 import {setLoginIn} from 'utils'
 
 const MD5 = require("md5"), encrypt = (word) => {
-
   return MD5(word, 'hex');
 }
 
@@ -15,8 +14,8 @@ export default modelExtend(pageModel, {
 
   state: {
     state: true,
-    isLogin: true,
-    loadPwd: ''
+    loadPwd: '',
+    buttonState:true //登录按钮状态
   },
 
   effects: {
@@ -24,34 +23,35 @@ export default modelExtend(pageModel, {
       yield put({
         type: 'updateState',
         payload: {
-          isLogin: false
+          buttonState: false
         }
       })
       const {from = "/", ...params} = payload, {usrPwd = ""} = params;
       const data = yield call(login, Object.assign({}, params, {usrPwd: encrypt(usrPwd)}));
-      console.log(data)
       if (data && data.success) {
         if (data.errors) {
           Toast.offline(data.errors[0].msg)
           yield put({
             type: 'updateState',
             payload: {
-              isLogin: true
+              buttonState: true
             }
           })
         } else {
           yield put({
-            type: 'updateState',
-            payload: {
-              isLogin: true
-            }
-          })
-          yield put({
             type: 'app/updateState',
             payload: {
-              isLayout: false
+              isLogin: true,
             }
           })
+
+          yield put({
+            type: 'updateState',
+            payload: {
+              buttonState: true,
+            }
+          })
+
           setLoginIn({
             ...data,
             ...params
@@ -63,6 +63,7 @@ export default modelExtend(pageModel, {
         }
 
       } else {
+
       }
     }
   },
