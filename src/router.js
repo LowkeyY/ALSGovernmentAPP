@@ -40,12 +40,21 @@ const Routers = function ({ history, app}) {
           }
         }
         ,{
-          path: 'contacts',
+          path: 'books',
           getComponent(nextState, cb) {
             require.ensure([], require => {
-              registerModel(app, require('models/contacts'));
-              cb(null, require('routes/contacts/'))
-            }, 'contacts')
+              registerModel(app, require('models/books'));
+              cb(null, require('routes/books/'))
+            }, 'books')
+          }
+        }
+        ,{
+          path: 'ecology',
+          getComponent(nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/ecology'));
+              cb(null, require('routes/ecology/'))
+            }, 'ecology')
           }
         }
         ,{
@@ -67,12 +76,12 @@ const Routers = function ({ history, app}) {
           }
         }
         ,{
-          path: 'message',
+          path: 'tour',
           getComponent(nextState, cb) {
             require.ensure([], require => {
-              registerModel(app, require('models/message'));
-              cb(null, require('routes/message/'))
-            }, 'message')
+              registerModel(app, require('models/tour'));
+              cb(null, require('routes/tour/'))
+            }, 'tour')
           }
         }
         ,{
@@ -145,6 +154,15 @@ const Routers = function ({ history, app}) {
               registerModel(app, require('models/login'));
               cb(null, require('routes/login/'))
             }, 'login')
+          }
+        }
+        ,{
+          path: 'mine',
+          getComponent(nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/mine'));
+              cb(null, require('routes/mine/'))
+            }, 'mine')
           }
         }
         ,{

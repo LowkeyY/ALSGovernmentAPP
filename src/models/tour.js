@@ -72,7 +72,7 @@ const data=[
 
 ]
 export default modelExtend(model, {
-  namespace: 'convenient',
+  namespace: 'tour',
   state:{
     defaultPageType:'43c756d4-6232-4a7b-8e8c-1957d90cfd94',
     defalutHeight: defalutClientHeight,
@@ -88,18 +88,13 @@ export default modelExtend(model, {
     pagination: {
       0: 0
     },
-    refreshing:false,
-    bannerData:[
-      {url:require('themes/images/banner/banner1.jpg')},
-      {url:require('themes/images/banner/banner1.jpg')},
-      {url:require('themes/images/banner/banner1.jpg')}
-    ],
+    refreshing:false
   },
 
   subscriptions: {
     setup({dispatch, history}) {
       history.listen(({pathname, query, action}) => {
-        if (pathname === '/convenient') {
+        if (pathname === '/tour') {
           dispatch({ //重置默认搜索结果
             type: "updateState",
             payload: {
@@ -132,14 +127,14 @@ export default modelExtend(model, {
   },
   effects: {
     * query({payload}, {call, put, select}){
-      const { pageIndex, defaultPageType} = yield select(state => state.convenient);
+      const { pageIndex, defaultPageType} = yield select(state => state.tour);
       const data = yield call(queryPartyData, {
         pageType:defaultPageType,
         nowPage:pageIndex,
         ...payload
       });
       if(data){
-        let { pageIndex, hasMore,defaultPageType,currentData,dataSource} = yield select(state => state.convenient);
+        let { pageIndex, hasMore,defaultPageType,currentData,dataSource} = yield select(state => state.tour);
         currentData = [...currentData, ...data.data];
         pageIndex = pageIndex + 1;
         hasMore = currentData.length < data.totalCount;

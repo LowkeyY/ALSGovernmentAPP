@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './header.less';
 import {Icon, Popover} from 'antd-mobile';
 import {getLocalIcon} from 'utils';
-import { routerRedux, Link } from 'dva/router';
+import { routerRedux } from 'dva/router';
 
 const PrefixCls = 'header', Item = Popover.Item;
 
@@ -22,7 +22,9 @@ class Header extends React.Component {
       selected: opt.props.value,
     });
    switch (opt.props.value){
-     case 0 : return;
+     case 0 : this.props.dispatch(routerRedux.push({
+       pathname:'mine'
+     }));
 
      case 1 : this.handlerLoginOut()
 

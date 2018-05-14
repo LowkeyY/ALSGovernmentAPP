@@ -8,7 +8,7 @@ import Listviews from 'components/listviews';
 import {listRows} from 'components/row'
 import styles from './index.less'
 
-const PrefixCls='party'
+const PrefixCls='patry'
 
 
 function Patry({location,dispatch,patry,app}) {
@@ -30,7 +30,6 @@ function Patry({location,dispatch,patry,app}) {
     });
   }
   const handleChangeView = (e)=> {
-
     const index=e.nativeEvent.selectedSegmentIndex
     let pageType=tabs[index].id
     dispatch({
@@ -42,25 +41,22 @@ function Patry({location,dispatch,patry,app}) {
         dataSource: new ListView.DataSource({
           rowHasChanged: (row1, row2) => row1 !== row2,
         }),
-        pageIndex:1
+        pageIndex:0
       }
     })
 
     dispatch({
       type:'patry/query',
-      payload:{
-        nowPage:1,
-      }
     })
   },
   onRefresh = () => {
-
     dispatch({
       type: "patry/resetState",
       payload:{
         refreshing:true,
       }
     });
+
   },
     updateScrollerTop = (scrollerTop) => {
       updateState({
@@ -68,9 +64,9 @@ function Patry({location,dispatch,patry,app}) {
       })
     },
   onEndReached = (event, st = 0) => {
+    console.log(st)
     if (isLoading || !hasMore || (st < 100 && pageIndex > 0))
       return;
-
     const adds = {};
     if (!isNaN(st) && st > 0 && pageIndex > 0)
       adds[st] = pageIndex;
@@ -80,6 +76,7 @@ function Patry({location,dispatch,patry,app}) {
         ...pagination,
         ...adds
       }
+
     });
     dispatch({
       type: "patry/query",

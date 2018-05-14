@@ -9,6 +9,7 @@ import { Toast } from 'antd-mobile'
 import { _cg } from './cookie'
 import { hashHistory } from 'react-router'
 import {  baseURL} from './config'
+
 axios.defaults.baseURL = baseURL
 
 
@@ -122,7 +123,6 @@ const getResponeseErrMsg = (status) => {
 }
 
 export default function request (options) {
-
   return fetch(options).then((response) => {
     const { statusText, status } = response
     let data =response.data
@@ -134,6 +134,7 @@ export default function request (options) {
       ...data,
     })
   }).catch((error) => {
+     console.log(error)
     // hashHistory.push(`/error`)
     let msg
     let statusCode

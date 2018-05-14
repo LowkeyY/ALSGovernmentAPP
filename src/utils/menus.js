@@ -8,20 +8,10 @@ const menus = [{
     name:'地理定位',
     route:'position'
 }
-,{
-    icon:require('themes/images/menu/contacts.png'),
-    name:'联系人',
-    route:'contacts'
- }
- ,{
-    icon:require('themes/images/menu/message.png'),
-    name:'对话信息',
-    route:'message'
- }
   ,{
-    icon:require('themes/images/menu/patry.png'),
-    name:'党建宣传',
-    route:'patry'
+    icon:require('themes/images/menu/route.png'),
+    name:'巡逻路线',
+    route:'route'
   }
   ,{
     icon:require('themes/images/menu/notice.png'),
@@ -33,15 +23,30 @@ const menus = [{
     name:'任务处理',
     route:'task'
   }
+ ,{
+    icon:require('themes/images/menu/tour.png'),
+    name:'旅游阿拉善',
+    route:'tour'
+ }
   ,{
-    icon:require('themes/images/menu/route.png'),
-    name:'巡逻路线',
-    route:'route'
+    icon:require('themes/images/menu/patry.png'),
+    name:'党建阿拉善',
+    route:'patry'
   }
   ,{
     icon:require('themes/images/menu/convenient.png'),
-    name:'普惠便民',
+    name:'民生阿拉善',
     route:'convenient'
+  }
+  ,{
+    icon:require('themes/images/menu/ecology.png'),
+    name:'生态阿拉善',
+    route:'ecology'
+  }
+  ,{
+    icon:require('themes/images/menu/books.png'),
+    name:'书香阿拉善',
+    route:'books'
   }
 ]
 

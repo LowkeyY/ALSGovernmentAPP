@@ -16,7 +16,7 @@ export default modelExtend(model, {
     currentData: [],
     isLoading: false,
     hasMore: true,
-    pageIndex:1,
+    pageIndex:0,
     totalCount: 0,
     scrollerTop: 0,
     pagination: {
@@ -46,7 +46,7 @@ export default modelExtend(model, {
               currentData: [],
               isLoading: false,
               hasMore: true,
-              pageIndex:1,
+              pageIndex:0,
               totalCount: 0,
               scrollerTop: 0,
               pagination: {
@@ -69,16 +69,15 @@ export default modelExtend(model, {
 
     * query({payload}, {call, put, select}){
       const { pageIndex, defaultPageType} = yield select(state => state.patry);
-      console.log(defaultPageType)
       const data = yield call(queryPartyData, {
         pageType:defaultPageType,
-        nowPage:pageIndex,
+        nowPage:pageIndex+1,
         ...payload
       });
       if(data){
         let { pageIndex, hasMore,defaultPageType,currentData,dataSource} = yield select(state => state.patry);
         currentData = [...currentData, ...data.data];
-        pageIndex = pageIndex + 1;
+        pageIndex = pageIndex + 1
         hasMore = currentData.length < data.totalCount;
         dataSource = dataSource.cloneWithRows(currentData);
         yield put({
@@ -100,7 +99,6 @@ export default modelExtend(model, {
 
   reducers:{
     resetState(state, {payload}) {
-      console.log(state)
       return {
         ...state,
         dataSource: new ListView.DataSource({
@@ -109,12 +107,13 @@ export default modelExtend(model, {
         currentData: [],
         isLoading: false,
         hasMore: true,
-        pageIndex: 1,
+        pageIndex:0,
         totalCount: 0,
         scrollerTop: -1,
         pagination: {
           0: 0
         },
+        ...payload
       }
     },
     updateData(state, {payload}) {

@@ -63,7 +63,12 @@ export default modelExtend(pageModel, {
         }
 
       } else {
-
+        yield put({
+          type: 'updateState',
+          payload: {
+            buttonState: true,
+          }
+        })
       }
     }
   },
