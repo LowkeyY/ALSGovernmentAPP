@@ -2,10 +2,10 @@ import React from 'react'
 import {connect} from 'dva';
 import {WhiteSpace} from 'antd-mobile';
 import Nav from 'components/nav'
-import Baseline from 'components/baseline'
+import Layout from 'components'
 import styles from './index.less'
 
-const PrefixCls ='details'
+const PrefixCls ='details',{BaseLine} = Layout
 function Details({location,dispatch,details}) {
   const {name=''}=location.query,
     {currentData:{content,title,date}}=details

@@ -1,0 +1,30 @@
+@PrefixCls:test;
+.@{PrefixCls}-outer{
+  width: 100%;
+  overflow-y: scroll;
+  &-title{
+    padding:40px 40px;
+    font-weight: 600;
+    line-height:1.4em;
+    font-size:40px;
+    background:#fff;
+    border-bottom:2px solid #ddd;
+  }
+  &-date{
+    font-size: 30px;
+    text-align: right;
+    background: #fff;
+    padding: 15px 60px;
+    color: #aaa;
+  }
+  &-content{
+    padding: 40px 40px  80px 40px;
+    background: #fff;
+    font-size: 40px;
+    line-height: 1.7;
+    & img{
+      width: 100% !important;
+      height: 100% !important;
+    }
+  }
+}

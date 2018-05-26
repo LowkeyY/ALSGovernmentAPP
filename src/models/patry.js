@@ -67,34 +67,34 @@ export default modelExtend(model, {
   },
   effects: {
 
-    * query({payload}, {call, put, select}){
-      const { pageIndex, defaultPageType} = yield select(state => state.patry);
-      const data = yield call(queryPartyData, {
-        pageType:defaultPageType,
-        nowPage:pageIndex+1,
-        ...payload
-      });
-      if(data){
-        let { pageIndex, hasMore,defaultPageType,currentData,dataSource} = yield select(state => state.patry);
-        currentData = [...currentData, ...data.data];
-        pageIndex = pageIndex + 1
-        hasMore = currentData.length < data.totalCount;
-        dataSource = dataSource.cloneWithRows(currentData);
-        yield put({
-          type: 'updateData',
-          payload: {
-            currentData:currentData,
-            dataSource:dataSource,
-            totalCount:data.totalCount,
-            pageIndex: pageIndex,
-            hasMore: hasMore,
-            isLoading: false,
-            refreshing: false,
-          },
-        })
-      }
-
-      }
+    // * query({payload}, {call, put, select}){
+    //   const { pageIndex, defaultPageType} = yield select(state => state.patry);
+    //   const data = yield call(queryPartyData, {
+    //     pageType:defaultPageType,
+    //     nowPage:pageIndex+1,
+    //     ...payload
+    //   });
+    //   if(data){
+    //     let { pageIndex, hasMore,defaultPageType,currentData,dataSource} = yield select(state => state.patry);
+    //     currentData = [...currentData, ...data.data];
+    //     pageIndex = pageIndex + 1
+    //     hasMore = currentData.length < data.totalCount;
+    //     dataSource = dataSource.cloneWithRows(currentData);
+    //     yield put({
+    //       type: 'updateData',
+    //       payload: {
+    //         currentData:currentData,
+    //         dataSource:dataSource,
+    //         totalCount:data.totalCount,
+    //         pageIndex: pageIndex,
+    //         hasMore: hasMore,
+    //         isLoading: false,
+    //         refreshing: false,
+    //       },
+    //     })
+    //   }
+    //
+    //   }
     },
 
   reducers:{

@@ -9,179 +9,216 @@ const registerModel = (app, model) => {
   }
 }
 
-const Routers = function ({ history, app}) {
+const Routers = function ({ history, app }) {
   const routes = [
     {
       path: '/',
       component: App,
       getIndexRoute (nextState, cb) {
         require.ensure([], (require) => {
-          registerModel(app, require('models/dashboard'));
+          registerModel(app, require('models/dashboard'))
           cb(null, { component: require('routes/dashboard/') })
         }, 'dashboard')
       },
       childRoutes: [
         {
           path: 'dashboard',
-          getComponent(nextState, cb) {
+          getComponent (nextState, cb) {
             require.ensure([], require => {
-              registerModel(app, require('models/dashboard'));
+              registerModel(app, require('models/dashboard'))
               cb(null, require('routes/dashboard/'))
             }, 'dashboard')
-          }
+          },
         }
-        ,{
+        , {
           path: 'warning',
-          getComponent(nextState, cb) {
+          getComponent (nextState, cb) {
             require.ensure([], require => {
-              registerModel(app, require('models/warning'));
+              registerModel(app, require('models/warning'))
               cb(null, require('routes/warning/'))
             }, 'warning')
-          }
+          },
         }
-        ,{
-          path: 'books',
-          getComponent(nextState, cb) {
+        , {
+          path: 'livelihood',
+          getComponent (nextState, cb) {
             require.ensure([], require => {
-              registerModel(app, require('models/books'));
-              cb(null, require('routes/books/'))
-            }, 'books')
-          }
+              registerModel(app, require('models/livelihood'))
+              cb(null, require('routes/livelihood/'))
+            }, 'livelihood')
+          },
         }
-        ,{
+        , {
           path: 'ecology',
-          getComponent(nextState, cb) {
+          getComponent (nextState, cb) {
             require.ensure([], require => {
-              registerModel(app, require('models/ecology'));
+              registerModel(app, require('models/ecology'))
               cb(null, require('routes/ecology/'))
             }, 'ecology')
-          }
+          },
         }
-        ,{
-          path: 'convenient',
-          getComponent(nextState, cb) {
+        , {
+          path: 'guard',
+          getComponent (nextState, cb) {
             require.ensure([], require => {
-              registerModel(app, require('models/convenient'));
-              cb(null, require('routes/convenient/'))
-            }, 'convenient')
-          }
+              registerModel(app, require('models/guard'))
+              cb(null, require('routes/guard/'))
+            }, 'guard')
+          },
         }
-        ,{
-          path: 'position',
-          getComponent(nextState, cb) {
+      , {
+          path: 'news',
+          getComponent (nextState, cb) {
             require.ensure([], require => {
-              registerModel(app, require('models/position'));
-              cb(null, require('routes/position/'))
-            }, 'position')
-          }
-        }
-        ,{
-          path: 'tour',
-          getComponent(nextState, cb) {
+              registerModel(app, require('models/news'))
+              cb(null, require('routes/news/'))
+            }, 'news')
+          },
+        }, {
+          path: 'newsdetails',
+          getComponent (nextState, cb) {
             require.ensure([], require => {
-              registerModel(app, require('models/tour'));
-              cb(null, require('routes/tour/'))
-            }, 'tour')
-          }
-        }
-        ,{
-          path: 'messageroom',
-          getComponent(nextState, cb) {
+              registerModel(app, require('models/newsdetails'))
+              cb(null, require('routes/newsdetails/'))
+            }, 'newsdetails')
+          },
+        }, {
+          path: 'legal',
+          getComponent (nextState, cb) {
             require.ensure([], require => {
-              registerModel(app, require('models/messageroom'));
-              cb(null, require('routes/messageroom/'))
-            }, 'messageroom')
-          }
+              registerModel(app, require('models/legal'))
+              cb(null, require('routes/legal/'))
+            }, 'legal')
+          },
         }
-        ,{
-          path: 'notice',
-          getComponent(nextState, cb) {
+
+        , {
+          path: 'deren',
+          getComponent (nextState, cb) {
             require.ensure([], require => {
-              registerModel(app, require('models/notice'));
-              cb(null, require('routes/notice/'))
-            }, 'notice')
-          }
+              registerModel(app, require('models/deren'))
+              cb(null, require('routes/deren/'))
+            }, 'deren')
+          },
         }
-        ,{
+        , {
           path: 'patry',
-          getComponent(nextState, cb) {
+          getComponent (nextState, cb) {
             require.ensure([], require => {
-              registerModel(app, require('models/patry'));
+              registerModel(app, require('models/patry'))
               cb(null, require('routes/patry/'))
             }, 'patry')
-          }
+          },
         }
-        ,{
-          path: 'route',
-          getComponent(nextState, cb) {
+        , {
+          path: 'appeal',
+          getComponent (nextState, cb) {
             require.ensure([], require => {
-              registerModel(app, require('models/route'));
-              cb(null, require('routes/route/'))
-            }, 'route')
-          }
-        }
-        ,{
-          path: 'task',
-          getComponent(nextState, cb) {
+              registerModel(app, require('models/appeal'))
+              cb(null, require('routes/appeal/'))
+            }, 'appeal')
+          },
+        }, {
+          path: 'seekdetails',
+          getComponent (nextState, cb) {
             require.ensure([], require => {
-              registerModel(app, require('models/task'));
-              cb(null, require('routes/task/'))
-            }, 'task')
-          }
+              registerModel(app, require('models/seekdetails'))
+              cb(null, require('routes/seekdetails/'))
+            }, 'seekdetails')
+          },
         }
-        ,{
+        , {
           path: 'taskdetails',
-          getComponent(nextState, cb) {
+          getComponent (nextState, cb) {
             require.ensure([], require => {
-              registerModel(app, require('models/taskdetails'));
+              registerModel(app, require('models/taskdetails'))
               cb(null, require('routes/taskdetails/'))
             }, 'taskdetails')
-          }
+          },
         }
-        ,{
+        , {
           path: 'details',
-          getComponent(nextState, cb) {
+          getComponent (nextState, cb) {
             require.ensure([], require => {
-              registerModel(app, require('models/details'));
+              registerModel(app, require('models/details'))
               cb(null, require('routes/details/'))
             }, 'details')
-          }
+          },
         }
-        ,{
+        , {
           path: 'login',
-          getComponent(nextState, cb) {
+          getComponent (nextState, cb) {
             require.ensure([], require => {
-              registerModel(app, require('models/login'));
+              registerModel(app, require('models/login'))
               cb(null, require('routes/login/'))
             }, 'login')
-          }
+          },
         }
-        ,{
+        , {
           path: 'mine',
-          getComponent(nextState, cb) {
+          getComponent (nextState, cb) {
             require.ensure([], require => {
-              registerModel(app, require('models/mine'));
+              registerModel(app, require('models/mine'))
               cb(null, require('routes/mine/'))
             }, 'mine')
-          }
-        }
-        ,{
+          },
+        }, {
+          path: 'lvyou',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/lvyou'))
+              cb(null, require('routes/lvyou/'))
+            }, 'lvyou')
+          },
+        }, {
+          path: 'lvyoudetails',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/lvyoudetails'))
+              cb(null, require('routes/lvyoudetails/'))
+            }, 'lvyoudetails')
+          },
+        }, {
+          path: 'patrylist',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/patrylist'))
+              cb(null, require('routes/patrylist/'))
+            }, 'patrylist')
+          },
+        }, {
+          path: 'patrydetails',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/patrydetails'))
+              cb(null, require('routes/patrydetails/'))
+            }, 'patrydetails')
+          },
+        }, {
+          path: 'test',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/test'))
+              cb(null, require('routes/test/'))
+            }, 'test')
+          },
+        }, {
           path: '*',
-          getComponent(nextState, cb) {
-            const {location : {pathname}} = nextState;
+          getComponent (nextState, cb) {
+            const { location: { pathname } } = nextState
             if (pathname && /^\/(android).+?index\.html$/.exec(pathname)) {
               require.ensure([], require => {
-                registerModel(app, require('models/dashboard'));
+                registerModel(app, require('models/dashboard'))
                 cb(null, require('routes/dashboard/'))
               })
             }
           },
-        }
+        },
       ],
     },
   ]
 
-  return <Router history={history} routes={routes} />
+  return <Router history={history} routes={routes}/>
 }
 
 Routers.propTypes = {

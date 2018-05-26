@@ -15,14 +15,14 @@ function TaskDetails({location,dispatch,taskdetails}) {
       <Nav title='任务详情' dispatch={dispatch}/>
       <div className={styles[`${PrefixCls}-outer`]}>
          <div className={styles[`${PrefixCls}-outer-title`]}>
-              清理小广告
+              公安局信息员收到信息请回复。
          </div>
         <div className={styles[`${PrefixCls}-outer-content`]}>
             <Icon type={getLocalIcon('/others/task.svg')} size="md"/>
           <span>【任务详情】</span>
         </div>
         <div className={styles[`${PrefixCls}-outer-details`]}>
-          撒旦法是打发斯蒂芬第三方就肯定会是范德萨科技峰会上点击返回
+          诺日公派出所，刚收到乌力吉牧民反馈，有一辆新疆籍越野车向你辖区驶去，请关注，并及时汇报情况。
         </div>
           <div className={styles[`${PrefixCls}-outer-chat`]}>
             <Icon type={getLocalIcon('/others/chat.svg')} size="md"/>

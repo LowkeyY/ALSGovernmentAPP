@@ -1,156 +1,57 @@
 import React from 'react'
-import {connect} from 'dva';
-import { routerRedux } from 'dva/router';
-import { SegmentedControl, WingBlank,WhiteSpace,ListView} from 'antd-mobile';
+import { connect } from 'dva'
 import Nav from 'components/nav'
-import Banner from 'components/banner'
-import Listviews from 'components/listviews';
-import {listRows} from 'components/row'
+import { routerRedux } from 'dva/router'
+import { WingBlank, WhiteSpace } from 'antd-mobile'
+import PatryItems from 'components/patryitems'
+import Banner from 'components/banner/index'
 import styles from './index.less'
 
-const PrefixCls='patry'
+const PrefixCls = 'patry'
+const bannerData = [
+  { url: require('themes/images/banner/banner6.jpg') },
+  { url: require('themes/images/banner/banner6.jpg') },
+  { url: require('themes/images/banner/banner6.jpg') },
+]
+
+const meun = [
+  { name: '大宣讲', isArticle: 0, url: require('themes/images/patry/dxc.jpg') },
+  { name: '大调研', isArticle: 1, url: require('themes/images/patry/ddy.jpg') },
+  { name: '大落实', isArticle: 2, url: require('themes/images/patry/dls.jpg') },
+]
 
 
-function Patry({location,dispatch,patry,app}) {
-  const {name=''}=location.query,
-    {selectedIndex,bannerData,dataSource, isLoading, hasMore, pageIndex, scrollerTop, pagination, totalCount,refreshing,defalutHeight,currentData}=patry,
-    {tabs}=app;
-  const getTabsArr=(tabs)=>{
-     const arr=[]
-    tabs&&tabs.map((data)=>{
-       arr.push(`${data.title}`)
-    })
-    return arr
-  }
+function Patry ({ location, dispatch, patry }) {
+  const { name = '' } = location.query
 
-  const updateState = (payload) => {
-    dispatch({
-      type: 'patry/updateState',
-      payload
-    });
-  }
-  const handleChangeView = (e)=> {
-    const index=e.nativeEvent.selectedSegmentIndex
-    let pageType=tabs[index].id
-    dispatch({
-      type: 'patry/updateState',
-      payload: {
-        selectedIndex:e.nativeEvent.selectedSegmentIndex,
-        defaultPageType:pageType,
-        currentData:[],
-        dataSource: new ListView.DataSource({
-          rowHasChanged: (row1, row2) => row1 !== row2,
-        }),
-        pageIndex:0
+  const handleClick = ({ name, isArticle }) => {
+    dispatch(routerRedux.push({
+      pathname: 'patrylist',
+      query:{
+        name,
+        theIndex: isArticle,
       }
-    })
-
-    dispatch({
-      type:'patry/query',
-    })
+    }))
   },
-  onRefresh = () => {
-    dispatch({
-      type: "patry/resetState",
-      payload:{
-        refreshing:true,
-      }
-    });
-
-  },
-    updateScrollerTop = (scrollerTop) => {
-      updateState({
-        scrollerTop
-      })
-    },
-  onEndReached = (event, st = 0) => {
-    console.log(st)
-    if (isLoading || !hasMore || (st < 100 && pageIndex > 0))
-      return;
-    const adds = {};
-    if (!isNaN(st) && st > 0 && pageIndex > 0)
-      adds[st] = pageIndex;
-    updateState({
-      isLoading: true,
-      pagination: {
-        ...pagination,
-        ...adds
-      }
-
-    });
-    dispatch({
-      type: "patry/query",
-      payload:{
-        nowPage:pageIndex,
-      }
-
-    })
-
-  },
-
-    handlePartyListClick=(id)=>{
-      dispatch(routerRedux.push({
-        pathname: "/details",
-        query: {
-          dataId:id
-        }
-      }))
-    },
-
-    renderRow=(rowData, sectionID, rowID)=>{
-      return (
-        listRows(rowData, sectionID, rowID,handlePartyListClick)
-      );
-
+    handleBannerClick = (id) => {
+      alert(id)
     }
-  const listviewprops={
-    refreshing,
-    dataSource,
-    isLoading,
-    onRefresh,
-    onEndReached,
-    renderRow,
-    defalutHeight,
-    initialListSize: dataSource.getRowCount() || 10,
-    scrollerTop,
-    updateScrollerTop,
-    pagination,
-    totalCount,
-    pageIndex
-  }
-
-  const getCurrentView=(selectedIndex=0)=>{
-
-        return (
-          <div>
-            <Banner bannerData={bannerData}/>
-            <Listviews {...listviewprops}/>
-          </div>
-        )
-      }
 
 
   return (
-    <div className={styles[`${PrefixCls}-outer`]}>
+    <div>
       <Nav title={name} dispatch={dispatch}/>
-      <WhiteSpace size="md"/>
-      <WingBlank size="md">
-      <SegmentedControl
-        selectedIndex={selectedIndex}
-        onChange={ handleChangeView }
-        values={getTabsArr(tabs)}
-      />
-      </WingBlank>
-      <WhiteSpace size="md"/>
-        <div>
-          {getCurrentView(selectedIndex)}
-        </div>
+      <Banner datas={bannerData} handleClick={handleBannerClick}/>
+      <div className={styles[`${PrefixCls}-container`]}>
+        {meun && meun.map((data) => {
+          return <PatryItems {...data} handle={handleClick.bind(null, data)}/>
+        })}
+      </div>
     </div>
   )
 }
 
-export default connect(({loading,patry,app}) => ({
+export default connect(({ loading, patry }) => ({
   loading,
   patry,
-  app
 }))(Patry)

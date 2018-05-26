@@ -1,4 +1,4 @@
-import { RefreshControl, ListView } from 'antd-mobile';
+import { PullToRefresh, ListView } from 'antd-mobile';
 import ReactDOM from 'react-dom';
 import './index.less';
 
@@ -134,7 +134,7 @@ class Results extends React.Component {
           style={ { height: this.state.height, border: '1px solid #ddd' } }
           className="comp-view-lists"
           scrollerOptions={ { scrollbars: true } }
-          refreshControl={ <RefreshControl refreshing={ this.props.refreshing } onRefresh={ this.props.onRefresh } /> }
+          /*refreshControl={ <RefreshControl refreshing={ this.props.refreshing } onRefresh={ this.props.onRefresh } /> }*/
           onScroll={ this.onScroll }
           scrollRenderAheadDistance={ 200 }
           scrollEventThrottle={ 20 }

@@ -88,12 +88,7 @@ const getErrorImg = (el) =>{
   }
 }
 
-// const getDefaultUserICon = (el) =>{
-//   if(el && el.target){
-//     el.target.src = defaultImg;
-//     el.target.onerror=null;
-//   }
-// }
+
 const setLoginIn = ({accessToken, user_name, user_power}) => {
   const now = new Date()
   now.setDate(now.getDate() + 5)
@@ -109,11 +104,13 @@ const getLocalIcon = (icon) => {
     let addIconName = [];
     if(icon.startsWith("/") && (addIconName = regex.exec(icon)) && addIconName.length > 1){
       const addIcon = require(`svg/${icon.substr(1)}`);
-      return `#${addIconName[1]}`;
+      return `${addIconName[1]}`;
     }
     return icon;
 }
+const getHtmlSize = () => {
 
+}
 module.exports = {
   config,
   request,

@@ -10,8 +10,23 @@ export default modelExtend(model, {
     state: {
         bannerData:[
           {url:require('themes/images/banner/banner1.jpg')},
-          {url:require('themes/images/banner/banner1.jpg')},
-          {url:require('themes/images/banner/banner1.jpg')}
+          {url:require('themes/images/banner/banner2.jpg')},
+          {url:require('themes/images/banner/banner3.jpg')},
+          {url:require('themes/images/banner/banner4.jpg')},
+        ],
+        noticeDate:[
+          {
+            title:'阿拉善头条：杨博调研巴彦浩特城市建设重点项目杨博调研巴彦浩特城市建设重点项杨博调研巴彦浩特城市建设重点项推进情况',
+            id:1
+          },
+          {
+            title:'阿拉善头',
+            id:2
+          },
+          {
+            title:'阿拉善头条：杨博调研巴彦浩特城市建设重点项目推进情况',
+            id:3
+          }
         ]
     },
 

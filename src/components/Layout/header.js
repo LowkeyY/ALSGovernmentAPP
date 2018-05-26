@@ -1,10 +1,11 @@
-import React from 'react';
-import styles from './header.less';
-import {Icon, Popover} from 'antd-mobile';
-import {getLocalIcon} from 'utils';
-import { routerRedux } from 'dva/router';
+import React from 'react'
+import styles from './header.less'
+import { Icon, Popover } from 'antd-mobile'
+import { getLocalIcon } from 'utils'
+import { routerRedux } from 'dva/router'
 
-const PrefixCls = 'header', Item = Popover.Item;
+const PrefixCls = 'header',
+  Item = Popover.Item
 
 
 class Header extends React.Component {
@@ -12,57 +13,59 @@ class Header extends React.Component {
   state = {
     visible: false,
     selected: '',
-  };
-
+  }
 
 
   onSelect = (opt) => {
     this.setState({
       visible: false,
       selected: opt.props.value,
-    });
-   switch (opt.props.value){
-     case 0 : this.props.dispatch(routerRedux.push({
-       pathname:'mine'
-     }));
+    })
+    switch (opt.props.value) {
+      case 0 :
+        this.props.dispatch(routerRedux.push({
+          pathname: 'mine',
+        }))
 
-     case 1 : this.handlerLoginOut()
+      case 1 :
+        this.handlerLoginOut()
 
 
-   }
-  };
+    }
+  }
   handleVisibleChange = (visible) => {
     this.setState({
       visible,
-    });
-  };
+    })
+  }
 
-  handlerLogin (){ //登录
+  handlerLogin () { //登录
     this.props.dispatch(
       routerRedux.push({
-        pathname:'login'
-    })
+        pathname: 'login',
+      }),
     )
   }
 
-  handlerLoginOut(){ //退出登录
+  handlerLoginOut () { //退出登录
     this.props.dispatch({
-      type:'app/updateState',
-      payload:{
-        isLogin:false
-      }
+      type: 'app/updateState',
+      payload: {
+        isLogin: false,
+      },
     })
   }
 
-  renderLoginView() {
-    let offsetX = -10;
+  renderLoginView () {
+    let offsetX = -10
     if (/(iPhone|iPad|iPod|iOS|Android)/i.test(navigator.userAgent)) {
-      offsetX = -26;
+      offsetX = -26
     }
+
     return (
       <Popover mask
                overlayClassName="fortest"
-               overlayStyle={{color: 'currentColor'}}
+               overlayStyle={{ color: 'currentColor' }}
                visible={this.state.visible}
                overlay={[
                  (<Item key="4" value={0} data-seed="logId">
@@ -72,7 +75,7 @@ class Header extends React.Component {
                      <span>个人信息</span>
                    </div>
                  </Item>),
-                 (<Item key="5" value={1} style={{whiteSpace: 'nowrap'}}>
+                 (<Item key="5" value={1} style={{ whiteSpace: 'nowrap' }}>
                    <div className={styles[`${PrefixCls}-iconbox`]}>
                      <Icon type={getLocalIcon('/dashboard/loginout.svg')}
                            size="sm"/>
@@ -81,7 +84,7 @@ class Header extends React.Component {
                  </Item>),
                ]}
                align={{
-                 overflow: {adjustY: 0, adjustX: 0},
+                 overflow: { adjustY: 0, adjustX: 0 },
                  offset: [offsetX, 15],
                }}
                onVisibleChange={this.handleVisibleChange}
@@ -101,15 +104,16 @@ class Header extends React.Component {
     )
   }
 
-  renderNotLoginView(onClick){
+  renderNotLoginView (onClick) {
     return (
-       <div className={styles[`${PrefixCls}-notlogin`]} onClick={onClick}>
-         <Icon type={getLocalIcon('/dashboard/login.svg')} size="lg"/>
-            登录
-       </div>
+      <div className={styles[`${PrefixCls}-notlogin`]} onClick={onClick}>
+        <Icon type={getLocalIcon('/dashboard/login.svg')} size="lg"/>
+        登录
+      </div>
     )
   }
-  render() {
+
+  render () {
     const isLogin = this.props.isLogin
 
     return (
@@ -124,10 +128,10 @@ class Header extends React.Component {
       </span>
         </div>
       </div>
-    );
+    )
   }
 
 }
 
-export default Header;
+export default Header
 

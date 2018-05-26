@@ -2,7 +2,7 @@ import {Component} from 'react'
 import ReactDOM from 'react-dom';
 import {connect} from 'dva';
 import styles from './index.less'
-import {ReceiveBubble,ReplyBubble} from './chatbubble/index'
+import {ReceiveBubble,ReplyBubble , ReceiveImgBubble} from './chatbubble/index'
 import InputBox from 'components/inputbox'
 
 const PrefixCls = 'chatroom'
@@ -32,6 +32,7 @@ class ChatRoom  extends Component {
       <div>
         <div className={styles[`${PrefixCls}-outer`]} ref={ el => this.lv = el } style={{height:this.state.height}}>
           <div className={styles[`${PrefixCls}-outer-content`]}>
+            <ReceiveImgBubble userIcon=""/>
             <ReceiveBubble userIcon=""/>
             <ReceiveBubble userIcon=""/>
             <ReplyBubble userIcon=""/>

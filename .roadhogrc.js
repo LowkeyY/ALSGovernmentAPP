@@ -3,8 +3,6 @@ import PxToRem from 'postcss-pxtorem';
 const path = require('path')
 const { version } = require('./package.json')
 
-console.log(path.resolve(__dirname, 'src/svg/'));
-console.log(require.resolve('antd-mobile').replace(/warn\.js$/, ''));
 const svgSpriteDirs = [
   path.resolve(__dirname, 'src/svg/'),
   require.resolve('antd-mobile').replace(/warn\.js$/, ''), // antd-mobile 内置svg

@@ -1,44 +1,65 @@
-import React from 'react';
-import { Carousel, WhiteSpace, WingBlank } from 'antd-mobile';
+import React from 'react'
+import { Carousel  } from 'antd-mobile'
+import ReactDOM from 'react-dom'
+import './index.less'
+
 class Banner extends React.Component {
 
   state = {
     data: [],
+    slideIndex: 0,
+    isLoad:false
   }
-
-  componentWillMount() {
+  componentWillMount () {
     setTimeout(() => {
       this.setState({
-        data: this.props.bannerData,
-      });
-    }, 100);
+        data: this.props.datas,
+      })
+    }, 1000)
   }
-  render() {
-    return (
-        <Carousel
-          autoplay={true}
-          infinite
-          easing="ease-in-out"
-          selectedIndex={1}
-          style={{ height:'100%', verticalAlign: 'top'}}
-        >
-          {this.state.data&&this.state.data.map((data,i) => {
 
-            return <img
-              key={i}
+  render () {
+    const {slideIndex} = this.state;
+    return (
+      <Carousel
+        className="space-carousel"
+        selectedIndex={slideIndex}
+        cellSpacing={10}
+        slideWidth={0.8}
+        autoplay
+        infinite
+        afterChange={index => this.setState({ slideIndex: index })}
+      >
+        {this.state.data && this.state.data.map((data, i) => (
+          <div
+            key={`a_${i}`}
+            style={{
+              position: 'relative',
+              boxShadow: '4px 2px 2px rgba(0, 0, 0, 0.4)',
+              top: this.state.slideIndex === i ? 0 : 20,
+            }}
+             onClick={this.props.handleClick.bind(this)}
+          >
+            <img
+              ref={el => this.banner = el}
               src={`${data.url}?v=${new Date().getTime()}`}
               alt=""
-              style={{width:'100%',height:'3rem', verticalAlign: 'top'}}
+              style={{ width: '100%', verticalAlign: 'top' }}
               onLoad={() => {
-                // fire window resize event to change height
-                window.dispatchEvent(new Event('resize'));
+                if(!this.state.isLoad){
+                  this.setState({
+                    isLoad:true
+                  })
+                  window.dispatchEvent(new Event('resize'));
+                }
               }}
-
             />
-          })}
-        </Carousel>
-
-    );
+          </div>
+        ))}
+      </Carousel>
+    )
   }
+
 }
+
 export default Banner

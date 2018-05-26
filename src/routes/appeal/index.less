@@ -1,0 +1,230 @@
+@PrefixCls: appeal;
+@ColorCard:white;
+@ColorInfo:white;
+@FontSizeLg: 35px;
+@FontSizeNm: 30px;
+@FontSizeSm: 25px;
+
+.imgs {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin: 10px 15px 0 15px;
+}
+
+.@{PrefixCls}-card {
+  background: @ColorCard;
+  padding: 20px 20px 0;
+  min-height: 100px;
+  padding-bottom: 40px;
+  box-shadow: 0 0.05rem 0.5rem #aaa;
+
+  &-info {
+    display: flex;
+    background: @ColorInfo;
+    font-size: @FontSizeNm;
+    &-details {
+      width: 80%;
+      &-name {
+        height: 50px;
+        line-height: 50px;
+      }
+      &-others {
+        height: 50px;
+        line-height: 50px;
+        &-date {
+          width: 50%;
+          float: left;
+        }
+        &-pos {
+          width: 50%;
+          float: left;
+        }
+      }
+    }
+    & img {
+      .imgs;
+    }
+  }
+  &-content {
+    padding: 10px;
+    background-color: #d8e1e2;
+    border-radius: 20px;
+    margin-bottom: 40px;
+    &-title {
+      font-size: @FontSizeLg;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    &-status {
+      padding:20px 0;
+      font-size: @FontSizeNm;
+      line-height: @FontSizeNm + 10;
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      &-collection{
+       vertical-align: top;
+      }
+    }
+    &-content {
+      margin-top: 20px;
+      font-size: @FontSizeSm;
+      line-height: @FontSizeSm + 10;
+      max-height: 180px;
+      display: -webkit-box;
+      -webkit-line-clamp:3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+  &-attrs {
+    margin: 5px 0;
+    display: flex;
+    & img {
+      width: 49%;
+      height: 49%;
+      margin-right: 0.5%;
+    }
+  }
+  &-answers {
+    padding: 10px;
+    border-radius: 20px;
+    background-color: #f9f2e8;
+    &-content,&-date,&-dept,&-user,&-phone {
+      margin-top: 20px;
+      font-size: @FontSizeSm;
+      line-height: @FontSizeSm + 10;
+    }
+  }
+}
+
+.@{PrefixCls}-outer {
+  background: #fff;
+  min-height: 50px;
+  padding-bottom: 100px;
+
+  &-title {
+    display: flex;
+    max-height: 50px;
+    align-items: center;
+    width: 100%;
+    background: #4eaaf7;
+    padding: 20px 50px;
+    & img {
+      margin-left: 1%;
+      width: 49%;
+      .imgs;
+    }
+
+    & span {
+      font-size: 50px;
+    }
+  }
+
+  &-content {
+    padding: 20px 40px;
+    &-info {
+      display: flex;
+      justify-content: flex-start;
+      background-color: #e3eef7;
+      height: 1rem;
+
+      & img {
+        .imgs;
+      }
+
+      &-details {
+        display: flex;
+        justify-content: space-around;
+        flex-direction: column;
+
+        &-name {
+          font-weight: bold;
+        }
+        &-date {
+
+          & span {
+            margin-right: 100px;
+          }
+        }
+      }
+    }
+
+    &-details {
+
+      &-problem {
+        margin-top: 20px;
+        background: #ddd;
+        padding: 10px 10px;
+
+        & p {
+          font-weight: bold;
+          margin: 0 0 20px 0;
+          & span {
+
+            color: #aaa;
+          }
+        }
+
+      }
+      &-imgbox {
+        margin-top: 20px;
+        display: flex;
+        justify-content: flex-start;
+        & img {
+          width: 33.3%;
+          height: 100%;
+          margin: 0 10px;
+        }
+      }
+
+    }
+
+  }
+
+}
+.@{PrefixCls}-nav{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  & span{
+    font-size: 32px ;
+  }
+
+}
+
+.@{PrefixCls}-infobox{
+
+  :global{
+    .am-accordion .am-accordion-item .am-accordion-header{
+      color:#ff5b05;
+    }
+  }
+
+  background: #fff;
+
+  &-title{
+    color:orange;
+  }
+
+  &-container{
+    padding: 0 40px;
+
+    &-items{
+       font-size: 22px;
+       display: flex;
+       align-items: center;
+       padding: 20px 0;
+      & img{
+        width: 40px;
+        margin-right: 10px;
+      }
+    }
+  }
+}
+
+

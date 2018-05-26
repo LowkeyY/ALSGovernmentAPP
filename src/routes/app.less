@@ -1,6 +1,7 @@
 @import "~themes/default";
 
 :global {
+
   #nprogress {
     pointer-events: none;
 
@@ -60,6 +61,14 @@
       }
     }
   }
+  .tabbarbox{
+
+    & .am-tab-bar-bar{
+      width: 100%;
+      position: fixed;
+      bottom: 0;
+    }
+  }
 }
 @keyframes nprogress-spinner {
   0% {
@@ -69,4 +78,5 @@
   100% {
     transform: rotate(360deg);
   }
+
 }

@@ -31,7 +31,6 @@ export default {
         })
       })
     },
-
   },
   effects: {
     *querytabs({payload}, {call, put, select}){
