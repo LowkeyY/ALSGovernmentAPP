@@ -1,8 +1,9 @@
 import React from 'react'
 import { connect } from 'dva'
 import Nav from 'components/nav'
-import { WhiteSpace, Icon, List, Flex, Tabs, Badge, Tag, Accordion, Layout } from 'components'
+import { WhiteSpace, Icon, List, Flex, Tabs, Badge, Tag, Layout } from 'components'
 import SearchHeader from 'components/searchheader'
+import PullToRefresh from 'components/pulltorefresh'
 import { routerRedux } from 'dva/router'
 import styles from './index.less'
 
@@ -203,64 +204,63 @@ function Appeal ({ location, dispatch, appeal }) {
       <Nav title={name} dispatch={dispatch} renderNavRight={renderNavRight()}/>
       <SearchHeader/>
       <div className={styles[`${PrefixCls}-infobox`]}>
-        <Accordion>
-          <Accordion.Panel header="本周数据">
-            <div className={styles[`${PrefixCls}-infobox-container`]}>
-              {/*topstart*/}
-              <Flex>
-                <Flex.Item>
-                  <div className={styles[`${PrefixCls}-infobox-container-items`]}>
-                    <img src={require('themes/images/spirit/phone.jpg')} alt=""/>
-                    <span>语音受理件<span>&nbsp;{`${vioceappept}件`}</span></span>
+        <List>
+          <Item><span className={styles[`${PrefixCls}-infobox-title`]}>本周数据</span></Item>
+        </List>
+        <div className={styles[`${PrefixCls}-infobox-container`]}>
+          {/*topstart*/}
+          <Flex>
+            <Flex.Item>
+              <div className={styles[`${PrefixCls}-infobox-container-items`]}>
+                <img src={require('themes/images/spirit/phone.jpg')} alt=""/>
+                <span>语音受理件<span>&nbsp;{`${vioceappept}件`}</span></span>
 
-                  </div>
-                </Flex.Item>
-                <Flex.Item>
-                  <div className={styles[`${PrefixCls}-infobox-container-items`]}>
-                    <img src={require('themes/images/spirit/video.jpg')} alt=""/>
-                    <span>多媒体受理件<span>&nbsp;{`${mediaappept}件`}</span></span>
-                  </div>
-                </Flex.Item>
-              </Flex>
-              {/*middleStart*/}
-              <Flex>
-                <Flex.Item>
-                  <div className={styles[`${PrefixCls}-infobox-container-items`]}>
-                    <span>受理件 <span>&nbsp;{`${appept}件`}</span></span>
-                  </div>
-                </Flex.Item>
-                <Flex.Item>
-                  <div className={styles[`${PrefixCls}-infobox-container-items`]}>
-                    <span>回复件 <span>&nbsp;{`${reply}件`}</span></span>
-                  </div>
-                </Flex.Item>
-                <Flex.Item>
-                  <div className={styles[`${PrefixCls}-infobox-container-items`]}>
-                    <span>回复率 <span>&nbsp;{`${replyrate}`}</span></span>
-                  </div>
-                </Flex.Item>
-              </Flex>
-              {/*bottomStart*/}
-              <Flex>
-                <Flex.Item>
-                  <div className={styles[`${PrefixCls}-infobox-container-items`]}>
-                    <span>办结件 <span>&nbsp;{`${handle}件`}</span></span>
-                  </div>
-                </Flex.Item>
-                <Flex.Item>
-                  <div className={styles[`${PrefixCls}-infobox-container-items`]}>
-                    <span>办结率 <span>&nbsp;{`${handlerate}`}</span></span>
-                  </div>
-                </Flex.Item>
-                <Flex.Item>
-                  <div className={styles[`${PrefixCls}-infobox-container-items`]}>
-                    <span>满意率 <span>&nbsp;{`${satisfied}`}</span></span>
-                  </div>
-                </Flex.Item>
-              </Flex>
-            </div>
-          </Accordion.Panel>
-        </Accordion>
+              </div>
+            </Flex.Item>
+            <Flex.Item>
+              <div className={styles[`${PrefixCls}-infobox-container-items`]}>
+                <img src={require('themes/images/spirit/video.jpg')} alt=""/>
+                <span>多媒体受理件<span>&nbsp;{`${mediaappept}件`}</span></span>
+              </div>
+            </Flex.Item>
+          </Flex>
+          {/*middleStart*/}
+          <Flex>
+            <Flex.Item>
+              <div className={styles[`${PrefixCls}-infobox-container-items`]}>
+                <span>受理件 <span>&nbsp;{`${appept}件`}</span></span>
+              </div>
+            </Flex.Item>
+            <Flex.Item>
+              <div className={styles[`${PrefixCls}-infobox-container-items`]}>
+                <span>回复件 <span>&nbsp;{`${reply}件`}</span></span>
+              </div>
+            </Flex.Item>
+            <Flex.Item>
+              <div className={styles[`${PrefixCls}-infobox-container-items`]}>
+                <span>回复率 <span>&nbsp;{`${replyrate}`}</span></span>
+              </div>
+            </Flex.Item>
+          </Flex>
+          {/*bottomStart*/}
+          <Flex>
+            <Flex.Item>
+              <div className={styles[`${PrefixCls}-infobox-container-items`]}>
+                <span>办结件 <span>&nbsp;{`${handle}件`}</span></span>
+              </div>
+            </Flex.Item>
+            <Flex.Item>
+              <div className={styles[`${PrefixCls}-infobox-container-items`]}>
+                <span>办结率 <span>&nbsp;{`${handlerate}`}</span></span>
+              </div>
+            </Flex.Item>
+            <Flex.Item>
+              <div className={styles[`${PrefixCls}-infobox-container-items`]}>
+                <span>满意率 <span>&nbsp;{`${satisfied}`}</span></span>
+              </div>
+            </Flex.Item>
+          </Flex>
+        </div>
       </div>
       <WhiteSpace/>
       <Tabs
@@ -274,8 +274,12 @@ function Appeal ({ location, dispatch, appeal }) {
         }}
       >
         <div>
-          {messages.map(message => getCard(message, dispatch))}
-          <BaseLine/>
+          <PullToRefresh children={
+            <div>
+              {messages.map(message => getCard(message, dispatch))}
+              <BaseLine/>
+            </div>
+          }/>
         </div>
         <div>
           <p style={{ margin: '20px' }}>没有更多数据了</p>

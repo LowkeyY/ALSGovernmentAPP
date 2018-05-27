@@ -1,6 +1,6 @@
 import React from 'react'
 import {connect} from 'dva';
-import { WhiteSpace, Icon,List} from 'antd-mobile'
+import { WhiteSpace, Icon,List} from 'components'
 import Nav from 'components/nav'
 import { getImages, getErrorImg ,getLocalIcon} from 'utils'
 import styles from './index.less'

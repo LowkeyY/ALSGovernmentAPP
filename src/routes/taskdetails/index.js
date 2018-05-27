@@ -1,7 +1,7 @@
 import {Component} from 'react'
 import ReactDOM from 'react-dom';
 import {connect} from 'dva';
-import { Icon, WhiteSpace} from 'antd-mobile';
+import { Icon, WhiteSpace,Accordion,Button} from 'components';
 import ChartRoom from 'components/chatroom'
 import Nav from 'components/nav'
 import { getLocalIcon } from 'utils';
@@ -17,12 +17,22 @@ function TaskDetails({location,dispatch,taskdetails}) {
          <div className={styles[`${PrefixCls}-outer-title`]}>
               公安局信息员收到信息请回复。
          </div>
-        <div className={styles[`${PrefixCls}-outer-content`]}>
-            <Icon type={getLocalIcon('/others/task.svg')} size="md"/>
-          <span>【任务详情】</span>
-        </div>
-        <div className={styles[`${PrefixCls}-outer-details`]}>
-          诺日公派出所，刚收到乌力吉牧民反馈，有一辆新疆籍越野车向你辖区驶去，请关注，并及时汇报情况。
+        <Accordion  className={styles[`${PrefixCls}-outer-taskdetails`]} >
+          <Accordion.Panel header={
+            <div className={styles[`${PrefixCls}-outer-taskdetails-title`]} >
+              <Icon type={getLocalIcon('/others/task.svg')} size="md"/>
+              <span>【任务详情】</span>
+            </div>
+          } >
+            <span className={styles[`${PrefixCls}-outer-taskdetails-content`]}>
+               诺日公派出所，刚收到乌力吉牧民反馈，有一辆新疆籍越野车向你辖区驶去，请关注，并及时汇报情况。
+            </span>
+          </Accordion.Panel>
+        </Accordion>
+        <div className={styles[`${PrefixCls}-outer-control`]}>
+          <Button type="primary" inline size="small" style={{ marginRight: '4px' }}>接受</Button>
+          <Button type="primary" inline size="small" style={{ marginRight: '4px' }}>发布任务</Button>
+          <Button type="primary" inline size="small" style={{ marginRight: '4px' }}>取消</Button>
         </div>
           <div className={styles[`${PrefixCls}-outer-chat`]}>
             <Icon type={getLocalIcon('/others/chat.svg')} size="md"/>

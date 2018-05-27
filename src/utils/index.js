@@ -108,9 +108,23 @@ const getLocalIcon = (icon) => {
     }
     return icon;
 }
-const getHtmlSize = () => {
 
+/**
+ *
+ * @param el 当前元素
+ * @returns {number} 父元素不是body时元素相对body的offsetTop
+ */
+const getOffsetTopByBody = (el) => {
+   let offsetTop=0;
+  while (el && el.tagName !== 'BODY') {
+    offsetTop += el.offsetTop
+    el = el.offsetParent
+  }
+  return offsetTop
 }
+
+
+
 module.exports = {
   config,
   request,
@@ -120,6 +134,7 @@ module.exports = {
   queryURL,
   setLoginIn,
   queryArray,
+  getOffsetTopByBody,
   timeStamp : () => (new Date()).getTime(),
   isEmptyObject : (obj) => Object.keys(obj).length === 0,
   getLocalIcon,

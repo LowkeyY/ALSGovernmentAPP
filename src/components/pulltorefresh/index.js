@@ -1,5 +1,6 @@
 import { PullToRefresh, Button } from 'antd-mobile'
 import ReactDOM from 'react-dom'
+import {getOffsetTopByBody} from 'utils'
 
 class Comp extends React.Component {
   constructor (props) {
@@ -12,13 +13,21 @@ class Comp extends React.Component {
   }
 
   componentDidMount () {
-    window.addEventListener('resize',()=>{
+    if(this.props.sibilingsHasBanner){//判断是否有banner默认false
+      window.addEventListener('resize',()=>{
+        const el = ReactDOM.findDOMNode(this.ptr)
+        const hei =cnhtmlHeight - getOffsetTopByBody(el)-cnhtmlSize
+        setTimeout(() => this.setState({
+          height: hei,
+        }), 0)
+      })
+    }else {
       const el = ReactDOM.findDOMNode(this.ptr)
-      const hei =cnhtmlHeight - ReactDOM.findDOMNode(this.ptr).offsetTop-cnhtmlSize
+      const hei =cnhtmlHeight - getOffsetTopByBody(el)-cnhtmlSize
       setTimeout(() => this.setState({
         height: hei,
       }), 0)
-    })
+    }
 
   }
 
@@ -41,6 +50,10 @@ class Comp extends React.Component {
     >
       {this.props.children || ''}
     </PullToRefresh>)
+  }
+
+  static defaultProps = {
+    sibilingsHasBanner:false
   }
 }
 

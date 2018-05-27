@@ -42,4 +42,17 @@ module.exports = {
       </div>
     )
   },
+  ReceivevoiceBubble:() => {
+    return (
+      <div className={styles[`${PrefixCls}-left`]}>
+    <span className={styles[`${PrefixCls}-left-iconbox`]}>
+        <img src={getImages('', 'user')}/>
+    </span>
+        <div className={styles[`${PrefixCls}-left-contentbox`]}>
+          及时跟踪处理情况
+        </div>
+      </div>
+    )
+  },
+
 }

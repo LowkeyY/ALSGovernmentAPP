@@ -34,20 +34,24 @@ function Dashboard ({ dashboard, loading, dispatch, app }) {
   },
     handleBannerClick = (id) => {
      alert(id)
+    },
+
+    bannerProps={
+      datas:bannerData,
+      handleImgClick:handleImgClick,
+      handleClick:handleBannerClick
     }
-
-
   return (
     <div className={styles[`${PrefixCls}-outer`]}>
       <div className={styles[`${PrefixCls}-top`]}>
         <Header dispatch={dispatch} isLogin={isLogin}/>
         <WhiteSpace size="sm"/>
-        <Banner datas={bannerData} handleImgClick={handleImgClick} handleClick={handleBannerClick}/>
+        <Banner {...bannerProps} />
         <WhiteSpace size="sm"/>
         <NoticeBar datas={noticeDate} handleClick={handleNoticeClick}/>
       </div>
       <WhiteSpace size="sm"/>
-      <PullToRefresh children={
+      <PullToRefresh sibilingsHasBanner={true} children={
         <Menu handleGridClick={handleGridClick}/>
       }/>
     </div>

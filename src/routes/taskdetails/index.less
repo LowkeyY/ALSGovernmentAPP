@@ -9,25 +9,40 @@
   padding:20px 40px;
   font-size: 46px;
   font-weight: bold;
-  border-bottom: 1px solid #ddd;
   display: flex;
   align-items: center;
+}
+._padding{
+  padding:20px 40px;
 }
 .@{PrefixCls}-outer{
   background: #fff;
 
   &-title{
-    padding:20px 40px;
-    font-size: 46px;
+    ._padding;
+    font-size: 36px;
     font-weight: bold;
-    border-bottom: 1px solid #ddd;
   }
-  &-content{
-   .titlebox;
 
-    & span{
-      .tasktitle;
+  &-taskdetails{
+    &-title{
+      display: flex;
+      align-items: center;
+      & span{
+        .tasktitle;
+      }
     }
+    :global{
+      .am-accordion-content-box{
+        ._padding;
+      }
+    }
+  }
+  &-control{
+    padding: 10px 40px;
+    border-bottom: 2px solid #ddd;
+    display: flex;
+    justify-content: space-around;
   }
   &-details{
     padding: 40px 80px;
@@ -38,7 +53,6 @@
     }
   }
   &-chat{
-    border-top: 1px solid #ddd;
     .titlebox;
 
   }

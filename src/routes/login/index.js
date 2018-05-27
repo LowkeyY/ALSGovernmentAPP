@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import {createForm} from 'rc-form';
 import {connect} from 'dva';
 import {routerRedux} from 'dva/router';
-import {InputItem, WhiteSpace, WingBlank, Button, Checkbox, Flex, Toast, ActivityIndicator} from 'antd-mobile';
+import {InputItem, WhiteSpace, WingBlank, Button, Flex, Toast, ActivityIndicator,Icon} from 'components';
+import { getLocalIcon } from 'utils'
 import {config} from 'utils';
 import {_cg} from 'utils/cookie';
 import styles from './index.less';
@@ -12,24 +13,15 @@ import pwd from 'themes/images/login/锁.png'
 import img from 'themes/images/login/loginicon.png'
 import bg from 'themes/images/login/loginbg.png'
 
-const PrefixCls = "login", AgreeItem = Checkbox.AgreeItem
+const PrefixCls = "login"
 
 class Login extends React.Component {
-  // const handleLogin = () =>{
-  //   dispatch(routerRedux.push({pathname:"/"}))
-  // };
-  // const handleDisabled =()=>{
-  //   dispatch({
-  //     type:'login/disabled'
-  //   });
-  //   return login
-  // };
+
   constructor(props) {
     super()
     this.state = {}
 
   }
-
 
   onSubmit = () => {
     this.props.form.validateFields({
@@ -128,7 +120,6 @@ class Login extends React.Component {
             </WingBlank>
             <span ref="span"></span>
             <WhiteSpace size="lg"/>
-
             <WingBlank size="md">
               <Flex>
                 <Flex.Item>
@@ -138,13 +129,16 @@ class Login extends React.Component {
                 </Flex.Item>
                 <Flex.Item>
                   <Button type="ghost" className="am-button-borderfix" onClick={this.handlerVisitorsLogin}>
-                    <span style={{color: '#108ee9'}}>游客登录</span>
+                    <span style={{color: '#108ee9'}}>返回</span>
                   </Button>
                 </Flex.Item>
               </Flex>
-
             </WingBlank>
           </form>
+          <div className={styles[`${PrefixCls}-phonelogin`]}>
+            <Icon type={getLocalIcon('/others/phone.svg')} size='md'/>
+            <span>手机验证码登录</span>
+          </div>
         </div>
       </div>
     )
