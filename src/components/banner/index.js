@@ -24,21 +24,21 @@ class Banner extends React.Component {
       <Carousel
         className="space-carousel"
         selectedIndex={slideIndex}
-        cellSpacing={10}
-        slideWidth={0.8}
+/*        cellSpacing={10}
+        slideWidth={0.8}*/
         autoplay
         infinite
         afterChange={index => this.setState({ slideIndex: index })}
       >
-        {this.state.data && this.state.data.map((data, i) => (
+        {this.props.datas && this.props.datas.map((data, i) => (
           <div
             key={`a_${i}`}
             style={{
               position: 'relative',
               boxShadow: '4px 2px 2px rgba(0, 0, 0, 0.4)',
-              top: this.state.slideIndex === i ? 0 : 20,
+              //top: this.state.slideIndex === i ? 0 : 20,
             }}
-             onClick={this.props.handleClick.bind(this)}
+             onClick={this.props.handleClick.bind(null , data)}
           >
             <img
               ref={el => this.banner = el}

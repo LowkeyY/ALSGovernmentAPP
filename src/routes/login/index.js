@@ -89,7 +89,7 @@ class Login extends React.Component {
   }
 
   phoneValidSuccess = () => {
-         alert()
+    alert()
     // this.props.form.validateFields({
     //   force: true,
     // }, (error) => {
@@ -156,7 +156,7 @@ class Login extends React.Component {
                                  rules: [
                                    { required: true, message: '手机号必须输入' },
                                    {pattern:/^[1][3,4,5,7,8][0-9]{9}$/, message: '请输入正确的手机号'}
-                                   ],
+                                 ],
                                })}
                                clear
                                error={!!getFieldError(phoneKey)}

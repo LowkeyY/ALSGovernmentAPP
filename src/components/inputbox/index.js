@@ -53,8 +53,7 @@ class InputBox extends Component {
     })
   }
 
-  onRecording(e) {
-
+  onRecording() {
     const that = this
     stop= setTimeout(function () {//延迟1s执行
       that.setState({
@@ -65,8 +64,7 @@ class InputBox extends Component {
 
   }
 
-  stopRecording(e) {
-
+  stopRecording() {
     this.setState({
       onRecording: false,
       unit: 0,

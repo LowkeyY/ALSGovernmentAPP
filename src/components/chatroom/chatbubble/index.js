@@ -1,7 +1,6 @@
 import styles from './index.less'
 import { Flex, WhiteSpace } from 'antd-mobile'
 import { getImages, getErrorImg } from 'utils'
-import Css3Loading from 'components/loading'
 
 const PrefixCls = 'bubble'
 
@@ -16,7 +15,6 @@ module.exports = {
         <div className={styles[`${PrefixCls}-left-contentbox`]}>
           及时跟踪处理情况
         </div>
-       <div className={styles[`${PrefixCls}-left-loading`]}><Css3Loading/></div>
       </div>
     )
   },
@@ -41,7 +39,6 @@ module.exports = {
         <div className={styles[`${PrefixCls}-right-contentbox`]}>
           马上就处理
         </div>
-        <div className={styles[`${PrefixCls}-right-loading`]}><Css3Loading/></div>
       </div>
     )
   },
@@ -52,7 +49,7 @@ module.exports = {
         <img src={getImages('', 'user')}/>
     </span>
         <div className={styles[`${PrefixCls}-left-contentbox`]}>
-          5s
+          及时跟踪处理情况
         </div>
       </div>
     )

@@ -92,8 +92,6 @@ class Header extends React.Component {
       >
         <div style={{
           height: '100%',
-          padding: '0 0.3rem',
-          marginRight: '-0.3rem',
           display: 'flex',
           alignItems: 'center',
         }}

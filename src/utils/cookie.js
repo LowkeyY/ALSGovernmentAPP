@@ -1,7 +1,8 @@
 import Cookie from 'js-cookie'
-import { accessToken } from './config'
+import {userTag} from './config'
 
-const has = () => typeof(localStorage) !== 'undefined',
+const {usertoken} = userTag,
+  has = () => typeof(localStorage) !== 'undefined',
   set = (key, value) => {
     if (has) {
       localStorage.setItem(key, value)
@@ -36,7 +37,7 @@ export const _cr = (key) => {
 }
 
 export const _cg = (key) => {
-  const cf = accessToken !== key,//先从cookie中获取
+  const cf = usertoken !== key,//先从cookie中获取
     v = cf ? Cookie.get(key) : get(key)
   return v && v != 'undefined' ? v : ((cf ? get(key) : Cookie.get(key)) || '')
 }

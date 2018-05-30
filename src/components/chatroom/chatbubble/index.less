@@ -53,28 +53,20 @@
 }
 
 .@{PrefixCls}-left {
-  position: relative;
   clear: both;
   float: left;
   margin-bottom: 60px;
   margin-left: 10px;
-
   &-iconbox {
-
     .iconbox(left);
     & img {
       .icon;
     }
   }
-  &-loading{
-   position: absolute;
-    right: -70px;
-    top:20px;
-  }
   &-contentbox {
-
     .contentbox(left, #9ee62a);
     .left;
+
 
     &:before {
       .arrow(transparent #9ee62a transparent transparent);
@@ -84,7 +76,6 @@
 }
 
 .@{PrefixCls}-right {
-  position: relative;
   clear: both;
   float: right;
   margin-bottom: 60px;
@@ -95,13 +86,6 @@
       .icon;
     }
   }
-
-  &-loading{
-    position: absolute;
-    left: -70px;
-    top:20px;
-  }
-
   &-contentbox {
     .contentbox(right, #fff);
     .right;
