@@ -4,14 +4,14 @@ import qs from 'qs'
 import jsonp from 'jsonp'
 import lodash from 'lodash'
 import pathToRegexp from 'path-to-regexp'
-import {Toast} from 'antd-mobile'
-import {_cg} from './cookie'
-import {hashHistory} from 'react-router'
-import {baseURL, userTag} from './config'
+import { message } from 'antd'
+import { Toast } from 'antd-mobile'
+import { _cg } from './cookie'
+import { hashHistory } from 'react-router'
+import {  baseURL} from './config'
 
 axios.defaults.baseURL = baseURL
-axios.defaults.withCredentials = true
-const {usertoken} = userTag
+
 
 const doDecode = (json) => {
   return eval("(" + json + ")");
@@ -24,16 +24,7 @@ const fetch = (options) => {
     url,
   } = options
 
-  const appendParams = {
-/*    header: {
-      'Access-Control-Allow-Origin': '*',
-      'x-requested-with': 'XMLHttpRequest'
-    }*/
-  }
-  appendParams[usertoken] = _cg(usertoken)
-
-  const cloneData = lodash.cloneDeep({...data, ...appendParams})
-
+  const cloneData = lodash.cloneDeep(data)
   try {
     let domin = ''
     if (url.match(/[a-zA-z]+:\/\/[^/]*/)) {
@@ -52,6 +43,21 @@ const fetch = (options) => {
     Toast.offline(e.message)
   }
 
+  if (fetchType === 'JSONP') {
+    return new Promise((resolve, reject) => {
+      jsonp(url, {
+        param: `${qs.stringify(data)}&callback`,
+        name: `jsonp_${new Date().getTime()}`,
+        timeout: 4000,
+      }, (error, result) => {
+        if (error) {
+          reject(error)
+        }
+        resolve({ statusText: 'OK', status: 200, data: result })
+      })
+    })
+  }
+
   switch (method.toLowerCase()) {
     case 'get':
       return axios.get(url, {
@@ -64,7 +70,14 @@ const fetch = (options) => {
     case 'post':
       return axios.post(url, qs.stringify(cloneData, {
         indices: false
-      }))
+      },
+        {
+          header:{
+            'Access-Control-Allow-Origin':'*',
+            'x-requested-with':'XMLHttpRequest'
+          }
+        }
+        ))
     case 'put':
       return axios.put(url, cloneData)
     case 'patch':
@@ -109,10 +122,10 @@ const getResponeseErrMsg = (status) => {
   return msg;
 }
 
-export default function request(options) {
+export default function request (options) {
   return fetch(options).then((response) => {
-    const {statusText, status} = response
-    let data = response.data
+    const { statusText, status } = response
+    let data =response.data
     typeof (data) === "string" && (data = doDecode(data));
     return Promise.resolve({
       success: true,
@@ -121,16 +134,16 @@ export default function request(options) {
       ...data,
     })
   }).catch((error) => {
-    console.log(error)
+     console.log(error)
     // hashHistory.push(`/error`)
     let msg
     let statusCode
-    const {response = {}} = error
+    const {response={}}=error
     if (response && response instanceof Object) {
-      const {data, statusText} = response
+      const { data, statusText } = response
       statusCode = response.status
-      msg = getResponeseErrMsg(statusCode) || statusText
+      msg =getResponeseErrMsg(statusCode) || statusText
     }
-    return Promise.reject({success: false, statusCode, message: msg})
+    return Promise.reject({ success: false, statusCode, message: msg })
   })
 }

@@ -1,9 +1,9 @@
-import {PullToRefresh, Button} from 'antd-mobile'
+import { PullToRefresh, Button } from 'antd-mobile'
 import ReactDOM from 'react-dom'
 import {getOffsetTopByBody} from 'utils'
 
 class Comp extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       refreshing: false,
@@ -12,43 +12,39 @@ class Comp extends React.Component {
     }
   }
 
-  componentDidMount() {
-    const el = ReactDOM.findDOMNode(this.ptr);
-    if (el) {
-      if (this.props.sibilingsHasBanner) {//判断是否有banner默认false
-        window.addEventListener('resize', () => {
-          const hei = cnhtmlHeight - getOffsetTopByBody(el) - cnhtmlSize
-          setTimeout(() => this.setState({
-            height: hei,
-          }), 10)
-        })
-      } else {
-        const hei = cnhtmlHeight - getOffsetTopByBody(el) - cnhtmlSize
+  componentDidMount () {
+    if(this.props.sibilingsHasBanner){//判断是否有banner默认false
+      window.addEventListener('resize',()=>{
+        const el = ReactDOM.findDOMNode(this.ptr)
+        const hei =cnhtmlHeight - getOffsetTopByBody(el)-cnhtmlSize
         setTimeout(() => this.setState({
           height: hei,
-        }), 10)
-      }
+        }), 0)
+      })
+    }else {
+      const el = ReactDOM.findDOMNode(this.ptr)
+      const hei =cnhtmlHeight - getOffsetTopByBody(el)-cnhtmlSize
+      setTimeout(() => this.setState({
+        height: hei,
+      }), 0)
     }
+
   }
 
-
-  render() {
+  render () {
     return (<PullToRefresh
       ref={el => this.ptr = el}
-      style={this.props.autoHeight ? {
-        height: '100%',
-        overflow: 'scroll',
-      } : {
+      style={{
         height: this.state.height,
         overflow: 'auto',
       }}
-      indicator={this.state.down ? {} : {deactivate: '上拉可以刷新'}}
+      indicator={this.state.down ? {} : { deactivate: '上拉可以刷新' }}
       direction={this.state.down ? 'down' : 'up'}
       refreshing={this.state.refreshing}
       onRefresh={() => {
-        this.setState({refreshing: true})
+        this.setState({ refreshing: true })
         setTimeout(() => {
-          this.setState({refreshing: false})
+          this.setState({ refreshing: false })
         }, 1000)
       }}
     >
@@ -57,8 +53,7 @@ class Comp extends React.Component {
   }
 
   static defaultProps = {
-    sibilingsHasBanner: false,
-    autoHeight: false,
+    sibilingsHasBanner:false
   }
 }
 

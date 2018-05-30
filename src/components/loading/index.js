@@ -1,9 +1,26 @@
+import {Icon} from 'components'
+import {getLocalIcon} from 'utils'
 import styles from './index.less'
 
-function Css3Loading () {
-
+function Css3Loading (props) {
   return(
-    <div className={styles.loader}>Loading...</div>
+    <div style={{display:props.show?'block':'none'}}  className={styles.loader}></div>
+  )
+
+}
+
+function LoadingFail (props) {
+  return (
+    <div><Icon type={getLocalIcon('/others/loadingfail.svg')}/></div>
   )
 }
-export default Css3Loading
+
+
+Css3Loading.defaultProps = {
+  show:true
+}
+
+module.exports={
+  Css3Loading,
+  LoadingFail
+}

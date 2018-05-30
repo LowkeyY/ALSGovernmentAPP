@@ -53,7 +53,6 @@ function Guard ({ location, dispatch, guard }) {
       ))
     },
     getCurrentView = (index) => {
-
         switch (index) {
           case 0 : {
             let isNew = false;
@@ -106,7 +105,6 @@ function Guard ({ location, dispatch, guard }) {
     <div>
       <Nav title={name} dispatch={dispatch}/>
       <Tabs
-        initialPage={0}
         tabs={tabs}
         onChange={(tab, index) => { console.log('onChange', index, tab); }}
         onTabClick={handleTabClick}

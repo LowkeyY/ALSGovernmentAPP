@@ -9,7 +9,33 @@ import styles from './index.less'
 
 const PrefixCls = 'taskdetails'
 function TaskDetails({location,dispatch,taskdetails}) {
-  const {name=''}=location.query
+
+  const {name=''}=location.query,
+    {chartArr,val,isDisabled} = taskdetails
+
+ const onSubmit = (text) => {
+    var obj = {
+      msgType:0,
+      content:text
+    }
+    chartArr.push(obj)
+    dispatch({
+      type:'taskdetails/updateState',
+      payload:{
+        chartArr:chartArr,
+        val:'',
+        isDisabled:true
+      }
+    })
+  }
+
+  const props={
+    dispatch,
+    chartArr,
+    val,
+    isDisabled,
+    onSubmit
+  }
   return (
     <div>
       <Nav title='任务详情' dispatch={dispatch}/>
@@ -39,7 +65,7 @@ function TaskDetails({location,dispatch,taskdetails}) {
             <span className={styles[`${PrefixCls}-outer-details-title`]}>【任务汇报】</span>
           </div>
       </div>
-      <ChartRoom dispatch={dispatch}/>
+      <ChartRoom {...props}/>
     </div>
   )
 }

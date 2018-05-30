@@ -1,4 +1,4 @@
-import {Carousel} from 'antd-mobile'
+import { Carousel } from 'antd-mobile'
 import styles from './index.less'
 
 const PrefixCls = 'notice'
@@ -16,10 +16,9 @@ const NoticeBar = (props) => {
                 infinite
       >
         {
-          props.datas && props.datas.map((data, index) =>
-            <div onClick={props.handleClick.bind(data.id)}
-                 className={styles[`${PrefixCls}-outer-container`]}
-                 key={index}>{data.title}</div>)
+          props.datas && props.datas.map((data, index) => <div onClick={props.handleClick.bind(data.id)}
+                                                               className={styles[`${PrefixCls}-outer-container`]}
+                                                               key={index}>{data.title}</div>)
         }
       </Carousel>
     </div>

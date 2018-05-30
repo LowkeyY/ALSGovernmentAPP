@@ -15,7 +15,7 @@ export default modelExtend(pageModel, {
   state: {
     state: true,
     loadPwd: '',
-    buttonState: true //登录按钮状态
+    buttonState:true //登录按钮状态
   },
 
   effects: {
@@ -38,18 +38,13 @@ export default modelExtend(pageModel, {
             }
           })
         } else {
-          const {sessionId = '', realName = ''} = data, users = {
-            user_name: realName,
-            user_power: usrPwd,
-            user_token: sessionId
-          };
-          setLoginIn(users);
           yield put({
-            type: 'app/updateUsers',
+            type: 'app/updateState',
             payload: {
-              users
+              isLogin: true,
             }
           })
+
           yield put({
             type: 'updateState',
             payload: {
@@ -57,6 +52,10 @@ export default modelExtend(pageModel, {
             }
           })
 
+          setLoginIn({
+            ...data,
+            ...params
+          });
 
           yield put(routerRedux.replace({
             pathname: from

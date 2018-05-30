@@ -1,12 +1,11 @@
 import React from 'react'
 import { connect } from 'dva'
-import { WhiteSpace } from 'antd-mobile'
+import { WhiteSpace,Layout } from 'components'
 import testDataObj from 'utils/datadangjian'
 import Nav from 'components/nav'
-import Layout from 'components'
 import styles from './index.less'
 
-const PrefixCls = 'patrydetails',{BaseLine} = Layout
+const PrefixCls = 'patrydetails', {BaseLine} = Layout,
   dangjianImages = [require('themes/images/patry/dxc.jpg'), require('themes/images/patry/ddy.jpg'), require('themes/images/patry/dls.jpg')]
 
 const message = {
@@ -55,7 +54,7 @@ function Patrydetails ({ location, dispatch, patrydetails }) {
           {getContents(contents , images)}
         </div>
       </div>
-      <Baseline/>
+      <BaseLine />
     </div>
   )
 }

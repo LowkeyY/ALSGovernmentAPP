@@ -1,8 +1,10 @@
 import { request ,config} from 'utils'
-const {api : {DashboardApi}} = config
-export async function queryDashboard () {
-  return request({
-    url: DashboardApi,
+const {api} = config
+const {dashboard} = api
+export async function query () {
+/*  return request({
+    url: dashboard,
     method: 'get'
-  })
+  })*/
+  return{}
 }

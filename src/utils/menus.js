@@ -30,7 +30,7 @@ const menus = [{
   }
   , {
     icon: require('themes/images/nmenus/lvyou.png'),
-    name: '映像阿拉善',
+    name: '印象阿拉善',
     route: 'lvyou',
   }
   , {

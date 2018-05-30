@@ -3,11 +3,12 @@ import classnames from 'classnames'
 import lodash from 'lodash'
 import config from './config'
 import request from './request'
-import cookie from './cookie'
+import { _cs, _cr, _cg } from './cookie'
 import defaultImg from "themes/images/patry.png"
 import defaultUserIcon from "themes/images/userIcon.jpg"
 
-const {userTag: {username, usertoken, userpower}} = config, {_cs, _cr, _cg} = cookie;
+
+let userAccessToken = "";
 // 连字符转驼峰
 String.prototype.hyphenToHump = function () {
   return this.replace(/-(\w)/g, (...args) => {
@@ -74,35 +75,38 @@ const queryArray = (array, key, keyAlias = 'key') => {
   return null
 }
 
-const getImages = (path = "", type = 'defaultImg') => {
+const getImages = (path = "",type='defaultImg') => {
   if (path == "" || !path)
-    return type === 'defaultImg' ? defaultImg : defaultUserIcon;
+    return type==='defaultImg'?defaultImg:defaultUserIcon;
   return path.startsWith("http://") || path.startsWith("https://") ? path
     : (config.baseURL + (path.startsWith("/") ? "" : "/") + path);
 }
-
-const getErrorImg = (el) => {
-  if (el && el.target) {
+const getErrorImg = (el) =>{
+  if(el && el.target){
     el.target.src = defaultImg
-    el.target.onerror = null;
+    el.target.onerror=null;
   }
 }
 
-const setLoginIn = ({user_token, user_name, user_power}) => {
-  _cs(username, user_name)
-  _cs(userpower, user_power)
-  _cs(usertoken, user_token)
-  // cnSetAlias(user_name , user_token);
-}
 
+const setLoginIn = ({accessToken, user_name, user_power}) => {
+  const now = new Date()
+  now.setDate(now.getDate() + 5)
+  //_cs('user_session', now.getTime())
+  _cs('user_name', user_name)
+  //_cs('user_power', user_power)
+  _cs(config.accessToken, accessToken)
+  userAccessToken = accessToken
+  // cnSetAlias(user_name , accessToken);
+}
 const getLocalIcon = (icon) => {
-  const regex = /\/([^\/]+?)\./g;
-  let addIconName = [];
-  if (icon.startsWith("/") && (addIconName = regex.exec(icon)) && addIconName.length > 1) {
-    const addIcon = require(`svg/${icon.substr(1)}`);
-    return `${addIconName[1]}`;
-  }
-  return icon;
+    const regex = /\/([^\/]+?)\./g;
+    let addIconName = [];
+    if(icon.startsWith("/") && (addIconName = regex.exec(icon)) && addIconName.length > 1){
+      const addIcon = require(`svg/${icon.substr(1)}`);
+      return `${addIconName[1]}`;
+    }
+    return icon;
 }
 
 /**
@@ -111,7 +115,7 @@ const getLocalIcon = (icon) => {
  * @returns {number} 父元素不是body时元素相对body的offsetTop
  */
 const getOffsetTopByBody = (el) => {
-  let offsetTop = 0;
+   let offsetTop=0;
   while (el && el.tagName !== 'BODY') {
     offsetTop += el.offsetTop
     el = el.offsetParent
@@ -120,10 +124,10 @@ const getOffsetTopByBody = (el) => {
 }
 
 
+
 module.exports = {
   config,
   request,
-  cookie,
   classnames,
   getErrorImg,
   getImages,
@@ -131,7 +135,7 @@ module.exports = {
   setLoginIn,
   queryArray,
   getOffsetTopByBody,
-  timeStamp: () => (new Date()).getTime(),
-  isEmptyObject: (obj) => Object.keys(obj).length === 0,
+  timeStamp : () => (new Date()).getTime(),
+  isEmptyObject : (obj) => Object.keys(obj).length === 0,
   getLocalIcon,
 }

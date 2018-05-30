@@ -1,25 +1,8 @@
 import Loader from './Loader'
 import * as Layout from './Layout'
-import {
-  WhiteSpace,
-  Button,
-  WingBlank,
-  Icon,
-  List,
-  Flex,
-  Tabs,
-  Badge,
-  Tag,
-  Grid,
-  SegmentedControl,
-  Accordion,
-  ActivityIndicator,
-  InputItem,
-  Toast,
-  TabBar,
-} from 'antd-mobile'
+import { WhiteSpace,Button,WingBlank, Icon,List,Flex ,Tabs, Badge ,Tag,Grid,SegmentedControl,Accordion,ActivityIndicator,InputItem,Toast} from 'antd-mobile'
 
-module.exports = {
+module.exports ={
   WhiteSpace,
   Button,
   WingBlank,
@@ -35,7 +18,6 @@ module.exports = {
   ActivityIndicator,
   InputItem,
   Toast,
-  TabBar,
   Loader,
-  Layout,
+  Layout
 }

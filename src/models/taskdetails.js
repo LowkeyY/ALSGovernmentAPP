@@ -4,7 +4,9 @@ import { model } from 'models/common'
 export default modelExtend(model, {
   namespace: 'taskdetails',
   state: {
-
+    chartArr:[],
+    val:'',
+    isDisabled:true
   },
 
 })

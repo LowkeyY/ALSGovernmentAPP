@@ -1,6 +1,9 @@
+import React from 'react'
 import styles from './index.less'
-import { Flex, WhiteSpace } from 'antd-mobile'
+import { Flex, WhiteSpace } from 'components'
 import { getImages, getErrorImg } from 'utils'
+import {Css3Loading,LoadingFail} from 'components/loading'
+import Voice from '../voice'
 
 const PrefixCls = 'bubble'
 
@@ -13,7 +16,7 @@ module.exports = {
         <img src={getImages('', 'user')}/>
     </span>
         <div className={styles[`${PrefixCls}-left-contentbox`]}>
-          及时跟踪处理情况
+          及时跟踪处理
         </div>
       </div>
     )
@@ -30,29 +33,18 @@ module.exports = {
       </div>
     )
   },
-  ReplyBubble: () => {
+  ReplyBubble: (props) => {
     return (
       <div className={styles[`${PrefixCls}-right`]}>
     <span className={styles[`${PrefixCls}-right-iconbox`]}>
         <img src={getImages('', 'user')}/>
     </span>
         <div className={styles[`${PrefixCls}-right-contentbox`]}>
-          马上就处理
+          {props.content}
         </div>
+        <div className={styles[`${PrefixCls}-right-loading`]}><Css3Loading/></div>
       </div>
     )
-  },
-  ReceivevoiceBubble:() => {
-    return (
-      <div className={styles[`${PrefixCls}-left`]}>
-    <span className={styles[`${PrefixCls}-left-iconbox`]}>
-        <img src={getImages('', 'user')}/>
-    </span>
-        <div className={styles[`${PrefixCls}-left-contentbox`]}>
-          及时跟踪处理情况
-        </div>
-      </div>
-    )
-  },
+  }
 
 }

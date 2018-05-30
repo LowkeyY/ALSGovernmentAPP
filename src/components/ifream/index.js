@@ -26,12 +26,12 @@ class Iframes extends React.Component {
     }, 0);
 
     ifream.onload = function () {
-      dispatch({
-        type: 'app/updateState',
-        payload: {
-          spinning: false
-        }
-      })
+      // dispatch({
+      //   type: 'app/updateState',
+      //   payload: {
+      //     spinning: false
+      //   }
+      // })
     }
   }
 
