@@ -3,35 +3,73 @@ import { connect } from 'dva'
 import { routerRedux } from 'dva/router'
 import Nav from 'components/nav'
 import Tags from 'components/tags'
-import { List, WhiteSpace, SearchBar } from 'antd-mobile'
-import newsList from 'utils/datarongmeiti'
+import { List, WhiteSpace, SearchBar, Tabs, Layout } from 'components'
 import Ifreams from 'components/ifream'
 import styles from './index.less'
 
 let isPlay = false
+const Item = List.Item, { BaseLine } = Layout
 
 function News ({ location, dispatch, news }) {
   const { name = '' } = location.query,
-    handleClick = () => {
-      var vs = document.getElementById('testVideo1')
-      if (vs && vs.play) {
-        isPlay ? vs.pause() : vs.play()
-        isPlay = !isPlay
+    { banners, tuijian, tabs, selectedIndex, lists } = news,
+
+    getvideo = (data) => {
+      return data&&data.map(data=>{
+     return (
+       <video key={data.id} width='100%' loop poster={data.videoView} src={data.videoSrc} controls="controls"></video>
+     )
+   })
+
+  }
+
+  const PrefixCls = 'news',
+    Item = List.Item,
+    Brief = Item.Brief,
+    handleItemOnclick = ({ externalUrl = '', id, pathname = 'details' }) => {
+      if (externalUrl != '' && externalUrl.startsWith('http')) {
+        dispatch(routerRedux.push({
+          pathname: 'iframe',
+          query: {
+            name,
+            externalUrl: externalUrl,
+          },
+        }))
+      } else {
+        dispatch(routerRedux.push({
+          pathname: `/${pathname}`,
+          query: {
+            name,
+            dataId: id,
+          },
+        }))
       }
-    }
-  const PrefixCls = 'voice'
-  const Item = List.Item
-  const Brief = Item.Brief
-  const topMenus = [{ title: '新闻' }, { title: '财经' }, { title: '体育' }, { title: '娱乐' }, { title: '军事' }, { title: '图库' }, { title: '汽车' }, { title: '房产' }, { title: '时尚' }, { title: '小说' }, { title: '历史' }, { title: '科技' }, { title: '教育' }, { title: '健康' }, { title: '母婴' }, { title: '文化' }, { title: '社会' }, { title: '警法' }],
-    homeVedioSrc = require('themes/MP4/1.mp4'),
-    homePicSrc = require('themes/MP4/1.png'),
-    handleItemOnclick = (index) => {
-      dispatch(routerRedux.push({
-        pathname: '/newsdetails',
-        query: {
-          index,
+    },
+    handleTabClick = (data, index) => {
+      dispatch({
+        type: 'news/querySelect',
+        payload: {
+          ...data,
+          selected: index,
         },
-      }))
+      })
+    },
+
+    getContents = (lists) => {
+      const result = []
+      lists.map((list, i) => {
+        const { id = '' } = list
+        if (id != '') {
+          result.push(
+            <Item key={id} className={styles[`${PrefixCls}-item`]}
+                  thumb={list.image || ''} multipleLine wrap arrow='horizontal'
+                  onClick={handleItemOnclick.bind(null, list)}>
+              <span>{list.title}</span><Brief>{list.time}</Brief>
+            </Item>,
+          )
+        }
+      })
+      return <List>{result}</List>
     }
   return (
     <div>
@@ -48,27 +86,24 @@ function News ({ location, dispatch, news }) {
         onChange={() => console.log('onChange')}
       />
       <WhiteSpace size="md"/>
-      <Tags hotwords={topMenus}/>
-      <div className={styles[`${PrefixCls}-outer-content`]}>
-        {/*<div onClick={handleClick}>*/}
-        {/*<video id = "testVideo1">*/}
-        {/*<source src={require('themes/MP4/1.mp4')} type="video/mp4"/>*/}
-        {/*</video>*/}
-        {/*</div>*/}
-        <video id="testVideo1" width='100%' loop poster={homePicSrc} src={homeVedioSrc} onClick={handleClick}
-               controls="controls"></video>
-        <WhiteSpace size="md"/>
-        <List renderHeader={() => '新闻'}>
-          {newsList.map((
-            _,
-            index,
-          ) =>
-            <Item onClick={handleItemOnclick.bind(null, index)}>
-              <span className={styles[`${PrefixCls}-title`]}>{_.title}</span>
-            </Item>)}
-        </List>
-        <WhiteSpace size="md"/>
-      </div>
+      <Tabs
+        initialPage={0}
+        page={selectedIndex}
+        tabs={tabs}
+        swipeable={false}
+        onTabClick={handleTabClick}
+      >
+        <div>
+         <div>
+           {getvideo(banners)}
+         </div>
+          <List>
+            <Item>{tuijian[0] && tuijian[0].title}</Item>
+          </List>
+          <div>{getContents(lists)}</div>
+        </div>
+      </Tabs>
+      <BaseLine/>
     </div>
   )
 }

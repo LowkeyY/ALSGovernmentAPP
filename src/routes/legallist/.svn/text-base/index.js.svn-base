@@ -1,0 +1,94 @@
+import React from 'react'
+import { connect } from 'dva'
+import { WhiteSpace, Tabs, Badge } from 'components'
+import Nav from 'components/nav'
+import { lawyerList, officeList } from 'components/row'
+import { routerRedux } from 'dva/router'
+import styles from './index.less'
+
+const PrefixCls = 'legallist',
+  tabs = [
+    { title: <Badge>联系律师</Badge> },
+    { title: <Badge>联系事务所</Badge> },
+  ],
+  lawyerData = [
+    {
+      name: '保利巴特尔',
+      exp: '20',
+      adress: '中山路',
+      info: [
+        '水电费', '公交费',
+      ],
+    },
+  ],
+  officeData = [
+    {
+      name: '毛利事务所',
+      type: ['类型', '类型2', '类型3'],
+      year: '3',
+      tel: '13932324324',
+    },
+  ]
+
+function Comp ({ location, dispatch, legallist }) {
+
+  const { name = '', selectedIndex = 0, grids, lists } = legallist,
+    handleItemOnclick = ({ externalUrl = '', id, pathname = 'details' }) => {
+      if (externalUrl != '' && externalUrl.startsWith('http')) {
+        dispatch(routerRedux.push({
+          pathname: 'iframe',
+          query: {
+            name,
+            externalUrl: externalUrl,
+          },
+        }))
+      } else {
+        dispatch(routerRedux.push({
+          pathname: `/${pathname}`,
+          query: {
+            name,
+            dataId: id,
+          },
+        }))
+      }
+    },
+    handleTabClick = (data, index) => {
+      dispatch({
+        type: 'legallist/querySelect',
+        payload: {
+          ...data,
+          selected: index,
+        },
+      })
+    },
+    getContent = () => {
+      const result = []
+      if (selectedIndex == 0) {
+        result.push(lawyerList(lists , handleItemOnclick))
+      } else {
+        result.push(officeList(lists , handleItemOnclick))
+      }
+      return <div>{result}</div>
+    }
+
+  return (
+    <div className={styles[`${PrefixCls}-outer`]}>
+      <Nav title={name} dispatch={dispatch}/>
+      <WhiteSpace size="sm"/>
+      <Tabs tabs={grids}
+            swipeable={false}
+            initialPage={selectedIndex}
+            onTabClick={(tab, index) => {
+              handleTabClick(tab, index)
+            }}
+      >
+        {getContent()}
+      </Tabs>
+    </div>
+  )
+}
+
+export default connect(({ loading, legallist }) => ({
+  loading,
+  legallist,
+}))(Comp)

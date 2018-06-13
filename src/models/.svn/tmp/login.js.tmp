@@ -1,0 +1,84 @@
+import {routerRedux} from 'dva/router'
+import {login} from 'services/login'
+import {Toast} from 'antd-mobile'
+import modelExtend from 'dva-model-extend'
+import {pageModel} from './common'
+import {setLoginIn} from 'utils'
+
+const MD5 = require("md5"), encrypt = (word) => {
+  return MD5(word, 'hex');
+}
+
+export default modelExtend(pageModel, {
+  namespace: 'login',
+
+  state: {
+    state: true,
+    loadPwd: '',
+    buttonState: true //登录按钮状态
+  },
+
+  effects: {
+    * login({payload}, {call, put, select}) {
+      yield put({
+        type: 'updateState',
+        payload: {
+          buttonState: false
+        }
+      })
+      const {from = "/", ...params} = payload, {usrPwd = ""} = params;
+      const data = yield call(login, Object.assign({}, params, {usrPwd: encrypt(usrPwd)}))
+      console.log(data)
+      if (data && data.success) {
+        console.log(data)
+        if (data.errors) {
+          Toast.offline(data.errors[0].msg)
+          yield put({
+            type: 'updateState',
+            payload: {
+              buttonState: true
+            }
+          })
+        } else {
+          const {sessionId = '', realName = '' , userId = ''} = data, users = {
+            user_name: realName,
+            user_power: usrPwd,
+            user_token: sessionId,
+            user_id : userId,
+          };
+          setLoginIn(users);
+          yield put({
+            type: 'app/updateUsers',
+            payload: {
+              users
+            }
+          })
+          yield put({
+            type: 'updateState',
+            payload: {
+              buttonState: true,
+            }
+          })
+
+
+          yield put(routerRedux.replace({
+            pathname: from
+          }))
+        }
+
+      } else {
+        yield put({
+          type: 'updateState',
+          payload: {
+            buttonState: true,
+          }
+        })
+      }
+    }
+  },
+  reducers: {
+    'disabled'(state) {
+      return state = !state;
+    }
+  }
+})

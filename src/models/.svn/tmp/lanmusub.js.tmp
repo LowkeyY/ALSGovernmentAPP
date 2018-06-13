@@ -1,0 +1,89 @@
+import { parse } from 'qs'
+import modelExtend from 'dva-model-extend'
+import { model } from 'models/common'
+import { queryPartyData } from 'services/querylist'
+
+const defaultBanners = [{
+    url: require('themes/images/deren/default.png'),
+  }, {
+    url: require('themes/images/deren/default1.png'),
+  }],
+  defaultLists = [],
+  defaultIcon = require('themes/images/nmenus/suqiu.png'),
+  getBanners = (datas = []) => {
+    let result = [],
+      counts = 0
+    datas.map((data, index) => {
+      const { image = '', id  , ...others} = data
+      if (image != '' && id != '' && counts++ < 4) {
+        result.push({
+          url : image,
+          id,
+          ...others,
+        })
+      }
+    })
+    return result.length > 0 ? result : []
+  },
+  getList = (datas = []) => {
+    const result = []
+    datas.map((_, index) => {
+      const { id = '', route = 'details' } = _
+      if (id != '') {
+        result.push({
+          ..._,
+          id,
+          route,
+        })
+      }
+    })
+    return result.length > 0 ? result : []
+  }
+
+export default modelExtend(model, {
+  namespace: 'lanmusub',
+  state: {
+    bannerDatas: [],
+    lists: [],
+    id: '',
+    name: '',
+  },
+  subscriptions: {
+    setup ({ dispatch, history }) {
+      history.listen(({ pathname, query }) => {
+        if (pathname === '/lanmusub') {
+          const { id = '', name = '' } = query
+          dispatch({
+            type: 'updateState',
+            payload: {
+              id,
+              name,
+            },
+          })
+          dispatch({
+            type: 'query',
+            payload: {
+              ...query,
+            },
+          })
+        }
+      })
+    },
+  },
+  effects: {
+    * query ({ payload }, { call, put, select }) {
+      const { id = '' } = payload,
+        result = yield call(queryPartyData, { dataId: id })
+      if (result) {
+        let { data = [] } = result
+        yield put({
+          type: 'updateState',
+          payload: {
+            bannerDatas: getBanners(data),
+            lists: getList(data),
+          },
+        })
+      }
+    },
+  },
+})

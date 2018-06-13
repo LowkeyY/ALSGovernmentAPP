@@ -66,7 +66,7 @@ const Routers = function ({ history, app }) {
             }, 'guard')
           },
         }
-      , {
+        , {
           path: 'news',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -81,14 +81,6 @@ const Routers = function ({ history, app }) {
               registerModel(app, require('models/newsdetails'))
               cb(null, require('routes/newsdetails/'))
             }, 'newsdetails')
-          },
-        }, {
-          path: 'legal',
-          getComponent (nextState, cb) {
-            require.ensure([], require => {
-              registerModel(app, require('models/legal'))
-              cb(null, require('routes/legal/'))
-            }, 'legal')
           },
         }
 
@@ -203,6 +195,201 @@ const Routers = function ({ history, app }) {
             }, 'test')
           },
         }, {
+          path: 'lanmusub',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/lanmusub'))
+              cb(null, require('routes/lanmusub/'))
+            }, 'lanmusub')
+          },
+        }, {
+          path: 'lanmutab',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/lanmutab'))
+              cb(null, require('routes/lanmutab/'))
+            }, 'lanmutab')
+          },
+        }
+        , {
+          path: 'iframe',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              cb(null, require('routes/iframe/'))
+            }, 'iframe')
+          },
+        }
+        , {
+          path: 'legallist',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/legallist'))
+              cb(null, require('routes/legallist/'))
+            }, 'legallist')
+          },
+        }
+        , {
+          path: 'derenitems',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/derenitems'))
+              cb(null, require('routes/derenitems/'))
+            }, 'derenitems')
+          },
+        }
+        , {
+          path: 'volunteer',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/volunteer'))
+              cb(null, require('routes/volunteer/'))
+            }, 'volunteer')
+          },
+        }
+        , {
+          path: 'camel',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/camel'))
+              cb(null, require('routes/camel/'))
+            }, 'camel')
+          },
+        }
+        , {
+          path: 'survey',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/survey'))
+              cb(null, require('routes/survey/'))
+            }, 'survey')
+          },
+        }
+        , {
+          path: 'basevoice',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/basevoice'))
+              cb(null, require('routes/basevoice/'))
+            }, 'basevoice')
+          },
+        }
+        , {
+          path: 'commonlist',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/commonlist'))
+              cb(null, require('routes/commonlist/'))
+            }, 'commonlist')
+          },
+        }, {
+          path: 'lanmutabshouhu',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/lanmutabshouhu'))
+              cb(null, require('routes/lanmutabshouhu/'))
+            }, 'lanmutabshouhu')
+          },
+        }
+        , {
+          path: 'integral',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/integral'))
+              cb(null, require('routes/integral/'))
+            }, 'integral')
+          },
+        }
+        , {
+          path: 'payment',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/payment'))
+              cb(null, require('routes/payment/'))
+            }, 'payment')
+          },
+        }
+        , {
+          path: 'collection',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/collection'))
+              cb(null, require('routes/collection/'))
+            }, 'collection')
+          },
+        }
+        , {
+          path: 'setup',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/setup'))
+              cb(null, require('routes/setup/'))
+            }, 'setup')
+          },
+        }
+        , {
+          path: 'myappeal',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/myappeal'))
+              cb(null, require('routes/myappeal/'))
+            }, 'myappeal')
+          },
+        }
+        , {
+          path: 'volunteerdetails',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/volunteerdetails'))
+              cb(null, require('routes/volunteerdetails/'))
+            }, 'volunteerdetails')
+          },
+        }
+        , {
+          path: 'incorrupt',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/incorrupt'))
+              cb(null, require('routes/incorrupt/'))
+            }, 'incorrupt')
+          },
+        }
+        , {
+          path: 'threebig',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/threebig'))
+              cb(null, require('routes/threebig/'))
+            }, 'threebig')
+          },
+        }
+        , {
+          path: 'patryworklist',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/patryworklist'))
+              cb(null, require('routes/patryworklist/'))
+            }, 'patryworklist')
+          },
+        }
+        , {
+          path: 'twostupid',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/twostupid'))
+              cb(null, require('routes/twostupid/'))
+            }, 'twostupid')
+          },
+        }
+        , {
+          path: 'lawyerlist',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/lawyerlist'))
+              cb(null, require('routes/lawyerlist/'))
+            }, 'lawyerlist')
+          },
+        }
+        , {
           path: '*',
           getComponent (nextState, cb) {
             const { location: { pathname } } = nextState

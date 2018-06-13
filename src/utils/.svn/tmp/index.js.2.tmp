@@ -1,0 +1,163 @@
+/* global window */
+import classnames from 'classnames'
+import lodash from 'lodash'
+import config from './config'
+import request from './request'
+import cookie from './cookie'
+import defaultImg from 'themes/images/default/default.png'
+import defaultUserIcon from 'themes/images/default/userIcon.jpg'
+import formsubmit from './formsubmit'
+
+const { userTag: { username, usertoken, userpower, userid } } = config, { _cs, _cr, _cg } = cookie
+// 连字符转驼峰
+String.prototype.hyphenToHump = function () {
+  return this.replace(/-(\w)/g, (...args) => {
+    return args[1].toUpperCase()
+  })
+}
+
+// 驼峰转连字符
+String.prototype.humpToHyphen = function () {
+  return this.replace(/([A-Z])/g, '-$1')
+    .toLowerCase()
+}
+
+// 日期格式化
+Date.prototype.format = function (format) {
+  const o = {
+    'M+': this.getMonth() + 1,
+    'd+': this.getDate(),
+    'h+': this.getHours(),
+    'H+': this.getHours(),
+    'm+': this.getMinutes(),
+    's+': this.getSeconds(),
+    'q+': Math.floor((this.getMonth() + 3) / 3),
+    S: this.getMilliseconds(),
+  }
+  if (/(y+)/.test(format)) {
+    format = format.replace(RegExp.$1, `${this.getFullYear()}`.substr(4 - RegExp.$1.length))
+  }
+  for (let k in o) {
+    if (new RegExp(`(${k})`).test(format)) {
+      format = format.replace(RegExp.$1, RegExp.$1.length === 1 ? o[k] : (`00${o[k]}`).substr(`${o[k]}`.length))
+    }
+  }
+  return format
+}
+
+
+/**
+ * @param   {String}
+ * @return  {String}
+ */
+
+const queryURL = (name) => {
+  let reg = new RegExp(`(^|&)${name}=([^&]*)(&|$)`, 'i')
+  let r = window.location.search.substr(1)
+    .match(reg)
+  if (r != null) return decodeURI(r[2])
+  return null
+}
+
+/**
+ * 数组内查询
+ * @param   {array}      array
+ * @param   {String}    id
+ * @param   {String}    keyAlias
+ * @return  {Array}
+ */
+const queryArray = (array, key, keyAlias = 'key') => {
+  if (!(array instanceof Array)) {
+    return null
+  }
+  const item = array.filter(_ => _[keyAlias] === key)
+  if (item.length) {
+    return item[0]
+  }
+  return null
+}
+
+const getImages = (path = '', type = 'defaultImg') => {
+  if (path instanceof Blob || path.startsWith('blob:')) {
+    return path
+  }
+  if (path == '' || !path) {
+    return type === 'defaultImg' ? defaultImg : defaultUserIcon
+  }
+  return path.startsWith('http://') || path.startsWith('https://') ? path
+    : (config.baseURL + (path.startsWith('/') ? '' : '/') + path)
+}
+
+const getErrorImg = (el) => {
+  if (el && el.target) {
+    el.target.src = defaultImg
+    el.target.onerror = null
+  }
+}
+
+const setLoginIn = ({ user_token, user_name, user_power, user_id }) => {
+  _cs(username, user_name)
+  _cs(userpower, user_power)
+  _cs(usertoken, user_token)
+  _cs(userid, user_id)
+}
+const setLoginOut = () => {
+  _cr(username)
+  _cr(userpower)
+  _cr(usertoken)
+  _cr(userid)
+}
+const getLocalIcon = (icon) => {
+  const regex = /\/([^\/]+?)\./g
+  let addIconName = []
+  if (icon.startsWith('/') && (addIconName = regex.exec(icon)) && addIconName.length > 1) {
+    const addIcon = require(`svg/${icon.substr(1)}`)
+    return `${addIconName[1]}`
+  }
+  return icon
+}
+
+/**
+ *
+ * @param el 当前元素
+ * @returns {number} 父元素不是body时元素相对body的offsetTop
+ */
+const getOffsetTopByBody = (el) => {
+  let offsetTop = 0
+  while (el && el.tagName !== 'BODY') {
+    offsetTop += el.offsetTop
+    el = el.offsetParent
+  }
+  return offsetTop
+}
+
+const doDecode = (json) => {
+  return eval('(' + json + ')')
+}
+
+const postionsToString = ({ address = {}, latitude = '', longitude = '', radius = '' }) => JSON.stringify({
+  address,
+  latitude,
+  longitude,
+  radius,
+})
+
+module.exports = {
+  config,
+  request,
+  cookie,
+  classnames,
+  getErrorImg,
+  getImages,
+  queryURL,
+  setLoginIn,
+  queryArray,
+  getOffsetTopByBody,
+  timeStamp: () => (new Date()).getTime(),
+  isEmptyObject: (obj) => Object.keys(obj).length === 0,
+  getLocalIcon,
+  doDecode,
+  formsubmit,
+  postionsToString,
+  setLoginOut
+}

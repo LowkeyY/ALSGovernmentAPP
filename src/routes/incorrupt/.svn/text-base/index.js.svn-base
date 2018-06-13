@@ -1,0 +1,28 @@
+import React from 'react'
+import { connect } from 'dva'
+import { WhiteSpace } from 'antd-mobile'
+import Nav from 'components/nav'
+import Layout from 'components'
+import styles from './index.less'
+
+
+  const PrefixCls = 'incorrupt', { BaseLine } = Layout
+
+function Incorrupt ({ location, dispatch,incorrupt }) {
+  const { name = '', index = 0 } = location.query
+
+  return (
+    <div>
+      <Nav title={name} dispatch={dispatch}/>
+      <WhiteSpace size="md"/>
+      <div className={styles[`${PrefixCls}-outer`]}>
+
+      </div>
+    </div>
+  )
+}
+
+export default connect(({ loading, incorrupt }) => ({
+  loading,
+  incorrupt,
+}))(Incorrupt)

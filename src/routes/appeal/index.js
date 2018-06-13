@@ -1,10 +1,11 @@
 import React from 'react'
 import { connect } from 'dva'
 import Nav from 'components/nav'
-import { WhiteSpace, Icon, List, Flex, Tabs, Badge, Tag, Layout } from 'components'
+import { WhiteSpace, Icon, List, Flex, Tabs, Badge, Tag, Layout, Toast, Accordion } from 'components'
 import SearchHeader from 'components/searchheader'
 import PullToRefresh from 'components/pulltorefresh'
 import { routerRedux } from 'dva/router'
+import { getImages, getErrorImg, getLocalIcon, postionsToString } from 'utils'
 import styles from './index.less'
 
 const Item = List.Item,
@@ -16,139 +17,100 @@ const Item = List.Item,
     { title: <Badge>收藏求助</Badge> },
   ],
   PrefixCls = 'appeal'
-import { getImages, getErrorImg, getLocalIcon } from 'utils'
-
-const messages = [{
-  username: '匿名',
-  createDate: '2018-04-19 16:02',
-  positions: '阿拉善左旗',
-  title: '九九香生煎包（康馨雅苑小区商服楼下）卫生状况存在严重问题',
-  status: '3',
-  content: '前几天来了几个外地客户，去九九香生煎包（康馨雅苑小区商服楼下）吃早点，吃到一半外地朋友说是稀饭放点白糖，白糖罐盖子里全是烟头烫的印子，随即打开辣椒盖一看全是残渣，像是别人吃剩下的，朋友立马就没食欲了。其次收钱那女的服务也不好，一直拉的脸，让人看的很是不舒服，希望有关部门亲自去检查一下。',
-  answers: [{
-    content: '经过调查,九九香生煎包子店确实存在消费者反映的那样,部分白糖罐子盖子里有烟头烫过的痕迹。这是部分消费者在用餐时将其盖子作为烟灰缸所致,该店工作人员未及时清理,卫生上确实存在一定问题。我执法人员责令其进行整改,给消费者营造一个健康良好的消费环境。',
-    createDate: '2018-05-02 15:30',
-    dept: '阿左旗市场监督管理局新区市场监督管理所',
-    user: '李映玉',
-    phone: '0483-8332058',
-    isCollect: 0,
-  }],
-}, {
-  username: '李冬梅',
-  createDate: '2018-05-19 16:02',
-  positions: '阿拉善左旗',
-  title: '关于银苑新村小区楼顶琉璃瓦脱落问题',
-  status: '1',
-  content: '2018年3月份银苑新村小区楼顶琉璃瓦脱落，致使我的轿车车顶破损，我发现该小区有很大的安全隐患，银苑新村小区建于2000年，18年了，楼顶的琉璃瓦年久失修，经常能听见楼顶的琉璃瓦噼里啪啦坠落的响声，小区里的好多老人在楼下打扑克，下棋，晒太阳，乘凉，我不希望楼顶的琉璃瓦坠落导致悲剧发生，希望有关部门加快速度处理此事，将安全隐患杜绝，将楼顶的琉璃瓦清理，望有关部门高度重视！！！',
-  images: [require('themes/images/banner/banner2.jpg')],
-  isCollect: 1,
-}, {
-  username: '王海',
-  createDate: '2018-05-04 06:02',
-  positions: '阿拉善左旗',
-  title: '关于祥云豪宅每天早上垃圾清运车扰民的问题',
-  status: '3',
-  content: '祥云豪宅附近有个小区聚集（绿色之光、景苑小区、景开嘉园），垃圾清运车每天不到六点就开始开着那噪声巨大的垃圾车过来清运垃圾，一点不顾及周边群众是否还在休息。员工素质也是很差，一个劲的扯着喊，喇叭一个劲的按，好像我睡不了你们住户也别睡一样。对于这辆车小区很多人都很气愤，尤其周末我们上班族本想的能好好休息休息，结果这车仍然在惊扰着我们，对于此事也有很多人在民心网上投诉过无数次，但这些人依然我行我素。希望市政管理局能重视此事，加强对员工的教育。下次如果还是这样，本人将直接向公安机关和综合执法部门报案，如果他们管不了，我将直接上书纪检监察部门和民生在线好好给有关部门增点彩。',
-  answers: [{
-    content: '2018年5月10日第一次回复：您好！祥云豪宅附近有个小区聚集（绿色之光、景苑小区、景开嘉园），垃圾清运车每天不到六点就开始开着那噪声巨大的垃圾车过来清运垃圾，一点不顾及周边群众是否还在休息。员工素质也是很差，一个劲的扯着喊，喇叭一个劲的按，好像我睡不了你们住户也别睡一样。对于这辆车小区很多人都很气愤，尤其周末我们上班族本想的能好好休息休息，结果这车仍然在惊扰着我们，对于此事也有很多人在民心网上投诉过无数次，但这些人依然我行我素。希望市政管理局能重视此事，加强对员工的教育。下次如果还是这样，本人将直接向公安机关和综合执法部门报案，如果他们管不了，我将直接上书纪检监察部门和民生在线好好给有关部门增点彩。 的诉求我单位已收悉，现答复如下：由于环卫部门每日清理的垃圾点多、垃圾量大，所以环卫部门清运人员清运垃圾时间存在过早的现象。此前，根据居民反映的垃圾清运车扰民的问题，环卫局已调整了部分区域的作业时间，尽量将清运时间推迟。收到您反映的祥云豪宸附近的垃圾清运车扰民的问题后，环卫局立即组织相关负责人进行调查核实，暂未发现六点之前清运的情况。环卫局沿街收集车每日早7：30左右从民生花园街出发沿吉兰泰路向西沿街收集道路两侧餐饮店、其它商铺的生活垃圾，行至祥云豪宸附近的锡林南路路口后掉头，向东继续收集垃圾至欣欣家园附近的贺兰路路口结束。环卫局将加强作业人员管理，要求在收集垃圾时严格按照操作流程规范操作，尽量减少噪音。若再次发生您所反映的此类问题，请您及时拨打电话8226242或拍照反映，我们将对违反工作规定的作业人员作出严厉的处罚。感谢居民群众对环卫工作的监督，也请城区广大居民能够谅解和支持环卫部门工作，谢谢！。',
-    createDate: '2018-05-14 15:30',
-    dept:
-      '阿左旗城管局',
-    user:
-      '唐恩泽',
-    phone:
-      '0483-8226242',
-
-  }],
-  isCollect: 0,
-}]
-
-const resultInfo = {
-  'vioceappept': '120',
-  'mediaappept': '10',
-  'appept': '43',
-  'reply': '36',
-  'replyrate': '84',
-  'handle': '26',
-  'handlerate': '96',
-  'satisfied': '76',
-}
-
-
-const messageStatus = {
-    '1': '已受理',
-    '2': '处理中',
-    '3': '已办理',
-  },
-  colorStatus = {
-    '1': 'blue',
-    '2': 'green',
-    '3': 'gray',
-  },
-  getMessageStatus = (i) => messageStatus[i] || messageStatus['2'],
-  getColorStauts = (i) => colorStatus[i] || colorStatus['2'],
-  getStatusPage = (i) => {
-    return (
-      <span style={{ color: getColorStauts(i) }}>
-        {getMessageStatus(i)}
-        </span>
-    )
-  },
-  getImagesPage = (images, cls = '') => {
-    if (cnIsArray(images) && images.length) {
-      return (
-        <div className={styles[`${cls}-attrs`]}>
-          {images.map(src => <img src={src} alt=""/>)}
-        </div>
-      )
-    }
-    return ''
-  },
-  handleCollectClick = () => {
-    e.stopPropagation()
-    e.preventDefault()
-  },
-  handleCardClick = (dispatch) => {
-    dispatch(routerRedux.push({
-      pathname: '/seekdetails',
-
-    }))
-  },
-  getAnswersPage = (answers, cls = '') => {
-    if (cnIsArray(answers) && answers.length) {
-      return (
-        <div className={styles[`${cls}-answers`]}>
-          {answers.map(({ content = '', createDate = '', dept = '', user = '', phone = '' }) => {
-            return content != '' ? (
-              <div>
-                <div className={styles[`${cls}-answers-content`]}>
-                  <span style={{ color: '#1ab99d' }}>回复内容 : </span>
-                  {content}
+function Appeal ({ location, dispatch, appeal, app }) {
+  const emptyFunc = () => {
+    },
+    getShtate = () => {
+      return <span style={{ color: '#red' }}>拒办</span>
+    },
+    getStatus = (status) => {
+      switch (status) {
+        case '0' :
+          return <span style={{ color: '#ccb820' }}>待审核</span>
+        case '1' :
+        case '2' :
+        case '3' :
+        case '4' :
+          return <span style={{ color: 'green' }}>处理中</span>
+        case '5' :
+          return <span style={{ color: '#000' }}>已完成</span>
+      }
+    },
+    getImagesPage = (images, cls = '') => {
+      if (cnIsArray(images) && images.length) {
+        let i = 0
+        return (
+          <div className={styles[`${cls}-attrs`]}>
+            {images.map((src, i) => i < 2 ?
+              <div key={i} className={styles[`${cls}-attrs-img`]}
+                   style={{ backgroundImage: 'url(' + src + ')' }}></div> : '')}
+          </div>
+        )
+      }
+      return ''
+    },
+    handleCollectClick = (data) => {
+      dispatch({
+        type: `${PrefixCls}/collent`,
+        payload: {
+          ...data,
+        },
+      })
+    },
+    stopPropagation = (e) => {
+      e.stopPropagation()
+    },
+    handleCardClick = ({ id }) => {
+      dispatch({
+        type: 'seekdetails/updateState',
+        payload: {
+          isTask:false
+        },
+      })
+      dispatch(routerRedux.push({
+        pathname: '/seekdetails',
+        query: {
+          id,
+        },
+      }))
+    },
+    getAnswersPage = (answers, cls = '') => {
+      if (cnIsArray(answers) && answers.length) {
+        return (
+          <div className={styles[`${cls}-answers`]}>
+            {answers.map(({ content = '', createDate = '', dept = '', user = '', phone = '',id }) => {
+              return content != '' ? (
+                <div key={id}>
+                  <div className={styles[`${cls}-answers-content`]}>
+                    <span style={{ color: '#1ab99d' }}>回复内容 : </span>
+                    {content}
+                  </div>
+                  {createDate != '' ? <div className={styles[`${cls}-answers-date`]}><span style={{ color: '#1ab99d' }}>回复时间 : </span>{createDate}
+                  </div> : ''}
+                  {dept != '' ?
+                    <div className={styles[`${cls}-answers-dept`]}><span style={{ color: '#1ab99d' }}>单位 : </span>{dept}
+                    </div> : ''}
+                  {user != '' ?
+                    <div className={styles[`${cls}-answers-user`]}><span
+                      style={{ color: '#1ab99d' }}>执行人 : </span>{user}
+                    </div> : ''}
+                  {phone != '' ? <div className={styles[`${cls}-answers-phone`]}><span
+                    style={{ color: '#1ab99d' }}>联系电话 : </span>{phone}</div> : ''}
                 </div>
-                {createDate != '' ? <div className={styles[`${cls}-answers-date`]}><span style={{ color: '#1ab99d' }}>回复时间 : </span>{createDate}
-                </div> : ''}
-                {dept != '' ?
-                  <div className={styles[`${cls}-answers-dept`]}><span style={{ color: '#1ab99d' }}>单位 : </span>{dept}
-                  </div> : ''}
-                {user != '' ?
-                  <div className={styles[`${cls}-answers-user`]}><span style={{ color: '#1ab99d' }}>执行人 : </span>{user}
-                  </div> : ''}
-                {phone != '' ? <div className={styles[`${cls}-answers-phone`]}><span
-                  style={{ color: '#1ab99d' }}>联系电话 : </span>{phone}</div> : ''}
-              </div>
-            ) : ''
-          })}
-        </div>
-      )
-    }
-    return ''
-  },
-  getCard = ({ username, createDate, positions, title, status, content, images, answers, isCollect }, dispatch) => {
-    const cls = `${PrefixCls}-card`
-    return (
-        <div className={styles[cls]} onClick={handleCardClick.bind(null, dispatch)}>
+              ) : ''
+            })}
+          </div>
+        )
+      }
+      return ''
+    },
+    getCard = (data) => {
+      const { username, createDate, positions, title, state, content, images, answers, isCollect, id, shState, userPhoto } = data,
+        cls = `${PrefixCls}-card`
+      return (
+        <div key={id} className={styles[cls]} onClick={handleCardClick.bind(null, data)}>
           <div className={styles[`${cls}-info`]}>
-            <img src={getImages('', 'user')} alt=""/>
+            <img src={getImages(userPhoto, 'user')} alt=""/>
             <div className={styles[`${cls}-info-details`]}>
               <div className={styles[`${cls}-info-details-name`]}>{username}</div>
               <div className={styles[`${cls}-info-details-others`]}>
@@ -161,15 +123,15 @@ const messageStatus = {
               </div>
             </div>
           </div>
-          <div className={styles[`${cls}-content-status`]}>
-            <span style={{ color: '#1ab99d' }}>当前状态: {getStatusPage(status)}</span>
-            <span><Tag selected={isCollect} onChange={handleCollectClick}>
-                      <Icon type={getLocalIcon('/others/collection.svg')}/>
-              {isCollect
-                ?
-                <span className={styles[`${cls}-content-status-collection`]}>已收藏</span>
+          <div className={styles[`${cls}-content-status`]} onClick={stopPropagation}>
+            <span style={{ color: '#1ab99d' }}>当前状态:<span>{shState=='2'?getShtate():getStatus(state)}</span></span>
+            <span>
+            <Tag selected={isCollect} onChange={handleCollectClick.bind(null, data)}>
+            <Icon type={getLocalIcon('/others/collectionblack.svg')}/>
+              {isCollect ? <span className={styles[`${cls}-content-status-collection`]}>已收藏</span>
                 : <span className={styles[`${cls}-content-status-collection`]}>收藏</span>}
-                    </Tag></span>
+                </Tag>
+          </span>
           </div>
           <div className={styles[`${cls}-content`]}>
             <div className={styles[`${cls}-content-title`]}>{title}</div>
@@ -180,65 +142,57 @@ const messageStatus = {
           </div>
           {getImagesPage(images, cls)}
         </div>
-    )
-  }
+      )
+    },
+    getPositions = ({ street = '', district = '', city = '', province = '' }) => {
+      return street || district || city || province
+    },
+    getDataList = (datas = []) => {
+      const result = []
+      datas.map(data => {
+        const { username, shState, createDate, address = {}, title, state = 1, content, images = [], shoucang = false, id = '', shoucangId = '', userPhoto } = data
+        result.push({
+          username,
+          createDate,
+          positions: getPositions(address),
+          title,
+          state,
+          content,
+          images,
+          answers: [],
+          isCollect: shoucang,
+          id,
+          shState,
+          shoucangId,
+          userPhoto,
+        })
+      })
+      return result
+    },
 
+    { btnDisabled, dataList, btnTitle, name, selectedIndex, workCount } = appeal,
+    { isLogin } = app,
 
-function Appeal ({ location, dispatch, appeal }) {
+    getCountList = (data = {}) => {
+      const { shouli = 0, huifu = 0, huifulv = 0, banjie = 0, banjielv = 0 } = data
 
-  const name = '反应问题'
-  const { vioceappept, mediaappept, appept, reply, replyrate, handle, handlerate, satisfied } = resultInfo
-
-  const renderNavRight = () => {
-    return (
-      <div className={styles[`${PrefixCls}-nav`]}>
-        <Icon type={getLocalIcon('/others/sendup.svg')}/>
-        <span>我要发言</span>
-      </div>
-    )
-  }
-
-
-  return (
-    <div>
-      <Nav title={name} dispatch={dispatch} renderNavRight={renderNavRight()}/>
-      <SearchHeader/>
-      <div className={styles[`${PrefixCls}-infobox`]}>
-        <List>
-          <Item><span className={styles[`${PrefixCls}-infobox-title`]}>本周数据</span></Item>
-        </List>
+      return (
         <div className={styles[`${PrefixCls}-infobox-container`]}>
-          {/*topstart*/}
-          <Flex>
-            <Flex.Item>
-              <div className={styles[`${PrefixCls}-infobox-container-items`]}>
-                <img src={require('themes/images/spirit/phone.jpg')} alt=""/>
-                <span>语音受理件<span>&nbsp;{`${vioceappept}件`}</span></span>
-
-              </div>
-            </Flex.Item>
-            <Flex.Item>
-              <div className={styles[`${PrefixCls}-infobox-container-items`]}>
-                <img src={require('themes/images/spirit/video.jpg')} alt=""/>
-                <span>多媒体受理件<span>&nbsp;{`${mediaappept}件`}</span></span>
-              </div>
-            </Flex.Item>
-          </Flex>
           {/*middleStart*/}
           <Flex>
             <Flex.Item>
               <div className={styles[`${PrefixCls}-infobox-container-items`]}>
-                <span>受理件 <span>&nbsp;{`${appept}件`}</span></span>
+                <span>受理件 <span>&nbsp;{`${shouli}件`}</span></span>
               </div>
             </Flex.Item>
             <Flex.Item>
               <div className={styles[`${PrefixCls}-infobox-container-items`]}>
-                <span>回复件 <span>&nbsp;{`${reply}件`}</span></span>
+                <span>回复件 <span>&nbsp;{`${huifu}件`}</span></span>
               </div>
             </Flex.Item>
             <Flex.Item>
               <div className={styles[`${PrefixCls}-infobox-container-items`]}>
-                <span>回复率 <span>&nbsp;{`${replyrate}`}</span></span>
+                <span>回复率 <span>&nbsp;{`${huifulv}%`}</span></span>
               </div>
             </Flex.Item>
           </Flex>
@@ -246,46 +200,101 @@ function Appeal ({ location, dispatch, appeal }) {
           <Flex>
             <Flex.Item>
               <div className={styles[`${PrefixCls}-infobox-container-items`]}>
-                <span>办结件 <span>&nbsp;{`${handle}件`}</span></span>
+                <span>办结件 <span>&nbsp;{`${banjie}件`}</span></span>
               </div>
             </Flex.Item>
             <Flex.Item>
               <div className={styles[`${PrefixCls}-infobox-container-items`]}>
-                <span>办结率 <span>&nbsp;{`${handlerate}`}</span></span>
+                <span>办结率 <span>&nbsp;{`${banjielv}`}</span></span>
               </div>
             </Flex.Item>
             <Flex.Item>
               <div className={styles[`${PrefixCls}-infobox-container-items`]}>
-                <span>满意率 <span>&nbsp;{`${satisfied}`}</span></span>
+                <span>满意率 <span>&nbsp;{`${100}%`}</span></span>
               </div>
             </Flex.Item>
           </Flex>
         </div>
-      </div>
+      )
+    }
+
+  const btnVisible = (visible = true) => {
+      dispatch({
+        type: `${PrefixCls}/updateState`,
+        payload: {
+          btnDisabled: visible,
+        },
+      })
+    },
+    handleWarningClick = (name = '') => {
+      btnVisible()
+      const onSuccess = (postions = {}) => {
+          btnVisible(false)
+          dispatch(routerRedux.push({
+            pathname: '/warning',
+            query: {
+              name,
+              location: postionsToString(postions),
+            },
+          }))
+        },
+        onError = ({ message = '', code = -999 }) => {
+          btnVisible(false)
+          let msg = code == -999 ? message : '请允许系统访问您的位置。'
+          Toast.offline(msg, 2)
+        }
+      cnGetCurrentPosition(onSuccess, onError)
+    },
+    renderNavRight = (handleClick) => {
+      return isLogin ? (
+        btnDisabled ?
+          <div className={styles[`${PrefixCls}-nav`]}>
+            <Icon type='loading'/>
+            <span>{btnTitle}</span>
+          </div> :
+          <div className={styles[`${PrefixCls}-nav`]} onClick={handleClick}>
+            <Icon type={getLocalIcon('/others/sendup.svg')}/>
+            <span>{btnTitle}</span>
+          </div>
+      ) : ''
+    },
+    currentDataList = getDataList(dataList)
+    ,
+    handleTabClick = (tab, index) => {
+      dispatch({
+        type: `${PrefixCls}/query`,
+        payload: {
+          selected: index,
+        },
+      })
+    }
+
+  return (
+    <div>
+      <Nav title={name} dispatch={dispatch}
+           renderNavRight={renderNavRight(handleWarningClick.bind(null, btnTitle))}/>
+      <SearchHeader children='自助搜索'/>
+
+      <Accordion defaultActiveKey="0" className="my-accordion">
+        <Accordion.Panel header={<span>本周数据</span>} className="pad">
+          <div className={styles[`${PrefixCls}-infobox`]}>
+            {getCountList(workCount)}
+          </div>
+        </Accordion.Panel>
+      </Accordion>
       <WhiteSpace/>
       <Tabs
         initialPage={0}
+        page={selectedIndex}
         tabs={tabs}
+        swipeable={false}
         onChange={(tab, index) => {
-          console.log('onChange', index, tab)
         }}
-        onTabClick={(tab, index) => {
-          console.log('onTabClick', index, tab)
-        }}
+        onTabClick={handleTabClick}
       >
         <div>
-          <PullToRefresh children={
-            <div>
-              {messages.map(message => getCard(message, dispatch))}
-              <BaseLine/>
-            </div>
-          }/>
-        </div>
-        <div>
-          <p style={{ margin: '20px' }}>没有更多数据了</p>
-        </div>
-        <div>
-          <p style={{ margin: '20px' }}>没有更多数据了</p>
+          {currentDataList.map(message => getCard(message, dispatch))}
+          <BaseLine/>
         </div>
       </Tabs>
       <WhiteSpace/>
@@ -294,7 +303,8 @@ function Appeal ({ location, dispatch, appeal }) {
   )
 }
 
-export default connect(({ loading, appeal }) => ({
+export default connect(({ loading, appeal, app }) => ({
   loading,
   appeal,
+  app,
 }))(Appeal)

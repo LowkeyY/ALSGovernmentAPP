@@ -1,0 +1,7 @@
+@PrefixCls: titlebox;
+
+.@{PrefixCls}-title {
+ border-right: 8px solid  @primary-color;
+  margin-right: 10px;
+
+}

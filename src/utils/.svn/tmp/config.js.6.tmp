@@ -1,0 +1,48 @@
+module.exports = {
+  name: 'ALS-APP',
+  logo: '/logo.png',
+  //baseURL: 'http://172.168.40.146:8080',
+  baseURL: 'http://172.168.40.146:8080',
+  wsURL: 'ws://172.168.40.146:8080/websocket/chat/',
+  userTag: {
+    username: 'username',
+    usertoken: 'usertoken',
+    userpower: 'userpower',
+    userid: 'userid',
+  },
+  privateApi: {
+    wanggequ: '/cphsc/htmlpage/ShowAllUserLocation.jcp',
+    guiji: '/cphsc/htmlpage/guijiwanggequ.jcp',
+  },
+  api: {
+    QueryManuscriptApi: `/cphsc/interface/huoqugaojian.jcp`,
+    QueryColumnTypeApi: `/cphsc/interface/huoqufenlei.jcp`,
+    LoginApi: '/login/login.jcp',
+    userLogout: `/login/appLogout.jcp`,
+    DetailsApi: '/cphsc/interface/getGaoJianInfo.jcp',
+    DashboardApi: '/cphsc/interface/getHomeMenuInfo.jcp',
+    AppBaseApi: '/cphsc/interface/getAppBase.jcp',
+    GetAppealList: '/cphsc/interface/getPoliceWorkInterface.jcp',
+    GetAppealContent: '/cphsc/interface/PoliceWorkInfo.jcp',
+    GetAppealTypeApi: '/cphsc/interface/getAppealType.jcp',
+    SendAppealInfoApi: '/ExternalItems/policWork/PoliceWorkAdd.jcp',
+    QueryHtmlBody: '/cphsc/interface/getHttpHtml.jcp',
+    getSurveyApi: '/cphsc/interface/surveyPanel.jcp',
+    submitSurveyApi: '/usr/survey/surveyPanel.jcp',
+    QueryWorkCountApi: '/cphsc/interface/getWookPoliceWorkCount.jcp',
+    JicengshengyinApi: '/cphsc/interface/getJicengshengyin.jcp',
+    LanmuAllApi: '/cphsc/interface/getAllZiLanMu.jcp',
+    CollectAppealApi: '/ExternalItems/policWork/interface/showCangInterface.jcp',
+    SetUpAPi: '/ExternalItems/userInterFace/userUpdateInfo.jcp',
+    ResetPasswordApi: '/ExternalItems/userInterFace/userChangePwd.jcp',
+    GetTaskListApi: '/ExternalItems/taskRelease/interface/getMyTask.jcp',
+    GetAllTaskApi: '/ExternalItems/taskRelease/interface/getTaskMsgAllByApp.jcp',
+<<<<<<< .mine
+    sendMsgFilesApi:'/ExternalItems/taskRelease/interface/appSendMsg.jcp',
+    TaskStatusApi:'/ExternalItems/taskRelease/policeWorkTaskCreat.jcp',
+    CompleteTaskApi:'/ExternalItems/taskRelease/conformTask.jcp'
+=======
+    sendMsgFilesApi: '/ExternalItems/taskRelease/interface/appSendMsg.jcp',
+>>>>>>> .r45
+  },
+}

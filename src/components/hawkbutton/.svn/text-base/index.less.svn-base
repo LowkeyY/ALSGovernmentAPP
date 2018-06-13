@@ -1,0 +1,15 @@
+@PrefixCls:hawkbutton;
+
+.@{PrefixCls}-outer{
+  position: absolute;
+  right: 20px;
+  bottom: 200px;
+  &-button{
+    width: 100px;
+    height:100px;
+    border-radius: 50%;
+    line-height: 100px;
+    text-align: center;
+    color: #fff;
+  }
+}

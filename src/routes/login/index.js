@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { createForm } from 'rc-form'
+import ReactDOM from 'react-dom'
 import { connect } from 'dva'
 import { routerRedux } from 'dva/router'
 import { InputItem, WhiteSpace, WingBlank, Button, Toast, ActivityIndicator, Icon } from 'components'
@@ -16,7 +17,7 @@ import phone from 'themes/images/login/phone.png'
 import code from 'themes/images/login/code.png'
 
 const PrefixCls = 'login'
-var timer;
+var timer
 
 class Login extends React.Component {
   constructor (props) {
@@ -24,8 +25,8 @@ class Login extends React.Component {
     this.state = {
       loginType: true,
       isCodeSending: false,
-      count: 5,
-      isDisabled: true,
+      count:60,
+      isDisabled: false,
     }
 
   }
@@ -35,7 +36,6 @@ class Login extends React.Component {
       force: true,
     }, (error) => {
       if (!error) {
-        alert()
         this.props.dispatch({
           type: 'login/login',
           payload: {
@@ -48,19 +48,40 @@ class Login extends React.Component {
     })
   }
   onPhoneSubmit = () => {
-    console.log(this.props.form)
     this.props.form.validateFields({
       force: true,
     }, (error) => {
       if (!error) {
         this.props.dispatch({
-          type: 'login/login',
+          type: 'login/PhoneLogin',
           payload: {
             ... this.props.form.getFieldsValue(),
           },
         })
       } else {
         Toast.fail('请确认信息是否正确', 3)
+      }
+    })
+  }
+  onValidateCodeClick= () => {
+    this.props.form.validateFields(['phoneNum'],{
+      force: true,
+
+    }, (error) => {
+      if (!error) {
+        this.setState({
+          isCodeSending: true,
+          isDisabled: true,
+        })
+        this.startCountDown()
+        this.props.dispatch({
+          type: 'login/SendValidateCode',
+          payload: {
+            ... this.props.form.getFieldsValue(),
+          },
+        })
+      } else {
+        Toast.fail('请输入正确的手机号', 3)
       }
     })
   }
@@ -88,29 +109,17 @@ class Login extends React.Component {
     })
   }
 
-  phoneValidSuccess = () => {
-         alert()
-    // this.props.form.validateFields({
-    //   force: true,
-    // }, (error) => {
-    //   if (!error) {
-    //    this.setState({
-    //      isDisabled:false
-    //    })
-    //   }
-    // })
-  }
 
   countDown = () => {
     this.setState({
       count: --this.state.count,
     })
-    if(this.state.count<1){
+    if (this.state.count < 1) {
       clearInterval(timer)
       this.setState({
         isCodeSending: false,
         isDisabled: false,
-        count:5
+        count:60,
       })
     }
   }
@@ -118,23 +127,17 @@ class Login extends React.Component {
     const that = this
     timer = setInterval(() => {
       that.countDown()
-    },1000)
+    }, 1000)
 
   }
-  getCode = () => {
-    this.setState({
-      isCodeSending: true,
-      isDisabled: true,
-    })
-    this.startCountDown()
-  }
+
 
   render () {
     const { getFieldProps, getFieldError } = this.props.form,
       userKey = 'usrMail',
       powerKey = 'usrPwd',
-      phoneKey = 'phoneNumber',
-      codeKey = 'code'
+      phoneKey = 'phoneNum',
+      codeKey = 'inputCode'
     return (
       <div className={styles[`${PrefixCls}-container`]} style={{ backgroundImage: 'url(' + bg + ')' }}>
         <div className={styles[`${PrefixCls}-container-goback`]} onClick={this.handleBack}>
@@ -147,7 +150,8 @@ class Login extends React.Component {
               <form>
                 <WingBlank size="md">
                   <div className={styles[`${PrefixCls}-phoneform-phonebox`]}>
-                    <InputItem placeholder="手机号"
+                    <InputItem
+                               placeholder="手机号"
                                type='number'
                                onChange={this.phoneValidSuccess}
                                onFocus={this.moveInput.bind(this)}
@@ -155,8 +159,8 @@ class Login extends React.Component {
                                  initialValue: _cg(phoneKey),
                                  rules: [
                                    { required: true, message: '手机号必须输入' },
-                                   {pattern:/^[1][3,4,5,7,8][0-9]{9}$/, message: '请输入正确的手机号'}
-                                   ],
+                                   { pattern: /^[1][3,4,5,7,8][0-9]{9}$/, message: '请输入正确的手机号' },
+                                 ],
                                })}
                                clear
                                error={!!getFieldError(phoneKey)}
@@ -180,18 +184,13 @@ class Login extends React.Component {
                     <InputItem
                       type="text"
                       placeholder="验证码"
-                      clear
                       onFocus={this.moveInput.bind(this)}
                       {...getFieldProps(codeKey, {
                         initialValue: this.props.login.loadPwd, rules: [{ required: true, message: '验证码必须输入' }, {
                           min: 1, message:
                             '验证码不小于4个字符',
                         }],
-                      })}
-                      error={!!getFieldError(codeKey)}
-                      onErrorClick={() => {
-                        Toast.fail(getFieldError(codeKey))
-                      }}>
+                      })}>
                       <div style={{
                         backgroundImage: 'url(' + code + ')',
                         backgroundSize: 'cover',
@@ -202,7 +201,7 @@ class Login extends React.Component {
                     <div className={styles[`${PrefixCls}-codebox-button`]}>
                       <Button type="ghost" inline size="small"
                               style={{ marginRight: '4px', color: '#4eaaf7' }}
-                              onClick={this.getCode}
+                              onClick={this.onValidateCodeClick}
                               disabled={this.state.isDisabled}
                       >
                         {
@@ -228,7 +227,8 @@ class Login extends React.Component {
                     </Button>
                   }
                 </WingBlank>
-
+                <WhiteSpace size="lg"/>
+                <WhiteSpace size="lg"/>
                 <WhiteSpace size="lg"/>
                 <WingBlank size="md">
                 </WingBlank>
@@ -243,6 +243,7 @@ class Login extends React.Component {
               <form>
                 <WingBlank size="md">
                   <InputItem placeholder="用户名"
+                             name='phoneNum'
                              onFocus={this.moveInput.bind(this)}
                              {...getFieldProps(userKey, {
                                initialValue: _cg(userKey), rules: [{ required: true, message: '用户名必须输入' }, {
@@ -299,10 +300,15 @@ class Login extends React.Component {
                   }
                 </WingBlank>
                 <WhiteSpace size="lg"/>
+                <WhiteSpace size="lg"/>
+                <WhiteSpace size="lg"/>
                 <WingBlank size="md">
                 </WingBlank>
                 <div ref='button' className={styles[`${PrefixCls}-phonelogin`]} onClick={this.handlePhoneLogin}>
                   <Icon type={getLocalIcon('/login/phone.svg')} size='md'/>
+                  <WhiteSpace size="lg"/>
+                  <WhiteSpace size="lg"/>
+                  <WhiteSpace size="lg"/>
                   <span>手机验证码登录</span>
                 </div>
               </form>
@@ -315,9 +321,8 @@ class Login extends React.Component {
 }
 
 
-export default connect(({ login, loading, agreement, app }) => ({
+export default connect(({ login, loading, app }) => ({
   login,
   loading,
-  agreement,
   app,
 }))(createForm()(Login))

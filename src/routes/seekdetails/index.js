@@ -1,83 +1,143 @@
 import React from 'react'
-import {connect} from 'dva';
-import { WhiteSpace, Icon,List} from 'components'
+import { connect } from 'dva'
+import { WhiteSpace, Icon, List } from 'components'
 import Nav from 'components/nav'
-import { getImages, getErrorImg ,getLocalIcon} from 'utils'
+import { getImages, getErrorImg, getLocalIcon } from 'utils'
+import NoMessage from 'components/nomessage'
+import { baseURL, api } from 'utils/config'
+import { routerRedux } from 'dva/router'
 import styles from './index.less'
-import SeekReply from  'components/seekreply'
-const Item = List.Item;
-const Brief = Item.Brief;
-const message={
-  username: '匿名',
-  createDate: '2018-04-19 16:02',
-  positions: '阿拉善左旗',
-  title: '九九香生煎包（康馨雅苑小区商服楼下）卫生状况存在严重问题',
-  status: '3',
-  content: '前几天来了几个外地客户，去九九香生煎包（康馨雅苑小区商服楼下）吃早点，吃到一半外地朋友说是稀饭放点白糖，白糖罐盖子里全是烟头烫的印子，随即打开辣椒盖一看全是残渣，像是别人吃剩下的，朋友立马就没食欲了。其次收钱那女的服务也不好，一直拉的脸，让人看的很是不舒服，希望有关部门亲自去检查一下。',
-  images: [require('themes/images/banner/banner2.jpg')]
-}
+import TitleBox from 'components/titlecontainer'
+import SeekReply from 'components/seekreply'
+import VociePrev from 'components/voicePrev'
+import WxImageViewer from 'react-wx-images-viewer'
 
-const reply = [
-  {
-    contents:'正在受理中,请耐心等待。。。',
-    date:'2018-5-20 18:18:00',
-    position:'新华网'
-  }
-]
-const PrefixCls = 'seekdetails'
-function SeekDetails({location,dispatch,seekdetails}) {
+const Item = List.Item,
+  Brief = Item.Brief, { positionApi } = api,
+  PrefixCls = 'seekdetails'
 
-  const {username,createDate,positions,title,content,images} = message
-  const name = '求助详情'
-
- const getImagesPage = (images) => {
-    if (cnIsArray(images) && images.length) {
-      return (
-        <div className={styles[`${PrefixCls}-content-images`]}>
-          {images.map(src => <img src={src} alt=""/>)}
-        </div>
-      )
+function SeekDetails ({ location, dispatch, seekdetails }) {
+  const { name, currentData, isOpen, viewImageIndex, isTask, workId, taskId } = seekdetails,
+    { username, createDate, positions, title, content, images, answers, voicePath, userPhoto ,status,shState,isCollect} = currentData
+  const getImagesPage = (images) => {
+      if (cnIsArray(images) && images.length) {
+        return (
+          <div className={styles[`${PrefixCls}-content-images`]}>
+            {images.map(src => <div data-src={src} className='imgbox' style={{ backgroundImage: `url(${src})` }}></div>)}
+          </div>
+        )
+      }
+      return ''
+    },
+    replacSrc = (src = '') => {
+      return src.replaceAll('\\', '/')
+        .replace(':80/', '')
+    },
+    has = (images = [], src = '') => {
+      let result = -1
+      images.map((image, index) => {
+        if (replacSrc(image) == replacSrc(src)) {
+          result = index
+        }
+      })
+      return result
+    },
+    getShtate = () => {
+      return <span style={{ color: '#red' }}>拒办</span>
+    },
+    getStatus = (status) => {
+      switch (status) {
+        case '0' :
+          return <span style={{ color: '#ccb820' }}>待审核</span>
+        case '1' :
+        case '2' :
+        case '3' :
+        case '4' :
+          return <span style={{ color: 'green' }}>处理中</span>
+        case '5' :
+          return <span style={{ color: '#000' }}>已完成</span>
+      }
+    },
+    handleDivClick = (e) => {
+      if (e.target.className === 'imgbox') {
+        let src = e.target.dataset.src,
+          curImageIndex = images.indexOf(src)
+        if (src) {
+          dispatch({
+            type: `${PrefixCls}/updateState`,
+            payload: {
+              isOpen: true,
+              viewImageIndex: curImageIndex < 0 ? 0 : curImageIndex,
+            },
+          })
+        }
+      }
+    },
+    onViemImageClose = () => {
+      dispatch({
+        type: `${PrefixCls}/updateState`,
+        payload: {
+          isOpen: false,
+        },
+      })
+    },
+    handlePositionClick = ({ route = 'iframe', name = '定位' }) => {
+      const src = `${baseURL}${positionApi}?workId${workId}&taskId=${taskId}`
+      dispatch(routerRedux.push({
+        pathname: `/${route}`,
+        query: {
+          name,
+          externalUrl: src,
+        },
+      }))
     }
-    return ''
-  }
 
   return (
     <div>
       <Nav title={name} dispatch={dispatch}/>
       <div className={styles[`${PrefixCls}-outer`]}>
-         <div className={styles[`${PrefixCls}-header`]}>
-            <span>提问</span>
-             <div className={styles[`${PrefixCls}-header-info`]}>
-                     <div className={styles[`${PrefixCls}-header-info-box`]}>
-                       <div className={styles[`${PrefixCls}-header-info-box-name`]}>{username}</div>
-                       <div className={styles[`${PrefixCls}-header-info-box-date`]}><span>{createDate}</span><span>{positions}</span></div>
-                     </div>
-                   <img src={getImages('', 'user')} alt=""/>
-                 </div>
-             </div>
-          <div className={styles[`${PrefixCls}-content`]}>
-             <div className={styles[`${PrefixCls}-content-title`]}>
-               <span>{title}</span>
-               <span><Icon type={getLocalIcon('/others/heart.svg')} /></span>
-             </div>
-             <div className={styles[`${PrefixCls}-content-details`]}><span>问题详情：{content}</span></div>
-            {getImagesPage(images)}
+        <div className={styles[`${PrefixCls}-header`]}>
+          <div className={styles[`${PrefixCls}-header-info`]}>
+            <img src={getImages(userPhoto, 'user')} alt=""/>
+            <div className={styles[`${PrefixCls}-header-info-box`]}>
+              <div className={styles[`${PrefixCls}-header-info-box-name`]}>{username}</div>
+              <div className={styles[`${PrefixCls}-header-info-box-date`]}>
+                <span>{createDate}</span><span>{positions}</span></div>
+            </div>
           </div>
+        </div>
+        <div className={styles[`${PrefixCls}-content`]} onClick={handleDivClick}>
+          <div className={styles[`${PrefixCls}-content-title`]}>
+            <span>{title}</span>
+            {isTask ? <span onClick={handlePositionClick}><Icon type={getLocalIcon('/others/location.svg')} size='lg'/></span> : ''}
+          </div>
+          <div className={styles[`${PrefixCls}-content-status`]}>
+            <span style={{ color: '#1ab99d' }}>当前状态:<span>{shState=='2'?getShtate():getStatus(status)}</span></span>
+            {isCollect?<div><span><Icon type={getLocalIcon('/mine/collection.svg')}/></span><span>已收藏</span></div>:''}
+          </div>
+          <div>
+            {voicePath != '' ? <VociePrev mediaFileUrl={voicePath} mediaFileTimer={0}/> : ''}
+          </div>
+          <div className={styles[`${PrefixCls}-content-details`]}><span>问题详情：{content}</span></div>
+          {getImagesPage(images)}
+        </div>
         <WhiteSpace/>
-        <List >
-          <Item extra={'已批转'} >回复</Item>
-        </List>
+        <TitleBox title={'回复'}/>
         {
-          reply&&reply.map((data)=>{
-           return <SeekReply {...data}/>
+          answers && answers.map((data) => {
+            return <SeekReply {...data}/>
           })
         }
-         </div>
+      </div>
+      {
+        isOpen && viewImageIndex != -1 ?
+          <WxImageViewer onClose={onViemImageClose} urls={images} index={viewImageIndex}/> : ''
+      }
     </div>
   )
 }
 
-export default connect(({loading,seekdetails}) => ({
+export default connect(({ loading, seekdetails }) => ({
   loading,
-  seekdetails
+  seekdetails,
 }))(SeekDetails)
