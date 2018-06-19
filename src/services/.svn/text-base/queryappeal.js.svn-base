@@ -13,7 +13,7 @@ export async function queryAppealType () {
 export async function queryAppealList (payload) {
   return request({
     url: GetAppealList,
-    method: 'get',
+    method: 'post',
     data: payload,
   })
 }

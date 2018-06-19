@@ -8,21 +8,19 @@ import '../../../node_modules/rc-rate/assets/index.css'
 const PrefixCls = 'row',
   Item = List.Item,
   Brief = Item.Brief
+
 module.exports = {
-  listRows: (rowData, sectionID, rowID, onClick) => (
-    <div
-      onClick={onClick.bind(null, rowData.id)}
-      key={`${sectionID} - ${rowID}`} className={styles[`${PrefixCls}-party-outer`]}>
-      <div style={{display: '-webkit-box', display: 'flex', padding: '0.3rem 0'}}>
-        <img style={{width: '1.28rem', height: '1.28rem', marginRight: '0.3rem'}} src={getImages(rowData.img)}
-             onError={getErrorImg} alt="icon"/>
-        <div className={styles[`${PrefixCls}-party-outer-text-box`]}>
-          <div style={{marginBottom: '0.16rem', fontWeight: 'bold'}}>{rowData.title}</div>
-          <div className={styles[`${PrefixCls}-party-outer-text-box-time`]}>{rowData.time}</div>
-        </div>
-      </div>
-    </div>
-  ),
+  layoutRow : (rowData, sectionID, rowID,onClick) => {
+    const {title = '', image = '', time = ''} = rowData
+    return <Item className={styles[`${PrefixCls}-item`]}
+                 key={`${PrefixCls}-${sectionID}-${rowID}`}
+                 thumb={image || ''} multipleLine wrap arrow='horizontal'
+                 onClick={onClick.bind(null, rowData)}
+    >
+      <span>{title}</span>
+      <Brief>{time}</Brief>
+    </Item>
+  },
   message: (rowData, sectionID, rowID, onClick) => {
     let isNew = rowData.flag === '0'
     let result = (
@@ -124,7 +122,38 @@ module.exports = {
       )
     })
   },
-  integralList: ({title = '', number = 0, info = '' , index = 0}) => {
+  integralList: ({title = '', number = 0, info = '' , index = 0,isCount=0,userPhoto='',isUser=false}) => {
+    return (
+      <div className={styles[`${PrefixCls}-integral-outer`]}>
+        <div className={styles[`${PrefixCls}-integral-outer-left`]}>
+          <span>{index}</span>
+          {
+            isUser? <div className={styles[`${PrefixCls}-integral-outer-left-img`]}>
+              <img src={getImages(userPhoto, 'user')} alt=""/>
+            </div>
+              :
+              ''
+          }
+          <span>{title}</span>
+        </div>
+        <div className={styles[`${PrefixCls}-integral-outer-right`]}>
+          <div className={styles[`${PrefixCls}-integral-outer-right-info`]}>
+            <span>{number}</span>
+            <span>{info}</span>
+          </div>
+          {
+            isCount>0? <div className={styles[`${PrefixCls}-integral-outer-right-star`]}>
+              <span>{isCount}</span>
+              <span><Icon type={getLocalIcon('/others/star.svg')}/></span>
+            </div>
+              :
+              ''
+          }
+        </div>
+      </div>
+    )
+  },
+  companyList: ({title = '', number = 0, info = '' , index = 0,isCount=0}) => {
     return (
       <div className={styles[`${PrefixCls}-integral-outer`]}>
         <div className={styles[`${PrefixCls}-integral-outer-left`]}>
@@ -139,10 +168,14 @@ module.exports = {
             <span>{number}</span>
             <span>{info}</span>
           </div>
-          <div className={styles[`${PrefixCls}-integral-outer-right-star`]}>
-            <span>9</span>
-            <span><Icon type={getLocalIcon('/others/star.svg')}/></span>
-          </div>
+          {
+            isCount>0? <div className={styles[`${PrefixCls}-integral-outer-right-star`]}>
+                <span>{isCount}</span>
+                <span><Icon type={getLocalIcon('/others/star.svg')}/></span>
+              </div>
+              :
+              ''
+          }
         </div>
       </div>
     )
@@ -151,7 +184,7 @@ module.exports = {
   }) => {
     const cls = `${PrefixCls}-card`
     return (
-      <div className={styles[cls]} onClick={handleCardClick.bind(null, id)}>
+      <div key={id} className={styles[cls]} onClick={handleCardClick.bind(null, id)}>
         <div className={styles[`${cls}-info`]}>
           <img src={getImages('', 'user')} alt=""/>
           <div className={styles[`${cls}-info-details`]}>

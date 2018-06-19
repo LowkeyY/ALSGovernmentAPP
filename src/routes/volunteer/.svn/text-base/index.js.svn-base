@@ -54,10 +54,9 @@ const PrefixCls = 'volunteer',
 
 function Volunteer({location, dispatch, volunteer}) {
 
-  const {name = '', selectedIndex = 0, grids, lists, gridsitem = []} = volunteer
+  const {name = '', selectedIndex = 0, grids, lists, gridsitem = [],volunteers=[]} = volunteer
 
   const handleItemOnclick = ({id, title, name = '公益活动', pathname = 'volunteerdetails'}) => {
-      console.log(name)
       dispatch(routerRedux.push({
         pathname: `/${pathname}`,
         query: {
@@ -99,14 +98,24 @@ function Volunteer({location, dispatch, volunteer}) {
       })
     },
     handleTabClickItem = (data, index) => {
-      tabDefaultIndex = index,
+      if(index==0){
         dispatch({
-          type: 'volunteer/querySelectItem',
+          type: 'volunteer/queryVolunteers',
           payload: {
             ...data,
             selected: index,
           },
         })
+      }else {
+        dispatch({
+          type: 'volunteer/querytongjibumen',
+          payload: {
+            ...data,
+            selected: index,
+          },
+        })
+      }
+
     },
 
     getContent = () => {
@@ -122,7 +131,11 @@ function Volunteer({location, dispatch, volunteer}) {
                 }}
           >
             {/*<NoMessage/>*/}
-            {<div>{nowDate[tabDefaultIndex].map((item, index) => integralList({...item, index: index + 1}))}</div>}
+            <div>
+              {volunteers&&volunteers.map((data,i)=>{
+                return integralList({...data,index:i+1})
+              })}
+            </div>
           </Tabs>
         )
       }

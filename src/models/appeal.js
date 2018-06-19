@@ -13,6 +13,11 @@ const changeAttByItems = (items = [], id = '', isOk = false) => {
     })
     return result
   },
+  getDefaultPaginations = () => ({
+    current: 1,
+    total: 0,
+    size:10,
+  }),
   namespace = 'appeal'
 
 export default modelExtend(model, {
@@ -24,51 +29,73 @@ export default modelExtend(model, {
     dataList: [],
     name: '',
     workCount: {},
+    scrollerTop: 0,
+    paginations: getDefaultPaginations(),
   },
   subscriptions: {
     setup ({ dispatch, history }) {
       history.listen(({ pathname, action, query }) => {
         if (pathname === `/${namespace}`) {
           const { btnTitle = '发起诉求', name = '反应问题' } = query
-          dispatch({
-            type: 'updateState',
-            payload: {
-              btnDisabled: false,
-              btnTitle,
-              name,
-            },
-          })
-          dispatch({
-            type: 'queryCount',
-          })
-          dispatch({
-            type: 'query',
-          })
+          if (action === 'PUSH') {
+            dispatch({
+              type: 'updateState',
+              payload: {
+                btnDisabled: false,
+                btnTitle,
+                name,
+                scrollerTop: 0,
+                paginations: getDefaultPaginations(),
+              },
+            })
+            dispatch({
+              type: 'queryCount',
+            })
+            dispatch({
+              type: 'queryListview',
+              payload: {},
+            })
+          }
         }
       })
     },
   },
   effects: {
-    * query ({ payload = {} }, { call, put, select }) {
-      const { selected = -1 } = payload, { selectedIndex } = yield select(_ => _.appeal),
+
+    * queryListview ({ payload }, { call, put, select }) {
+      const { callback = '', isRefresh = false, selected = -1 } = payload,
+        _this = yield select(_ => _[`${namespace}`]),
+        { paginations: { current, total, size }, selectedIndex, dataList } = _this,
         currentSelectedIndex = selected != -1 ? selected : selectedIndex
       yield put({
         type: 'updateState',
         payload: {
-          dataList: [],
           selectedIndex: currentSelectedIndex,
         },
       })
-      const { success = false, data = [], message = '获取数据失败。' } = yield call(queryAppealList, { showType: currentSelectedIndex + 1 })
-      if (success) {
+      const start = isRefresh ? 1 : current,
+        result = yield call(queryAppealList, { showType: currentSelectedIndex + 1, nowPage: start, showCount: size })
+      if (result) {
+        let { data = [], totalCount = 0 } = result,
+          newLists = []
+        newLists = start == 1 ? data : [...dataList, ...data]
         yield put({
           type: 'updateState',
           payload: {
-            dataList: data,
+            paginations: {
+              ..._this.paginations,
+              total: totalCount * 1,
+              current: start + 1,
+            },
+            dataList: newLists,
           },
         })
       }
+      if (callback) {
+        callback()
+      }
     },
+
     * queryCount ({ payload }, { call, put, select }) {
       const data = yield call(queryWorkCount)
       if (data.success) {

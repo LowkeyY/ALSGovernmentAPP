@@ -97,11 +97,12 @@ function Dashboard ({ dashboard, loading, dispatch, app }) {
         {noticeDatas.length > 0 && <NoticeBar datas={noticeDatas} handleClick={handleDataClick}/>}
       </div>
       <WhiteSpace size="sm"/>
-      {isScroll ?
-        getContent() :
-        <PullToRefresh sibilingsHasBanner={true} children={
-          getContent()
-        }/>}
+      {/*{isScroll ?*/}
+        {/*getContent() :*/}
+        {/*<PullToRefresh sibilingsHasBanner={true} children={*/}
+          {/**/}
+        {/*}/>}*/}
+        <div className={styles[`${PrefixCls}-outer-content`]}>{getContent()}</div>
     </div>
   )
 }

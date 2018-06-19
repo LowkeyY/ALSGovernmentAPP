@@ -8,7 +8,7 @@ import defaultImg from 'themes/images/default/default.png'
 import defaultUserIcon from 'themes/images/default/userIcon.jpg'
 import formsubmit from './formsubmit'
 
-const { userTag: { username, usertoken, userpower, userid, useravatar,usertype } } = config, { _cs, _cr, _cg } = cookie
+const { userTag: { username, usertoken, userpower, userid, useravatar, usertype }, privateApi: { sumbitUrlPositions } } = config, { _cs, _cr, _cg } = cookie
 // 连字符转驼峰
 String.prototype.hyphenToHump = function () {
   return this.replace(/-(\w)/g, (...args) => {
@@ -95,7 +95,7 @@ const getErrorImg = (el) => {
   }
 }
 
-const setLoginIn = ({ user_token, user_name, user_power, user_id, user_avatar,user_type }) => {
+const setLoginIn = ({ user_token, user_name, user_power, user_id, user_avatar, user_type }) => {
   _cs(username, user_name)
   _cs(userpower, user_power)
   _cs(usertoken, user_token)
@@ -146,6 +146,29 @@ const postionsToString = ({ address = {}, latitude = '', longitude = '', radius 
   radius,
 })
 
+const postCurrentPosition = ({ serverId = '', entityId = '' }) => {
+  if (serverId != '' && entityId != '' && _cg(usertoken) != '') {
+    cnNeedPositions(_cg(userid), config.baseURL + sumbitUrlPositions)
+  }
+}
+const replaceSystemEmoji = (content) => {
+  const ranges = [
+    '\ud83c[\udf00-\udfff]',
+    '\ud83d[\udc00-\ude4f]',
+    '\ud83d[\ude80-\udeff]'
+  ];
+  return content.replace(new RegExp(ranges.join('|'), 'g'), '').replace(/\[\/.+?\]/g, '');
+}
+
+const hasSystemEmoji = (content) => {
+  const ranges = [
+    '\ud83c[\udf00-\udfff]',
+    '\ud83d[\udc00-\ude4f]',
+    '\ud83d[\ude80-\udeff]'
+  ];
+  return content.match(new RegExp(ranges.join('|'), 'g'));
+}
+
 module.exports = {
   config,
   request,
@@ -164,4 +187,7 @@ module.exports = {
   formsubmit,
   postionsToString,
   setLoginOut,
+  postCurrentPosition,
+  replaceSystemEmoji,
+  hasSystemEmoji
 }

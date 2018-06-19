@@ -7,11 +7,11 @@ import { queryAppealList } from 'services/queryappeal'
 export default modelExtend(model, {
   namespace: 'guard',
   state: {
-    selectedIndex:2,
+    selectedIndex: 2,
     segmentedIndex: 0,
     scrollerTop: 0,
     taskList: [],
-    dataList:[]
+    dataList: [],
   },
   subscriptions: {
     setup ({ dispatch, history }) {
@@ -25,7 +25,7 @@ export default modelExtend(model, {
     },
   },
   effects: {
-    * getTaskList ({ payload={} }, { call, put, select }) {
+    * getTaskList ({ payload = {} }, { call, put, select }) {
       const { selected = -1 } = payload, { segmentedIndex } = yield select(_ => _.guard),
         currentSelectedIndex = selected != -1 ? selected : segmentedIndex
       yield put({
@@ -36,7 +36,7 @@ export default modelExtend(model, {
         },
       })
       const { pageType } = yield select(state => state.guard)
-      const data = yield call(getTaskList, {pageType:currentSelectedIndex+1})
+      const data = yield call(getTaskList, { pageType: currentSelectedIndex + 1 })
       if (data) {
         yield put({
           type: 'updateState',
@@ -57,7 +57,7 @@ export default modelExtend(model, {
           segmentedIndex: currentSelectedIndex,
         },
       })
-     const { success = false, data = [], message = '获取数据失败。' } = yield call(queryAppealList, {showType:'2'})
+      const { success = false, data = [], message = '获取数据失败。' } = yield call(queryAppealList, { showType: '2' })
       if (success) {
         yield put({
           type: 'updateState',

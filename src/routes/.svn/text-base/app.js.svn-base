@@ -4,11 +4,12 @@ import PropTypes from 'prop-types'
 import { connect } from 'dva'
 import { routerRedux } from 'dva/router'
 import { classnames, config, getLocalIcon } from 'utils'
-import { Loader, TabBar, Icon,Modal } from 'components'
+import { Loader, TabBar, Icon, Modal } from 'components'
 import './app.less'
 
 
-let lastHref,isFirst=true,
+let lastHref,
+  isFirst = true,
   startWebSocket = ({ userid = '' }) => {
     const { wsURL = '' } = config
     cnGetWebSocket(wsURL, userid)
@@ -16,7 +17,7 @@ let lastHref,isFirst=true,
   progessStart = false
 const App = ({ children, dispatch, app, loading, location }) => {
   let { pathname } = location
-  const { spinning=false, tabBars, users,updates:{upgraded=false,urls=''},showModal } = app
+  const { spinning = false, tabBars, users, updates: { upgraded = false, urls = '' }, showModal } = app
   pathname = pathname.startsWith('/') ? pathname : `/${pathname}`
   pathname = pathname.endsWith('/index.html') ? '/' : pathname //Android配置首页自启动
   const href = window.location.href,
@@ -38,31 +39,33 @@ const App = ({ children, dispatch, app, loading, location }) => {
     progessStart = false
     NProgress.done()
   }
- const update = (url,upgraded) => {
-    if(upgraded){
+  const update = (url, upgraded) => {
+    if (upgraded) {
       return <Modal
         visible={true}
         transparent
         maskClosable={false}
         title="当前版本过低"
-        footer={[{ text: '立刻升级', onPress: () =>cnUpdate(url)}]}
+        footer={[{ text: '立刻升级', onPress: () => cnUpdate(url) }]}
       >
         <div>
           为保证正常使用，请先升级应用
         </div>
       </Modal>
-    }else {
-      if(isFirst){
+    } else {
+      if (isFirst) {
         Modal.alert('版本更新', '点击升级我的阿拉善', [
-          { text: '暂不升级', onPress: () => dispatch({
-              type:'app/updateState',
-              payload:{
-                showModal:false
-              }
-            }), style: 'default' },
+          {
+            text: '暂不升级', onPress: () => dispatch({
+              type: 'app/updateState',
+              payload: {
+                showModal: false,
+              },
+            }), style: 'default',
+          },
           { text: '立刻升级', onPress: () => cnUpdate(url) },
-        ]);
-        isFirst=false
+        ])
+        isFirst = false
       }
     }
 
@@ -116,15 +119,12 @@ const App = ({ children, dispatch, app, loading, location }) => {
           return (
             <TabBar.Item {...props}>
               {/*{index!==0? <Loader spinning={spinning} />:null}*/}
-              {children}
+              {pathname === _.route ? children : ''}
             </TabBar.Item>
           )
         })}
       </TabBar>
-      <div></div>
-   <div>
-     {/*{showModal?update(urls,upgraded):''}*/}
-   </div>
+      {showModal ? update(urls, upgraded) : ''}
     </div>
   )
 }

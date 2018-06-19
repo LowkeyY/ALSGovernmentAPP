@@ -9,6 +9,7 @@ import { routerRedux } from 'dva/router'
 import styles from './index.less'
 import TitleBox from 'components/titlecontainer'
 import SeekReply from 'components/seekreply'
+import StatusBox from 'components/statusbox'
 import VociePrev from 'components/voicePrev'
 import WxImageViewer from 'react-wx-images-viewer'
 
@@ -18,7 +19,7 @@ const Item = List.Item,
 
 function SeekDetails ({ location, dispatch, seekdetails }) {
   const { name, currentData, isOpen, viewImageIndex, isTask, workId, taskId } = seekdetails,
-    { username, createDate, positions, title, content, images, answers, voicePath, userPhoto ,status,shState,isCollect} = currentData
+    { username, situatton,createDate, positions, title, content, images, answers, voicePath, userPhoto ,status,shState,isCollect} = currentData
   const getImagesPage = (images) => {
       if (cnIsArray(images) && images.length) {
         return (
@@ -43,19 +44,19 @@ function SeekDetails ({ location, dispatch, seekdetails }) {
       return result
     },
     getShtate = () => {
-      return <span style={{ color: '#red' }}>拒办</span>
+      return <StatusBox bg='#9c9595' status='不在办理范围'/>
     },
     getStatus = (status) => {
       switch (status) {
         case '0' :
-          return <span style={{ color: '#ccb820' }}>待审核</span>
+          return <StatusBox bg='#f5b90c' status='待审核'/>
         case '1' :
         case '2' :
         case '3' :
         case '4' :
-          return <span style={{ color: 'green' }}>处理中</span>
+          return <StatusBox bg='#29ad2e' status='处理中'/>
         case '5' :
-          return <span style={{ color: '#000' }}>已完成</span>
+          return <StatusBox bg='#d45b5b' status='已完成'/>
       }
     },
     handleDivClick = (e) => {
@@ -106,10 +107,13 @@ function SeekDetails ({ location, dispatch, seekdetails }) {
             </div>
           </div>
         </div>
+        <div className={styles[`${PrefixCls}-outer-type`]}><span>诉求类型：{situatton}</span><span>{positions}</span></div>
         <div className={styles[`${PrefixCls}-content`]} onClick={handleDivClick}>
           <div className={styles[`${PrefixCls}-content-title`]}>
             <span>{title}</span>
-            {isTask ? <span onClick={handlePositionClick}><Icon type={getLocalIcon('/others/location.svg')} size='lg'/></span> : ''}
+            {isTask ? <span onClick={handlePositionClick}>
+              <Icon type={getLocalIcon('/others/location.svg')} size='lg'/>
+            </span> : ''}
           </div>
           <div className={styles[`${PrefixCls}-content-status`]}>
             <span style={{ color: '#1ab99d' }}>当前状态:<span>{shState=='2'?getShtate():getStatus(status)}</span></span>

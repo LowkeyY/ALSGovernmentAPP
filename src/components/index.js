@@ -27,6 +27,8 @@ import {
   Checkbox,
   Card,
   Modal,
+  NavBar,
+  DatePicker,
 } from 'antd-mobile'
 
 module.exports = {
@@ -57,5 +59,7 @@ module.exports = {
   Checkbox,
   Card,
   Eventlisten,
-  Modal
+  Modal,
+  NavBar,
+  DatePicker
 }

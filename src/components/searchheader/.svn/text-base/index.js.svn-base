@@ -3,6 +3,7 @@ import styles from './index.less'
 import {getLocalIcon} from 'utils';
 import {routerRedux} from 'dva/router';
 const PrefixCls = 'searchheader'
+
 function SearchHeader(props) {
 
   return(
@@ -11,7 +12,8 @@ function SearchHeader(props) {
          {props.children}
        </div>
       <SearchBar
-        placeholder="输入关键字搜索"
+        placeholder={props.placeholder}
+        onFocus={props.onFocu}
       />
     </div>
   )

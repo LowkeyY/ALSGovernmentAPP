@@ -1,10 +1,11 @@
 import React from 'react'
-import { connect } from 'dva'
+import {connect} from 'dva'
 import Nav from 'components/nav'
-import { routerRedux } from 'dva/router'
-import { SegmentedControl, WingBlank, WhiteSpace, List, SearchBar } from 'antd-mobile'
+import {routerRedux} from 'dva/router'
+import {SegmentedControl, WingBlank, WhiteSpace, List, SearchBar} from 'antd-mobile'
 import Banner from 'components/banner/index'
-import PullToRefresh from 'components/pulltorefresh'
+import {layoutRow} from 'components/row'
+import ListView from 'components/listview'
 import Menu from 'components/menu/index'
 import styles from './index.less'
 
@@ -12,9 +13,9 @@ const PrefixCls = 'lvyou',
   Item = List.Item,
   Brief = Item.Brief
 
-function Lvyou ({ location, dispatch, lvyou }) {
-  const { bannerDatas, lists, grids, name = '', isScroll } = lvyou,
-    handleItemOnclick = ({ externalUrl = '', id = '', pathname = 'details' }) => {
+function Lvyou({location, dispatch, lvyou}) {
+  const {bannerDatas, lists, grids, name = '', isScroll, paginations, scrollerTop} = lvyou,
+    handleItemOnclick = ({externalUrl = '', id = '', pathname = 'details'}) => {
       if (externalUrl != '' && externalUrl.startsWith('http')) {
         dispatch(routerRedux.push({
           pathname: 'iframe',
@@ -33,7 +34,7 @@ function Lvyou ({ location, dispatch, lvyou }) {
         }))
       }
     },
-    handleGridClick = ({ pathname, title, externalUrl = '', ...others }) => {
+    handleGridClick = ({pathname, title, externalUrl = '', ...others}) => {
       if (externalUrl != '' && externalUrl.startsWith('http')) {
         dispatch(routerRedux.push({
           pathname: 'iframe',
@@ -66,29 +67,67 @@ function Lvyou ({ location, dispatch, lvyou }) {
         }
       }
     },
-    getContents = (lists = []) => {
-      const result = []
-      lists.map((list, i) => {
-        const { title = '', items = [] } = list
-        if (title != '' && items.length > 0) {
-          result.push(
-            <List renderHeader={() => title}>
-              {items.map((it, j) =>
-                <Item className={styles[`${PrefixCls}-item`]}
-                      thumb={it.image || ''} multipleLine wrap arrow='horizontal'
-                      onClick={handleItemOnclick.bind(null, it)}>
-                  <span>{it.title}</span> <Brief>{it.time}</Brief>
-                </Item>)
-              }
-            </List>,
-          )
+    onRefresh = (params, callback) => {
+
+      dispatch({
+        type: `${PrefixCls}/queryListview`,
+        payload: {
+          ...params,
+          callback,
+          isRefresh: true
         }
       })
+    },
+    onEndReached = (params, callback) => {
+
+      dispatch({
+        type: `${PrefixCls}/queryListview`,
+        payload: {
+          ...params,
+          callback
+        }
+      })
+    },
+    onScrollerTop = (top) => {
+      if (top && !isNaN(top * 1))
+        dispatch({
+          type: `${PrefixCls}/updateState`,
+          payload: {
+            scrollerTop: top
+          }
+        })
+    },
+    getContents = (lists) => {
+      const result = [], {title = '', id = '', items = []} = lists
+      if (title != '' && items.length > 0) {
+
+        const {current, total, size} = paginations,
+          hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total)
+
+        result.push(
+          <ListView layoutHeader={() => title} dataSource={items}
+                    layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleItemOnclick)}
+                    onEndReached={onEndReached.bind(null, {id, title})}
+                    onRefresh={onRefresh.bind(null, {id, title})} hasMore={hasMore}
+                    onScrollerTop={onScrollerTop.bind(null)}
+                    scrollerTop={scrollerTop}
+          />
+        )
+      }
       return result
     },
     bannerProps = {
       datas: bannerDatas,
       handleClick: handleItemOnclick,
+    },
+    handleSearchClick = ({id = ''}) => {
+      dispatch(routerRedux.push({
+        pathname: `/search`,
+        query: {
+          router: PrefixCls,
+          id
+        },
+      }))
     }
 
   return (
@@ -96,29 +135,20 @@ function Lvyou ({ location, dispatch, lvyou }) {
       <Nav title={name} dispatch={dispatch}/>
       <WhiteSpace size="md"/>
       <SearchBar
-        placeholder="输入需要搜索的内容"
-        onSubmit={value => console.log(value, 'onSubmit')}
-        onClear={value => console.log(value, 'onClear')}
-        onFocus={() => console.log('onFocus')}
-        onBlur={() => console.log('onBlur')}
-        onCancel={() => console.log('onCancel')}
-        showCancelButton
-        onChange={() => console.log('onChange')}
+        placeholder={`在${name || '此页面'}中搜索`}
+        maxLength={20}
+        onFocus={handleSearchClick.bind(this, lvyou)}
       />
       {bannerDatas.length > 0 && <Banner {...bannerProps} />}
       <WhiteSpace size="sm"/>
       {grids.length > 0 && <Menu handleGridClick={handleGridClick} datas={grids}/>}
       <WhiteSpace size="sm"/>
-      {isScroll ?
-        getContents(lists) :
-        <PullToRefresh sibilingsHasBanner={true} autoHeight children={
-          getContents(lists)
-        }/>}
+      {lists.length > 0 && getContents(lists[0])}
     </div>
   )
 }
 
-export default connect(({ loading, lvyou }) => ({
+export default connect(({loading, lvyou}) => ({
   loading,
   lvyou,
 }))(Lvyou)

@@ -82,14 +82,6 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/newsdetails/'))
             }, 'newsdetails')
           },
-        }, {
-          path: 'legal',
-          getComponent (nextState, cb) {
-            require.ensure([], require => {
-              registerModel(app, require('models/legal'))
-              cb(null, require('routes/legal/'))
-            }, 'legal')
-          },
         }
 
         , {
@@ -359,6 +351,51 @@ const Routers = function ({ history, app }) {
               registerModel(app, require('models/incorrupt'))
               cb(null, require('routes/incorrupt/'))
             }, 'incorrupt')
+          },
+        }
+        ,  {
+          path: 'search',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/search'))
+              cb(null, require('routes/search/'))
+            }, 'search')
+          },
+        }
+        , {
+          path: 'threebig',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/threebig'))
+              cb(null, require('routes/threebig/'))
+            }, 'threebig')
+          },
+        }
+        , {
+          path: 'patryworklist',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/patryworklist'))
+              cb(null, require('routes/patryworklist/'))
+            }, 'patryworklist')
+          },
+        }
+        , {
+          path: 'twostupid',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/twostupid'))
+              cb(null, require('routes/twostupid/'))
+            }, 'twostupid')
+          },
+        }
+        , {
+          path: 'lawyerlist',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/lawyerlist'))
+              cb(null, require('routes/lawyerlist/'))
+            }, 'lawyerlist')
           },
         }
         , {

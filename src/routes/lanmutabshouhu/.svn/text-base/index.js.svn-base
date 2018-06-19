@@ -3,6 +3,8 @@ import { connect } from 'dva'
 import { WingBlank, WhiteSpace, Tabs, Badge, List, SearchBar ,Layout} from 'components'
 import Nav from 'components/nav'
 import { routerRedux } from 'dva/router'
+import {layoutRow} from 'components/row'
+import ListView from 'components/listview'
 import Banner from 'components/banner'
 import styles from './index.less'
 
@@ -12,7 +14,7 @@ const PrefixCls = 'lanmutabshouhu',
   {BaseLine} = Layout
 
 function Comp ({ location, dispatch, lanmutabshouhu }) {
-  const { name = '', selectedIndex = 0, grids, lists, bannerDatas } = lanmutabshouhu,
+  const { name = '', selectedIndex = 0, grids, lists, bannerDatas ,paginations, scrollerTop,refreshId,noViewCount} = lanmutabshouhu,
     handleItemOnclick = ({ externalUrl = '', id, pathname = 'details' }) => {
       if (externalUrl != '' && externalUrl.startsWith('http')) {
         dispatch(routerRedux.push({
@@ -32,21 +34,47 @@ function Comp ({ location, dispatch, lanmutabshouhu }) {
         }))
       }
     },
-    getContents = (lists) => {
-      const result = []
-      lists.map((list, i) => {
-        const { id = '' } = list
-        if (id != '') {
-          result.push(
-            <Item className={styles[`${PrefixCls}-item`]}
-                  thumb={list.image || ''} multipleLine wrap arrow='horizontal'
-                  onClick={handleItemOnclick.bind(null, list)}>
-              <span>{list.title}</span><Brief>{list.time}</Brief>
-            </Item>,
-          )
+    onRefresh = (refreshId, callback) => {
+      dispatch({
+        type: `${PrefixCls}/queryListview`,
+        payload: {
+          refreshId,
+          callback,
+          isRefresh: true
         }
       })
-      return <List>{result}</List>
+    },
+    onEndReached = (refreshId, callback) => {
+      dispatch({
+        type: `${PrefixCls}/queryListview`,
+        payload: {
+          refreshId,
+          callback
+        }
+      })
+    },
+    onScrollerTop = (top) => {
+      if (top && !isNaN(top * 1))
+        dispatch({
+          type: `${PrefixCls}/updateState`,
+          payload: {
+            scrollerTop: top
+          }
+        })
+    },
+    getContents = (lists,refreshId) => {
+      const {current, total, size} = paginations,
+        hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total),
+        result= []
+      result.push(
+        <ListView layoutHeader={''} dataSource={lists} layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleItemOnclick)}
+                  onEndReached={onEndReached.bind(null,refreshId)}
+                  onRefresh={onRefresh.bind(null, refreshId)} hasMore={hasMore}
+                  onScrollerTop={onScrollerTop.bind(null)}
+                  scrollerTop={scrollerTop}
+        />
+      )
+      return result
     },
     getTabs = () => {
       const result = []
@@ -58,15 +86,22 @@ function Comp ({ location, dispatch, lanmutabshouhu }) {
       })
       return result
     },
-    getCurrentView = () => <div>{getContents(lists)} <BaseLine/></div>,
+    getCurrentView = () => <div>{lists.length > 0 && getContents(lists,refreshId)}</div>,
     handleTabClick = (data, index) => {
       const { route = '', title = '' ,id} = data
       if (route == '') {
         dispatch({
-          type: 'lanmutabshouhu/querySelect',
+          type: 'lanmutabshouhu/updateState',
           payload: {
-            ...data,
+            refreshId:id
+          },
+        })
+        dispatch({
+          type: 'lanmutabshouhu/queryListview',
+          payload: {
+            refreshId:id,
             selected: index,
+            isRefresh: true
           },
         })
       } else {
@@ -99,22 +134,25 @@ function Comp ({ location, dispatch, lanmutabshouhu }) {
     bannerProps = {
       datas: bannerDatas,
       handleClick: (data) => {
-        console.log(data)
+
       },
     }
   return (
     <div className={styles[`${PrefixCls}-outer`]} >
       <Nav title={name} dispatch={dispatch} renderNavRight={renderNav(lanmutabshouhu)}/>
       <Banner {...bannerProps}/>
-      <Tabs
-        initialPage={0}
-        page={selectedIndex}
-        tabs={getTabs()}
-        swipeable={false}
-        onTabClick={handleTabClick}
-      >
-        {getCurrentView()}
-      </Tabs>
+     <div className={styles[`${PrefixCls}-tabbox`]}>
+       <Tabs
+         initialPage={0}
+         page={selectedIndex}
+         tabs={getTabs()}
+         swipeable={false}
+         onTabClick={handleTabClick}
+       >
+         {getCurrentView()}
+       </Tabs>
+       <div className={styles[`${PrefixCls}-tabbox-count`]}>{noViewCount*1>0?<Badge text={noViewCount} overflowCount={55} />:''}</div>
+     </div>
     </div>
 
   )

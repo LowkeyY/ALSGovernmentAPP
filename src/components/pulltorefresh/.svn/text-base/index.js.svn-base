@@ -1,14 +1,14 @@
 import { PullToRefresh, Button } from 'antd-mobile'
 import ReactDOM from 'react-dom'
 import { getOffsetTopByBody } from 'utils'
-
+let timer;
 class Comp extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
       refreshing: false,
       down: true,
-      height: document.documentElement.clientHeight,
+      height: document.documentElement.clientHeight
     }
   }
 
@@ -18,19 +18,28 @@ class Comp extends React.Component {
       if (this.props.sibilingsHasBanner) {//判断是否有banner默认false
         window.addEventListener('resize', () => {
           const hei = cnhtmlHeight - getOffsetTopByBody(el) - cnhtmlSize
-          setTimeout(() => this.setState({
-            height: hei,
-          }), 100)
+       if(this._isMounted){
+         setTimeout(() => this.setState({
+           height: hei,
+         }), 100)
+       }
         })
       } else {
         const hei = cnhtmlHeight - getOffsetTopByBody(el) - cnhtmlSize
-        setTimeout(() => this.setState({
-          height: hei,
-        }), 100)
+         if(this._isMounted){
+           setTimeout(() => this.setState({
+             height: hei,
+           }), 100)
+         }
       }
     }
   }
-
+  componentWillMount(){
+    this._isMounted = true
+  }
+  componentWillUnmount () {
+    this._isMounted = false
+  }
 
   render () {
     return (<PullToRefresh

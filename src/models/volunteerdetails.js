@@ -1,15 +1,21 @@
 import modelExtend from 'dva-model-extend'
 import {model} from 'models/common'
-import {Bangfuduixiang} from 'services/fabuhuodong'
+import {Toast} from 'components'
+import {routerRedux} from 'dva/router';
+import {Bangfuduixiang, submitHuodong} from 'services/fabuhuodong'
 
+const defaultInitState = () => ({
+  id: '',
+  name: '',
+  currentSelect: [],
+  userInfos: [],
+  currentData: {},
+  deptIds: ''
+}), namespace = 'volunteerdetails'
 export default modelExtend(model, {
-  namespace: 'volunteerdetails',
+  namespace,
   state: {
-    id: '',
-    name: '',
-    currentSelect: [],
-    userInfos: [],
-    currentData: {}
+    ...defaultInitState()
   },
   subscriptions: {
     setup({dispatch, history}) {
@@ -20,9 +26,9 @@ export default modelExtend(model, {
             dispatch({
               type: 'updateState',
               payload: {
+                ...defaultInitState(),
                 id,
-                name,
-                currentSelect: [],
+                name
               },
             })
             dispatch({
@@ -41,18 +47,30 @@ export default modelExtend(model, {
       const {id = ''} = payload,
         {success = false, ...result} = yield call(Bangfuduixiang, {dataId: id})
       if (success) {
-        let {bfrJa = [], ...others} = result
-        console.log(bfrJa, others)
+        let {bfrJa = [], deptId = '', ...others} = result
         yield put({
           type: 'updateState',
           payload: {
             currentData: {
               ...others
             },
+            deptIds: deptId,
             userInfos: bfrJa
           },
         })
       }
     },
+    * submit({payload}, {call, put, select}) {
+      const {id = '', deptIds = '', currentSelect = []} = yield select(_ => _[namespace])
+      if (id != '') {
+        const result = yield call(submitHuodong, {
+          huodongId: id,
+          jubanfangId: deptIds,
+          bangfurenId: currentSelect.join(',')
+        })
+      }
+      Toast.success('感谢您的参与。', 2)
+      yield put(routerRedux.goBack())
+    }
   }
 })

@@ -1,0 +1,67 @@
+@PrefixCls:legallist;
+.imgs {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin: 10px 15px 0 15px;
+}
+.@{PrefixCls}-position{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 20px;
+  color: #888;
+  background: #fff;
+}
+.@{PrefixCls}-info{
+  display: flex;
+  background: #fff;
+ padding: 20px 0;
+  border-bottom: 2px solid #ddd;
+  & img {
+    .imgs;
+  }
+  &-details {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    &-name {
+      font-size: 30px;
+      font-weight: bold;
+    }
+    &-others {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      &-date {
+      }
+      &-pos {
+      }
+
+    }
+  }
+}
+.@{PrefixCls}-ask{
+  padding: 20px;
+  background: #fff;
+
+  &-info{
+    margin-top: 20px;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &-type{
+      color: #4eaaf7;
+      padding: 2px 8px;
+      border: 2px solid #4eaaf7;
+    }
+  }
+
+}
+.@{PrefixCls}-cards{
+  box-shadow: 0 0.02rem 0.05rem #555;
+  margin-bottom: 20px;
+}

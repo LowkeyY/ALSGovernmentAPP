@@ -1,12 +1,12 @@
 import { request, config } from 'utils'
 
 const { api } = config
-const { QueryManuscriptApi, QueryColumnTypeApi, JicengshengyinApi, LanmuAllApi ,GetTaskListApi ,GetAllTaskApi} = api
+const { QueryManuscriptApi, QueryColumnTypeApi, JicengshengyinApi, LanmuAllApi ,GetTaskListApi ,GetAllTaskApi,GetTowStupidApi, GetPatryWorkListApi,GetTowStupidListApi,GetVolunteerOrderApi,GettongjibumenApi,GetUnreadMessageApi} = api
 
 export async function queryPartyData (payload) {
   return request({
     url: QueryManuscriptApi,
-    method: 'get',
+    method: 'post',
     data: payload,
   })
   return {}
@@ -23,7 +23,7 @@ export async function queryPartyTabs (payload) {
 export async function queryPatryList (payload) {
   return request({
     url: QueryManuscriptApi,
-    method: 'get',
+    method: 'post',
     data: payload,
   })
 }
@@ -60,3 +60,42 @@ export async function getAllTask (payload) {
   })
 }
 
+
+export async function GetTowStupid (payload) {
+  return request({
+    url: GetTowStupidApi,
+    method: 'get',
+    data: payload,
+  })
+}
+export async function GetTowStupidList (payload) {
+  return request({
+    url: GetTowStupidListApi,
+    method: 'post',
+    data: payload,
+  })
+}
+export async function GetPatryWorkList () {
+  return request({
+    url: GetPatryWorkListApi,
+    method: 'get'
+  })
+}
+export async function GetVolunteerOrder () {
+  return request({
+    url: GetVolunteerOrderApi,
+    method: 'get'
+  })
+}
+export async function Gettongjibumen () {
+  return request({
+    url: GettongjibumenApi,
+    method: 'get'
+  })
+}
+export async function GetUnreadMessage () {
+  return request({
+    url: GetUnreadMessageApi,
+    method: 'get'
+  })
+}

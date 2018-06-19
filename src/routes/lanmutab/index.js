@@ -3,6 +3,8 @@ import { connect } from 'dva'
 import { WingBlank, WhiteSpace, Tabs, Badge, List, SearchBar } from 'components'
 import Nav from 'components/nav'
 import { routerRedux } from 'dva/router'
+import {layoutRow} from 'components/row'
+import ListView from 'components/listview'
 import Banner from 'components/banner'
 import styles from './index.less'
 
@@ -11,7 +13,7 @@ const PrefixCls = 'lanmutab',
   Brief = Item.Brief
 
 function Comp ({ location, dispatch, lanmutab }) {
-  const { name = '', selectedIndex = 0, grids, lists, bannerDatas, fixedLanmu } = lanmutab,
+  const { name = '', selectedIndex = 0, grids, lists, bannerDatas, fixedLanmu,paginations, scrollerTop,refreshId} = lanmutab,
     handleItemOnclick = ({ externalUrl = '', id, route = 'details' }) => {
       if (externalUrl != '' && externalUrl.startsWith('http')) {
         dispatch(routerRedux.push({
@@ -43,21 +45,68 @@ function Comp ({ location, dispatch, lanmutab }) {
         }))
       }
     },
-    getContents = (lists) => {
-      const result = []
-      lists.map((list, i) => {
-        const { id = '' } = list
-        if (id != '') {
-          result.push(
-            <Item className={styles[`${PrefixCls}-item`]}
-                  thumb={list.image || ''} multipleLine wrap arrow='horizontal'
-                  onClick={handleItemOnclick.bind(null, list)}>
-              <span>{list.title}</span><Brief>{list.time}</Brief>
-            </Item>,
-          )
+    onRefresh = (refreshId, callback) => {
+      dispatch({
+        type: `${PrefixCls}/queryListview`,
+        payload: {
+          refreshId,
+          callback,
+          isRefresh: true
         }
       })
-      return <List>{result}</List>
+    },
+    onEndReached = (refreshId, callback) => {
+      dispatch({
+        type: `${PrefixCls}/queryListview`,
+        payload: {
+          refreshId,
+          callback
+        }
+      })
+    },
+    onScrollerTop = (top) => {
+      if (top && !isNaN(top * 1))
+        dispatch({
+          type: `${PrefixCls}/updateState`,
+          payload: {
+            scrollerTop: top
+          }
+        })
+    },
+    getRefreshId = (arr) => {
+      if(Array.isArray(arr)&&arr.length>0){
+        return arr[0]
+      }
+    },
+    getContents = (lists,grids) => {
+        const {current, total, size} = paginations,
+          hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total),
+          result= []
+         if(selectedIndex==0){
+           result.push(
+             <ListView layoutHeader={''} dataSource={lists} layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleItemOnclick)}
+                       onEndReached={onEndReached.bind(null, refreshId)}
+                       onRefresh={onRefresh.bind(null, refreshId)} hasMore={hasMore}
+                       onScrollerTop={onScrollerTop.bind(null)}
+                       scrollerTop={scrollerTop}
+             />
+           )
+         }else {
+           lists.map((list, i) => {
+             const { id = '' } = list
+             if (id != '') {
+               result.push(
+                 <Item key={id} className={styles[`${PrefixCls}-item`]}
+                       thumb={list.image || ''} multipleLine wrap arrow='horizontal'
+                       onClick={handleItemOnclick.bind(null, list)}>
+                   <span>{list.title}</span><Brief>{list.time}</Brief>
+                 </Item>,
+               )
+             }
+           })
+         }
+
+      return result
     },
     getTabs = () => {
       const result = []
@@ -96,37 +145,48 @@ function Comp ({ location, dispatch, lanmutab }) {
         result.push(<Banner {...props}/>)
         result.push(getFixedItem())
       }
-      result.push(getContents(lists))
+      result.push(getContents(lists,grids))
       return <div>{result}</div>
     },
     handleTabClick = (data, index) => {
+      const { route = '', title = '' ,id} = data
       dispatch({
-        type: 'lanmutab/querySelect',
+        type: 'lanmutab/updateState',
         payload: {
-          ...data,
-          selected: index,
+          refreshId:id
         },
       })
+      dispatch({
+        type: 'lanmutab/queryListview',
+        payload: {
+          refreshId:id,
+          selected: index,
+          isRefresh: true
+        },
+      })
+    },
+    handleSearchClick = ({id=''}) => {
+      dispatch(routerRedux.push({
+        pathname: `/search`,
+        query: {
+          router: PrefixCls,
+          id
+        },
+      }))
     }
   return (
     <div className={styles[`${PrefixCls}-outer`]}>
       <Nav title={name} dispatch={dispatch}/>
       <SearchBar
-        placeholder="输入需要搜索的内容"
-        onSubmit={value => console.log(value, 'onSubmit')}
-        onClear={value => console.log(value, 'onClear')}
-        onFocus={() => console.log('onFocus')}
-        onBlur={() => console.log('onBlur')}
-        onCancel={() => console.log('onCancel')}
-        showCancelButton
-        onChange={() => console.log('onChange')}
+        placeholder={`在${name || '此页面'}中搜索`}
+        maxLength={20}
+        onFocus={handleSearchClick.bind(this,lanmutab)}
       />
       <Tabs
         initialPage={0}
         page={selectedIndex}
         tabs={getTabs()}
         swipeable={false}
-        /*onChange={(tab, index) => handleTabChange(tab , index)}}*/
         onTabClick={handleTabClick}
       >
         {getCurrentView()}

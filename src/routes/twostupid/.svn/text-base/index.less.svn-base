@@ -1,0 +1,4 @@
+@PrefixCls:twostupid;
+.@{PrefixCls}-outer{
+  margin:10px 0;
+}

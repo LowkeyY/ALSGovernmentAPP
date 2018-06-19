@@ -1,34 +1,33 @@
 import React from 'react'
-import { connect } from 'dva'
-import { WhiteSpace, List, Icon, ActivityIndicator, Toast, Modal } from 'components'
+import {connect} from 'dva'
+import {WhiteSpace, List, Icon, ActivityIndicator, Toast, Modal} from 'components'
 import Nav from 'components/nav'
 import FileUpload from 'react-fileupload'
-import { getErrorImg, getImages, getLocalIcon, config } from 'utils'
+import {getErrorImg, getImages, getLocalIcon, config, cookie} from 'utils'
 import styles from './index.less'
 import doUserAvatarUpload from 'utils/formsubmit'
 
 const PrefixCls = 'setup',
   Item = List.Item,
   prompt = Modal.prompt,
-  { baseURL, api: { SetUpAPi } } = config
+  {baseURL, api: {SetUpAPi}, userTag} = config,
+  {_cs, _cr, _cg} = cookie
 
 
 class Setup extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
-
   }
 
   handleUserNameClick = (user) => {
-
     prompt('修改昵称', '', [
-      { text: '取消' },
+      {text: '取消'},
       {
         text: '确定', onPress: value => {
           this.props.dispatch({
             type: 'setup/setUserInfo',
             payload: {
-              params: { realName: value },
+              params: {realName: value},
               images: {},
               mediaFile: {},
             },
@@ -67,48 +66,49 @@ class Setup extends React.Component {
     this.props.dispatch({
       type: 'updateState',
       payload: {
-        animating: true,
+        animating: false,
       },
     })
   }
 
-  render () {
-    const { name = '' } = this.props.location.query
-    const { animating } = this.props.setup
-    const options = {
-      uploadSuccess: (path) => {
+  render() {
+    const {name = ''} = this.props.location.query,
+      {animating} = this.props.setup,
+      uploadSuccess = (path) => {
+        _cs(userTag.useravatar , path)
         this.props.dispatch({
-          type: 'app/updateState',
+          type: 'app/updateUsers',
           payload: {
-            users:{
-              useravatar:path
-            },
+            users :{
+              useravatar : path
+            }
           },
         })
       },
-      baseUrl: `${baseURL + SetUpAPi}`,
-      accept: 'image/*',
-      dataType: 'json',
-      fileFieldName: 'photo',
-      chooseFile: function (files) {
-        // beforeIconChange();
-        doUserAvatarUpload(SetUpAPi, {}, {
-          photo: files[0],
-        }, {}, true)
-          .then((res) => {
-            this.refs.ajax_upload_file_input.value = ''
-            // hiddenActivityIndicator();
-
-            if (res.headPortrait) {
-              this.uploadSuccess(res.headPortrait)
-              Toast.success('上传成功', 2)
-            } else {
-              Toast.fail('上传失败，请稍后再试', 2)
-            }
-          })
-      },
-    }
-    const { users: { username ,useravatar,usertype}} = this.props.app
+      options = {
+        uploadSuccess: uploadSuccess.bind(this),
+        baseUrl: `${baseURL + SetUpAPi}`,
+        accept: 'image/*',
+        dataType: 'json',
+        fileFieldName: 'photo',
+        chooseFile: function (files) {
+          // beforeIconChange();
+          doUserAvatarUpload(SetUpAPi, {}, {
+            photo: files[0],
+          }, {}, true)
+            .then((res) => {
+              this.refs.ajax_upload_file_input.value = ''
+              // hiddenActivityIndicator();
+              if (res.headPortrait) {
+                this.uploadSuccess(res.headPortrait)
+                Toast.success('上传成功', 2)
+              } else {
+                Toast.fail('上传失败，请稍后再试', 2)
+              }
+            })
+        },
+      }
+    const {users: {username, useravatar, usertype}} = this.props.app
     return (
       <div>
         <Nav title={name} dispatch={this.props.dispatch}/>
@@ -127,15 +127,20 @@ class Setup extends React.Component {
                 </FileUpload>
               </div>
             </Item>
-            <Item extra={username} onClick={this.handleUserNameClick.bind(null, username)}>
-              更换昵称
-            </Item>
             {
-              usertype!=='regist'?
-              <Item onClick={this.handlePassWordClick.bind(null, username)}>
-              修改密码
-              </Item>
-                :''
+              usertype == 'isRegistUser' ?
+                <Item extra={username} onClick={this.handleUserNameClick.bind(null, username)}>
+                  更换昵称
+                </Item>
+                :
+                ''
+            }
+            {
+              usertype !== 'isRegistUser' ?
+                <Item onClick={this.handlePassWordClick.bind(null, username)}>
+                  修改密码
+                </Item>
+                : ''
             }
             <Item>
               关于我们
@@ -151,7 +156,7 @@ class Setup extends React.Component {
   }
 }
 
-export default connect(({ loading, setup, app }) => ({
+export default connect(({loading, setup, app}) => ({
   loading,
   setup,
   app,

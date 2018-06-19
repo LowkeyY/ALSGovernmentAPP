@@ -2,9 +2,11 @@ import React from 'react'
 import { connect } from 'dva'
 import Nav from 'components/nav'
 import { routerRedux } from 'dva/router'
-import { SegmentedControl, WingBlank, WhiteSpace, List } from 'components'
+import { SegmentedControl, WingBlank, WhiteSpace, List,SearchBar } from 'components'
 import { getImages } from 'utils'
 import { Layout } from 'components'
+import {layoutRow} from 'components/row'
+import ListView from 'components/listview'
 import Banner from 'components/banner'
 import SearchHeader from 'components/searchheader'
 import styles from './index.less'
@@ -15,7 +17,7 @@ const PrefixCls = 'ecology',
 
 function Ecology ({ location, dispatch, ecology }) {
   const { name = '' } = location.query,
-    { banners, data, lists } = ecology, { BaseLine } = Layout,
+    { banners, data, lists ,paginations, scrollerTop} = ecology,
     getBannerDatas = (bannerDatas) => {
       bannerDatas && bannerDatas.map(item => {
         item.url = item.image
@@ -66,24 +68,50 @@ function Ecology ({ location, dispatch, ecology }) {
         }))
       }
     },
-    getContents = (lists = []) => {
-      const result = []
-      lists.map((list, i) => {
-        const { title = '', items = [] } = list
-        if (title != '' && items.length > 0) {
-          result.push(
-            <List key={list.id} renderHeader={() => title}>
-              {items.map((it, j) =>
-                <Item key={it.id} className={styles[`${PrefixCls}-item`]}
-                      thumb={it.image || ''} multipleLine wrap arrow='horizontal'
-                      onClick={handleItemOnclick.bind(null, it)}>
-                  <span>{it.title}</span> <Brief>{it.time}</Brief>
-                </Item>)
-              }
-            </List>,
-          )
+    onRefresh = (params, callback) => {
+      console.log(`${PrefixCls}-onRefresh`)
+      dispatch({
+        type: `${PrefixCls}/queryListview`,
+        payload: {
+          ...params,
+          callback,
+          isRefresh: true
         }
       })
+    },
+    onEndReached = (params, callback) => {
+      console.log(`${PrefixCls}-onEndReached`)
+      dispatch({
+        type: `${PrefixCls}/queryListview`,
+        payload: {
+          ...params,
+          callback
+        }
+      })
+    },
+    onScrollerTop = (top) => {
+      if (top && !isNaN(top * 1))
+        dispatch({
+          type: `${PrefixCls}/updateState`,
+          payload: {
+            scrollerTop: top
+          }
+        })
+    },
+    getContents = (lists = []) => {
+      const result = [], {title = '', id = '', items = []} = lists
+      if (title != '' && items.length > 0) {
+        const {current, total, size} = paginations,
+          hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total)
+        result.push(
+          <ListView layoutHeader={() =>title} dataSource={items} layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleItemOnclick)}
+                    onEndReached={onEndReached.bind(null, {id, title})}
+                    onRefresh={onRefresh.bind(null, {id, title})} hasMore={hasMore}
+                    onScrollerTop={onScrollerTop.bind(null)}
+                    scrollerTop={scrollerTop}
+          />
+        )
+      }
       return result
     },
     getItemBox = (data = [], onClick) => {
@@ -109,18 +137,30 @@ function Ecology ({ location, dispatch, ecology }) {
           <img src={getImages(data[3] && data[3].image)} alt=""/>
         </div>
       </div>
+    },
+    handleSearchClick = ({id=''}) => {
+      dispatch(routerRedux.push({
+        pathname: `/search`,
+        query: {
+          router: PrefixCls,
+          id
+        },
+      }))
     }
   return (
     <div>
       <Nav title={name} dispatch={dispatch}/>
       <WhiteSpace size="md"/>
-      <SearchHeader children={<span style={{ color: 'green', fontSize: '16px' }}>绿色在线</span>}/>
+      <SearchBar
+        placeholder={`在${name || '此页面'}中搜索`}
+        maxLength={20}
+        onFocus={handleSearchClick.bind(this,ecology)}
+      />
       <Banner datas={getBannerDatas(banners)} handleClick={handleBannerClick}/>
       <div>{getItemBox(data, handleItemClick)}</div>
       <div>
-        {getContents(lists)}
+        {lists.length > 0 && getContents(lists[0])}
        </div>
-      <BaseLine/>
     </div>
   )
 }

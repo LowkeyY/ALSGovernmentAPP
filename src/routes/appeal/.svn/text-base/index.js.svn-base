@@ -1,10 +1,11 @@
 import React from 'react'
 import { connect } from 'dva'
 import Nav from 'components/nav'
-import { WhiteSpace, Icon, List, Flex, Tabs, Badge, Tag, Layout, Toast, Accordion } from 'components'
+import { WhiteSpace, Icon, List, Flex, Tabs, Badge, Tag, Layout, Toast, Accordion, SearchBar, Modal } from 'components'
 import SearchHeader from 'components/searchheader'
-import PullToRefresh from 'components/pulltorefresh'
+import ListView from 'components/listview'
 import { routerRedux } from 'dva/router'
+import StatusBox from 'components/statusbox'
 import { getImages, getErrorImg, getLocalIcon, postionsToString } from 'utils'
 import styles from './index.less'
 
@@ -17,23 +18,25 @@ const Item = List.Item,
     { title: <Badge>收藏求助</Badge> },
   ],
   PrefixCls = 'appeal'
+
 function Appeal ({ location, dispatch, appeal, app }) {
+  const { paginations, scrollerTop } = appeal, { isLogin } = app
   const emptyFunc = () => {
     },
     getShtate = () => {
-      return <span style={{ color: '#red' }}>拒办</span>
+      return <StatusBox bg='#9c9595' status='不在办理范围'/>
     },
     getStatus = (status) => {
       switch (status) {
         case '0' :
-          return <span style={{ color: '#ccb820' }}>待审核</span>
+          return <StatusBox bg='#f5b90c' status='待审核'/>
         case '1' :
         case '2' :
         case '3' :
         case '4' :
-          return <span style={{ color: 'green' }}>处理中</span>
+          return <StatusBox bg='#29ad2e' status='处理中'/>
         case '5' :
-          return <span style={{ color: '#000' }}>已完成</span>
+          return <StatusBox bg='#d45b5b' status='已完成'/>
       }
     },
     getImagesPage = (images, cls = '') => {
@@ -42,7 +45,7 @@ function Appeal ({ location, dispatch, appeal, app }) {
         return (
           <div className={styles[`${cls}-attrs`]}>
             {images.map((src, i) => i < 2 ?
-              <div className={styles[`${cls}-attrs-img`]}
+              <div key={i} className={styles[`${cls}-attrs-img`]}
                    style={{ backgroundImage: 'url(' + src + ')' }}></div> : '')}
           </div>
         )
@@ -50,12 +53,26 @@ function Appeal ({ location, dispatch, appeal, app }) {
       return ''
     },
     handleCollectClick = (data) => {
-      dispatch({
-        type: `${PrefixCls}/collent`,
-        payload: {
-          ...data,
-        },
-      })
+      if (isLogin) {
+        dispatch({
+          type: `${PrefixCls}/collent`,
+          payload: {
+            ...data,
+          },
+        })
+      } else {
+        Modal.alert('您还没登陆', '请登陆后继续收藏', [
+          { text: '稍后再说', onPress: () => console.log('cancel') },
+          {
+            text: '立刻登陆',
+            onPress: () =>
+              dispatch(routerRedux.push({
+                pathname: '/login',
+              })),
+          },
+        ])
+      }
+
     },
     stopPropagation = (e) => {
       e.stopPropagation()
@@ -64,7 +81,7 @@ function Appeal ({ location, dispatch, appeal, app }) {
       dispatch({
         type: 'seekdetails/updateState',
         payload: {
-          isTask:false
+          isTask: false,
         },
       })
       dispatch(routerRedux.push({
@@ -78,9 +95,9 @@ function Appeal ({ location, dispatch, appeal, app }) {
       if (cnIsArray(answers) && answers.length) {
         return (
           <div className={styles[`${cls}-answers`]}>
-            {answers.map(({ content = '', createDate = '', dept = '', user = '', phone = '' }) => {
+            {answers.map(({ content = '', createDate = '', dept = '', user = '', phone = '', id }) => {
               return content != '' ? (
-                <div>
+                <div key={id}>
                   <div className={styles[`${cls}-answers-content`]}>
                     <span style={{ color: '#1ab99d' }}>回复内容 : </span>
                     {content}
@@ -104,15 +121,17 @@ function Appeal ({ location, dispatch, appeal, app }) {
       }
       return ''
     },
-    getCard = (data) => {
-      const { username, createDate, positions, title, state, content, images, answers, isCollect, id, shState, userPhoto } = data,
+
+    layoutRow = (rowData, sectionID, rowID) => {
+      const { username, createDate, positions, title, state, content, images, answers, isCollect, id, shState, userPhoto, situatton } = rowData,
         cls = `${PrefixCls}-card`
       return (
-        <div className={styles[cls]} onClick={handleCardClick.bind(null, data)}>
+        <div key={id} className={styles[cls]} onClick={handleCardClick.bind(null, rowData)}>
           <div className={styles[`${cls}-info`]}>
             <img src={getImages(userPhoto, 'user')} alt=""/>
             <div className={styles[`${cls}-info-details`]}>
-              <div className={styles[`${cls}-info-details-name`]}>{username}</div>
+              <div className={styles[`${cls}-info-details-name`]}><span>{username}</span><span
+                className={styles[`${cls}-info-details-name-type`]}>诉求类型：{situatton}</span></div>
               <div className={styles[`${cls}-info-details-others`]}>
                 <div className={styles[`${cls}-info-details-others-date`]}>
                   <span>{createDate}</span>
@@ -124,9 +143,11 @@ function Appeal ({ location, dispatch, appeal, app }) {
             </div>
           </div>
           <div className={styles[`${cls}-content-status`]} onClick={stopPropagation}>
-            <span style={{ color: '#1ab99d' }}>当前状态:<span>{shState=='2'?getShtate():getStatus(state)}</span></span>
+            <span
+              style={{ color: '#1ab99d' }}>当前状态:<span>{shState == '2' ? getShtate() : getStatus(state)}</span></span>
             <span>
-            <Tag selected={isCollect} onChange={handleCollectClick.bind(null, data)}>
+            <Tag className={isLogin ? '' : styles[`${cls}-content-status-tag`]} selected={isCollect}
+                 onChange={handleCollectClick.bind(null, rowData)}>
             <Icon type={getLocalIcon('/others/collectionblack.svg')}/>
               {isCollect ? <span className={styles[`${cls}-content-status-collection`]}>已收藏</span>
                 : <span className={styles[`${cls}-content-status-collection`]}>收藏</span>}
@@ -144,13 +165,59 @@ function Appeal ({ location, dispatch, appeal, app }) {
         </div>
       )
     },
+    onRefresh = (callback) => {
+
+      dispatch({
+        type: `${PrefixCls}/queryListview`,
+        payload: {
+          callback,
+          isRefresh: true,
+        },
+      })
+    },
+    onEndReached = (callback) => {
+      dispatch({
+        type: `${PrefixCls}/queryListview`,
+        payload: {
+          callback,
+        },
+      })
+    },
+    onScrollerTop = (top) => {
+      if (top && !isNaN(top * 1)) {
+        dispatch({
+          type: `${PrefixCls}/updateState`,
+          payload: {
+            scrollerTop: top,
+          },
+        })
+      }
+    },
+    getContents = (lists) => {
+      const result = [], { current, total, size } = paginations,
+        hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total),
+        layoutList = <ListView layoutHeader={''} dataSource={lists} layoutRow={layoutRow}
+                               onEndReached={onEndReached}
+                               onRefresh={onRefresh} hasMore={hasMore}
+                               onScrollerTop={onScrollerTop.bind(null)}
+                               scrollerTop={scrollerTop}
+        />
+      for (let i = 0; i < tabs.length; i++) {
+        if (i == selectedIndex) {
+          result.push(<div>{layoutList}</div>)
+        } else {
+          result.push(<div></div>)
+        }
+      }
+      return result
+    },
     getPositions = ({ street = '', district = '', city = '', province = '' }) => {
       return street || district || city || province
     },
     getDataList = (datas = []) => {
       const result = []
       datas.map(data => {
-        const { username, shState, createDate, address = {}, title, state = 1, content, images = [], shoucang = false, id = '', shoucangId = '', userPhoto } = data
+        const { username, shState, createDate, address = {}, title, state = 1, content, images = [], shoucang = false, id = '', shoucangId = '', userPhoto, situatton } = data
         result.push({
           username,
           createDate,
@@ -164,6 +231,7 @@ function Appeal ({ location, dispatch, appeal, app }) {
           id,
           shState,
           shoucangId,
+          situatton,
           userPhoto,
         })
       })
@@ -171,7 +239,6 @@ function Appeal ({ location, dispatch, appeal, app }) {
     },
 
     { btnDisabled, dataList, btnTitle, name, selectedIndex, workCount } = appeal,
-    { isLogin } = app,
 
     getCountList = (data = {}) => {
       const { shouli = 0, huifu = 0, huifulv = 0, banjie = 0, banjielv = 0 } = data
@@ -262,19 +329,30 @@ function Appeal ({ location, dispatch, appeal, app }) {
     ,
     handleTabClick = (tab, index) => {
       dispatch({
-        type: `${PrefixCls}/query`,
+        type: `${PrefixCls}/queryListview`,
         payload: {
           selected: index,
+          isRefresh: true,
         },
       })
+    },
+    handleSearchClick = () => {
+      dispatch(routerRedux.push({
+        pathname: `/search`,
+        query: {
+          router: PrefixCls,
+        },
+      }))
     }
 
   return (
     <div>
       <Nav title={name} dispatch={dispatch}
            renderNavRight={renderNavRight(handleWarningClick.bind(null, btnTitle))}/>
-      <SearchHeader children='自助搜索'/>
-
+      {/*<SearchHeader title='自助搜索 : ' text = {`在${name || '此页面'}中搜索`} onClick={handleSearchClick}/>*/}
+      <SearchBar placeholder={`在${name || '此页面'}中搜索`}
+                 maxLength={20}
+                 onFocus={handleSearchClick}/>
       <Accordion defaultActiveKey="0" className="my-accordion">
         <Accordion.Panel header={<span>本周数据</span>} className="pad">
           <div className={styles[`${PrefixCls}-infobox`]}>
@@ -292,13 +370,9 @@ function Appeal ({ location, dispatch, appeal, app }) {
         }}
         onTabClick={handleTabClick}
       >
-        <div>
-          {currentDataList.map(message => getCard(message, dispatch))}
-          <BaseLine/>
-        </div>
+        {currentDataList.length > 0 && getContents(currentDataList)}
       </Tabs>
       <WhiteSpace/>
-      {/*<div style={{ height: '150px' }}></div>*/}
     </div>
   )
 }

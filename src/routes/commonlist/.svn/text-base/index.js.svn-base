@@ -134,7 +134,6 @@ function Comp ({ location, dispatch, commonlist }) {
         page={selectedIndex}
         tabs={getTabs()}
         swipeable={false}
-        /*onChange={(tab, index) => handleTabChange(tab , index)}}*/
         onTabClick={handleTabClick}
       >
         <div>

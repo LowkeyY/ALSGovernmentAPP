@@ -1,7 +1,8 @@
-import { parse } from 'qs'
+import {parse} from 'qs'
 import modelExtend from 'dva-model-extend'
-import { model } from 'models/common'
-import { queryDetails } from 'services/querycontent'
+import {model} from 'models/common'
+import {queryDetails} from 'services/querycontent'
+import {GetStudyTime} from 'services/app'
 
 const getViewIamges = (text) => {
   const result = []
@@ -28,24 +29,27 @@ export default modelExtend(model, {
     viewImageIndex: -1,
   },
   subscriptions: {
-    setup ({ dispatch, history }) {
+    setup({dispatch, history}) {
       history.listen(location => {
-        let { pathname, query } = location
+        let {pathname, query,action} = location
         if (pathname.startsWith('/details')) {
-          dispatch({
-            type: 'updateState',
-            payload: {
-              isOpen: false,
-              viewImages: [],
-              viewImageIndex: -1,
-            },
-          })
-          dispatch({
-            type: 'query',
-            payload: {
-              ...query,
-            },
-          })
+          if(action=='PUSH'){
+            dispatch({
+              type: 'updateState',
+              payload: {
+                isOpen: false,
+                viewImages: [],
+                viewImageIndex: -1,
+                currentData: {},
+              },
+            })
+            dispatch({
+              type: 'query',
+              payload: {
+                ...query,
+              },
+            })
+          }
         }
       })
     },
@@ -62,5 +66,8 @@ export default modelExtend(model, {
         },
       })
     },
-  },
+    * getStudyTime({payload},{call,put}){
+      const data = yield call(GetStudyTime,payload)
+    },
+  }
 })

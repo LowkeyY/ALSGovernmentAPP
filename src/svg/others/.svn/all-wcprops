@@ -1,7 +1,7 @@
 K 25
 svn:wc:ra_dav:version-url
-V 36
-/svn/MYALSAPP/!svn/ver/89/svg/others
+V 37
+/svn/MYALSAPP/!svn/ver/144/svg/others
 END
 people.svg
 K 25
@@ -32,6 +32,18 @@ K 25
 svn:wc:ra_dav:version-url
 V 56
 /svn/MYALSAPP/!svn/ver/73/svg/others/collectionblack.svg
+END
+female.svg
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/MYALSAPP/!svn/ver/117/svg/others/female.svg
+END
+refreshloading.svg
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/MYALSAPP/!svn/ver/144/svg/others/refreshloading.svg
 END
 time.svg
 K 25
@@ -122,6 +134,12 @@ K 25
 svn:wc:ra_dav:version-url
 V 48
 /svn/MYALSAPP/!svn/ver/1/svg/others/leftwave.svg
+END
+male.svg
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/MYALSAPP/!svn/ver/117/svg/others/male.svg
 END
 chat.svg
 K 25

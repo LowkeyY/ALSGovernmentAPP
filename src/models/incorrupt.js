@@ -67,7 +67,6 @@ export default modelExtend(model, {
      if (result) {
        let { data = [], banners = [] } = result
        const gridList = getGrids(data)
-       console.log(gridList)
        yield put({
          type: 'updateState',
          payload: {
@@ -102,7 +101,6 @@ export default modelExtend(model, {
      }
      const result = yield call(queryPartyData, { dataId: id })
      if (result) {
-       console.log(result)
        let { data = [] } = result,
          updates = {
            dataList: getList(data),

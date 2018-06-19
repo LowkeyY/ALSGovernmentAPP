@@ -114,7 +114,7 @@ constructor (props){
        )
      },
       handleNavClick = (grids) => {
-        const {id='',title='', route='lawyerlist'} =grids[0]
+        const {id='',title='', route='lawyerlist'} =grids[1]
         this.props.dispatch(routerRedux.push({
           pathname: `/${route}`,
           query: {
@@ -125,7 +125,7 @@ constructor (props){
       },
       renderNav = (grids) => {
       if(Array.isArray(grids)&&grids.length>0){
-        const {title=''} = grids[0]
+        const {title=''} = grids[1]
         return (
           <span onClick={handleNavClick.bind(this,grids)}>{title}</span>
         )
@@ -182,15 +182,6 @@ constructor (props){
           {getCards()}
         </div>
       </div>
-      <Tabs tabs={grids}
-            swipeable={false}
-            initialPage={selectedIndex}
-            onTabClick={(tab, index) => {
-              this.handleTabClick(tab, index)
-            }}
-      >
-        {getContent()}
-      </Tabs>
     </div>
   )
 }

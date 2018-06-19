@@ -3,37 +3,7 @@ import modelExtend from 'dva-model-extend'
 import { model } from 'models/common'
 import { queryPartyTabs, queryPartyData } from 'services/querylist'
 
-const defaultIamge = require('themes/images/lvyou/default.jpg'),
-  defaultBanners = [{
-    url: defaultIamge,
-  }, {
-    url: defaultIamge,
-  }],
-  defaultGrids = [{
-    name: '测试1',
-    route: '1',
-  }, {
-    name: '测试2',
-    route: '2',
-  }],
-  defaultFixedGrid = {
-    id: '0',
-    title: '找律师',
-    route: 'legallist',
-    image: defaultIamge,
-    infos: '婚姻、房产、债权债务、合同纠纷',
-  },
-  defaultLists = [{
-    id: '0',
-    title: '测试',
-    image: '',
-  }, {
-    id: '0',
-    title: '测试',
-    image: '',
-  }],
-  defaultIcon = require('themes/images/nmenus/suqiu.png'),
-  getGrid = (datas = []) => {
+const getGrid = (datas = []) => {
     let result = [],
       counts = 0,
       fixedLanmu = []
@@ -85,7 +55,13 @@ const defaultIamge = require('themes/images/lvyou/default.jpg'),
       }
     })
     return result.length > 0 ? result : []
-  }
+  },
+  getDefaultPaginations = () => ({
+    current: 1,
+    total: 0,
+    size:3
+  }),
+  namespace= 'lanmutab'
 
 export default modelExtend(model, {
   namespace: 'lanmutab',
@@ -96,7 +72,10 @@ export default modelExtend(model, {
     lists: [],
     id: '',
     name: '',
+    refreshId:'',
     selectedIndex: 0,
+    scrollerTop: 0,
+    paginations: getDefaultPaginations(),
   },
   subscriptions: {
     setup ({ dispatch, history }) {
@@ -114,6 +93,8 @@ export default modelExtend(model, {
                 fixedLanmu: {},
                 lists: [],
                 selectedIndex: 0,
+                scrollerTop: 0,
+                paginations: getDefaultPaginations(),
               },
             })
             dispatch({
@@ -145,9 +126,15 @@ export default modelExtend(model, {
         if (grids.length > 0) {
           const { id = '' } = grids[0]
           yield put({
-            type: 'querySelect',
+            type: 'updateState',
             payload: {
-              id,
+              refreshId:id,
+            },
+          })
+          yield put({
+            type: 'queryListview',
+            payload: {
+              refreshId:id,
             },
           })
         } else {
@@ -160,27 +147,82 @@ export default modelExtend(model, {
         }
       }
     },
-    * querySelect ({ payload }, { call, put, select }) {
-      const { id = '', selected = -1 } = payload, { selectedIndex } = yield select(state => state.lanmutab)
-      if (selected == -1 ? selectedIndex == 0 : selected == 0) {
-        const result = yield call(queryPartyData, { dataId: id })
+    // * querySelect ({ payload }, { call, put, select }) {
+    //   const { id = '', selected = -1 } = payload, { selectedIndex } = yield select(state => state.lanmutab)
+    //   if (selected == -1 ? selectedIndex == 0 : selected == 0) {
+    //     const result = yield call(queryPartyData, { dataId: id })
+    //     if (result) {
+    //       let { data = [] } = result,
+    //         updates = {
+    //           lists: getList(data),
+    //         }
+    //       if (selected != -1) {
+    //         updates['selectedIndex'] = selected
+    //       }
+    //       yield put({
+    //         type: 'updateState',
+    //         payload: {
+    //           ...updates,
+    //         },
+    //       })
+    //     }
+    //   } else {
+    //     const result = yield call(queryPartyTabs, { dataId: id })
+    //     if (result) {
+    //       let { data = [] } = result,
+    //         updates = {
+    //           lists: getList(data),
+    //         }
+    //       if (selected != -1) {
+    //         updates['selectedIndex'] = selected
+    //       }
+    //       yield put({
+    //         type: 'updateState',
+    //         payload: {
+    //           ...updates,
+    //         },
+    //       })
+    //     }
+    //   }
+    //
+    // },
+    * queryListview({payload}, {call, put, select}) {
+      const { callback = '', isRefresh = false, selected = -1 } = payload,
+        _this = yield select(_ => _[`${namespace}`]),
+        {paginations: {current, total, size}, lists,selectedIndex,refreshId} = _this
+       const start = isRefresh ? 1 : current
+      if (selected != -1) {
+        yield put({
+          type: 'updateState',
+          payload: {
+            selectedIndex: selected,
+          },
+        })
+      }
+      if(selected == -1 ? selectedIndex == 0 : selected == 0){
+        const start = isRefresh ? 1 : current,
+          result = yield call(queryPartyData, {dataId:refreshId, nowPage: start, showCount: size})
         if (result) {
-          let { data = [] } = result,
-            updates = {
-              lists: getList(data),
-            }
-          if (selected != -1) {
-            updates['selectedIndex'] = selected
-          }
+          let {data = [], totalCount = 0} = result,
+            newLists = []
+          newLists = start == 1 ? data : [...lists, ...data]
+
           yield put({
             type: 'updateState',
             payload: {
-              ...updates,
+              paginations: {
+                ..._this.paginations,
+                total: totalCount * 1,
+                current: start + 1
+              },
+              lists:newLists
             },
           })
         }
-      } else {
-        const result = yield call(queryPartyTabs, { dataId: id })
+        if (callback)
+          callback()
+      }else {
+        const result = yield call(queryPartyTabs, { dataId: refreshId })
         if (result) {
           let { data = [] } = result,
             updates = {
@@ -197,8 +239,7 @@ export default modelExtend(model, {
           })
         }
       }
-
-    },
+    }
   },
 
 })

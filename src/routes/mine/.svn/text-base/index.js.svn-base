@@ -15,7 +15,6 @@ const PrefixCls = 'mine', { BaseLine } = Layout,{helpApi} = api,
 function Mine ({ location, dispatch, mine, app, login }) {
   const name = '我的'
   const { users: { username, useravatar }, isLogin } = app
-  console.log(useravatar)
   const handleLogin = () => {
       dispatch(routerRedux.push({
         pathname: '/login',

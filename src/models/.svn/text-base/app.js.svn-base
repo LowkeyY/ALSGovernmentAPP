@@ -1,14 +1,14 @@
 /* global window */
 /* global document */
 /* global location */
-import { routerRedux } from 'dva/router'
-import { parse } from 'qs'
-import { config, cookie, setLoginOut } from 'utils'
-import { Modal } from 'antd-mobile'
-import { defaultTabBarIcon, defaultTabBars } from 'utils/defaults'
-import { queryAppbase, logout } from 'services/app'
+import {routerRedux} from 'dva/router'
+import {parse} from 'qs'
+import {config, cookie, setLoginOut, postCurrentPosition} from 'utils'
+import {Modal} from 'antd-mobile'
+import {defaultTabBarIcon, defaultTabBars} from 'utils/defaults'
+import {queryAppbase, logout, guiji} from 'services/app'
 
-const { userTag: { username, usertoken, userid, useravatar,usertype} } = config, { _cs, _cr, _cg } = cookie,
+const {userTag: {username, usertoken, userid, useravatar, usertype}} = config, {_cs, _cr, _cg} = cookie,
   getInfoUser = () => ({
       username: _cg(username),
       usertoken: _cg(usertoken),
@@ -22,11 +22,11 @@ const { userTag: { username, usertoken, userid, useravatar,usertype} } = config,
     return users[usertoken] !== ''
   },
   appendIcon = (tar, i) => {
-    let { icon = '', selectedIcon = '', route = '/default' } = tar
+    let {icon = '', selectedIcon = '', route = '/default'} = tar
     tar.key = ++i
     if (icon == '' || selectedIcon == '') {
       route = route.substr(1)
-      tar = { ...tar, ...(defaultTabBarIcon[route || 'default'] || {}) }
+      tar = {...tar, ...(defaultTabBarIcon[route || 'default'] || {})}
     }
     return tar
   }
@@ -38,27 +38,23 @@ export default {
     isLogin: getUserLoginStatus(),
     users: getInfoUser(),
     tabBars: [],
-    updates:{},
-    showModal:false
+    updates: {},
+    guiji: {},
+    showModal: false
   },
   subscriptions: {
-    setupHistory ({ dispatch, history }) {
+    setupHistory({dispatch, history}) {
       dispatch({
         type: 'query',
-        payload:{
-          currentVersion:cnVersion,
-          systemType:cnDeviceType()
+        payload: {
+          currentVersion: cnVersion,
+          systemType: cnDeviceType()
         }
       })
-      history.listen(({ pathname, query, action }) => {
+      history.listen(({pathname, query, action}) => {
         if (pathname === '/') {
           dispatch({
-            type: 'updateUsers',
-            payload: {
-              others: {
-                spinning: true,
-              },
-            },
+            type: 'updateUsers'
           })
         }
       })
@@ -67,51 +63,70 @@ export default {
   }
   ,
   effects: {
-    * query ({ payload }, { call, put, select }) {
-      const data = yield call(queryAppbase,payload)
+    * query({payload}, {call, put, select}) {
+      const data = yield call(queryAppbase, payload)
       if (data) {
-        let { tabBars = defaultTabBars } = data
-        const {updates} = data,{urls}=updates
+        let {tabBars = defaultTabBars} = data
+        const {updates, guiji = {}} = data, {urls} = updates
         tabBars = tabBars.map((bar, i) => appendIcon(bar, i))
         yield put({
           type: 'updateState',
           payload: {
             tabBars,
-            updates
+            updates,
+            guiji
           },
         })
-        if(urls!==''){
+        postCurrentPosition(guiji)
+        if (urls !== '') {
           yield put({
             type: 'updateState',
             payload: {
-              showModal:true
+              showModal: true
             },
           })
         }
       }
     }
     ,
-    * logout ({}, { call, put, select }) {
+    * logout({}, {call, put, select}) {
       const data = yield call(logout)
       if (data) {
         setLoginOut()
+        yield put({
+          type: 'updateState',
+          payload: {
+            users: {},
+            isLogin: false
+          },
+        })
         yield put(routerRedux.replace({
           pathname: '/login',
         }))
       }
     },
+    * guiji({payload}, {call, put, select}) {
+      const {success = false, ...others} = yield call(guiji, payload)
+      if (success) {
+        yield put({
+          type: 'updateGuiji',
+          payload: others,
+        })
+      }
+    }
   }
   ,
   reducers: {
-    updateState (state, { payload }) {
+    updateState(state, {payload}) {
       return {
         ...state,
         ...payload,
       }
     }
     ,
-    updateUsers (state, { payload }) {
-      const { users = getInfoUser(), others = {} } = payload
+    updateUsers(state, {payload = {}}) {
+      let {users: appendUsers = getInfoUser(), others = {}} = payload, {users} = state
+      users = {...users, ...appendUsers}
       let isLogin = getUserLoginStatus(users)
       return {
         ...state,
@@ -121,6 +136,16 @@ export default {
       }
     }
     ,
+    updateGuiji(state, {payload}) {
+      const {guiji = {}} = state
+      return {
+        ...state,
+        guiji: {
+          ...guiji,
+          ...payload
+        }
+      }
+    }
   }
   ,
 }

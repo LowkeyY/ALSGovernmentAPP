@@ -12,7 +12,7 @@ const getShstate = (shtate,state) => {
   if(shtate=='0'){
    return <span style={{ color: '#ccb820' }}>●正在审核</span>
   }else if(shtate=='2'){
-    return <span style={{ color: 'red' }}>●拒办</span>
+    return <span style={{ color: 'red' }}>●不在办理范围</span>
   }else {
     return getStatus(state)
   }

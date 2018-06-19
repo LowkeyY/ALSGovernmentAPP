@@ -2,10 +2,12 @@ import React from 'react'
 import { connect } from 'dva'
 import Nav from 'components/nav'
 import { routerRedux } from 'dva/router'
-import { SegmentedControl, WingBlank, WhiteSpace, List, SearchBar } from 'antd-mobile'
+import { SegmentedControl, WingBlank, WhiteSpace, List, SearchBar } from 'components'
 import Banner from 'components/banner/index'
 import Iframes from 'components/ifream'
 import Menu from 'components/menu/index'
+import {layoutRow} from 'components/row'
+import ListView from 'components/listview'
 import styles from './index.less'
 
 const PrefixCls = 'lanmusub',
@@ -13,7 +15,7 @@ const PrefixCls = 'lanmusub',
   Brief = Item.Brief
 
 function Comp ({ location, dispatch, lanmusub }) {
-  const { bannerDatas, lists, name = '' } = lanmusub,
+  const { bannerDatas, lists, name = '',paginations, scrollerTop } = lanmusub,
     handleItemOnclick = ({ externalUrl = '', id, route = 'details' }) => {
       if (externalUrl != '' && externalUrl.startsWith('http')) {
         dispatch(routerRedux.push({
@@ -41,39 +43,68 @@ function Comp ({ location, dispatch, lanmusub }) {
         },
       }))
     },
-    getContents = (lists) => {
-      const result = []
-      lists.map((it, i) => {
-        const { id = '' } = it
-        if (id != '') {
-          result.push(
-            <Item className={styles[`${PrefixCls}-item`]}
-                  thumb={it.image || ''} multipleLine wrap arrow='horizontal'
-                  onClick={handleItemOnclick.bind(null, it)}>
-              <span>{it.title}</span> <Brief>{it.time}</Brief>
-            </Item>)
+    onRefresh = (callback) => {
+      dispatch({
+        type: `${PrefixCls}/queryListview`,
+        payload: {
+          callback,
+          isRefresh:true
         }
       })
-      return result.length > 0 ? <List>{result}</List> : ''
+    },
+    onEndReached = (callback) => {
+      dispatch({
+        type: `${PrefixCls}/queryListview`,
+        payload: {
+          callback
+        }
+      })
+    },
+    onScrollerTop = (top) => {
+      if (top && !isNaN(top * 1))
+        dispatch({
+          type: `${PrefixCls}/updateState`,
+          payload: {
+            scrollerTop: top
+          }
+        })
+    },
+    getContents = (lists) => {
+      const {current, total, size} = paginations,
+        hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total),
+        result= []
+        result.push(
+          <ListView layoutHeader={''} dataSource={lists} layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleItemOnclick)}
+                    onEndReached={onEndReached}
+                    onRefresh={onRefresh} hasMore={hasMore}
+                    onScrollerTop={onScrollerTop.bind(null)}
+                    scrollerTop={scrollerTop}
+          />
+        )
+
+      return result
     },
     bannerProps = {
       datas: bannerDatas,
       handleClick: handleItemOnclick,
+    },
+    handleSearchClick = ({id = ''}) => {
+      dispatch(routerRedux.push({
+        pathname: `/search`,
+        query: {
+          router: PrefixCls,
+          id
+        },
+      }))
     }
-
   return (
     <div>
       <Nav title={name} dispatch={dispatch}/>
       <WhiteSpace size="md"/>
       <SearchBar
-        placeholder="输入需要搜索的内容"
-        onSubmit={value => console.log(value, 'onSubmit')}
-        onClear={value => console.log(value, 'onClear')}
-        onFocus={() => console.log('onFocus')}
-        onBlur={() => console.log('onBlur')}
-        onCancel={() => console.log('onCancel')}
-        showCancelButton
-        onChange={() => console.log('onChange')}
+        placeholder={`在${name || '此页面'}中搜索`}
+        maxLength={20}
+        onFocus={handleSearchClick.bind(this, lanmusub)}
       />
       {bannerDatas.length > 0 && <Banner {...bannerProps} />}
       <WhiteSpace size="sm"/>

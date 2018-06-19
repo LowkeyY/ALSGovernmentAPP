@@ -1,5 +1,6 @@
 import React from 'react'
 import styles from './index.less'
+import { Icon } from 'antd-mobile'
 
 const PrefixCls = 'hawkbutton'
 
@@ -7,35 +8,47 @@ class HawkButton extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      btnStatus:false,
-      color:false
+      isLoading: false,
     }
   }
 
   componentWillMount () {
 
   }
+
   handleClick = () => {
     this.setState({
-      btnStatus:!this.state.btnStatus,
-      color:!this.state.color
+      isLoading: true,
     })
+    const callback = () => {
+      this.setState({
+        isLoading: false,
+      })
+    }
+    if (this.props.handleClick) {
+      this.props.handleClick(callback.bind(this))
+    } else {
+      setTimeout(callback, 1000)
+    }
+
   }
 
   render () {
-   const style = this.state.color,
-     text=this.state.btnStatus?'结束':'开始',
-     color=this.state.color?'red':'#108ee9'
+    const text = this.props.btnStatus ? '结束' : '开始',
+      color = this.props.btnStatus ? 'red' : '#108ee9', { isLoading } = this.state
     return (
       <div className={styles[`${PrefixCls}-outer`]} onClick={this.handleClick}>
-        <div className={styles[`${PrefixCls}-outer-button`]} style={{background:color}}>
-          {text}
+        <div className={styles[`${PrefixCls}-outer-button`]} style={{ background: color }}>
+          {isLoading ? <Icon type='loading'/> : text}
         </div>
       </div>
     )
 
   }
 
+  static defaultProps = {
+    btnStatus: false,
+  }
 }
 
 export default HawkButton

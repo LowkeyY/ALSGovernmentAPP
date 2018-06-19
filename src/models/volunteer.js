@@ -1,43 +1,11 @@
 import {parse} from 'qs'
 import modelExtend from 'dva-model-extend'
 import {model} from 'models/common'
-import {queryPartyTabs, queryPartyData} from 'services/querylist'
+import {queryPartyTabs, queryPartyData,GetVolunteerOrder,Gettongjibumen} from 'services/querylist'
 import {Fabuhuodong} from 'services/fabuhuodong'
 import {doDecode} from 'utils'
 
-const defaultGrids = [{
-    title: '联系律师',
-    id: '0',
-  }, {
-    title: '律师事务所',
-    id: '1',
-  }],
-  defaultLists = [{
-    id: '0',
-    title: '测试1',
-    image: '',
-    exp: '20',
-    adress: '中山路',
-    info: [
-      '水电费', '公交费',
-    ],
-    type: ['类型', '类型2', '类型3'],
-    year: '3',
-    tel: '13932324324',
-  }, {
-    id: '1',
-    title: '测试2',
-    image: '',
-    exp: '20',
-    adress: '中山路',
-    info: [
-      '水电费', '公交费',
-    ],
-    type: ['类型', '类型2', '类型3'],
-    year: '3',
-    tel: '13932324324',
-  }],
-  getGrids = (datas) => {
+const getGrids = (datas) => {
     const result = []
     datas.map(data => {
       const {id = '', title = ''} = data
@@ -47,7 +15,7 @@ const defaultGrids = [{
         })
       }
     })
-    return result.length > 0 ? result : defaultGrids
+    return result.length > 0 ? result : []
   },
   getGridsItems = (datas) => {
     const result = []
@@ -59,7 +27,7 @@ const defaultGrids = [{
         })
       }
     })
-    return result.length > 0 ? result : defaultGridsItem
+    return result.length > 0 ? result : []
   },
   getInfo = (info) => {
     if (info) {
@@ -85,7 +53,7 @@ const defaultGrids = [{
         })
       }
     })
-    return result.length > 0 ? result : defaultLists
+    return result.length > 0 ? result : []
   }
 
 export default modelExtend(model, {
@@ -96,7 +64,8 @@ export default modelExtend(model, {
     id: '',
     name: '',
     selectedIndex: 0,
-    gridsitem: []
+    gridsitem: [],
+    volunteers:[],
   },
 
   subscriptions: {
@@ -175,7 +144,7 @@ export default modelExtend(model, {
             ...updates,
           },
         })
-        if (id == '3c288f3a-e946-476b-8429-9ec2402cd5e0') {
+        if (selected==1) {
           yield put({
             type: 'queryItems',
             payload: {
@@ -186,7 +155,7 @@ export default modelExtend(model, {
       }
     },
     * queryItems({payload}, {call, put, select}) {
-      const {id = ''} = payload,
+      const {id = '',selected} = payload,
         result = yield call(queryPartyTabs, {dataId: id})
       if (result) {
         let {data = []} = result,
@@ -200,7 +169,7 @@ export default modelExtend(model, {
         if (gridsitem.length > 0) {
           const {id = ''} = gridsitem[0]
           yield put({
-            type: 'querySelect',
+            type: 'queryVolunteers',
             payload: {
               id,
             },
@@ -215,26 +184,33 @@ export default modelExtend(model, {
         }
       }
     },
-    * querySelectItem({payload}, {call, put, select}) {
-      const {id = '', selected = -1} = payload,
-        {selectedIndex} = yield select(state => state.volunteer),
-        result = yield call(queryPartyData, {dataId: id})
-      // if (result) {
-      //   let { data = [] } = result,
-      //     updates = {
-      //       lists: getList(data),
-      //     }
-      //   if (selected != -1) {
-      //     updates['selectedIndex'] = selected
-      //   }
-      //   yield put({
-      //     type: 'updateState',
-      //     payload: {
-      //       ...updates,
-      //     },
-      //   })
-      //
-      // }
+    * queryVolunteers({payload}, {call, put, select}) {
+       const {selectedIndex} = yield select(state => state.volunteer),
+        result = yield call(GetVolunteerOrder)
+      if (result) {
+        let { datas = [] } = result
+        yield put({
+          type: 'updateState',
+          payload: {
+            volunteers:datas
+          },
+        })
+
+      }
+    },
+    *querytongjibumen({payload}, {call, put, select}) {
+      const {selectedIndex} = yield select(state => state.volunteer),
+        result = yield call(Gettongjibumen)
+      if (result) {
+        let { datas = [] } = result
+        yield put({
+          type: 'updateState',
+          payload: {
+            volunteers:datas
+          },
+        })
+
+      }
     },
   },
   reducers: {},

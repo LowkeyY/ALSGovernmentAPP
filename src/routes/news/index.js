@@ -4,6 +4,8 @@ import { routerRedux } from 'dva/router'
 import Nav from 'components/nav'
 import Tags from 'components/tags'
 import { List, WhiteSpace, SearchBar, Tabs, Layout } from 'components'
+import {layoutRow} from 'components/row'
+import ListView from 'components/listview'
 import Ifreams from 'components/ifream'
 import styles from './index.less'
 
@@ -12,7 +14,7 @@ const Item = List.Item, { BaseLine } = Layout
 
 function News ({ location, dispatch, news }) {
   const { name = '' } = location.query,
-    { banners, tuijian, tabs, selectedIndex, lists } = news,
+    { banners, tuijian, tabs, selectedIndex, lists, paginations, scrollerTop ,refreshId} = news,
 
     getvideo = (data) => {
       return data&&data.map(data=>{
@@ -22,7 +24,6 @@ function News ({ location, dispatch, news }) {
    })
 
   }
-
   const PrefixCls = 'news',
     Item = List.Item,
     Brief = Item.Brief,
@@ -46,44 +47,84 @@ function News ({ location, dispatch, news }) {
       }
     },
     handleTabClick = (data, index) => {
+      const { route = '', title = '' ,id} = data
       dispatch({
-        type: 'news/querySelect',
+        type: 'news/updateState',
         payload: {
-          ...data,
-          selected: index,
+          refreshId:id
         },
       })
+      dispatch({
+        type: 'news/queryListview',
+        payload: {
+          refreshId:id,
+          selected: index,
+          isRefresh: true
+        },
+      })
+
     },
 
-    getContents = (lists) => {
-      const result = []
-      lists.map((list, i) => {
-        const { id = '' } = list
-        if (id != '') {
-          result.push(
-            <Item key={id} className={styles[`${PrefixCls}-item`]}
-                  thumb={list.image || ''} multipleLine wrap arrow='horizontal'
-                  onClick={handleItemOnclick.bind(null, list)}>
-              <span>{list.title}</span><Brief>{list.time}</Brief>
-            </Item>,
-          )
+    onRefresh = (refreshId, callback) => {
+      dispatch({
+        type: `${PrefixCls}/queryListview`,
+        payload: {
+          refreshId,
+          callback,
+          isRefresh: true
         }
       })
-      return <List>{result}</List>
+    },
+    onEndReached = (refreshId, callback) => {
+
+      dispatch({
+        type: `${PrefixCls}/queryListview`,
+        payload: {
+          refreshId,
+          callback
+        }
+      })
+    },
+    onScrollerTop = (top) => {
+      if (top && !isNaN(top * 1))
+        dispatch({
+          type: `${PrefixCls}/updateState`,
+          payload: {
+            scrollerTop: top
+          }
+        })
+    },
+    getContents = (lists,refreshId) => {
+      const result = [], {title = '', id = ''} = lists
+        const {current, total, size} = paginations,
+          hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total)
+        result.push(
+          <ListView layoutHeader={''} dataSource={lists} layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleItemOnclick)}
+                    onEndReached={onEndReached.bind(null, refreshId)}
+                    onRefresh={onRefresh.bind(null, refreshId)} hasMore={hasMore}
+                    onScrollerTop={onScrollerTop.bind(null)}
+                    scrollerTop={scrollerTop}
+          />
+        )
+      return result
+    },
+    handleSearchClick = ({id=''}) => {
+      dispatch(routerRedux.push({
+        pathname: `/search`,
+        query: {
+          router: PrefixCls,
+          id
+        },
+      }))
     }
   return (
     <div>
       <Nav title={name} dispatch={dispatch}/>
       <WhiteSpace size="md"/>
       <SearchBar
-        placeholder="输入需要搜索的内容"
-        onSubmit={value => console.log(value, 'onSubmit')}
-        onClear={value => console.log(value, 'onClear')}
-        onFocus={() => console.log('onFocus')}
-        onBlur={() => console.log('onBlur')}
-        onCancel={() => console.log('onCancel')}
-        showCancelButton
-        onChange={() => console.log('onChange')}
+        placeholder={`在${name || '此页面'}中搜索`}
+        maxLength={20}
+        onFocus={handleSearchClick.bind(this,news)}
       />
       <WhiteSpace size="md"/>
       <Tabs
@@ -97,13 +138,9 @@ function News ({ location, dispatch, news }) {
          <div>
            {getvideo(banners)}
          </div>
-          <List>
-            <Item>{tuijian[0] && tuijian[0].title}</Item>
-          </List>
-          <div>{getContents(lists)}</div>
+          <div>{lists.length > 0 && getContents(lists,refreshId)}</div>
         </div>
       </Tabs>
-      <BaseLine/>
     </div>
   )
 }

@@ -20,7 +20,7 @@ const appendPositions = ({ street = '', district = '', city = '', province = '' 
   },
   appendData = ({
                   username, createDate, address = {}, title, voicePath = '', serverHost, shState = '',
-                  status = '', content, images = [], huifu = [], shoucang = false, id = '', userPhoto,
+                  status = '', content, images = [], huifu = [], shoucang = false, id = '', userPhoto,situatton
                 }) => {
     return {
       username,
@@ -39,6 +39,7 @@ const appendPositions = ({ street = '', district = '', city = '', province = '' 
       userPhoto,
       workId: '',
       taskId: '',
+      situatton
     }
   }
 

@@ -4,39 +4,8 @@ import { model } from 'models/common'
 import { queryPartyTabs, queryPartyData } from 'services/querylist'
 import { doDecode } from 'utils'
 
-const defaultGrids = [{
-    title: '联系律师',
-    id: '0',
-  }, {
-    title: '律师事务所',
-    id: '1',
-  }],
-  defaultLists = [{
-    id: '0',
-    title: '测试1',
-    image: '',
-    exp: '20',
-    adress: '中山路',
-    info: [
-      '水电费', '公交费',
-    ],
-    type: ['类型', '类型2', '类型3'],
-    year: '3',
-    tel: '13932324324',
-  }, {
-    id: '1',
-    title: '测试2',
-    image: '',
-    exp: '20',
-    adress: '中山路',
-    info: [
-      '水电费', '公交费',
-    ],
-    type: ['类型', '类型2', '类型3'],
-    year: '3',
-    tel: '13932324324',
-  }],
-  getGrids = (datas) => {
+
+ const  getGrids = (datas) => {
     const result = []
     datas.map(data => {
       const { id = '', title = '' } = data
@@ -46,7 +15,7 @@ const defaultGrids = [{
         })
       }
     })
-    return result.length > 0 ? result : defaultGrids
+    return result.length > 0 ? result : []
   },
   getInfo = (info) => {
     if (info) {
@@ -72,7 +41,7 @@ const defaultGrids = [{
         })
       }
     })
-    return result.length > 0 ? result : defaultLists
+    return result.length > 0 ? result : []
   }
 
 export default modelExtend(model, {

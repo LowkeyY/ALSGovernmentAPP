@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'dva'
-import { WingBlank, WhiteSpace, Tabs, SegmentedControl, Badge, List, Eventlisten } from 'components'
+import { WingBlank, WhiteSpace, Tabs, SegmentedControl, Badge, List, Eventlisten, Toast } from 'components'
 import Ifreams from 'components/ifream'
 import Nav from 'components/nav'
 import HawkButton from 'components/hawkbutton'
@@ -9,7 +9,7 @@ import Banner from 'components/banner'
 import styles from './index.less'
 import { baseURL, privateApi } from 'utils/config'
 
-const { wanggequ, guiji } = privateApi,
+const { iframeUrlwanggequ, iframeUrlguiji } = privateApi,
   PrefixCls = 'guard',
   tabs = [
     { title: <Badge>网格区</Badge> },
@@ -19,9 +19,9 @@ const { wanggequ, guiji } = privateApi,
   Item = List.Item,
   Brief = Item.Brief
 
-function Guard ({ location, dispatch, guard }) {
+function Guard ({ location, dispatch, guard, app }) {
 
-  const { name = '' } = location.query, { selectedIndex = 0, scrollerTop = 0, appentParam = '', taskList,dataList ,segmentedIndex, pageType } = guard
+  const { name = '' } = location.query, { selectedIndex = 0, scrollerTop = 0, appentParam = '', taskList, dataList, segmentedIndex, pageType } = guard, { guiji = {} } = app, { serverId = '', entityId = '', guijiId = '' } = guiji
   const handlerTaskClick = ({ taskId, taskInfo, taskTitle }) => {
       dispatch(routerRedux.push(
         {
@@ -34,7 +34,7 @@ function Guard ({ location, dispatch, guard }) {
         },
       ))
     },
-    handleItemClick = ({id}) => {
+    handleItemClick = ({ id }) => {
       dispatch(routerRedux.push({
         pathname: '/seekdetails',
         query: {
@@ -42,28 +42,28 @@ function Guard ({ location, dispatch, guard }) {
         },
       }))
     },
- getShstate = (shtate,state) => {
-    if(shtate=='0'){
-      return <span style={{ color: '#ccb820' }}>●正在审核</span>
-    }else if(shtate=='2'){
-      return <span style={{ color: 'red' }}>●拒办</span>
-    }else {
-      return getStatus(state)
-    }
-  },
-  getStatus = (status) => {
-    switch (status) {
-      case '0' :
-        return <span style={{ color: '#ccb820' }}>●待审核</span>
-      case '1' :
-      case '2' :
-      case '3' :
-      case '4' :
-        return <span style={{ color: 'green' }}>●处理中</span>
-      case '5' :
-        return <span style={{ color: '#000' }}>●已完成</span>
-    }
-  },
+    getShstate = (shtate, state) => {
+      if (shtate == '0') {
+        return <span style={{ color: '#ccb820' }}>●正在审核</span>
+      } else if (shtate == '2') {
+        return <span style={{ color: 'red' }}>●不在办理范围</span>
+      } else {
+        return getStatus(state)
+      }
+    },
+    getStatus = (status) => {
+      switch (status) {
+        case '0' :
+          return <span style={{ color: '#ccb820' }}>●待审核</span>
+        case '1' :
+        case '2' :
+        case '3' :
+        case '4' :
+          return <span style={{ color: 'green' }}>●处理中</span>
+        case '5' :
+          return <span style={{ color: '#000' }}>●已完成</span>
+      }
+    },
     getCurrentView = (index) => {
       switch (index) {
         case 0 : {
@@ -75,7 +75,7 @@ function Guard ({ location, dispatch, guard }) {
                   multipleLine
                   onClick={handlerTaskClick.bind(null, _)}
                   wrap
-                  extra={<Badge text={_.noViewCount>0?_.noViewCount:''} />}
+                  extra={<Badge text={_.noViewCount > 0 ? _.noViewCount : ''}/>}
                   align="top"
                 >
                   <div className={`${styles[`${PrefixCls}-message-title`]} ${isNew ? 'news' : ''}`}>
@@ -100,7 +100,7 @@ function Guard ({ location, dispatch, guard }) {
                   multipleLine
                   onClick={handlerTaskClick.bind(null, _)}
                   wrap
-                  extra={<Badge text={_.noViewCount>0?_.noViewCount:''} overflowCount={99} />}
+                  extra={<Badge text={_.noViewCount > 0 ? _.noViewCount : ''} overflowCount={99}/>}
                   align="top"
                 >
                   <div className={`${styles[`${PrefixCls}-message-title`]} ${isNew ? 'news' : ''}`}>
@@ -121,16 +121,16 @@ function Guard ({ location, dispatch, guard }) {
             <List>
               {
                 dataList && dataList.map((data) => {
-                  const { content, createDate, state,shState } = data
+                  const { content, createDate, state, shState } = data
                   return <Item
                     className={styles[`${PrefixCls}-item`]}
                     multipleLine
-                    onClick={handleItemClick.bind(this,data)}
+                    onClick={handleItemClick.bind(this, data)}
                   >
                     {content}
                     <div className={styles[`${PrefixCls}-item-status`]}>
                       <span>{createDate}</span>
-                      <span>{getShstate(shState,state)}</span>
+                      <span>{getShstate(shState, state)}</span>
                     </div>
                   </Item>
                 })
@@ -143,21 +143,21 @@ function Guard ({ location, dispatch, guard }) {
       return ''
     },
     handleChangeView = (e) => {
-    if(e.nativeEvent.selectedSegmentIndex==2){
-      dispatch({
-        type: 'guard/getAppelList',
-        payload: {
-          selected: e.nativeEvent.selectedSegmentIndex
-        },
-      })
-    }else {
-      dispatch({
-        type: 'guard/getTaskList',
-        payload: {
-          selected: e.nativeEvent.selectedSegmentIndex,
-        },
-      })
-    }
+      if (e.nativeEvent.selectedSegmentIndex == 2) {
+        dispatch({
+          type: 'guard/getAppelList',
+          payload: {
+            selected: e.nativeEvent.selectedSegmentIndex,
+          },
+        })
+      } else {
+        dispatch({
+          type: 'guard/getTaskList',
+          payload: {
+            selected: e.nativeEvent.selectedSegmentIndex,
+          },
+        })
+      }
     },
     handleTabClick = (e, i) => {
       dispatch({
@@ -193,6 +193,41 @@ function Guard ({ location, dispatch, guard }) {
           },
         })
       }
+    },
+    handleGuijiClick = (callback) => {
+      let canStart = (guijiId == '')
+      const onSuccess = () => {
+          console.log('handleGuijiClick - onSuccess')
+          dispatch({
+            type: 'app/guiji',
+            payload: {
+              type: canStart ? 'start' : 'end',
+              guijiId,
+            },
+          })
+          callback()
+          Toast.success(canStart ? '开始记录轨迹。' : '结束记录轨迹。')
+        },
+        onFail = (err) => {
+          console.log('handleGuijiClick - onFail', err, canStart, guijiId)
+          callback()
+          if (!canStart) {
+            dispatch({
+              type: 'app/guiji',
+              payload: {
+                type: 'end',
+                guijiId,
+              },
+            })
+          }
+          Toast.offline('请开启手机定位权限，否则无法记录轨迹。')
+        }
+      if (canStart) {
+        cnStartJiluguiji(serverId, entityId, onSuccess.bind(this), onFail.bind(this), 1500)
+      } else {
+        onSuccess()
+        cnStopJiluguiji()
+      }
     }
   return (
     <div>
@@ -205,12 +240,13 @@ function Guard ({ location, dispatch, guard }) {
         onTabClick={handleTabClick}
       >
         <div>
-          <Ifreams src={`${baseURL + wanggequ}`} dispatch={dispatch}/>
+          <Ifreams src={`${baseURL + iframeUrlwanggequ}`} dispatch={dispatch}/>
         </div>
-        <div style={{position:'relative'}}>
-          <Ifreams src={`${baseURL + guiji + (appentParam == '' ? '' : '?userId=' + appentParam)}`}
+        <div style={{ position: 'relative' }}>
+          <Ifreams src={`${baseURL + iframeUrlguiji + (appentParam == '' ? '' : '?userId=' + appentParam)}`}
                    dispatch={dispatch}/>
-          <HawkButton/>
+          {serverId != '' && entityId != '' ?
+            <HawkButton btnStatus={guijiId != ''} handleClick={handleGuijiClick}/> : ''}
         </div>
         <div>
           <WhiteSpace size="md"/>
@@ -229,7 +265,8 @@ function Guard ({ location, dispatch, guard }) {
   )
 }
 
-export default connect(({ loading, guard }) => ({
+export default connect(({ loading, guard, app }) => ({
   loading,
   guard,
+  app,
 }))(Guard)

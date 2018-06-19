@@ -99,7 +99,7 @@ function Livelihood ({ location, dispatch, livelihood }) {
           }} sibilingsHasBanner={true}
                          children={<div>
                            {items.map((item, index) => (
-                             <div id={item.id}>
+                             <div key={item.id} id={item.id}>
                                <Tile parents={tabs[index]} items={item} colors={getCurrentColor(index)}
                                      handleClick={handleTileClick}/>
                              </div>

@@ -4,6 +4,7 @@ import { connect } from 'dva'
 import Nav from 'components/nav'
 import { routerRedux } from 'dva/router'
 import VociePrev from 'components/voicePrev'
+import classNames from 'classnames'
 import {
   List,
   InputItem,
@@ -17,7 +18,7 @@ import {
   Icon,
   ActivityIndicator,
 } from 'components'
-import { getLocalIcon, postionsToString } from 'utils'
+import { getLocalIcon, postionsToString ,replaceSystemEmoji,pattern} from 'utils'
 import styles from './index.less'
 
 let int,
@@ -89,9 +90,20 @@ class Warning extends Component {
         })*/
   }
   onChange = (files, type, index) => {
-    this.setState({
-      files,
+    let reg = /image/,
+      result = []
+    files.map((data, i) => {
+      if (!reg.test(data.file.type)) {
+
+        Toast.fail('这不是图片哟！！！', 2)
+      } else {
+        result.push(data)
+      }
     })
+    this.setState({
+      files: result,
+    })
+
   }
   getKey = (name) => (name && `${name}` || 'warningBaseIndex') + `_${warningBaseIndex++}`
   getUploadFiles = () => {
@@ -112,6 +124,14 @@ class Warning extends Component {
   onCancel = () => {
     this.props.dispatch(routerRedux.goBack())
   }
+  changeValue = (obj) => {
+    for (let i in obj){
+     if (typeof (obj[i])==='string'){
+       obj[i]=replaceSystemEmoji(obj[i])
+     }
+    }
+    return obj
+  }
   onSubmit = () => {
     this.props.form.validateFields({
       force: true,
@@ -124,7 +144,7 @@ class Warning extends Component {
         this.props.dispatch({
           type: 'warning/sendAppealInfo',
           payload: {
-            ...data,
+            ...this.changeValue(data),
             images: uploadFiles,
             fileKey: uploadKey,
             mediaFile: mediaUploadFile,
@@ -149,11 +169,11 @@ class Warning extends Component {
       onRecording: true,
     })
     stop = setTimeout(() => {//延迟1s执行
-      console.log(this.state)
+
       const { isVoice, onRecording } = this.state
       if (isVoice === true && onRecording === true) {
         let mediaFile = cnStartRecord('', this.mediaFileOnSuccess.bind(this), this.mediaFileOnError.bind(this))
-        console.log('---- handleVoiceRecordingStart!!!', mediaFile)
+
         this.setState({
           mediaFile,
         })
@@ -166,7 +186,7 @@ class Warning extends Component {
       .removeAllRanges() : document.selection.empty()
     let { unit, bits, minutes, mediaFile, mediaFileLength } = this.state,
       updates = {}
-    console.log('---- handleVoiceRecordingEnd!!!', 'mediaFile:', mediaFile)
+
     if (mediaFile) {
       mediaFile.timers = mediaFileLength = (minutes * 60 + bits * 10 + unit)
       mediaFile = cnStopRecord(this.state.mediaFile)
@@ -201,7 +221,7 @@ class Warning extends Component {
   }
 
   mediaFileOnSuccess (blob, params) {
-    console.log('---- mediaFileOnSuccess!!!')
+
     const { name = '', nativeURL = '' } = params
     let pos = name.lastIndexOf('.'),
       key = pos == -1 ? name : name.substr(0, pos)
@@ -214,9 +234,9 @@ class Warning extends Component {
   }
 
   mediaFileOnError (error) {
-    console.log('---- mediaFileOnError!!!')
+
     handleVoiceRecordingEnd()
-    console.log(error)
+
   }
 
   getCurrentLocation () {
@@ -226,7 +246,7 @@ class Warning extends Component {
         loadPostions: true,
       })
       const onSuccess = (postions = {}) => {
-          console.log('---- getCurrentLocation -- success!!!')
+
           this.setState({
             loadPostions: false,
           })
@@ -250,7 +270,7 @@ class Warning extends Component {
     let { isVoice, onRecording, unit, bits, minutes, mediaFile, mediaFileLength } = this.state,
       updates = {}
     if (isVoice && onRecording) {
-      console.log('---- handleDivClick!!!', 'mediaFile:', mediaFile)
+
       if (mediaFile) {
         mediaFile.timers = mediaFileLength = (minutes * 60 + bits * 10 + unit)
         mediaFile = cnStopRecord(this.state.mediaFile)
@@ -271,13 +291,19 @@ class Warning extends Component {
     }
   }
 
+  componentWillUnmount () {
+    clearInterval(int)
+    clearTimeout(stop)
+  }
+
   render () {
     const { name = '' } = this.props.location.query, { appealType, animating, location } = this.props.warning
     let { address = {} } = JSON.parse(location),
       currentPostions = address.street || ''
-    console.log(location, currentPostions)
+
     const { getFieldProps, getFieldError } = this.props.form,
       { unit, bits, minutes, mediaFileUrl, mediaFile, mediaFileLength, loadPostions } = this.state
+
     return (
       <div onClick={this.handleDivClick.bind(this)}>
         <Nav title={name} dispatch={this.props.dispatch}/>
@@ -288,9 +314,8 @@ class Warning extends Component {
                 {...getFieldProps('title', {
                   initialValue: '',
                   rules: [{ required: true, message: '标题必须输入' },
-                    {
-                      max: 10, message: '标题最多能输入10个字',
-                    }],
+                    { max: 10, message: '标题最多能输入10个字'}
+                    ],
                 })}
                 clear
                 error={!!getFieldError('title') && Toast.fail(getFieldError('title'))}
@@ -352,6 +377,7 @@ class Warning extends Component {
                 onImageClick={(index, fs) => console.log(index, fs)}
                 selectable={this.state.files.length < 4}
                 multiple={this.state.multiple}
+                accept='image/*'
               />
             </div>
             <div className={styles[`${PrefixCls}-outer-voice`]}>
@@ -360,7 +386,7 @@ class Warning extends Component {
                 <div className={styles[`${PrefixCls}-outer-voice-container-files`]}>
                   {mediaFile != '' ? <VociePrev mediaFileUrl={mediaFileUrl} mediaFileTimer={mediaFileLength}/> : ''}
                 </div>
-                <div className={styles[`${PrefixCls}-outer-voice-container-button`]}
+                <div className={classNames(styles[`${PrefixCls}-outer-voice-container-button`],{[styles.active]:this.state.isVoice})}
                      onTouchStart={this.handleVoiceRecordingStart}
                      onTouchEnd={this.handleVoiceRecordingEnd}
                 >

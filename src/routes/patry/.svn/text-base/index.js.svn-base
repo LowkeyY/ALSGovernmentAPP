@@ -6,8 +6,11 @@ import { WingBlank, WhiteSpace, List, Layout, Grid } from 'components'
 import PullToRefresh from 'components/pulltorefresh'
 import Menu from 'components/menu/index'
 import { getImages } from 'utils'
+import {layoutRow} from 'components/row'
+import ListView from 'components/listview'
 import Banner from 'components/banner/index'
 import BannerBox from 'components/bannerbox/index'
+import TitleBox from 'components/titlecontainer'
 import styles from './index.less'
 
 const Item = List.Item,
@@ -17,7 +20,7 @@ const PrefixCls = 'patry', { BaseLine } = Layout
 
 function Patry ({ location, dispatch, patry }) {
   const { name = '' } = location.query,
-    { patryDate, patryList, isScroll } = patry
+    { patryDate, patryList, isScroll,paginations, scrollerTop} = patry
 
   const getBannerDatas = () => {
       let bannerDatas = patryDate.slice(0, 4)
@@ -58,7 +61,25 @@ function Patry ({ location, dispatch, patry }) {
         },
       }))
     },
-
+    handleItemOnclick = ({externalUrl = '', id = '', pathname = 'details'}) => {
+      if (externalUrl != '' && externalUrl.startsWith('http')) {
+        dispatch(routerRedux.push({
+          pathname: 'iframe',
+          query: {
+            name,
+            externalUrl: externalUrl,
+          },
+        }))
+      } else {
+        dispatch(routerRedux.push({
+          pathname: `/${pathname}`,
+          query: {
+            name,
+            dataId: id,
+          },
+        }))
+      }
+    },
     handleGridbox = ({ id, title, route }) => {
       dispatch(routerRedux.push({
         pathname: `/${route}`,
@@ -117,18 +138,49 @@ function Patry ({ location, dispatch, patry }) {
         }
       }
     },
-    getContent = () => {
-      const childrens = [],
-        result = []
-      patryList && patryList.map((data = {}, index) => {
-        const { items = [], title = '' } = data
-        if (items.length > 0) {
-          childrens.push(<List renderHeader={() => < span className={styles[`${PrefixCls}-listtitle`]}>{title}</span>}>{getListItem(items)}</List>)
+    onRefresh = (params, callback) => {
+
+      dispatch({
+        type: `${PrefixCls}/queryListview`,
+        payload: {
+          ...params,
+          callback,
+          isRefresh: true
         }
       })
-      if (childrens.length > 0) {
-        result.push(childrens)
-        // result.push(<BaseLine/>)
+    },
+    onEndReached = (params, callback) => {
+
+      dispatch({
+        type: `${PrefixCls}/queryListview`,
+        payload: {
+          ...params,
+          callback
+        }
+      })
+    },
+    onScrollerTop = (top) => {
+      if (top && !isNaN(top * 1))
+        dispatch({
+          type: `${PrefixCls}/updateState`,
+          payload: {
+            scrollerTop: top
+          }
+        })
+    },
+    getContents = (patryList) => {
+      const result = [], {title = '', id = '', items = []} = patryList
+      if (title != '' && items.length > 0) {
+        const {current, total, size} = paginations,
+          hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total)
+        result.push(
+          <ListView layoutHeader={() =>title} dataSource={items} layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleItemOnclick)}
+                    onEndReached={onEndReached.bind(null, {id, title})}
+                    onRefresh={onRefresh.bind(null, {id, title})} hasMore={hasMore}
+                    onScrollerTop={onScrollerTop.bind(null)}
+                    scrollerTop={scrollerTop}
+          />
+        )
       }
       return result
     }
@@ -149,19 +201,12 @@ function Patry ({ location, dispatch, patry }) {
         }
       </div>
       <div>{getFixBanner()}</div>
-      <div className={styles[`${PrefixCls}-bannertitle`]}>
-        <span
-        className={styles[`${PrefixCls}-bannertitle-icon`]}></span>专题学习
-      </div>
+        <TitleBox title='专题学习'/>
       <div className={styles[`${PrefixCls}-bannerbox`]}>
         {getBannerBoxDatas().length > 0 && <BannerBox datas={getBannerBoxDatas()} handleClick={handleBannerClick}/>}
       </div>
       <div className={styles[`${PrefixCls}-container`]}>
-        {isScroll?
-          getContent() :
-          <PullToRefresh sibilingsHasBanner={true} autoHeight children={
-            getContent()
-          }/>}
+        {patryList.length > 0 && getContents(patryList[0])}
       </div>
     </div>
   )

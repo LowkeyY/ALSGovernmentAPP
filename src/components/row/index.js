@@ -1,28 +1,27 @@
 import styles from './index.less'
 import React from 'react'
-import {List, Badge, Icon} from 'antd-mobile'
+import {List, Badge, Icon,Tag} from 'antd-mobile'
 import {getErrorImg, getImages, getLocalIcon} from 'utils'
+import StatusBox from 'components/statusbox'
 import Rate from 'rc-rate'
 import '../../../node_modules/rc-rate/assets/index.css'
 
 const PrefixCls = 'row',
   Item = List.Item,
   Brief = Item.Brief
+
 module.exports = {
-  listRows: (rowData, sectionID, rowID, onClick) => (
-    <div
-      onClick={onClick.bind(null, rowData.id)}
-      key={`${sectionID} - ${rowID}`} className={styles[`${PrefixCls}-party-outer`]}>
-      <div style={{display: '-webkit-box', display: 'flex', padding: '0.3rem 0'}}>
-        <img style={{width: '1.28rem', height: '1.28rem', marginRight: '0.3rem'}} src={getImages(rowData.img)}
-             onError={getErrorImg} alt="icon"/>
-        <div className={styles[`${PrefixCls}-party-outer-text-box`]}>
-          <div style={{marginBottom: '0.16rem', fontWeight: 'bold'}}>{rowData.title}</div>
-          <div className={styles[`${PrefixCls}-party-outer-text-box-time`]}>{rowData.time}</div>
-        </div>
-      </div>
-    </div>
-  ),
+  layoutRow : (rowData, sectionID, rowID,onClick) => {
+    const {title = '', image = '', time = ''} = rowData
+    return <Item className={styles[`${PrefixCls}-item`]}
+                 key={`${PrefixCls}-${sectionID}-${rowID}`}
+                 thumb={image || ''} multipleLine wrap arrow='horizontal'
+                 onClick={onClick.bind(null, rowData)}
+    >
+      <span>{title}</span>
+      <Brief>{time}</Brief>
+    </Item>
+  },
   message: (rowData, sectionID, rowID, onClick) => {
     let isNew = rowData.flag === '0'
     let result = (
@@ -124,7 +123,38 @@ module.exports = {
       )
     })
   },
-  integralList: ({title = '', number = 0, info = '' , index = 0}) => {
+  integralList: ({title = '', number = 0, info = '' , index = 0,isCount=0,userPhoto='',isUser=false}) => {
+    return (
+      <div className={styles[`${PrefixCls}-integral-outer`]}>
+        <div className={styles[`${PrefixCls}-integral-outer-left`]}>
+          <span>{index}</span>
+          {
+            isUser? <div className={styles[`${PrefixCls}-integral-outer-left-img`]}>
+              <img src={getImages(userPhoto, 'user')} alt=""/>
+            </div>
+              :
+              ''
+          }
+          <span>{title}</span>
+        </div>
+        <div className={styles[`${PrefixCls}-integral-outer-right`]}>
+          <div className={styles[`${PrefixCls}-integral-outer-right-info`]}>
+            <span>{number}</span>
+            <span>{info}</span>
+          </div>
+          {
+            isCount>0? <div className={styles[`${PrefixCls}-integral-outer-right-star`]}>
+              <span>{isCount}</span>
+              <span><Icon type={getLocalIcon('/others/star.svg')}/></span>
+            </div>
+              :
+              ''
+          }
+        </div>
+      </div>
+    )
+  },
+  companyList: ({title = '', number = 0, info = '' , index = 0,isCount=0}) => {
     return (
       <div className={styles[`${PrefixCls}-integral-outer`]}>
         <div className={styles[`${PrefixCls}-integral-outer-left`]}>
@@ -139,10 +169,14 @@ module.exports = {
             <span>{number}</span>
             <span>{info}</span>
           </div>
-          <div className={styles[`${PrefixCls}-integral-outer-right-star`]}>
-            <span>9</span>
-            <span><Icon type={getLocalIcon('/others/star.svg')}/></span>
-          </div>
+          {
+            isCount>0? <div className={styles[`${PrefixCls}-integral-outer-right-star`]}>
+                <span>{isCount}</span>
+                <span><Icon type={getLocalIcon('/others/star.svg')}/></span>
+              </div>
+              :
+              ''
+          }
         </div>
       </div>
     )
@@ -175,6 +209,81 @@ module.exports = {
           </div>
         </div>
         {/*{getImagesPage(images, cls)}*/}
+      </div>
+    )
+  },
+  appealList : (rowData, sectionID, rowID,isLogin,handleCardClick,handleCollectClick) => {
+    const { username, createDate, positions, title, state, content, images, answers, isCollect, id, shState, userPhoto, situatton } = rowData,
+      stopPropagation = (e) => {
+        e.stopPropagation()
+      },
+      getShtate = () => {
+        return <StatusBox bg='#9c9595' status='不在办理范围'/>
+      },
+      getStatus = (status) => {
+        switch (status) {
+          case '0' :
+            return <StatusBox bg='#f5b90c' status='待审核'/>
+          case '1' :
+          case '2' :
+          case '3' :
+          case '4' :
+            return <StatusBox bg='#29ad2e' status='处理中'/>
+          case '5' :
+            return <StatusBox bg='#d45b5b' status='已完成'/>
+        }
+      },
+      getImagesPage = (images, cls = '') => {
+        if (cnIsArray(images) && images.length) {
+          let i = 0
+          return (
+            <div className={styles[`${cls}-attrs`]}>
+              {images.map((src, i) => i < 2 ?
+                <div key={i} className={styles[`${cls}-attrs-img`]}
+                     style={{ backgroundImage: 'url(' + src + ')' }}></div> : '')}
+            </div>
+          )
+        }
+        return ''
+      },
+      cls = `${PrefixCls}-card`
+    return (
+      <div key={id} className={styles[cls]} onClick={handleCardClick.bind(null, rowData)}>
+        <div className={styles[`${cls}-info`]}>
+          <img src={getImages(userPhoto, 'user')} alt=""/>
+          <div className={styles[`${cls}-info-details`]}>
+            <div className={styles[`${cls}-info-details-name`]}><span>{username}</span><span
+              className={styles[`${cls}-info-details-name-type`]}>诉求类型：{situatton}</span></div>
+            <div className={styles[`${cls}-info-details-others`]}>
+              <div className={styles[`${cls}-info-details-others-date`]}>
+                <span>{createDate}</span>
+              </div>
+              <div className={styles[`${cls}-info-details-others-pos`]}>
+                <span>{positions}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className={styles[`${cls}-content-status`]} onClick={stopPropagation}>
+            <span
+              style={{ color: '#1ab99d' }}>当前状态:<span>{shState == '2' ? getShtate() : getStatus(state)}</span></span>
+          <span>
+            <Tag className={isLogin ? '' : styles[`${cls}-content-status-tag`]} selected={isCollect}
+                 onChange={handleCollectClick.bind(null, rowData)}>
+            <Icon type={getLocalIcon('/others/collectionblack.svg')}/>
+              {isCollect ? <span className={styles[`${cls}-content-status-collection`]}>已收藏</span>
+                : <span className={styles[`${cls}-content-status-collection`]}>收藏</span>}
+                </Tag>
+          </span>
+        </div>
+        <div className={styles[`${cls}-content`]}>
+          <div className={styles[`${cls}-content-title`]}>{title}</div>
+          <div className={styles[`${cls}-content-content`]}>
+            <span style={{ color: '#1ab99d' }}>问：</span>
+            {content}
+          </div>
+        </div>
+        {getImagesPage(images, cls)}
       </div>
     )
   },

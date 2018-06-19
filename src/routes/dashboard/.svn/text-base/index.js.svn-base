@@ -76,19 +76,15 @@ function Dashboard ({ dashboard, loading, dispatch, app }) {
       Array.from(new Array(20))
         .map((val, i) => {
           childrens.push(
-            <Item arrow="horizontal" multipleLine>
+            <Item key={i} arrow="horizontal" multipleLine>
               {`Title${i}`}
-            </Item>,
+            </Item>
           )
         })
       result.push(
         <Menu handleGridClick={handleGridClick} datas={grids}/>,
       )
-      /*      result.push(
-              <List renderHeader={() => 'Basic Style'}>
-                {childrens}
-              </List>,
-            )*/
+
       return result
     }
   return (
@@ -101,11 +97,12 @@ function Dashboard ({ dashboard, loading, dispatch, app }) {
         {noticeDatas.length > 0 && <NoticeBar datas={noticeDatas} handleClick={handleDataClick}/>}
       </div>
       <WhiteSpace size="sm"/>
-      {isScroll ?
-        getContent() :
-        <PullToRefresh sibilingsHasBanner={true} children={
-          getContent()
-        }/>}
+      {/*{isScroll ?*/}
+        {/*getContent() :*/}
+        {/*<PullToRefresh sibilingsHasBanner={true} children={*/}
+          {/**/}
+        {/*}/>}*/}
+        <div className={styles[`${PrefixCls}-outer-content`]}>{getContent()}</div>
     </div>
   )
 }

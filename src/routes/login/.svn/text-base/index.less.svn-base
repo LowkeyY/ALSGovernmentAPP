@@ -133,7 +133,7 @@
   }
 
   margin-top: 50px;
-  padding: 0 60px;
+  padding: 0 20px;
   & form{
     padding: 50px 20px;
   }

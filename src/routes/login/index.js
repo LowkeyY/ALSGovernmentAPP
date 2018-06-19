@@ -91,9 +91,7 @@ class Login extends React.Component {
 
   handleBack = () => {
     this.props.dispatch(
-      routerRedux.push({
-        pathname: '/',
-      }),
+      routerRedux.goBack()
     )
   }
 

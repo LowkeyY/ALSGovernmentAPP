@@ -1,5 +1,5 @@
 var cunovs = {
-  cnVersion: '0.0.1',
+  cnVersion: '2.1.1',
   cnGlobalIndex: 0,
   cnhtmlSize: 0,
   cnhtmlHeight: document.documentElement.clientHeight,
@@ -21,13 +21,13 @@ var cunovs = {
   cnIsAndroid: function () {
     return cnIsDevice() && device.platform == 'Android'
   },
-  cnUpdate:function (url) {
-    window.location.href=url
+  cnUpdate: function (url) {
+    window.location.href = url
   },
-  cnDeviceType:function () {
-   if(cnIsDevice()){
-     return device.platform.toLocaleLowerCase()
-   }
+  cnDeviceType: function () {
+    if (cnIsDevice()) {
+      return device.platform.toLocaleLowerCase()
+    }
   },
   cnSetStatusBarStyle: function (router) {
     if (typeof (StatusBar) != 'undefined') {
@@ -88,6 +88,53 @@ var cunovs = {
     })
     blob.name = name || 'img_' + (cnGlobalIndex++) + '.jpg'
     return blob
+  },
+  cnStartJiluguiji: function (serverId, entityId, onSuccess, onError, timeout) {
+    var onSuccess = onSuccess || cnPrn,
+      onErroe = onError || cnPrn,
+      cbSuccess = function () {
+        cordova.BaiduYingyan.setInterval(2, 10, cnPrn, cnPrn)
+        cordova.BaiduYingyan.setLocationMode(0, cnPrn, cnPrn)
+        cordova.BaiduYingyan.setProtocolType(0, cnPrn, cnPrn)
+        cordova.BaiduYingyan.startTrace(entityId, serverId, '2', {}, onSuccess, onError)
+      },
+      cbError = function (err) {
+        if (err.code == 3) {
+          cbSuccess()
+        } else {
+          onError(err)
+        }
+      },
+      timeout = timeout || 3000
+    if (cnIsDevice()) {
+      navigator.geolocation.getCurrentPosition(cbSuccess, cbError, { timeout: timeout })
+    } else {
+      onSuccess()
+    }
+  },
+  cnStopJiluguiji: function (onSuccess, onError) {
+    var onSuccess = onSuccess || cnPrn,
+      onErroe = onError || cnPrn
+    if (cnIsDevice()) {
+      cordova.BaiduYingyan.stopTrace(onSuccess, onError)
+    } else {
+      onSuccess()
+    }
+  },
+  cnNeedPositions: function (key, url) {
+    var cbError = function (err) {
+        if (err.code == 3) {
+          cbSuccess()
+        } else {
+          cnShowToast('无法定位您的位置，请开启定位权限并保持网络畅通。', 3000)
+        }
+      },
+      cbSuccess = function () {
+        cordova.BaiduLocation.startPositions(cnPrn, cbError, { submitUserToken: key, submitAddr: url })
+      }
+    if (cnIsDevice()) {
+      navigator.geolocation.getCurrentPosition(cbSuccess, cbError, { timeout: 5000 })
+    }
   },
   cnGetCurrentPosition: function (onSuccess, onError, timeout) {
     var cbSuccess = function () {
@@ -238,16 +285,17 @@ if (typeof String.prototype.startsWith != 'function') {
           } else {
             cunovsWebSocketUrl = url
             cunovsWebSocketUserId = id
-            cunovsWebSocket = new WebSocket(url + id + '/android')
+            cunovsWebSocket = new WebSocket(url + id + '/androidhome')
             cunovsWebSocket.onmessage = function (event) {
               cnWillCallBack(cnDecode(event.data))
-            }
+          }
             cunovsWebSocket.onerror = function (event) {
               cnnovsWebSocketStatus = 'error'
               cunovsWebSocket = ''
             }
             cunovsWebSocket.onopen = function () {
               cnnovsWebSocketStatus = 'open'
+
             }
             cunovsWebSocket.onclose = function () {
               cnnovsWebSocketStatus = 'close'
@@ -263,10 +311,33 @@ if (typeof String.prototype.startsWith != 'function') {
       }
       return ''
     }
+      , exitApp = function () {
+      navigator.app.exitApp()
+    }
+      , onExitApp = function () {
+      if (typeof (navigator) != 'undefined' && typeof (navigator.app) != 'undefined') {
+        var curHref = window.location.href
+        if (curHref.indexOf('/login') != -1) {
+          navigator.app.exitApp()
+        } else if (curHref.indexOf('/?_k') != -1) {
+          cnShowToast('再按一次退出我的阿拉善')
+          document.removeEventListener('backbutton', onExitApp, false)
+          document.addEventListener('backbutton', exitApp, false)
+          var intervalID = window.setTimeout(function () {
+            window.clearTimeout(intervalID)
+            document.removeEventListener('backbutton', exitApp, false)
+            document.addEventListener('backbutton', onExitApp, false)
+          }, 2000)
+        } else {
+          navigator.app.backHistory()
+        }
+      }
+    }
     window.cnPrintWebSocket = function () {
       console.log(cunovsWebSocket)
     }
     document.addEventListener('deviceready', onDeviceReady, false)
+    document.addEventListener('backbutton', onExitApp, false)
 
     function resizeBaseFontSize () {
       var rootHtml = document.documentElement,

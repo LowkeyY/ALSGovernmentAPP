@@ -91,9 +91,7 @@ class Login extends React.Component {
 
   handleBack = () => {
     this.props.dispatch(
-      routerRedux.push({
-        pathname: '/',
-      }),
+      routerRedux.goBack()
     )
   }
 
@@ -184,18 +182,13 @@ class Login extends React.Component {
                     <InputItem
                       type="text"
                       placeholder="验证码"
-                      clear
                       onFocus={this.moveInput.bind(this)}
                       {...getFieldProps(codeKey, {
                         initialValue: this.props.login.loadPwd, rules: [{ required: true, message: '验证码必须输入' }, {
                           min: 1, message:
                             '验证码不小于4个字符',
                         }],
-                      })}
-                      error={!!getFieldError(codeKey)}
-                      onErrorClick={() => {
-                        Toast.fail(getFieldError(codeKey))
-                      }}>
+                      })}>
                       <div style={{
                         backgroundImage: 'url(' + code + ')',
                         backgroundSize: 'cover',

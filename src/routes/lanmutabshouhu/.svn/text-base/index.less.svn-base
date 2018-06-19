@@ -1,24 +1,13 @@
 @PrefixCls: lanmutabshouhu;
-.@{PrefixCls}-outer {
-  background: #fff;
-}
-.@{PrefixCls}-item {
-  & span {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-  }
-  & img {
-    width: 180px;
-    height: 140px;
+.@{PrefixCls}-tabbox {
+  position: relative;
+
+  &-count{
+    position: absolute;
+    top:5px;
+    right:20px;
+    z-index: 999;
   }
 }
-.@{PrefixCls}-fixeditem {
-  & img {
-    width: 100px;
-    height: 100px;
-  }
-}
+
 

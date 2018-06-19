@@ -5,7 +5,7 @@ import { routerRedux } from 'dva/router'
 import { Icon, WhiteSpace, Accordion, Button, Eventlisten, Toast, List } from 'components'
 import ChartRoom from 'components/chatroom'
 import Nav from 'components/nav'
-import { getLocalIcon, getImages } from 'utils'
+import { getLocalIcon, getImages,hasSystemEmoji } from 'utils'
 import styles from './index.less'
 
 let globalIndex = 0
@@ -27,6 +27,9 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
     { isSuccess } = chartArr,
     { users: { userid, useravatar } } = app
   const onSubmit = ({ msgType = 0, content = '' }) => {
+   if(hasSystemEmoji(content)){
+     Toast.fail('不支持的字符',2)
+   }
       let _Key = `${taskId}${globalIndex++}`,
         params = { msgType, taskId, _Key },
         appendLoacl = { ...params, isMySelf: true },
@@ -134,9 +137,9 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
     getTaskButtons = (flowLeve, flowState) => {
       if (flowLeve == '3' && flowState == '0') {
         return <div>
-          <Button type="primary" inline size="small" style={{ marginRight: '4px' }}
+          <Button type="primary" inline size="small" style={{ marginRight: '40px',background:'#35aa47',borderColor:'#35aa47' }}
                   onClick={handleTaskClick.bind(null, 'conform')}>接受</Button>
-          <Button type="primary" inline size="small" style={{ marginRight: '4px' }}
+          <Button type="primary" inline size="small" style={{ marginRight: '4px',background:'#f3565d',borderColor:'#f3565d' }}
                   onClick={handleTaskClick.bind(null, 'back')}
           >退回</Button>
         </div>

@@ -172,7 +172,6 @@ export default modelExtend(model, {
     * querySelect ({ payload }, { call, put, select }) {
       const { id = '', selected = -1 } = payload, { selectedIndex ,isOuterChain } = yield select(state => state.commonlist)
       if (!isOuterChain) {
-        console.log(isOuterChain)
         const result = yield call(queryPartyData, { dataId: id })
         if (result) {
           let { data = [] } = result,

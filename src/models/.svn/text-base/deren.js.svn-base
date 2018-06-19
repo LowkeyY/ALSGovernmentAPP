@@ -1,13 +1,13 @@
-import { parse } from 'qs'
+import {parse} from 'qs'
 import modelExtend from 'dva-model-extend'
-import { model } from 'models/common'
-import { queryPartyTabs } from 'services/querylist'
+import {model} from 'models/common'
+import {queryPartyTabs, queryPartyData} from 'services/querylist'
 import defaultIcon from 'themes/images/nmenus/lvyou.png'
 
-const getGrid = (datas = []) => {
+const namespace = 'deren', getGrid = (datas = []) => {
     const result = []
     datas.map((data, index) => {
-      const { id = '', route = '', image = '', ...others } = data
+      const {id = '', route = '', image = '', ...others} = data
       if (id != '') {
         result.push({
           id,
@@ -23,7 +23,7 @@ const getGrid = (datas = []) => {
     let result = [],
       counts = 0
     datas.map((data, index) => {
-      const { image = '', id = '' } = data
+      const {image = '', id = ''} = data
       if (image != '' && id != '' && counts++ < 4) {
         result.push({
           url: image,
@@ -36,7 +36,7 @@ const getGrid = (datas = []) => {
   getList = (datas = []) => {
     const result = []
     datas.map((_, index) => {
-      const { id = '', route = 'details', items = [] } = _
+      const {id = '', route = 'details', items = []} = _
       if (id != '' && items.length > 0) {
         result.push({
           ..._,
@@ -46,7 +46,12 @@ const getGrid = (datas = []) => {
       }
     })
     return result.length > 0 ? result : []
-  }
+  },
+  getDefaultPaginations = () => ({
+    current: 1,
+    total: 0,
+    size:10
+  })
 
 export default modelExtend(model, {
   namespace: 'deren',
@@ -56,17 +61,21 @@ export default modelExtend(model, {
     lists: [],
     id: '',
     name: '',
+    scrollerTop: 0,
+    paginations: getDefaultPaginations()
   },
   subscriptions: {
-    setup ({ dispatch, history }) {
-      history.listen(({ pathname, query }) => {
-        if (pathname === '/deren') {
-          const { id = '', name = '' } = query
+    setup({dispatch, history}) {
+      history.listen(({pathname, query, action}) => {
+        if (pathname === '/deren' && action == 'PUSH') {
+          const {id = '', name = ''} = query
           dispatch({
             type: 'updateState',
             payload: {
               id,
               name,
+              scrollerTop: 0,
+              paginations: getDefaultPaginations()
             },
           })
           dispatch({
@@ -80,11 +89,11 @@ export default modelExtend(model, {
     },
   },
   effects: {
-    * query ({ payload }, { call, put, select }) {
-      const { id = '' } = payload,
-        result = yield call(queryPartyTabs, { dataId: id })
+    * query({payload}, {call, put, select}) {
+      const {id = ''} = payload,
+        result = yield call(queryPartyTabs, {dataId: id})
       if (result) {
-        let { data = [], banners = [], tuijian = [] } = result
+        let {data = [], banners = [], tuijian = []} = result
         yield put({
           type: 'updateState',
           payload: {
@@ -93,7 +102,45 @@ export default modelExtend(model, {
             lists: getList(tuijian),
           },
         })
+        if (tuijian.length > 0) {
+          const {id = '', title = ''} = tuijian[0]
+          yield put({
+            type: 'queryListview',
+            payload: {
+              id,
+              title
+            },
+          })
+        }
       }
     },
+    * queryListview({payload}, {call, put, select}) {
+      const {id = '', title = '', callback = '', isRefresh = false} = payload,
+        _this = yield select(_ => _[`${namespace}`]),
+        {paginations: {current, total, size}, lists} = _this,
+        start = isRefresh ? 1 : current,
+        result = yield call(queryPartyData, {dataId: id, nowPage: start, showCount: size})
+      if (result) {
+        let {data = [], totalCount = 0} = result,
+          newLists = [], {items = [], ...others} = (lists.length > 0 ? lists[0] : {})
+        newLists = start == 1 ? data : [...items, ...data]
+        yield put({
+          type: 'updateState',
+          payload: {
+            paginations: {
+              ..._this.paginations,
+              total: totalCount * 1,
+              current: start + 1
+            },
+            lists: [{
+              ...others,
+              items: newLists
+            }],
+          },
+        })
+      }
+      if (callback)
+        callback()
+    }
   },
 })

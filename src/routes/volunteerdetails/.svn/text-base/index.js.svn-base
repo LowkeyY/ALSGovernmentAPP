@@ -15,16 +15,18 @@ const newsList = [],
       __html: content,
     }
   },
-  layoutChildren = (items = [], onClick) => {
+  layoutChildren = (items = [], onClick, currentSelect = []) => {
     const result = []
     items.map((item, index) => {
-      const {id = '', name = '', info = ''} = item
+      const {id = '', name = '', sex = '', isBm = false, NFbaoming = true, ssjdb = '', znyy = '', sssq = ''} = item
       result.push(
-        <CheckboxItem key={id} onChange={() => onClick(id)} multipleLine>
-          {name}
-          <List.Item.Brief>
-            <div dangerouslySetInnerHTML={getContents(info)}/>
-          </List.Item.Brief>
+        <CheckboxItem key={id} className={styles[`${PrefixCls}-userinfo`]} checked={currentSelect.includes(id)}
+                      onClick={() => onClick(id)} disabled={isBm || !NFbaoming}>
+          <span>{name}</span>
+          <span>{sex != '' && sex == '男' ? <Icon size='xxs' type={getLocalIcon('/others/male.svg')}/> :
+            <Icon size='xxs' type={getLocalIcon('/others/female.svg')}/>}</span>
+          <span className={styles[`${PrefixCls}-userinfo-address`]}>{`${ssjdb}-${sssq}`}</span>
+          <List.Item wrap>{znyy}</List.Item>
         </CheckboxItem>
       )
     })
@@ -35,32 +37,41 @@ const newsList = [],
       {id: '3', title: 'XXX', content: '至难原因'}]
   }
 
-function VolunteerDetails({location, dispatch, volunteerdetails}) {
-  console.log(volunteerdetails)
+function VolunteerDetails({location, dispatch, volunteerdetails, app}) {
   const {name = ''} = location.query,
-    {currentSelected = [], currentData = {}, userInfos = []} = volunteerdetails,
+    {currentSelect = [], currentData = {}, userInfos = []} = volunteerdetails,
+    {isLogin} = app,
     handleClick = (key) => {
+      let newSelect = [], index = -1
+      if ((index = currentSelect.indexOf(key)) != -1)
+        newSelect = [...currentSelect.slice(0, index), ...currentSelect.slice(index + 1)]
+      else
+        newSelect = [...currentSelect, key]
       dispatch({
-        type: `${PrefixCls}/updateState`, payload: {
-          currentSelected: [...currentSelected, key]
+        type: `${PrefixCls}/updateState`,
+        payload: {
+          currentSelect: newSelect
         }
       })
     },
     handleSubmits = () => {
-      if (currentSelected.length > 0) {
-        Toast.success('感谢您的参与。', 2)
-        dispatch(routerRedux.goBack())
+      if (currentSelect.length > 0) {
+        dispatch({
+          type: `${PrefixCls}/submit`
+        })
       } else {
         Toast.info('请选择帮扶对象。', 2)
       }
     }
-  const {address = '', baomingS = '', baomingE = '', dept = '', startDate = '', endDate = '', image = '', info = ''} = currentData
+  const {address = '', baomingS = '', baomingE = '', dept = '', startDate = '', endDate = '', image = '', info = '', baomingrenshu = 0} = currentData
   return (
     <div>
       <Nav title={name} dispatch={dispatch}/>
       <WhiteSpace size="md"/>
       <div className={styles[`${PrefixCls}-container`]}>
         <img src={image || require('./1.png')} alt=""/>
+        <TitleBox title='发起单位'/>
+        {<div className={styles[`${PrefixCls}-container-company`]}>{dept}</div>}
         <div className={styles[`${PrefixCls}-container-content`]}>
           <div className={styles[`${PrefixCls}-container-content-item`]}>
             <Icon type={getLocalIcon('/others/position.svg')} size='xxs'/>
@@ -70,37 +81,37 @@ function VolunteerDetails({location, dispatch, volunteerdetails}) {
           <div className={styles[`${PrefixCls}-container-content-item`]}>
             <Icon type={getLocalIcon('/others/time.svg')} size='xxs'/>
             <span className={styles[`${PrefixCls}-container-content-item-before`]}>活动时间</span>
-            <span className={styles[`${PrefixCls}-container-content-item-after`]}>{startDate + "-" + endDate}</span>
+            <span className={styles[`${PrefixCls}-container-content-item-after`]}>{startDate + "至" + endDate}</span>
           </div>
           <div className={styles[`${PrefixCls}-container-content-item`]}>
             <Icon type={getLocalIcon('/others/time.svg')} size='xxs'/>
             <span className={styles[`${PrefixCls}-container-content-item-before`]}>报名时间</span>
-            <span className={styles[`${PrefixCls}-container-content-item-after`]}>{baomingS + "-" + baomingE}</span>
+            <span className={styles[`${PrefixCls}-container-content-item-after`]}>{baomingS + "至" + baomingE}</span>
           </div>
-          <div className={styles[`${PrefixCls}-container-content-item`]}>
+          {baomingrenshu > 0 && <div className={styles[`${PrefixCls}-container-content-item`]}>
             <Icon type={getLocalIcon('/others/people.svg')} size='xxs'/>
             <span className={styles[`${PrefixCls}-container-content-item-before`]}>报名人数</span>
-            <span className={styles[`${PrefixCls}-container-content-item-after`]}>{10}</span>
+            <span className={styles[`${PrefixCls}-container-content-item-after`]}>{baomingrenshu}</span>
           </div>
+          }
         </div>
         <TitleBox title='活动详情'/>
         <div className={styles[`${PrefixCls}-container-details`]}>
           {<div style={{padding: '0 10px'}} dangerouslySetInnerHTML={getContents(info)}/>}
         </div>
         <TitleBox title='帮扶对象'/>
-        {layoutChildren(userInfos, handleClick)}
-        <TitleBox title='单位详情'/>
-        {<div style={{padding: '10px'}}>{dept}</div>}
+        {layoutChildren(userInfos, handleClick, currentSelect)}
         <div style={{height: '100px'}}></div>
         <div style={{position: 'fixed', bottom: 0, width: '100%'}}>
-          <List>{<Button type="primary" onClick={handleSubmits}>我要参与</Button>}</List>
+          {isLogin ? <List>{<Button type="primary" onClick={handleSubmits}>我要参与</Button>}</List> : ''}
         </div>
       </div>
     </div>
   )
 }
 
-export default connect(({loading, volunteerdetails}) => ({
+export default connect(({loading, volunteerdetails, app}) => ({
   loading,
-  volunteerdetails
+  volunteerdetails,
+  app
 }))(VolunteerDetails)

@@ -13,17 +13,28 @@ const PrefixCls = 'patrylist', { BaseLine } = Layout,
 
 function Patrylist ({ location, dispatch, patrylist }) {
   const { name = '', theIndex = 0 } = location.query,
-    { patryListData } = patrylist
-  const handlerPatrylistClick = (id) => {
+    { patryListData } = patrylist,
+  handleItemOnclick = ({externalUrl = '', id = '', pathname = 'details'}) => {
+    if (externalUrl != '' && externalUrl.startsWith('http')) {
       dispatch(routerRedux.push({
-        pathname: 'details',
+        pathname: 'iframe',
         query: {
-          dataId: id,
           name,
+          externalUrl: externalUrl,
         },
       }))
-    },
+    } else {
+      dispatch(routerRedux.push({
+        pathname: `/${pathname}`,
+        query: {
+          name,
+          dataId: id,
+        },
+      }))
+    }
+  },
     handleBannerClick = (id) => {
+
       dispatch(routerRedux.push({
         pathname: 'details',
         query: {
@@ -53,7 +64,7 @@ function Patrylist ({ location, dispatch, patrylist }) {
             {patryListData.map((_, i) =>
                 <Item key={i} className={styles[`${PrefixCls}-item`]}
                       thumb={_.image || ''} multipleLine wrap arrow='horizontal'
-                      onClick={handlerPatrylistClick.bind(null, _.id)}>
+                      onClick={handleItemOnclick.bind(null, _)}>
                   <span className={styles[`${PrefixCls}-title`]}>{_.title}</span> <Brief>{_.time}</Brief>
                 </Item>)
             }

@@ -1,0 +1,83 @@
+<svg class="ldt-blank" width="1000px"  height="200px"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid" style="background: rgb(255, 255, 255);"><style type="text/css">path,ellipse,circle,rect,polygon,polyline,line { stroke-width: 0; }
+@keyframes ld-heartbeat {
+  0% {
+    -webkit-transform: scale(1.05);
+    transform: scale(1.05);
+  }
+  5% {
+    -webkit-transform: scale(1.25);
+    transform: scale(1.25);
+  }
+  39% {
+    -webkit-transform: scale(0.9);
+    transform: scale(0.9);
+  }
+  45% {
+    -webkit-transform: scale(1.15);
+    transform: scale(1.15);
+  }
+  60% {
+    -webkit-transform: scale(1.05);
+    transform: scale(1.05);
+  }
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+}
+@-webkit-keyframes ld-heartbeat {
+  0% {
+    -webkit-transform: scale(1.05);
+    transform: scale(1.05);
+  }
+  5% {
+    -webkit-transform: scale(1.25);
+    transform: scale(1.25);
+  }
+  39% {
+    -webkit-transform: scale(0.9);
+    transform: scale(0.9);
+  }
+  45% {
+    -webkit-transform: scale(1.15);
+    transform: scale(1.15);
+  }
+  60% {
+    -webkit-transform: scale(1.05);
+    transform: scale(1.05);
+  }
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+}
+.ld.ld-heartbeat {
+  -webkit-animation: ld-heartbeat 0.8s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+  animation: ld-heartbeat 0.8s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+text { font-family: Helvetica Neue }</style><g transform="translate(176.1875 169)" style="opacity: 1;">
+  <g style="animation-delay: 0s; animation-duration: 1s; font-size: 174px; animation-direction: normal; transform-origin: 87px 0px 0px;" class="ld ld-heartbeat">
+    <text fill="#df1317" style="font-family:Helvetica Neue">加</text>
+  </g>
+</g><g transform="translate(350.1875 169)" style="opacity: 1;">
+  <g style="animation-delay: -0.166667s; animation-duration: 1s; font-size: 174px; animation-direction: normal; transform-origin: 87px 0px 0px;" class="ld ld-heartbeat">
+    <text fill="#e4934b" style="font-family:Helvetica Neue">载</text>
+  </g>
+</g><g transform="translate(524.1875 169)" style="opacity: 1;">
+  <g style="animation-delay: -0.333333s; animation-duration: 1s; font-size: 174px; animation-direction: normal; transform-origin: 87px 0px 0px;" class="ld ld-heartbeat">
+    <text fill="#e2bb8b" style="font-family:Helvetica Neue">中</text>
+  </g>
+</g><g transform="translate(698.1875 169)" style="opacity: 1;">
+  <g style="animation-delay: -0.5s; animation-duration: 1s; font-size: 174px; animation-direction: normal; transform-origin: 20.9375px 0px 0px;" class="ld ld-heartbeat">
+    <text fill="#e1e7e7" style="font-family:Helvetica Neue">.</text>
+  </g>
+</g><g transform="translate(740.0625 169)" style="opacity: 1;">
+  <g style="animation-delay: -0.666667s; animation-duration: 1s; font-size: 174px; animation-direction: normal; transform-origin: 20.9375px 0px 0px;" class="ld ld-heartbeat">
+    <text fill="#91bcc6" style="font-family:Helvetica Neue">.</text>
+  </g>
+</g><g transform="translate(781.9375 169)" style="opacity: 1;">
+  <g style="animation-delay: -0.833333s; animation-duration: 1s; font-size: 174px; animation-direction: normal; transform-origin: 20.9375px 0px 0px;" class="ld ld-heartbeat">
+    <text fill="#07abcc" style="font-family:Helvetica Neue">.</text>
+  </g>
+</g></svg>
