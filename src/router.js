@@ -309,12 +309,12 @@ const Routers = function ({ history, app }) {
           },
         }
         , {
-          path: 'collection',
+          path: 'opinion',
           getComponent (nextState, cb) {
             require.ensure([], require => {
-              registerModel(app, require('models/collection'))
-              cb(null, require('routes/collection/'))
-            }, 'collection')
+              registerModel(app, require('models/opinion'))
+              cb(null, require('routes/opinion/'))
+            }, 'opinion')
           },
         }
         , {
@@ -396,6 +396,96 @@ const Routers = function ({ history, app }) {
               registerModel(app, require('models/lawyerlist'))
               cb(null, require('routes/lawyerlist/'))
             }, 'lawyerlist')
+          },
+        }
+        , {
+          path: 'aboutus',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/aboutus'))
+              cb(null, require('routes/aboutus/'))
+            }, 'aboutus')
+          },
+        }
+        , {
+          path: 'notary',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/notary'))
+              cb(null, require('routes/notary/'))
+            }, 'notary')
+          },
+        }
+        , {
+          path: 'partymembers',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/partymembers'))
+              cb(null, require('routes/partymembers/'))
+            }, 'partymembers')
+          },
+        }
+        , {
+          path: 'learnlist',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/learnlist'))
+              cb(null, require('routes/learnlist/'))
+            }, 'learnlist')
+          },
+        }
+        , {
+          path: 'fazhandangyuan',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/fazhandangyuan'))
+              cb(null, require('routes/fazhandangyuan/'))
+            }, 'fazhandangyuan')
+          },
+        }
+        , {
+          path: 'partyintegral',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/partyintegral'))
+              cb(null, require('routes/partyintegral/'))
+            }, 'partyintegral')
+          },
+        }
+        , {
+          path: 'fazhandangyuanxinxi',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/fazhandangyuanxinxi'))
+              cb(null, require('routes/fazhandangyuanxinxi/'))
+            }, 'fazhandangyuanxinxi')
+          },
+        }
+        , {
+          path: 'fazhandangyuanlist',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/fazhandangyuanlist'))
+              cb(null, require('routes/fazhandangyuanlist/'))
+            }, 'fazhandangyuanlist')
+          },
+        }
+        , {
+          path: 'selectmembers',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/selectmembers'))
+              cb(null, require('routes/selectmembers/'))
+            }, 'selectmembers')
+          },
+        }
+        , {
+          path: 'legalmediation',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/legalmediation'))
+              cb(null, require('routes/legalmediation/'))
+            }, 'legalmediation')
           },
         }
         , {

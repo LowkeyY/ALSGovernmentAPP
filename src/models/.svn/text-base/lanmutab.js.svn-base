@@ -59,7 +59,7 @@ const getGrid = (datas = []) => {
   getDefaultPaginations = () => ({
     current: 1,
     total: 0,
-    size:3
+    size:10
   }),
   namespace= 'lanmutab'
 
@@ -147,45 +147,7 @@ export default modelExtend(model, {
         }
       }
     },
-    // * querySelect ({ payload }, { call, put, select }) {
-    //   const { id = '', selected = -1 } = payload, { selectedIndex } = yield select(state => state.lanmutab)
-    //   if (selected == -1 ? selectedIndex == 0 : selected == 0) {
-    //     const result = yield call(queryPartyData, { dataId: id })
-    //     if (result) {
-    //       let { data = [] } = result,
-    //         updates = {
-    //           lists: getList(data),
-    //         }
-    //       if (selected != -1) {
-    //         updates['selectedIndex'] = selected
-    //       }
-    //       yield put({
-    //         type: 'updateState',
-    //         payload: {
-    //           ...updates,
-    //         },
-    //       })
-    //     }
-    //   } else {
-    //     const result = yield call(queryPartyTabs, { dataId: id })
-    //     if (result) {
-    //       let { data = [] } = result,
-    //         updates = {
-    //           lists: getList(data),
-    //         }
-    //       if (selected != -1) {
-    //         updates['selectedIndex'] = selected
-    //       }
-    //       yield put({
-    //         type: 'updateState',
-    //         payload: {
-    //           ...updates,
-    //         },
-    //       })
-    //     }
-    //   }
-    //
-    // },
+
     * queryListview({payload}, {call, put, select}) {
       const { callback = '', isRefresh = false, selected = -1 } = payload,
         _this = yield select(_ => _[`${namespace}`]),

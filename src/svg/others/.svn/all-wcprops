@@ -1,7 +1,7 @@
 K 25
 svn:wc:ra_dav:version-url
 V 37
-/svn/MYALSAPP/!svn/ver/144/svg/others
+/svn/MYALSAPP/!svn/ver/162/svg/others
 END
 people.svg
 K 25
@@ -15,11 +15,11 @@ svn:wc:ra_dav:version-url
 V 51
 /svn/MYALSAPP/!svn/ver/64/svg/others/cssloading.svg
 END
-number.svg
+collectionblack.svg
 K 25
 svn:wc:ra_dav:version-url
-V 47
-/svn/MYALSAPP/!svn/ver/16/svg/others/number.svg
+V 56
+/svn/MYALSAPP/!svn/ver/73/svg/others/collectionblack.svg
 END
 king.svg
 K 25
@@ -27,11 +27,11 @@ svn:wc:ra_dav:version-url
 V 44
 /svn/MYALSAPP/!svn/ver/1/svg/others/king.svg
 END
-collectionblack.svg
+number.svg
 K 25
 svn:wc:ra_dav:version-url
-V 56
-/svn/MYALSAPP/!svn/ver/73/svg/others/collectionblack.svg
+V 47
+/svn/MYALSAPP/!svn/ver/16/svg/others/number.svg
 END
 female.svg
 K 25
@@ -45,11 +45,11 @@ svn:wc:ra_dav:version-url
 V 56
 /svn/MYALSAPP/!svn/ver/144/svg/others/refreshloading.svg
 END
-time.svg
+tip.svg
 K 25
 svn:wc:ra_dav:version-url
 V 45
-/svn/MYALSAPP/!svn/ver/89/svg/others/time.svg
+/svn/MYALSAPP/!svn/ver/162/svg/others/tip.svg
 END
 sendup.svg
 K 25
@@ -57,11 +57,29 @@ svn:wc:ra_dav:version-url
 V 46
 /svn/MYALSAPP/!svn/ver/1/svg/others/sendup.svg
 END
+time.svg
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/MYALSAPP/!svn/ver/89/svg/others/time.svg
+END
 rightwave.svg
 K 25
 svn:wc:ra_dav:version-url
 V 49
 /svn/MYALSAPP/!svn/ver/1/svg/others/rightwave.svg
+END
+sign.svg
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/MYALSAPP/!svn/ver/174/svg/others/sign.svg
+END
+magnifier.svg
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/MYALSAPP/!svn/ver/152/svg/others/magnifier.svg
 END
 task.svg
 K 25
@@ -75,17 +93,17 @@ svn:wc:ra_dav:version-url
 V 45
 /svn/MYALSAPP/!svn/ver/1/svg/others/heart.svg
 END
-silver.svg
-K 25
-svn:wc:ra_dav:version-url
-V 46
-/svn/MYALSAPP/!svn/ver/1/svg/others/silver.svg
-END
 position.svg
 K 25
 svn:wc:ra_dav:version-url
 V 48
 /svn/MYALSAPP/!svn/ver/1/svg/others/position.svg
+END
+silver.svg
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/MYALSAPP/!svn/ver/1/svg/others/silver.svg
 END
 video.svg
 K 25
@@ -123,11 +141,23 @@ svn:wc:ra_dav:version-url
 V 44
 /svn/MYALSAPP/!svn/ver/78/svg/others/eat.svg
 END
+signed.svg
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/MYALSAPP/!svn/ver/174/svg/others/signed.svg
+END
 call.svg
 K 25
 svn:wc:ra_dav:version-url
 V 45
 /svn/MYALSAPP/!svn/ver/75/svg/others/call.svg
+END
+NO.svg
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/MYALSAPP/!svn/ver/174/svg/others/NO.svg
 END
 leftwave.svg
 K 25

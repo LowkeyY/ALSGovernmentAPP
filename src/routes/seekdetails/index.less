@@ -77,11 +77,18 @@
   &-status{
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-bottom: 20px;
     & div{
       display: flex;
       align-items: center;
-      color: #ecec6e;
+    }
+    :global{
+      .am-tag-disabled{
+        color: #108ee9;
+        background: #FFF;
+        border-color: #108ee9;
+      }
     }
   }
   &-details{
@@ -101,7 +108,7 @@
       margin-right:1%;
       background-size: cover;
       margin-bottom:1%;
-
     }
   }
 }
+

@@ -2,7 +2,6 @@ import { parse } from 'qs'
 import modelExtend from 'dva-model-extend'
 import { model } from 'models/common'
 import { queryPartyTabs, queryPartyData,GetUnreadMessage } from 'services/querylist'
-
 const getGrid = (datas = []) => {
     let result = [],
       counts = 0,
@@ -57,9 +56,9 @@ const getGrid = (datas = []) => {
   getDefaultPaginations = () => ({
     current: 1,
     total: 0,
-    size:10
+    size: 10,
   }),
-  namespace='lanmutabshouhu'
+  namespace = 'lanmutabshouhu'
 
 export default modelExtend(model, {
   namespace: 'lanmutabshouhu',
@@ -72,15 +71,14 @@ export default modelExtend(model, {
     selectedIndex: 0,
     scrollerTop: 0,
     paginations: getDefaultPaginations(),
-    refreshId:'',
-    noViewCount:''
+    refreshId: '',
   },
   subscriptions: {
     setup ({ dispatch, history }) {
       history.listen(({ pathname, query, action }) => {
         if (pathname === '/lanmutabshouhu') {
           dispatch({
-            type:'queryMessage'
+            type: 'queryMessage',
           })
           if (action === 'PUSH') {
             const { id = '', name = '' } = query
@@ -128,23 +126,23 @@ export default modelExtend(model, {
             yield put({
               type: 'updateState',
               payload: {
-                refreshId:id,
+                refreshId: id,
               },
             })
             yield put({
               type: 'queryListview',
               payload: {
-                refreshId:id,
+                refreshId: id,
               },
             })
           }
         }
       }
     },
-    * queryListview({payload}, {call, put, select}) {
-      const {callback = '', isRefresh = false, selected = -1 } = payload,
+    * queryListview ({ payload }, { call, put, select }) {
+      const { callback = '', isRefresh = false, selected = -1 } = payload,
         _this = yield select(_ => _[`${namespace}`]),
-        {paginations: {current, total, size}, lists,selectedIndex,refreshId} = _this
+        { paginations: { current, total, size }, lists, selectedIndex, refreshId } = _this
       if (selected != -1) {
         yield put({
           type: 'updateState',
@@ -153,10 +151,10 @@ export default modelExtend(model, {
           },
         })
       }
-       const start = isRefresh ? 1 : current,
-        result = yield call(queryPartyData, {dataId:refreshId, nowPage: start, showCount: size})
+      const start = isRefresh ? 1 : current,
+        result = yield call(queryPartyData, { dataId: refreshId, nowPage: start, showCount: size })
       if (result) {
-        let {data = [], totalCount = 0} = result,
+        let { data = [], totalCount = 0 } = result,
           newLists = []
         newLists = start == 1 ? data : [...lists, ...data]
         yield put({
@@ -165,24 +163,28 @@ export default modelExtend(model, {
             paginations: {
               ..._this.paginations,
               total: totalCount * 1,
-              current: start + 1
+              current: start + 1,
             },
-            lists:newLists
+            lists: newLists,
           },
         })
       }
-      if (callback)
+      if (callback) {
         callback()
+      }
     },
-    *queryMessage({payload},{call,put,select}){
-      const data = yield call(GetUnreadMessage),{success,noViewCount} = data
-      if(success){
-        yield put ({
-          type:'updateState',
-          payload:{
-            noViewCount
-          }
-        })
+    * queryMessage ({ payload }, { call, put, select }) {
+      const { isLogin = false } = yield select(_ => _.app)
+      if (isLogin) {
+        const data = yield call(GetUnreadMessage), { success, noViewCount = 0 } = data
+        if (success) {
+          yield put({
+            type: 'app/updateState',
+            payload: {
+              noViewCount:noViewCount*1,
+            },
+          })
+        }
       }
     }
   },

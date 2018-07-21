@@ -4,6 +4,12 @@ import { model } from 'models/common'
 import { queryPartyTabs, queryPartyData } from 'services/querylist'
 
 
+const getDefaultPaginations = () => ({
+    current: 1,
+    total: 0,
+    size: 10
+  }),
+  namespace='threebig'
 
 export default modelExtend(model, {
   namespace: 'threebig',
@@ -15,6 +21,9 @@ export default modelExtend(model, {
     itemData:[],
     bannersData:[],
    fixData:[],
+    scrollerTop: 0,
+    paginations: getDefaultPaginations(),
+    refreshId:''
   },
   subscriptions: {
     setup ({ dispatch, history }) {
@@ -29,6 +38,8 @@ export default modelExtend(model, {
                 name,
                 selectedIndex: 0,
                 tabs: [],
+                scrollerTop: 0,
+                paginations: getDefaultPaginations(),
               },
             })
             dispatch({
@@ -58,9 +69,15 @@ export default modelExtend(model, {
         if (data.length > 0) {
           const { id = '' } = data[0]
           yield put({
-            type: 'querySelect',
+            type: 'updateState',
             payload: {
-              id,
+              refreshId:id,
+            },
+          })
+          yield put({
+            type: 'queryListview',
+            payload: {
+              refreshId:id,
             },
           })
         }
@@ -79,9 +96,10 @@ export default modelExtend(model, {
         })
       }
     },
-
-    * querySelect ({ payload }, { call, put, select }) {
-      const { id = '',selected = -1 } = payload, { selectedIndex } = yield select(state => state.threebig)
+    * queryListview({payload}, {call, put, select}) {
+      const {callback = '', isRefresh = false, selected = -1 } = payload,
+        _this = yield select(_ => _[`${namespace}`]),
+        {paginations: {current, total, size}, itemData,selectedIndex,refreshId} = _this
       if (selected != -1) {
         yield put({
           type: 'updateState',
@@ -90,20 +108,26 @@ export default modelExtend(model, {
           },
         })
       }
-      const result = yield call(queryPartyData, { dataId: id })
+      const start = isRefresh ? 1 : current,
+        result = yield call(queryPartyData, {dataId:refreshId, nowPage: start, showCount: size})
       if (result) {
-        let { data = [] } = result,
-          updates = {
-            itemData:data
-          }
+        let {data = [], totalCount = 0} = result,
+          newLists = []
+        newLists = start == 1 ? data : [...itemData, ...data]
         yield put({
           type: 'updateState',
           payload: {
-            ...updates
+            paginations: {
+              ..._this.paginations,
+              total: totalCount * 1,
+              current: start + 1
+            },
+            itemData:newLists
           },
         })
       }
-
-    },
+      if (callback)
+        callback()
+    }
   }
 })

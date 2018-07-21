@@ -3,10 +3,11 @@ import { request, config, formsubmit } from 'utils'
 const { api } = config
 const { GetAppealTypeApi, SendAppealInfoApi, GetAppealList, GetAppealContent, QueryWorkCountApi, CollectAppealApi } = api
 
-export async function queryAppealType () {
+export async function queryAppealType (payload) {
   return request({
     url: GetAppealTypeApi,
     method: 'get',
+    data:payload
   })
 }
 

@@ -1,80 +1,61 @@
 import { parse } from 'qs'
 import modelExtend from 'dva-model-extend'
 import { model } from 'models/common'
-import { queryPartyTabs, queryPartyData } from 'services/querylist'
-import { doDecode } from 'utils'
+import {Toast} from 'components'
+import { GetLegallistType, GetLegallist,sendLigallist } from 'services/legallist'
 
-
- const  getGrids = (datas) => {
-    const result = []
-    datas.map(data => {
-      const { id = '', title = '' } = data
-      if (id != '' && title != '') {
-        result.push({
-          id, title,
-        })
-      }
-    })
-    return result.length > 0 ? result : []
-  },
-  getInfo = (info) => {
-    if (info) {
-      try {
-        return doDecode(info)
-      } catch (e) {
-      }
-    }
-    return {}
-  },
-  getList = (datas = []) => {
-    const result = []
-    datas.map((_, index) => {
-      const { id = '', route = 'details', infos = '' } = _
-      if (id != '') {
-        result.push({
-          ..._,
-          id,
-          route,
-          _attributes: {
-            ...getInfo(infos),
-          },
-        })
-      }
-    })
-    return result.length > 0 ? result : []
-  }
+const getType = (datas) => {
+  const currentDatas =datas
+  currentDatas.map(items => {
+    items.label = items.name
+  })
+  return currentDatas
+},
+getDefaultPaginations = () => ({
+  current: 1,
+  total: 0,
+  size:10,
+}),
+  namespace = 'legallist',
+  getDefaultValue=()=>({
+    contents:'',
+    tels:'',
+    positions:'阿拉善盟',
+    isNiming:true
+  })
 
 export default modelExtend(model, {
   namespace: 'legallist',
   state: {
-    grids: [],
-    gridList: {},
-    id: '',
-    name: '',
-    selectedIndex: 0,
+    legalType:[],
+    lists:'',
+    animating:false,
+    scrollerTop: 0,
+    paginations: getDefaultPaginations(),
+    resetValue:getDefaultValue()
   },
 
   subscriptions: {
     setup ({ dispatch, history }) {
       history.listen(({ pathname, query, action }) => {
+        const {name} =query
         if (pathname === '/legallist') {
           if (action === 'PUSH') {
-            const { id = '', name = '' } = query
             dispatch({
               type: 'updateState',
               payload: {
-                id,
                 name,
-                grids: [],
-                gridList: {},
-                selectedIndex: 0,
+                list:'',
+                animating:false,
+                scrollerTop: 0,
+                paginations: getDefaultPaginations()
               },
             })
             dispatch({
-              type: 'query',
-              payload: {
-                ...query,
-              },
+              type: 'queryType',
+            })
+            dispatch({
+              type: 'queryListview',
             })
           }
         }
@@ -82,56 +63,69 @@ export default modelExtend(model, {
     },
   },
   effects: {
-    * query ({ payload }, { call, put, select }) {
-      const { id = '' } = payload,
-        result = yield call(queryPartyTabs, { dataId: id })
+    * queryType ({ payload }, { call, put, select }) {
+       const result = yield call(GetLegallistType)
       if (result) {
-        let { data = [] } = result,
-          grids = getGrids(data)
         yield put({
           type: 'updateState',
           payload: {
-            grids,
+            legalType: getType(result.datas),
           },
         })
-        if (grids.length > 0) {
-          const { id = '' } = grids[0]
-          yield put({
-            type: 'querySelect',
-            payload: {
-              id,
-            },
-          })
-        } else {
-          yield put({
-            type: 'updateState',
-            payload: {
-              lists: [],
-            },
-          })
-        }
       }
     },
-    * querySelect ({ payload }, { call, put, select }) {
-      const { id = '', selected = -1 } = payload,
-        { selectedIndex } = yield select(state => state.legallist),
-        result = yield call(queryPartyData, { dataId: id })
+    * queryListview ({ payload={} }, { call, put, select }) {
+
+      const { callback='', isRefresh = false,} = payload,
+        _this = yield select(_ => _[`${namespace}`]),
+        { paginations: { current, total, size }, lists} = _this,
+        start = isRefresh ? 1 : current,
+        result = yield call(GetLegallist, {nowPage: start, showCount: size  })
       if (result) {
-        let { data = [] } = result,
-          updates = {
-            lists: getList(data),
-          }
-        if (selected != -1) {
-          updates['selectedIndex'] = selected
-        }
+        let {data = [], totalCount = 0} = result,
+          newLists = []
+        newLists = start == 1 ?data: [...lists, ...data]
         yield put({
           type: 'updateState',
           payload: {
-            ...updates,
+            paginations: {
+              ..._this.paginations,
+              total: totalCount * 1,
+              current: start + 1
+            },
+            lists:newLists
+          },
+        })
+      }
+      if (callback)
+        callback()
+    },
+    * sendLegallistInfo ({ payload }, { call, put, select }) {
+      const { resetValue } = yield select(_ => _.legallist)
+       const { success,message=''} = yield call(sendLigallist,payload)
+       Toast.success(message,2)
+      yield put({
+        type: 'updateState',
+        payload: {
+          animating: false,
+        },
+      })
+      if (success) {
+        yield put({
+          type: 'resetValue',
+          payload: {
+            resetValue:getDefaultValue()
           },
         })
       }
     },
   },
-  reducers: {},
+  reducers: {
+    resetValue(state,{payload}){
+      return {
+        ...state,
+        ...payload
+      }
+    }
+  },
 })

@@ -1,20 +1,25 @@
 import React from 'react'
 import { connect } from 'dva'
-import { WingBlank, WhiteSpace, Tabs, Badge, List, SearchBar ,Layout} from 'components'
+import { WingBlank, WhiteSpace, Tabs, Badge, List, SearchBar ,Layout,Modal} from 'components'
 import Nav from 'components/nav'
 import Iframes from 'components/ifream'
+import {layoutRow} from 'components/row'
+import ListView from 'components/listview'
 import { routerRedux } from 'dva/router'
 import Banner from 'components/banner'
+import TitleBox from 'components/titlecontainer'
+import { getImages } from 'utils'
 import { doDecode } from 'utils'
+import SignIn from 'components/sign'
 import styles from './index.less'
 
 const PrefixCls = 'commonlist',
   Item = List.Item,
-  Brief = Item.Brief,{BaseLine} = Layout
-
-function Comp ({ location, dispatch, commonlist }) {
-  const { name = '', selectedIndex = 0, grids, lists, bannerDatas } = commonlist,
-    handleItemOnclick = ({ externalUrl = '', id, pathname = 'details', infos = '{}' }) => {
+  Brief = Item.Brief
+function Comp ({ location, dispatch, commonlist ,app}) {
+  const { name = '', selectedIndex = 0, grids, lists, bannerDatas,paginations, scrollerTop,refreshId,dataItems } = commonlist,
+    { isLogin } = app,
+    handleItemOnclick = ({ externalUrl = '', id,title='',route='details', infos = '{}' }) => {
       let primaryParams = {}
       try {
         primaryParams = doDecode(infos)
@@ -28,13 +33,13 @@ function Comp ({ location, dispatch, commonlist }) {
         dispatch(routerRedux.push({
           pathname: 'iframe',
           query: {
-            name,
+            name:title,
             externalUrl: externalUrl,
           },
         }))
       } else {
         dispatch(routerRedux.push({
-          pathname: `/${pathname}`,
+          pathname: `/${route}`,
           query: {
             name,
             id,
@@ -43,33 +48,109 @@ function Comp ({ location, dispatch, commonlist }) {
         }))
       }
     },
-    handleFiexdItemOnclick = ({ route, id, title }) => {
-      if (route) {
-        dispatch(routerRedux.push({
-          pathname: `/${route}`,
-          query: {
-            name: title,
-            id,
-          },
-        }))
-      }
+    handleEntryOnclick = ({ externalUrl = '', id,title='',route='details' }) => {
+     if(route==='fazhandangyuan'){
+       if (isLogin) {
+         dispatch(routerRedux.push({
+           pathname: `/${route}`,
+           query: {
+             name:title,
+             id,
+             dataId: id,
+           },
+         }))
+       } else {
+         Modal.alert('您还没登陆', '登录后才可进入', [
+           { text: '稍后再说', onPress: () => console.log('cancel') },
+           {
+             text: '立刻登陆',
+             onPress: () =>
+               dispatch(routerRedux.push({
+                 pathname: '/login',
+               })),
+           },
+         ])
+       }
+     }else {
+       if (externalUrl != '' && externalUrl.startsWith('http')) {
+         dispatch(routerRedux.push({
+           pathname: 'iframe',
+           query: {
+             name:title,
+             externalUrl: externalUrl,
+           },
+         }))
+       } else {
+         dispatch(routerRedux.push({
+           pathname: `/${route}`,
+           query: {
+             name:title,
+             id,
+             dataId: id,
+           },
+         }))
+       }
+     }
     },
-    getContents = (lists) => {
-      const result = []
-      lists.map((list, i) => {
-        const { id = '' } = list
-        if (id != '') {
-          result.push(
-            <Item className={styles[`${PrefixCls}-item`]}
-                  thumb={list.image || ''} multipleLine wrap arrow='horizontal'
-                  onClick={handleItemOnclick.bind(null, list)}>
-              <span>{list.title}</span><Brief>{list.time}</Brief>
-            </Item>,
-          )
+    onRefresh = (refreshId, callback) => {
+      dispatch({
+        type: `${PrefixCls}/queryListview`,
+        payload: {
+          refreshId,
+          callback,
+          isRefresh: true
         }
       })
-      return <List>{result}</List>
     },
+    onEndReached = (refreshId, callback) => {
+      dispatch({
+        type: `${PrefixCls}/queryListview`,
+        payload: {
+          refreshId,
+          callback
+        }
+      })
+    },
+    onScrollerTop = (top) => {
+      if (typeof top !='undefined' && !isNaN(top * 1))
+        dispatch({
+          type: `${PrefixCls}/updateState`,
+          payload: {
+            scrollerTop: top
+          }
+        })
+    },
+    getContents = (lists,infos,refreshId) => {
+      const {current, total, size} = paginations,
+        hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total),
+        result= []
+      result.push(
+        <ListView layoutHeader={()=>infos} dataSource={lists} layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleItemOnclick)}
+                  onEndReached={onEndReached.bind(null,refreshId)}
+                  onRefresh={onRefresh.bind(null, refreshId)} hasMore={hasMore}
+                  onScrollerTop={onScrollerTop.bind(null)}
+                  scrollerTop={scrollerTop}
+        />
+      )
+      return result
+    },
+    // getContents = (lists) => {
+    //   const result = []
+    //   lists.map((list, i) => {
+    //     const { id = '' } = list
+    //     if (id != '') {
+    //       result.push(
+    //         <Item className={styles[`${PrefixCls}-item`]}
+    //               thumb={list.image || ''} multipleLine wrap arrow='horizontal'
+    //               onClick={handleItemOnclick.bind(null, list)}>
+    //           <span>{list.title}</span><Brief>{list.time}</Brief>
+    //         </Item>,
+    //       )
+    //     }
+    //   })
+    //   return <List>{result}</List>
+    // },
+
     getIfream = (src) => {
       return <Iframes src={src} dispatch={dispatch}/>
     },
@@ -83,8 +164,25 @@ function Comp ({ location, dispatch, commonlist }) {
       })
       return result
     },
-    getCurrentView = () => {
-      const { externalUrl = '' } = grids[selectedIndex] || {}
+    getEntrance = (dataItems) => {
+      if (Array.isArray(dataItems)) {
+       return dataItems&&dataItems.map((data,index)=>{
+          const {image,infos=''} = data
+          return (
+            <div key={index}>
+              {
+                infos!=''?<TitleBox title={infos}/>:''
+              }
+              <div className={styles[`${PrefixCls}-entrance`]} onClick={handleEntryOnclick.bind(null,data)}>
+                <img src={getImages(data.image)} alt=""/>
+              </div>
+            </div>
+          )
+        })
+      }
+    },
+    getCurrentView = (selectedIndex) => {
+      const { externalUrl = '' ,infos=''} = grids[selectedIndex] || {}
       const result = []
       if (bannerDatas.length > 0) {
         const props = {
@@ -95,11 +193,18 @@ function Comp ({ location, dispatch, commonlist }) {
         }
         result.push(<Banner {...props}/>)
       }
-      result.push(externalUrl == '' ? getContents(lists) : getIfream(externalUrl))
+
+      if(selectedIndex*1==0){
+        result.push(<SignIn/>)
+      }
+      result.push(getEntrance(dataItems))
+      if(selectedIndex*1!=1){
+        result.push(externalUrl == '' ? getContents(lists,infos) : getIfream(externalUrl))
+      }
       return <div>{result}</div>
     },
     handleTabClick = (data, index) => {
-      const { externalUrl = '' } = data
+      const { externalUrl = '' ,id} = data
       dispatch({
         type: 'commonlist/updateState',
         payload: {
@@ -108,27 +213,42 @@ function Comp ({ location, dispatch, commonlist }) {
       })
       if (externalUrl == '') {
         dispatch({
-          type: 'commonlist/querySelect',
+          type: 'commonlist/updateState',
           payload: {
-            ...data,
+            refreshId:id
+          },
+        })
+        dispatch({
+          type: 'commonlist/queryListview',
+          payload: {
+            refreshId:id,
             selected: index,
+            isRefresh: true
           },
         })
       }
+      dispatch({
+        type:'commonlist/queryOthers',
+        payload:{
+         id
+        }
+      })
+    },
+    handleSearchClick = ({id=''}) => {
+      dispatch(routerRedux.push({
+        pathname: `/search`,
+        query: {
+          router: PrefixCls,
+          id
+        },
+      }))
     }
   return (
     <div className={styles[`${PrefixCls}-outer`]}>
       <Nav title={name} dispatch={dispatch}/>
-      <SearchBar
-        placeholder="输入需要搜索的内容"
-        onSubmit={value => console.log(value, 'onSubmit')}
-        onClear={value => console.log(value, 'onClear')}
-        onFocus={() => console.log('onFocus')}
-        onBlur={() => console.log('onBlur')}
-        onCancel={() => console.log('onCancel')}
-        showCancelButton
-        onChange={() => console.log('onChange')}
-      />
+      <SearchBar placeholder={`在${name || '此页面'}中搜索`}
+                 maxLength={20}
+                 onFocus={handleSearchClick.bind(this,commonlist)}/>
       <Tabs
         initialPage={0}
         page={selectedIndex}
@@ -137,8 +257,7 @@ function Comp ({ location, dispatch, commonlist }) {
         onTabClick={handleTabClick}
       >
         <div>
-          {getCurrentView()}
-          <BaseLine/>
+          {getCurrentView(selectedIndex)}
         </div>
       </Tabs>
     </div>
@@ -146,7 +265,8 @@ function Comp ({ location, dispatch, commonlist }) {
   )
 }
 
-export default connect(({ loading, commonlist }) => ({
+export default connect(({ loading, commonlist ,app}) => ({
   loading,
   commonlist,
+  app
 }))(Comp)

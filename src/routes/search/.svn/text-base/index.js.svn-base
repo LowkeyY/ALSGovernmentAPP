@@ -6,7 +6,7 @@ import {SearchBar, WhiteSpace, WingBlank, Button, Icon, NavBar, Tag} from 'compo
 import {Flex} from 'components'
 import {getLocalIcon, getImages} from 'utils'
 import {layoutFilters} from './layout'
-import {layoutRow} from 'components/row'
+import {layoutRow,appealList} from 'components/row'
 import ListView from 'components/listview'
 import StatusBox from 'components/statusbox'
 import TitleBox from 'components/titlecontainer'
@@ -14,9 +14,10 @@ import styles from './index.less'
 
 const PrefixCls = "search"
 
-function Comp({location, search, loading, dispatch}) {
+function Comp({location, search, loading,app, dispatch}) {
   const {router = ''} = location.query
   const {filters, filterValues, isFilter, searchText, lists, paginations, scrollerTop, totalCount} = search,
+    {isLogin} = app,
     getDefaultPaginations = () => ({
       current: 1,
       total: 0,
@@ -70,25 +71,7 @@ function Comp({location, search, loading, dispatch}) {
         },
       }))
     },
-    stopPropagation = (e) => {
-      e.stopPropagation()
-    },
-    getShtate = () => {
-      return <StatusBox bg='#9c9595' status='不在办理范围'/>
-    },
-    getStatus = (status) => {
-      switch (status) {
-        case '0' :
-          return <StatusBox bg='#f5b90c' status='待审核'/>
-        case '1' :
-        case '2' :
-        case '3' :
-        case '4' :
-          return <StatusBox bg='#29ad2e' status='处理中'/>
-        case '5' :
-          return <StatusBox bg='#d45b5b' status='已完成'/>
-      }
-    },
+
     handleCollectClick = (data) => {
       dispatch({
         type: `${PrefixCls}/collent`,
@@ -97,59 +80,8 @@ function Comp({location, search, loading, dispatch}) {
         },
       })
     },
-    getImagesPage = (images, cls = '') => {
-      if (cnIsArray(images) && images.length) {
-        let i = 0
-        return (
-          <div className={styles[`${cls}-attrs`]}>
-            {images.map((src, i) => i < 2 ?
-              <div key={i} className={styles[`${cls}-attrs-img`]}
-                   style={{backgroundImage: 'url(' + src + ')'}}></div> : '')}
-          </div>
-        )
-      }
-      return ''
-    },
-    appealRow = (rowData, sectionID, rowID) => {
-      const {username, createDate, positions, title, state, content, images, answers, isCollect, id, shState, userPhoto} = rowData,
-        cls = `${PrefixCls}-card`
-      return (
-        <div key={id} className={styles[cls]} onClick={handleCardClick.bind(null, rowData)}>
-          <div className={styles[`${cls}-info`]}>
-            <img src={getImages(userPhoto, 'user')} alt=""/>
-            <div className={styles[`${cls}-info-details`]}>
-              <div className={styles[`${cls}-info-details-name`]}>{username}</div>
-              <div className={styles[`${cls}-info-details-others`]}>
-                <div className={styles[`${cls}-info-details-others-date`]}>
-                  <span>{createDate}</span>
-                </div>
-                <div className={styles[`${cls}-info-details-others-pos`]}>
-                  <span>{positions}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className={styles[`${cls}-content-status`]} onClick={stopPropagation}>
-            <span style={{color: '#1ab99d'}}>当前状态:<span>{shState == '2' ? getShtate() : getStatus(state)}</span></span>
-            <span>
-            <Tag selected={isCollect} onChange={handleCollectClick.bind(null, rowData)}>
-            <Icon type={getLocalIcon('/others/collectionblack.svg')}/>
-              {isCollect ? <span className={styles[`${cls}-content-status-collection`]}>已收藏</span>
-                : <span className={styles[`${cls}-content-status-collection`]}>收藏</span>}
-                </Tag>
-          </span>
-          </div>
-          <div className={styles[`${cls}-content`]}>
-            <div className={styles[`${cls}-content-title`]}>{title}</div>
-            <div className={styles[`${cls}-content-content`]}>
-              <span style={{color: '#1ab99d'}}>问：</span>
-              {content}
-            </div>
-          </div>
-          {getImagesPage(images, cls)}
-        </div>
-      )
-    },
+
+
     handleItemOnclick = ({name = '', externalUrl = '', id = '', pathname = 'details'}) => {
       if (externalUrl != '' && externalUrl.startsWith('http')) {
         dispatch(routerRedux.push({
@@ -188,7 +120,7 @@ function Comp({location, search, loading, dispatch}) {
       })
     },
     onScrollerTop = (top) => {
-      if (top && !isNaN(top * 1))
+      if (typeof top !='undefined' && !isNaN(top * 1))
         dispatch({
           type: `${PrefixCls}/updateState`,
           payload: {
@@ -201,7 +133,7 @@ function Comp({location, search, loading, dispatch}) {
         hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total)
       if (router === 'appeal') {
         result.push(
-          <ListView layoutHeader={''} dataSource={lists} layoutRow={appealRow}
+          <ListView layoutHeader={''} dataSource={lists} layoutRow={(rowData, sectionID, rowID) => appealList(rowData, sectionID, rowID,isLogin, handleCardClick,handleCollectClick)}
                     onEndReached={onEndReached}
                     hasMore={hasMore}
                     onScrollerTop={onScrollerTop.bind(null)}
@@ -271,7 +203,8 @@ Comp.propTypes = {
   loading: PropTypes.object,
 };
 
-export default connect(({search, loading}) => ({
+export default connect(({search,app, loading}) => ({
   search,
-  loading
+  loading,
+  app
 }))(Comp);

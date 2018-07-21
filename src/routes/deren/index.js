@@ -15,7 +15,7 @@ const PrefixCls = 'deren',
 
 function Comp({location, dispatch, deren}) {
   const {bannerDatas, lists, grids, name = '', paginations, scrollerTop} = deren,
-    handleItemOnclick = ({externalUrl = '', id = '', pathname = 'details'}) => {
+    handleItemOnclick = ({externalUrl = '', id = '', route = 'details'}) => {
       if (externalUrl != '' && externalUrl.startsWith('http')) {
         dispatch(routerRedux.push({
           pathname: 'iframe',
@@ -26,7 +26,7 @@ function Comp({location, dispatch, deren}) {
         }))
       } else {
         dispatch(routerRedux.push({
-          pathname: `/${pathname}`,
+          pathname: `/${route}`,
           query: {
             name,
             dataId: id,
@@ -43,18 +43,6 @@ function Comp({location, dispatch, deren}) {
         },
       }))
     },
-
-    // layoutRow = (rowData, sectionID, rowID) => {
-    //   const {title = '', image = '', time = ''} = rowData
-    //   return <Item className={styles[`${PrefixCls}-item`]}
-    //                key={`${PrefixCls}-${sectionID}-${rowID}`}
-    //                thumb={image || ''} multipleLine wrap arrow='horizontal'
-    //                onClick={handleItemOnclick.bind(null, rowData)}>
-    //     <span>{title}</span>
-    //     <Brief>{time}</Brief>
-    //   </Item>
-    // },
-
     onRefresh = (params, callback) => {
       console.log(`${PrefixCls}-onRefresh`)
       dispatch({
@@ -77,7 +65,7 @@ function Comp({location, dispatch, deren}) {
       })
     },
     onScrollerTop = (top) => {
-      if (top && !isNaN(top * 1))
+      if (typeof top !='undefined' && !isNaN(top * 1))
         dispatch({
           type: `${PrefixCls}/updateState`,
           payload: {
@@ -109,9 +97,8 @@ function Comp({location, dispatch, deren}) {
     <div>
       <Nav title={name} dispatch={dispatch}/>
       {bannerDatas.length > 0 && <Banner {...bannerProps} />}
-      <WhiteSpace size="sm"/>
       {grids.length > 0 && <Menu handleGridClick={handleGridClick} datas={grids} columnNum={4}/>}
-      <WhiteSpace size="sm"/>
+      <WhiteSpace size="xs"/>
       {lists.length > 0 && getContents(lists[0])}
     </div>
   )

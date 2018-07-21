@@ -6,7 +6,6 @@ import Tags from 'components/tags'
 import { List, WhiteSpace, SearchBar, Tabs, Layout } from 'components'
 import {layoutRow} from 'components/row'
 import ListView from 'components/listview'
-import Ifreams from 'components/ifream'
 import styles from './index.less'
 
 let isPlay = false
@@ -19,7 +18,7 @@ function News ({ location, dispatch, news }) {
     getvideo = (data) => {
       return data&&data.map(data=>{
      return (
-       <video key={data.id} width='100%' loop poster={data.videoView} src={data.videoSrc} controls="controls"></video>
+       <video  key={data.id} width='100%' preload='none' poster={data.videoView} src={data.videoSrc} controlsList="nodownload" controls="controls"></video>
      )
    })
 
@@ -86,7 +85,7 @@ function News ({ location, dispatch, news }) {
       })
     },
     onScrollerTop = (top) => {
-      if (top && !isNaN(top * 1))
+      if (typeof top !='undefined' && !isNaN(top * 1))
         dispatch({
           type: `${PrefixCls}/updateState`,
           payload: {
@@ -120,13 +119,14 @@ function News ({ location, dispatch, news }) {
   return (
     <div>
       <Nav title={name} dispatch={dispatch}/>
-      <WhiteSpace size="md"/>
       <SearchBar
         placeholder={`在${name || '此页面'}中搜索`}
         maxLength={20}
         onFocus={handleSearchClick.bind(this,news)}
       />
-      <WhiteSpace size="md"/>
+      <div>
+        {getvideo(banners)}
+      </div>
       <Tabs
         initialPage={0}
         page={selectedIndex}
@@ -135,9 +135,6 @@ function News ({ location, dispatch, news }) {
         onTabClick={handleTabClick}
       >
         <div>
-         <div>
-           {getvideo(banners)}
-         </div>
           <div>{lists.length > 0 && getContents(lists,refreshId)}</div>
         </div>
       </Tabs>

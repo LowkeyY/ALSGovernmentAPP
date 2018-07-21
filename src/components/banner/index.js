@@ -22,7 +22,7 @@ class Banner extends React.Component {
   render () {
     const {slideIndex} = this.state;
     return (
-     <div className={styles[`${PrefixCls}-outer`]}>
+     <div className={styles[`${PrefixCls}-outer`]} style={{clear:'both'}}>
        <Carousel
          className="space-carousel"
          selectedIndex={slideIndex}

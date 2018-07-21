@@ -3,36 +3,12 @@ import modelExtend from 'dva-model-extend'
 import { model } from 'models/common'
 import { queryPartyTabs, queryPartyData } from 'services/querylist'
 
-const defaultIamge = require('themes/images/lvyou/default.jpg'),
-  defaultBanners = [{
-    url: defaultIamge,
-  }, {
-    url: defaultIamge,
-  }],
-  defaultGrids = [{
-    name: '测试1',
-    route: '1',
-  }, {
-    name: '测试2',
-    route: '2',
-  }],
-  defaultFixedGrid = {
-    id: '0',
-    title: '找律师',
-    route: 'legallist',
-    image: defaultIamge,
-    infos: '婚姻、房产、债权债务、合同纠纷',
-  },
-  defaultLists = [{
-    id: '0',
-    title: '测试',
-    image: '',
-  }, {
-    id: '0',
-    title: '测试',
-    image: '',
-  }],
-  defaultIcon = require('themes/images/nmenus/suqiu.png'),
+const getDefaultPaginations = () => ({
+    current: 1,
+    total: 0,
+    size:10,
+  }),
+  namespace = 'commonlist',
   getGrid = (datas = []) => {
     let result = [],
       counts = 0,
@@ -86,13 +62,13 @@ const defaultIamge = require('themes/images/lvyou/default.jpg'),
     })
     return result.length > 0 ? result : []
   },
-  getexternalUrl = (datas=[]) => {
-    datas.map((data,index) =>{
-      if(data.externalUrl!==''){
+  getexternalUrl = (datas = []) => {
+    datas.map((data, index) => {
+      if (data.externalUrl !== '') {
         return data.externalUrl
       }
     })
-}
+  }
 
 
 export default modelExtend(model, {
@@ -105,13 +81,17 @@ export default modelExtend(model, {
     id: '',
     name: '',
     selectedIndex: 0,
-    isOuterChain:false
+    isOuterChain: false,
+    scrollerTop: 0,
+    paginations: getDefaultPaginations(),
+    refreshId: '',
+    dataItems:[]
   },
   subscriptions: {
     setup ({ dispatch, history }) {
-      history.listen(({ pathname, query , action}) => {
+      history.listen(({ pathname, query, action }) => {
         if (pathname === '/commonlist') {
-          if (action === 'PUSH'){
+          if (action === 'PUSH') {
             const { id = '', name = '' } = query
             dispatch({
               type: 'updateState',
@@ -123,6 +103,8 @@ export default modelExtend(model, {
                 fixedLanmu: {},
                 lists: [],
                 selectedIndex: 0,
+                scrollerTop: 0,
+                paginations: getDefaultPaginations(),
               },
             })
             dispatch({
@@ -139,6 +121,7 @@ export default modelExtend(model, {
   effects: {
     * query ({ payload }, { call, put, select }) {
       const { id = '' } = payload,
+        { selectedIndex } = yield select(state => state.commonlist),
         result = yield call(queryPartyTabs, { dataId: id })
       if (result) {
         let { data = [], banners = [] } = result,
@@ -154,11 +137,23 @@ export default modelExtend(model, {
         if (grids.length > 0) {
           const { id = '' } = grids[0]
           yield put({
-            type: 'querySelect',
+            type: 'updateState',
             payload: {
-              id,
+              refreshId: id,
             },
           })
+          yield put({
+            type: 'queryListview',
+            payload: {
+              refreshId: id,
+            },
+          })
+
+          yield put ({
+            type:'queryOthers',
+            payload: grids[selectedIndex]
+          })
+
         } else {
           yield put({
             type: 'updateState',
@@ -169,39 +164,65 @@ export default modelExtend(model, {
         }
       }
     },
-    * querySelect ({ payload }, { call, put, select }) {
-      const { id = '', selected = -1 } = payload, { selectedIndex ,isOuterChain } = yield select(state => state.commonlist)
+    * queryOthers ({ payload }, { call, put, select }) {
+      const { id = '' } = payload,
+        result = yield call(queryPartyTabs, { dataId: id })
+      if (result) {
+        let { data = [] } = result
+        yield put({
+          type: 'updateState',
+          payload: {
+            dataItems:data
+          },
+        })
+      }
+    },
+    * queryListview ({ payload }, { call, put, select }) {
+      const { callback = '', isRefresh = false, selected = -1 } = payload,
+        _this = yield select(_ => _[`${namespace}`]),
+        { paginations: { current, total, size }, lists, selectedIndex, refreshId, isOuterChain } = _this
       if (!isOuterChain) {
-        const result = yield call(queryPartyData, { dataId: id })
-        if (result) {
-          let { data = [] } = result,
-            updates = {
-              lists: getList(data),
-            }
-          if (selected != -1) {
-            updates['selectedIndex'] = selected
-          }
+        if (selected != -1) {
           yield put({
             type: 'updateState',
             payload: {
-              ...updates,
-              isOuterChain:false
+              selectedIndex: selected,
             },
           })
         }
-      } else {
-          const  updates = {}
-          if (selected != -1) {
-            updates['selectedIndex'] = selected
-          }
+        const start = isRefresh ? 1 : current,
+          result = yield call(queryPartyData, { dataId: refreshId, nowPage: start, showCount: size })
+        if (result) {
+          let {data = [], totalCount = 0} = result,
+            newLists = []
+          newLists = start == 1 ? data : [...lists, ...data]
           yield put({
             type: 'updateState',
             payload: {
-              ...updates,
-              externalUrl:getexternalUrl(),
-              isOuterChain:true
+              paginations: {
+                ..._this.paginations,
+                total: totalCount * 1,
+                current: start + 1
+              },
+              lists:newLists
             },
           })
+        }
+        if (callback)
+          callback()
+      } else {
+        const updates = {}
+        if (selected != -1) {
+          updates['selectedIndex'] = selected
+        }
+        yield put({
+          type: 'updateState',
+          payload: {
+            ...updates,
+            externalUrl: getexternalUrl(),
+            isOuterChain: true,
+          },
+        })
 
       }
 

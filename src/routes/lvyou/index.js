@@ -89,7 +89,7 @@ function Lvyou({location, dispatch, lvyou}) {
       })
     },
     onScrollerTop = (top) => {
-      if (top && !isNaN(top * 1))
+      if (typeof top !='undefined' && !isNaN(top * 1))
         dispatch({
           type: `${PrefixCls}/updateState`,
           payload: {
@@ -133,16 +133,14 @@ function Lvyou({location, dispatch, lvyou}) {
   return (
     <div onTouchStart={handleScroll} onTouchEnd={handleScroll}>
       <Nav title={name} dispatch={dispatch}/>
-      <WhiteSpace size="md"/>
       <SearchBar
         placeholder={`在${name || '此页面'}中搜索`}
         maxLength={20}
         onFocus={handleSearchClick.bind(this, lvyou)}
       />
       {bannerDatas.length > 0 && <Banner {...bannerProps} />}
-      <WhiteSpace size="sm"/>
       {grids.length > 0 && <Menu handleGridClick={handleGridClick} datas={grids}/>}
-      <WhiteSpace size="sm"/>
+      <WhiteSpace size="xs"/>
       {lists.length > 0 && getContents(lists[0])}
     </div>
   )

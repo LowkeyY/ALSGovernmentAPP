@@ -10,6 +10,7 @@ import ListView from 'components/listview'
 import Banner from 'components/banner'
 import SearchHeader from 'components/searchheader'
 import styles from './index.less'
+import bg from '../../themes/images/others/greenbg.png'
 
 const PrefixCls = 'ecology',
   Item = List.Item,
@@ -29,7 +30,7 @@ function Ecology ({ location, dispatch, ecology }) {
     },
 
     handleItemClick = ({ id, pathname = 'lanmusub', title, externalUrl = '', ...others }) => {
-      console.log(others)
+
       if (externalUrl != '' && externalUrl.startsWith('http')) {
         dispatch(routerRedux.push({
           pathname: 'iframe',
@@ -90,7 +91,7 @@ function Ecology ({ location, dispatch, ecology }) {
       })
     },
     onScrollerTop = (top) => {
-      if (top && !isNaN(top * 1))
+      if (typeof top !='undefined' && !isNaN(top * 1))
         dispatch({
           type: `${PrefixCls}/updateState`,
           payload: {
@@ -117,7 +118,7 @@ function Ecology ({ location, dispatch, ecology }) {
     getItemBox = (data = [], onClick) => {
 
       return <div>
-        <div className={styles[`${PrefixCls}-itembox`]}>
+        <div className={styles[`${PrefixCls}-itembox`]} style={{backgroundImage:`url(${bg})`}}>
           <div className={styles[`${PrefixCls}-itembox-left`]} onClick={onClick.bind(null, data[0])}>
             <img src={getImages(data[0] && data[0].image)} alt=""/>
             <span>{data[0] && data[0].title}</span>
@@ -149,8 +150,7 @@ function Ecology ({ location, dispatch, ecology }) {
     }
   return (
     <div>
-      <Nav title={name} dispatch={dispatch}/>
-      <WhiteSpace size="md"/>
+      <Nav title={name} dispatch={dispatch} />
       <SearchBar
         placeholder={`在${name || '此页面'}中搜索`}
         maxLength={20}
@@ -158,6 +158,7 @@ function Ecology ({ location, dispatch, ecology }) {
       />
       <Banner datas={getBannerDatas(banners)} handleClick={handleBannerClick}/>
       <div>{getItemBox(data, handleItemClick)}</div>
+      <WhiteSpace size="xs"/>
       <div>
         {lists.length > 0 && getContents(lists[0])}
        </div>

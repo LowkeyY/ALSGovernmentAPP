@@ -1,52 +1,29 @@
 import modelExtend from 'dva-model-extend'
 import { model } from 'models/common'
 import { GetTowStupid ,GetTowStupidList} from 'services/querylist'
-const defaultTabs= [
-  {
-    title:'答复类'
-  }
-  , {
-    title:'需政策解决类'
-  },
-  {
-    title:'需资金解决类'
-  },
-  {
-    title:'需协调解决类'
-  }
-],
-  defaultDataList = [
 
-    {
-      type:'fdsfdsf',
-      content:'建议政府将驼肉等畜产品的精细化加工纳入重点规划，特别是对于项目用地给予相应的支持。'
-    }
-    ,{
-      type:'社ewgfew会民生',
-      content:'建议政府将驼肉等畜产品的精细化加工纳入重点规划，特别是对于项目用地给予相应的支持。'
-    }
-    ,{
-      type:'社会民wer生',
-      content:'建议政府将驼肉等畜产品的精细化加工纳入重点规划，特别是对于项目用地给予相应的支持。'
-    }
-    ,{
-      type:'社会ewr民生',
-      content:'建议政府将驼肉等畜产品的精细化加工纳入重点规划，特别是对于项目用地给予相应的支持。'
-    }
-  ]
 const getTabs = (arr) => {
   arr.map((item,i)=>{
     item.title=item.name
   })
   return arr
-}
+},
+  getDefaultPaginations = () => ({
+    current: 1,
+    total: 0,
+    size:10,
+  }),
+  namespace = 'twostupid'
 
 export default modelExtend(model, {
   namespace: 'twostupid',
   state: {
     tabs:[],
     dataList:[],
-    selectedIndex:0
+    selectedIndex: 0,
+    scrollerTop: 0,
+    paginations: getDefaultPaginations(),
+    refreshValue:''
   },
   subscriptions: {
     setup ({ dispatch, history }) {
@@ -64,6 +41,9 @@ export default modelExtend(model, {
             payload: {
               id,
               name,
+              selectedIndex: 0,
+              scrollerTop: 0,
+              paginations: getDefaultPaginations(),
             },
           })
         }
@@ -84,18 +64,50 @@ export default modelExtend(model, {
           if (datas.length > 0) {
             const { value = '' } =datas[selectedIndex]
             yield put({
-              type: 'querySelect',
+              type: 'updateState',
               payload: {
-                value,
+                refreshValue:value,
+              },
+            })
+            yield put({
+              type: 'queryListview',
+              payload: {
+                refreshValue:value,
               },
             })
           }
         }
 
     },
-    * querySelect ({ payload }, { call, put, select }) {
-      const { value = '', selected = -1 } = payload, { selectedIndex } = yield select(state => state.twostupid)
-
+    // * querySelect ({ payload }, { call, put, select }) {
+    //   const { value = '', selected = -1 } = payload, { selectedIndex } = yield select(state => state.twostupid)
+    //
+    //   if (selected != -1) {
+    //     yield put({
+    //       type: 'updateState',
+    //       payload: {
+    //         selectedIndex: selected,
+    //       },
+    //     })
+    //   }
+    //   const result = yield call(GetTowStupidList, { type: value })
+    //   if (result) {
+    //     let { datas = [] } = result,
+    //       updates = {
+    //         dataList:JSON.parse(datas)
+    //       }
+    //     yield put({
+    //       type: 'updateState',
+    //       payload: {
+    //         ...updates
+    //       },
+    //     })
+    //   }
+    // },
+    * queryListview({payload}, {call, put, select}) {
+      const {callback = '', isRefresh = false, selected = -1 } = payload,
+        _this = yield select(_ => _[`${namespace}`]),
+        {paginations: {current, total, size}, dataList,selectedIndex,refreshValue} = _this
       if (selected != -1) {
         yield put({
           type: 'updateState',
@@ -104,19 +116,26 @@ export default modelExtend(model, {
           },
         })
       }
-      const result = yield call(GetTowStupidList, { type: value })
+      const start = isRefresh ? 1 : current,
+        result = yield call(GetTowStupidList, {type:refreshValue, nowPage: start, showCount: size})
       if (result) {
-        let { datas = [] } = result,
-          updates = {
-            dataList:JSON.parse(datas)
-          }
+        let {datas = [], totalCount = 0} = result,
+          newLists = []
+        newLists = start == 1 ? JSON.parse(datas) : [...dataList, ...JSON.parse(datas)]
         yield put({
           type: 'updateState',
           payload: {
-            ...updates
+            paginations: {
+              ..._this.paginations,
+              total: totalCount * 1,
+              current: start + 1
+            },
+            dataList:newLists
           },
         })
       }
+      if (callback)
+        callback()
     },
   }
 })

@@ -5,7 +5,7 @@ import config from './config'
 import request from './request'
 import cookie from './cookie'
 import defaultImg from 'themes/images/default/default.png'
-import defaultUserIcon from 'themes/images/default/userIcon.jpg'
+import defaultUserIcon from 'themes/images/default/userIcon.png'
 import formsubmit from './formsubmit'
 
 const { userTag: { username, usertoken, userpower, userid, useravatar, usertype }, privateApi: { sumbitUrlPositions } } = config, { _cs, _cr, _cg } = cookie
@@ -102,6 +102,7 @@ const setLoginIn = ({ user_token, user_name, user_power, user_id, user_avatar, u
   _cs(userid, user_id)
   _cs(useravatar, user_avatar)
   _cs(usertype, user_type)
+  cnSetAlias(user_name , user_token);
 }
 const setLoginOut = () => {
   _cr(username)
@@ -110,6 +111,7 @@ const setLoginOut = () => {
   _cr(userid)
   _cr(useravatar)
   _cr(usertype)
+  cnDeleteAlias(_cg(username) , _cg(usertoken));
 }
 const getLocalIcon = (icon) => {
   const regex = /\/([^\/]+?)\./g
@@ -147,9 +149,9 @@ const postionsToString = ({ address = {}, latitude = '', longitude = '', radius 
 })
 
 const postCurrentPosition = ({ serverId = '', entityId = '' }) => {
-  if (serverId != '' && entityId != '' && _cg(usertoken) != '') {
+/*  if (serverId != '' && entityId != '' && _cg(usertoken) != '') {
     cnNeedPositions(_cg(userid), config.baseURL + sumbitUrlPositions)
-  }
+  }*/
 }
 const replaceSystemEmoji = (content) => {
   const ranges = [
@@ -168,6 +170,7 @@ const hasSystemEmoji = (content) => {
   ];
   return content.match(new RegExp(ranges.join('|'), 'g'));
 }
+
 
 module.exports = {
   config,

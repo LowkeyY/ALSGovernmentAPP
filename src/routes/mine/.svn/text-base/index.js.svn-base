@@ -1,20 +1,19 @@
 import React from 'react'
 import { connect } from 'dva'
-import { Button, Flex, WingBlank, WhiteSpace, List, Icon, Modal } from 'components'
+import { Button, Flex, WingBlank, WhiteSpace, List, Icon, Modal,Badge } from 'components'
 import Nav from 'components/nav'
 import { getImages, getErrorImg, getLocalIcon } from 'utils'
 import { routerRedux } from 'dva/router'
 import { Grid, Layout } from 'components'
 import { baseURL,api} from 'utils/config'
 import styles from './index.less'
-
+import bg from '../../themes/images/others/minebg.png'
 const PrefixCls = 'mine', { BaseLine } = Layout,{helpApi} = api,
   Item = List.Item,
   Brief = Item.Brief
-
 function Mine ({ location, dispatch, mine, app, login }) {
   const name = '我的'
-  const { users: { username, useravatar }, isLogin } = app
+  const { users: { username, useravatar }, isLogin,noViewCount=0 } = app
   const handleLogin = () => {
       dispatch(routerRedux.push({
         pathname: '/login',
@@ -54,12 +53,27 @@ function Mine ({ location, dispatch, mine, app, login }) {
       }))
     },
     handleHelpClick = ({name='帮助'}) => {
-    const src =
       dispatch(routerRedux.push({
         pathname: 'iframe',
         query: {
           name,
           externalUrl:baseURL+helpApi
+        },
+      }))
+    },
+    handleopinionClick = ({name = '意见反馈'}) => {
+      dispatch(routerRedux.push({
+        pathname: 'opinion',
+        query: {
+          name,
+        },
+      }))
+    },
+    handleTaskClick = ({name='守护阿拉善'}) => {
+      dispatch(routerRedux.push({
+        pathname: 'guard',
+        query: {
+          name,
         },
       }))
     },
@@ -80,50 +94,91 @@ function Mine ({ location, dispatch, mine, app, login }) {
         { text: '再看看', onPress: () => console.log('cancel') },
 
       ])
+    },
+    handleAboutUsClick = ({name='关于我们'  })=> {
+     dispatch(routerRedux.push({
+        pathname: '/aboutus',
+        query: {
+          name,
+        },
+      }))
     }
   return (
     <div>
-      <div className={styles[`${PrefixCls}-outer`]}>
-        <div className={styles[`${PrefixCls}-outer-title`]}>{name}</div>
+      <div className={styles[`${PrefixCls}-outer`]} style={{backgroundImage:`url(${bg})`}}>
+        {/*<div className={styles[`${PrefixCls}-outer-title`]}>{name}</div>*/}
         <div className={styles[`${PrefixCls}-outer-box`]}>
           <img src={getImages(useravatar, 'user')} alt=""/>
           <div className={styles[`${PrefixCls}-outer-box-username`]}>{username}</div>
         </div>
       </div>
       <div className={styles[`${PrefixCls}-info`]}>
-        <div className={styles[`${PrefixCls}-info-head`]} onClick={handleIntegralClick}>
+        {isLogin? <div className={styles[`${PrefixCls}-info-head`]} onClick={handleIntegralClick}>
           <span className={styles[`${PrefixCls}-info-head-integral`]}><Icon
             type={getLocalIcon('/mine/integral.svg')}/><span>我的积分</span></span>
           <span className={styles[`${PrefixCls}-info-head-change`]}><Icon
             type={getLocalIcon('/mine/store.svg')}/><span>积分兑换</span></span>
-        </div>
+        </div>:''}
         <List>
+          {
+            isLogin?
+              <div>
+                <Item
+                  thumb={<Icon type={getLocalIcon('/mine/pay.svg')}/>}
+                  onClick={() => {
+                  }}
+                  arrow="horizontal"
+                  onClick={handlePayClick}
+                >
+                  缴费记录
+                </Item>
+                <Item
+                  thumb={<Icon type={getLocalIcon('/mine/appeal.svg')}/>}
+                  onClick={() => {
+                  }}
+                  arrow="horizontal"
+                  onClick={handleAppealClick}
+                >
+                  我的诉求
+                </Item>
+                <Item
+                  thumb={<Icon type={getLocalIcon('/mine/mytask.svg')}/>}
+                  onClick={() => {
+                  }}
+                  arrow="horizontal"
+                  onClick={handleTaskClick}
+                >
+                  我的任务
+                  { noViewCount>0?<Badge text={'new'} style={{ marginLeft:12 }} />:''}
+                </Item>
+                <Item
+                  thumb={<Icon type={getLocalIcon('/mine/collection.svg')}/>}
+                  onClick={() => {
+                  }}
+                  arrow="horizontal"
+                  onClick={handleCollectionClick}
+                >
+                  我的收藏
+                </Item>
+                <Item
+                  thumb={<Icon type={getLocalIcon('/mine/setup.svg')}/>}
+                  arrow="horizontal"
+                  onClick={handleSetupClick}
+                >
+                  个人设置
+                </Item>
+              </div>
+              :
+              ''
+          }
           <Item
-            thumb={<Icon type={getLocalIcon('/mine/pay.svg')}/>}
+            thumb={<Icon type={getLocalIcon('/mine/opinion.svg')}/>}
             onClick={() => {
             }}
             arrow="horizontal"
-            onClick={handlePayClick}
+            onClick={handleopinionClick}
           >
-            缴费记录
-          </Item>
-          <Item
-            thumb={<Icon type={getLocalIcon('/mine/appeal.svg')}/>}
-            onClick={() => {
-            }}
-            arrow="horizontal"
-            onClick={handleAppealClick}
-          >
-            我的诉求
-          </Item>
-          <Item
-            thumb={<Icon type={getLocalIcon('/mine/collection.svg')}/>}
-            onClick={() => {
-            }}
-            arrow="horizontal"
-            onClick={handleCollectionClick}
-          >
-            我的收藏
+            意见反馈
           </Item>
           <Item
             thumb={<Icon type={getLocalIcon('/mine/help.svg')}/>}
@@ -132,23 +187,22 @@ function Mine ({ location, dispatch, mine, app, login }) {
             arrow="horizontal"
             onClick={handleHelpClick}
           >
-            帮助与反馈
+            使用帮助
           </Item>
-          {isLogin ? <Item
-              thumb={<Icon type={getLocalIcon('/mine/setup.svg')}/>}
-              onClick={() => {
-              }}
-              arrow="horizontal"
-              onClick={handleSetupClick}
-            >
-              设置
-            </Item> :
-            ''
+          {
+            !isLogin ?
+              <Item
+                thumb={<Icon type={getLocalIcon('/mine/aboutus.svg')}/>}
+                arrow="horizontal"
+                onClick={handleAboutUsClick}>
+                关于我们
+              </Item>
+              :
+              ''
           }
         </List>
       </div>
       <div>
-        <WhiteSpace size='lg'/>
         <WhiteSpace size='lg'/>
         {
           !isLogin ?

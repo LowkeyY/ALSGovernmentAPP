@@ -22,10 +22,10 @@ const {usertoken} = userTag,
   }
 
 export const _cs = (key, value, expire) => {
-  Cookie.set(key, value, {
+/*  Cookie.set(key, value, {
     path: '/',
     expires: 365,
-  })
+  })*/
   set(key, value)
 }
 

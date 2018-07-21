@@ -1,7 +1,7 @@
 import { request, config } from 'utils'
 
 const { api } = config
-const { QueryManuscriptApi, QueryColumnTypeApi, JicengshengyinApi, LanmuAllApi ,GetTaskListApi ,GetAllTaskApi,GetTowStupidApi, GetPatryWorkListApi,GetTowStupidListApi,GetVolunteerOrderApi,GettongjibumenApi,GetUnreadMessageApi} = api
+const { QueryManuscriptApi, QueryColumnTypeApi, JicengshengyinApi, LanmuAllApi ,GetTaskListApi ,GetAllTaskApi,GetTowStupidApi, GetPatryWorkListApi,GetTowStupidListApi,GetVolunteerOrderApi,GettongjibumenApi,GetUnreadMessageApi,QueryMembersApi} = api
 
 export async function queryPartyData (payload) {
   return request({
@@ -75,10 +75,11 @@ export async function GetTowStupidList (payload) {
     data: payload,
   })
 }
-export async function GetPatryWorkList () {
+export async function GetPatryWorkList (payload) {
   return request({
     url: GetPatryWorkListApi,
-    method: 'get'
+    method: 'get',
+    data: payload,
   })
 }
 export async function GetVolunteerOrder () {
@@ -97,5 +98,12 @@ export async function GetUnreadMessage () {
   return request({
     url: GetUnreadMessageApi,
     method: 'get'
+  })
+}
+export async function QueryMembers (payload) {
+  return request({
+    url: QueryMembersApi,
+    method: 'get',
+    data:payload
   })
 }

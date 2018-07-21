@@ -1,0 +1,12 @@
+:global {
+  .am-modal-transparent .am-modal-content{
+    text-align: left;
+  }
+}
+.container{
+
+  width: 6.4rem;
+  color: #000;
+
+}
+

@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'dva'
 import Nav from 'components/nav'
 import { routerRedux } from 'dva/router'
-import { WingBlank, WhiteSpace, List, Layout, Grid } from 'components'
+import { WingBlank, WhiteSpace, List,Grid } from 'components'
 import PullToRefresh from 'components/pulltorefresh'
 import Menu from 'components/menu/index'
 import { getImages } from 'utils'
@@ -15,7 +15,7 @@ import styles from './index.less'
 
 const Item = List.Item,
   Brief = Item.Brief
-const PrefixCls = 'patry', { BaseLine } = Layout
+const PrefixCls = 'patry'
 
 
 function Patry ({ location, dispatch, patry }) {
@@ -52,16 +52,16 @@ function Patry ({ location, dispatch, patry }) {
         </div>
       }
     },
-    handleBannerClick = ({ id, title }) => {
+      handleBannerClick = ({ id, title,route='lanmusub' }) => {
       dispatch(routerRedux.push({
-        pathname: 'patrylist',
+        pathname: `/lanmusub`,
         query: {
           id,
           name: title,
         },
       }))
     },
-    handleItemOnclick = ({externalUrl = '', id = '', pathname = 'details'}) => {
+    handleItemOnclick = ({externalUrl = '', id = '', route = 'details'}) => {
       if (externalUrl != '' && externalUrl.startsWith('http')) {
         dispatch(routerRedux.push({
           pathname: 'iframe',
@@ -72,7 +72,7 @@ function Patry ({ location, dispatch, patry }) {
         }))
       } else {
         dispatch(routerRedux.push({
-          pathname: `/${pathname}`,
+          pathname: `/${route}`,
           query: {
             name,
             dataId: id,
@@ -89,15 +89,7 @@ function Patry ({ location, dispatch, patry }) {
         },
       }))
     },
-    handleItemsClick = ({id=''}) => {
-      dispatch(routerRedux.push({
-        pathname: 'patrydetails',
-        query: {
-          id,
-          name:'党建阿拉善'
-        },
-      }))
-    },
+
     handleFixBannerClick = ({ id, title, route=''}) => {
       dispatch(routerRedux.push({
         pathname: `/${route}`,
@@ -107,20 +99,6 @@ function Patry ({ location, dispatch, patry }) {
         },
       }))
 
-    },
-    getListItem = (items = []) => {
-      const result = []
-      items.map((item) => {
-        const { title, time, id, image = '' } = item
-        result.push(
-          <Item key={id} className={styles[`${PrefixCls}-item`]}
-                thumb={image || ''} multipleLine wrap arrow='horizontal'
-                onClick={handleItemsClick.bind(null, item)}>
-            <span>{title}</span> <Brief>{time}</Brief>
-          </Item>,
-        )
-      })
-      return result
     },
     handleScroll = (e) => {
       if (e.target) {
@@ -160,7 +138,7 @@ function Patry ({ location, dispatch, patry }) {
       })
     },
     onScrollerTop = (top) => {
-      if (top && !isNaN(top * 1))
+      if (typeof top !='undefined' && !isNaN(top * 1))
         dispatch({
           type: `${PrefixCls}/updateState`,
           payload: {

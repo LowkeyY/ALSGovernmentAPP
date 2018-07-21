@@ -4,12 +4,17 @@ import { WingBlank, WhiteSpace, Tabs, SegmentedControl, Badge, List, Eventlisten
 import Ifreams from 'components/ifream'
 import Nav from 'components/nav'
 import HawkButton from 'components/hawkbutton'
+import ListView from 'components/listview'
 import { routerRedux } from 'dva/router'
 import Banner from 'components/banner'
+import {taskRow,reactRow} from 'components/row'
 import styles from './index.less'
-import { baseURL, privateApi } from 'utils/config'
+import { config, cookie } from 'utils'
 
-const { iframeUrlwanggequ, iframeUrlguiji } = privateApi,
+const { baseURL, privateApi, userTag } = config,
+  { iframeUrlwanggequ, iframeUrlguiji, sumbitUrlPositions } = privateApi,
+  { userid: userTagUserId } = userTag,
+  { _cg } = cookie,
   PrefixCls = 'guard',
   tabs = [
     { title: <Badge>网格区</Badge> },
@@ -21,7 +26,11 @@ const { iframeUrlwanggequ, iframeUrlguiji } = privateApi,
 
 function Guard ({ location, dispatch, guard, app }) {
 
-  const { name = '' } = location.query, { selectedIndex = 0, scrollerTop = 0, appentParam = '', taskList, dataList, segmentedIndex, pageType } = guard, { guiji = {} } = app, { serverId = '', entityId = '', guijiId = '' } = guiji
+  const { name = '' } = location.query,
+    { selectedIndex = 0, scrollerTop = 0, appentParam = '', taskList, dataList, segmentedIndex, pageType,paginations} = guard,
+    { guiji = {} } = app,
+    { serverId = '', entityId = '', guijiId = '' } = guiji
+
   const handlerTaskClick = ({ taskId, taskInfo, taskTitle }) => {
       dispatch(routerRedux.push(
         {
@@ -39,103 +48,71 @@ function Guard ({ location, dispatch, guard, app }) {
         pathname: '/seekdetails',
         query: {
           id,
+          name:'反馈详情'
         },
       }))
     },
-    getShstate = (shtate, state) => {
-      if (shtate == '0') {
-        return <span style={{ color: '#ccb820' }}>●正在审核</span>
-      } else if (shtate == '2') {
-        return <span style={{ color: 'red' }}>●不在办理范围</span>
-      } else {
-        return getStatus(state)
-      }
+
+    onRefresh = (callback) => {
+      dispatch({
+        type: `${PrefixCls}/getTaskList`,
+        payload: {
+          callback,
+          isRefresh:true
+        }
+      })
     },
-    getStatus = (status) => {
-      switch (status) {
-        case '0' :
-          return <span style={{ color: '#ccb820' }}>●待审核</span>
-        case '1' :
-        case '2' :
-        case '3' :
-        case '4' :
-          return <span style={{ color: 'green' }}>●处理中</span>
-        case '5' :
-          return <span style={{ color: '#000' }}>●已完成</span>
-      }
+    onEndReached = (callback) => {
+      dispatch({
+        type: `${PrefixCls}/getTaskList`,
+        payload: {
+          callback
+        }
+      })
+    },
+    onScrollerTop = (top) => {
+      if (typeof top !='undefined' && !isNaN(top * 1))
+        dispatch({
+          type: `${PrefixCls}/updateState`,
+          payload: {
+            scrollerTop: top
+          }
+        })
     },
     getCurrentView = (index) => {
+      const {current, total, size} = paginations,
+        hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total)
       switch (index) {
         case 0 : {
-          let isNew = false
           return (
-            <List>
-              {taskList && taskList.map(_ => {
-                return <Item
-                  multipleLine
-                  onClick={handlerTaskClick.bind(null, _)}
-                  wrap
-                  extra={<Badge text={_.noViewCount > 0 ? _.noViewCount : ''}/>}
-                  align="top"
-                >
-                  <div className={`${styles[`${PrefixCls}-message-title`]} ${isNew ? 'news' : ''}`}>
-                    <h3>{_.taskTitle}</h3>
-                  </div>
-                  <div className={styles[`${PrefixCls}-message-content`]}>{_.content}</div>
-                  <Brief>
-                    {_.taskInfo}
-                  </Brief>
-                </Item>
-              })
-              }
-            </List>
+           <div  className={styles[`${PrefixCls}-message-outer`]}>
+             <ListView layoutHeader={''} dataSource={taskList} layoutRow={(rowData,sectionID,rowID)=>taskRow(rowData, sectionID, rowID,handlerTaskClick )}
+                       onEndReached={onEndReached}
+                       onRefresh={onRefresh} hasMore={hasMore}
+                       onScrollerTop={onScrollerTop.bind(null)}
+                       scrollerTop={scrollerTop}
+             />
+           </div>
           )
         }
         case 1 : {
-          let isNew = false
           return (
-            <List>
-              {taskList && taskList.map(_ => {
-                return <Item
-                  multipleLine
-                  onClick={handlerTaskClick.bind(null, _)}
-                  wrap
-                  extra={<Badge text={_.noViewCount > 0 ? _.noViewCount : ''} overflowCount={99}/>}
-                  align="top"
-                >
-                  <div className={`${styles[`${PrefixCls}-message-title`]} ${isNew ? 'news' : ''}`}>
-                    <h3>{_.taskTitle}</h3>
-                  </div>
-                  <div className={styles[`${PrefixCls}-message-content`]}>{_.content}</div>
-                  <Brief>
-                    {_.taskInfo}
-                  </Brief>
-                </Item>
-              })
-              }
-            </List>
+            <ListView layoutHeader={''} dataSource={taskList} layoutRow={(rowData,sectionID,rowID)=>taskRow(rowData, sectionID, rowID,handlerTaskClick )}
+                      onEndReached={onEndReached}
+                      onRefresh={onRefresh} hasMore={hasMore}
+                      onScrollerTop={onScrollerTop.bind(null)}
+                      scrollerTop={scrollerTop}
+            />
           )
         }
         case 2 : {
           return (
-            <List>
-              {
-                dataList && dataList.map((data) => {
-                  const { content, createDate, state, shState } = data
-                  return <Item
-                    className={styles[`${PrefixCls}-item`]}
-                    multipleLine
-                    onClick={handleItemClick.bind(this, data)}
-                  >
-                    {content}
-                    <div className={styles[`${PrefixCls}-item-status`]}>
-                      <span>{createDate}</span>
-                      <span>{getShstate(shState, state)}</span>
-                    </div>
-                  </Item>
-                })
-              }
-            </List>
+            <ListView layoutHeader={''} dataSource={dataList} layoutRow={(rowData,sectionID,rowID)=>reactRow(rowData, sectionID, rowID,handleItemClick )}
+                      onEndReached={onEndReached}
+                      onRefresh={onRefresh} hasMore={hasMore}
+                      onScrollerTop={onScrollerTop.bind(null)}
+                      scrollerTop={scrollerTop}
+            />
           )
         }
       }
@@ -148,6 +125,7 @@ function Guard ({ location, dispatch, guard, app }) {
           type: 'guard/getAppelList',
           payload: {
             selected: e.nativeEvent.selectedSegmentIndex,
+            isRefresh: true
           },
         })
       } else {
@@ -155,6 +133,7 @@ function Guard ({ location, dispatch, guard, app }) {
           type: 'guard/getTaskList',
           payload: {
             selected: e.nativeEvent.selectedSegmentIndex,
+            isRefresh: true
           },
         })
       }
@@ -169,11 +148,12 @@ function Guard ({ location, dispatch, guard, app }) {
         },
       })
     },
-    handleNavClick = (route = 'warning', name = '我要反馈') => {
+    handleNavClick = (route = 'warning', name = '我要反馈',isFankui=true) => {
       dispatch(routerRedux.push({
         pathname: `/warning`,
         query: {
           name,
+          isFankui
         },
       }))
     },
@@ -223,7 +203,10 @@ function Guard ({ location, dispatch, guard, app }) {
           Toast.offline('请开启手机定位权限，否则无法记录轨迹。')
         }
       if (canStart) {
-        cnStartJiluguiji(serverId, entityId, onSuccess.bind(this), onFail.bind(this), 1500)
+        cnStartJiluguiji(serverId, entityId, onSuccess.bind(this), onFail.bind(this), {
+          key: _cg(userTagUserId),
+          url: `${baseURL + sumbitUrlPositions}`,
+        }, 1000)
       } else {
         onSuccess()
         cnStopJiluguiji()

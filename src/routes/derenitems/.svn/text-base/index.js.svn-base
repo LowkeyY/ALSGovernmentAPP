@@ -34,7 +34,7 @@ function Derenitems ({ location, dispatch, derenitems }) {
       })
     },
     onScrollerTop = (top) => {
-      if (top && !isNaN(top * 1))
+      if (typeof top !='undefined' && !isNaN(top * 1))
         dispatch({
           type: `${PrefixCls}/updateState`,
           payload: {
@@ -114,7 +114,7 @@ function Derenitems ({ location, dispatch, derenitems }) {
         }))
       }
     },
-    handleItemOnclick = ({ externalUrl = '', id, pathname = 'details' }) => {
+    handleItemOnclick = ({ externalUrl = '', id, route = 'details' }) => {
       if (externalUrl != '' && externalUrl.startsWith('http')) {
         dispatch(routerRedux.push({
           pathname: 'iframe',
@@ -125,7 +125,7 @@ function Derenitems ({ location, dispatch, derenitems }) {
         }))
       } else {
         dispatch(routerRedux.push({
-          pathname: `/${pathname}`,
+          pathname: `/${route}`,
           query: {
             name,
             dataId: id,

@@ -75,7 +75,7 @@ function Volunteer({location, dispatch, volunteer}) {
             <Brief>
               <p className={styles[`${PrefixCls}-item`]}>
                 <span><Icon type={getLocalIcon('/others/number.svg')} size='xxs'/></span>
-                <span>{`${list.number || 10}人`}</span>
+                <span>{`${list.baomingrenshu || 0}人`}</span>
               </p>
               <p className={styles[`${PrefixCls}-item`]}>
                 <span><Icon type={getLocalIcon('/others/position.svg')} size='xxs'/></span>
@@ -144,7 +144,6 @@ function Volunteer({location, dispatch, volunteer}) {
   return (
     <div className={styles[`${PrefixCls}-outer`]}>
       <Nav title={name} dispatch={dispatch}/>
-      <WhiteSpace size="sm"/>
       <Tabs tabs={grids}
             initialPage={selectedIndex}
             swipeable={false}

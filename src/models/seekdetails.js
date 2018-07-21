@@ -57,13 +57,14 @@ export default modelExtend(model, {
     setup ({ dispatch, history }) {
       history.listen(({ pathname, action, query }) => {
         if (pathname === '/seekdetails') {
-          const { name = '诉求详情', id = '' } = query
+          const { name = '诉求详情', id = '',isTask } = query
           dispatch({
             type: 'updateState',
             payload: {
               name,
               currentId: id,
               isOpen: false,
+              isTask
             },
           })
           dispatch({

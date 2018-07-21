@@ -75,10 +75,11 @@ export async function GetTowStupidList (payload) {
     data: payload,
   })
 }
-export async function GetPatryWorkList () {
+export async function GetPatryWorkList (payload) {
   return request({
     url: GetPatryWorkListApi,
-    method: 'get'
+    method: 'get',
+    data: payload,
   })
 }
 export async function GetVolunteerOrder () {

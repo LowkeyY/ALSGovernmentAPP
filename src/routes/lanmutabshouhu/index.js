@@ -10,11 +10,11 @@ import styles from './index.less'
 
 const PrefixCls = 'lanmutabshouhu',
   Item = List.Item,
-  Brief = Item.Brief,
-  {BaseLine} = Layout
+  Brief = Item.Brief
 
-function Comp ({ location, dispatch, lanmutabshouhu }) {
-  const { name = '', selectedIndex = 0, grids, lists, bannerDatas ,paginations, scrollerTop,refreshId,noViewCount} = lanmutabshouhu,
+function Comp ({ location, dispatch, lanmutabshouhu,app }) {
+  const { name = '', selectedIndex = 0, grids, lists, bannerDatas ,paginations, scrollerTop,refreshId} = lanmutabshouhu,
+    { noViewCount=0 } = app,
     handleItemOnclick = ({ externalUrl = '', id, pathname = 'details' }) => {
       if (externalUrl != '' && externalUrl.startsWith('http')) {
         dispatch(routerRedux.push({
@@ -54,7 +54,7 @@ function Comp ({ location, dispatch, lanmutabshouhu }) {
       })
     },
     onScrollerTop = (top) => {
-      if (top && !isNaN(top * 1))
+      if (typeof top !='undefined' && !isNaN(top * 1))
         dispatch({
           type: `${PrefixCls}/updateState`,
           payload: {
@@ -138,7 +138,7 @@ function Comp ({ location, dispatch, lanmutabshouhu }) {
       },
     }
   return (
-    <div className={styles[`${PrefixCls}-outer`]} >
+    <div className={styles[`${PrefixCls}-outer`]}>
       <Nav title={name} dispatch={dispatch} renderNavRight={renderNav(lanmutabshouhu)}/>
       <Banner {...bannerProps}/>
      <div className={styles[`${PrefixCls}-tabbox`]}>
@@ -151,14 +151,14 @@ function Comp ({ location, dispatch, lanmutabshouhu }) {
        >
          {getCurrentView()}
        </Tabs>
-       <div className={styles[`${PrefixCls}-tabbox-count`]}>{noViewCount*1>0?<Badge text={noViewCount} overflowCount={55} />:''}</div>
+       <div className={styles[`${PrefixCls}-tabbox-count`]}>{noViewCount*1>0?<Badge text={noViewCount*1} overflowCount={99} />:''}</div>
      </div>
     </div>
-
   )
 }
 
-export default connect(({ loading, lanmutabshouhu }) => ({
+export default connect(({ loading, lanmutabshouhu,app }) => ({
   loading,
   lanmutabshouhu,
+  app
 }))(Comp)

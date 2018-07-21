@@ -1,16 +1,15 @@
 @PrefixCls:mine;
 .@{PrefixCls}-outer{
   width: 100%;
-  background: #108ee9;
+  background:center center;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 20px 0 50px;
   text-align: center;
 
   &-title{
-    font-size:0.45rem;
+    font-size:0.35rem;
     color:#fff;
     margin-bottom: 20px;
   }
@@ -21,6 +20,7 @@
     & img{
       width: 150px;
       height: 150px;
+      margin-top: 30px;
       border-radius: 50%;
     }
     &-button{
@@ -39,7 +39,7 @@
     &-title{
       width: 100%;
       background: #108ee9;
-      padding: 20px 40px;
+      padding: 20px 30px;
       font-size: 36px;
       font-weight: bold;
     }
@@ -65,6 +65,8 @@
 .@{PrefixCls}-info{
   font-size: 38px;
   background: #fff;
+  //overflow: scroll;
+  //max-height:50vh;
 
   &-head{
     display: flex;

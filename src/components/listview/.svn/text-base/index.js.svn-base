@@ -44,7 +44,6 @@ class Comp extends React.Component {
   }
 
   componentDidMount () {
-    console.log("listView is componentDidMount")
     let hei = this.state.height, el
     if (el = ReactDOM.findDOMNode(this.lv)) {
       hei = cnhtmlHeight - getOffsetTopByBody(el) - cnhtmlSize
@@ -69,9 +68,8 @@ class Comp extends React.Component {
   }
 
   componentWillUnmount () {
-    console.log("listView is componentWillUnmount")
     let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-    if (scrollTop && this.props.onScrollerTop) {
+    if (scrollTop>=0 && this.props.onScrollerTop) {
       this.props.onScrollerTop(scrollTop)
     }
   }
@@ -152,7 +150,7 @@ class Comp extends React.Component {
       return this.props.layoutFooter(this.state.isLoading)
     }
     return <div style={{ textAlign: 'center' }}>
-      {this.state.isLoading ? <RefreshLoading/> : <BaseLine/>}
+      {this.state.isLoading ? <RefreshLoading svg={'/others/refreshloading.svg'}/> : <BaseLine/>}
     </div>
   }
 
@@ -174,6 +172,8 @@ class Comp extends React.Component {
             margin: '5px 0',
           }}
           pullToRefresh={<PullToRefresh
+            distanceToRefresh={60}
+            damping={200}
             refreshing={this.state.refreshing}
             onRefresh={this.onRefresh}
           />}

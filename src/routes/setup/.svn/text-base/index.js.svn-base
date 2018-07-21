@@ -3,6 +3,7 @@ import {connect} from 'dva'
 import {WhiteSpace, List, Icon, ActivityIndicator, Toast, Modal} from 'components'
 import Nav from 'components/nav'
 import FileUpload from 'react-fileupload'
+import { routerRedux } from 'dva/router'
 import {getErrorImg, getImages, getLocalIcon, config, cookie} from 'utils'
 import styles from './index.less'
 import doUserAvatarUpload from 'utils/formsubmit'
@@ -69,6 +70,14 @@ class Setup extends React.Component {
         animating: false,
       },
     })
+  }
+  handleAboutUsClick = ({name='关于我们'  })=> {
+    this.props.dispatch(routerRedux.push({
+      pathname: '/aboutus',
+      query: {
+        name,
+      },
+    }))
   }
 
   render() {
@@ -142,7 +151,7 @@ class Setup extends React.Component {
                 </Item>
                 : ''
             }
-            <Item>
+            <Item onClick={this.handleAboutUsClick}>
               关于我们
             </Item>
             <Item>

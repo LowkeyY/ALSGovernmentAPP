@@ -3,6 +3,7 @@ import {login, SendValidateCode, PhoneLogin} from 'services/login'
 import {Toast} from 'antd-mobile'
 import modelExtend from 'dva-model-extend'
 import {pageModel} from './common'
+import { GetUnreadMessage } from 'services/querylist'
 import {setLoginIn , postCurrentPosition} from 'utils'
 
 const MD5 = require('md5'),
@@ -18,7 +19,11 @@ export default modelExtend(pageModel, {
     loadPwd: '',
     buttonState: true, //登录按钮状态
   },
+  subscriptions: {
+    setup({dispatch, history}) {
 
+    },
+  },
   effects: {
     * login({payload}, {call, put, select}) {
       yield put({
@@ -60,6 +65,9 @@ export default modelExtend(pageModel, {
               ...guiji
             },
           })
+          yield put ({
+            type: 'queryMessage',
+          })
           postCurrentPosition(guiji)
           yield put(routerRedux.replace({
             pathname: from,
@@ -95,6 +103,9 @@ export default modelExtend(pageModel, {
             payload: {
             },
           })
+          yield put ({
+            type: 'queryMessage',
+          })
           yield put(routerRedux.replace({
             pathname: from,
           }))
@@ -103,6 +114,20 @@ export default modelExtend(pageModel, {
         Toast.offline('请检查手机号和验证码')
       }
     },
+    * queryMessage ({ payload }, { call, put, select }) {
+      const { isLogin = false } = yield select(_ => _.app)
+      if (isLogin) {
+        const data = yield call(GetUnreadMessage), { success, noViewCount=0 } = data
+        if (success) {
+          yield put({
+            type: 'app/updateState',
+            payload: {
+              noViewCount:noViewCount*1,
+            },
+          })
+        }
+      }
+    }
   },
   reducers: {
     'disabled'(state) {

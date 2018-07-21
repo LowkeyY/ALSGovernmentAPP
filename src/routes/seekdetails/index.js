@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'dva'
-import { WhiteSpace, Icon, List } from 'components'
+import { WhiteSpace, Icon, List ,Tag} from 'components'
 import Nav from 'components/nav'
 import { getImages, getErrorImg, getLocalIcon } from 'utils'
 import NoMessage from 'components/nomessage'
@@ -24,7 +24,7 @@ function SeekDetails ({ location, dispatch, seekdetails }) {
       if (cnIsArray(images) && images.length) {
         return (
           <div className={styles[`${PrefixCls}-content-images`]}>
-            {images.map(src => <div data-src={src} className='imgbox' style={{ backgroundImage: `url(${src})` }}></div>)}
+            {images.map((src,i) => <div key={i} data-src={src} className='imgbox' style={{ backgroundImage: `url(${src})` }}></div>)}
           </div>
         )
       }
@@ -54,6 +54,8 @@ function SeekDetails ({ location, dispatch, seekdetails }) {
         case '2' :
         case '3' :
         case '4' :
+        case '6' :
+        case '7' :
           return <StatusBox bg='#29ad2e' status='处理中'/>
         case '5' :
           return <StatusBox bg='#d45b5b' status='已完成'/>
@@ -103,7 +105,7 @@ function SeekDetails ({ location, dispatch, seekdetails }) {
             <div className={styles[`${PrefixCls}-header-info-box`]}>
               <div className={styles[`${PrefixCls}-header-info-box-name`]}>{username}</div>
               <div className={styles[`${PrefixCls}-header-info-box-date`]}>
-                <span>{createDate}</span><span>{positions}</span></div>
+                <span>{createDate}</span></div>
             </div>
           </div>
         </div>
@@ -117,7 +119,7 @@ function SeekDetails ({ location, dispatch, seekdetails }) {
           </div>
           <div className={styles[`${PrefixCls}-content-status`]}>
             <span style={{ color: '#1ab99d' }}>当前状态:<span>{shState=='2'?getShtate():getStatus(status)}</span></span>
-            {isCollect?<div><span><Icon type={getLocalIcon('/mine/collection.svg')}/></span><span>已收藏</span></div>:''}
+            {isCollect?<div><Tag disabled><Icon type={getLocalIcon('/others/collectionblack.svg')}/>已收藏</Tag ></div>:''}
           </div>
           <div>
             {voicePath != '' ? <VociePrev mediaFileUrl={voicePath} mediaFileTimer={0}/> : ''}

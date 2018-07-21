@@ -1,34 +1,66 @@
 import React from 'react'
 import { connect } from 'dva'
-import { WingBlank, WhiteSpace, Tabs, Badge, List, SearchBar, Layout } from 'components'
+import { WingBlank, WhiteSpace, Tabs, Badge, List, SearchBar } from 'components'
 import Nav from 'components/nav'
 import { getImages } from 'utils'
 import { routerRedux } from 'dva/router'
+import {layoutRow} from 'components/row'
+import ListView from 'components/listview'
 import Banner from 'components/banner'
 import styles from './index.less'
 
 const PrefixCls = 'threebig',
   Item = List.Item,
-  Brief = Item.Brief, { BaseLine } = Layout
+  Brief = Item.Brief
 
 function Threebig ({ location, dispatch, threebig }) {
-  const { name = '', selectedIndex = 0, tabs, itemData, bannersData, fixData } = threebig,
-    getContents = (threebig, fixData,selectedIndex) => {
-
-      const result = []
-      itemData.map((list, i) => {
-        const { id = '', title, time, image } = list
-        if (id != '') {
-          result.push(
-            <Item key={id} className={styles[`${PrefixCls}-item`]}
-                  thumb={image || ''} multipleLine wrap arrow='horizontal'
-                  onClick={handleItemOnclick.bind(null, list)}>
-              <span>{title}</span><Brief>{time}</Brief>
-            </Item>,
-          )
+  const { name = '', selectedIndex = 0, tabs, itemData, bannersData, fixData,paginations, scrollerTop,refreshId } = threebig,
+    onRefresh = (refreshId, callback) => {
+      dispatch({
+        type: `${PrefixCls}/queryListview`,
+        payload: {
+          refreshId,
+          callback,
+          isRefresh: true
         }
       })
-      return <List>{selectedIndex>0?getFixColumn(fixData):''}{result}</List>
+    },
+    onEndReached = (refreshId, callback) => {
+      dispatch({
+        type: `${PrefixCls}/queryListview`,
+        payload: {
+          refreshId,
+          callback
+        }
+      })
+    },
+    onScrollerTop = (top) => {
+      if (typeof top !='undefined' && !isNaN(top * 1))
+        dispatch({
+          type: `${PrefixCls}/updateState`,
+          payload: {
+            scrollerTop: top
+          }
+        })
+    },
+    getContents = (lists,refreshId,fixData,selectedIndex) => {
+      const {current, total, size} = paginations,
+        hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total),
+        result= []
+      if(selectedIndex!=0){
+        result.push(
+          getFixColumn(fixData)
+        )
+      }
+      result.push(
+        <ListView layoutHeader={''} dataSource={lists} layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleItemOnclick)}
+                  onEndReached={onEndReached.bind(null,refreshId)}
+                  onRefresh={onRefresh.bind(null, refreshId)} hasMore={hasMore}
+                  onScrollerTop={onScrollerTop.bind(null)}
+                  scrollerTop={scrollerTop}
+        />
+      )
+      return result
     },
     handleFixImgClick = ({ id, title, route }) => {
       dispatch(routerRedux.push({
@@ -92,10 +124,17 @@ function Threebig ({ location, dispatch, threebig }) {
       } else {
         if (index != 0) {
           dispatch({
-            type: 'threebig/querySelect',
+            type: 'threebig/updateState',
             payload: {
-              ...data,
+              refreshId:id
+            },
+          })
+          dispatch({
+            type: 'threebig/queryListview',
+            payload: {
+              refreshId:id,
               selected: index,
+              isRefresh: true
             },
           })
           dispatch({
@@ -106,10 +145,17 @@ function Threebig ({ location, dispatch, threebig }) {
           })
         }
         dispatch({
-          type: 'threebig/querySelect',
+          type: 'threebig/updateState',
           payload: {
-            ...data,
+            refreshId:id
+          },
+        })
+        dispatch({
+          type: 'threebig/queryListview',
+          payload: {
+            refreshId:id,
             selected: index,
+            isRefresh: true
           },
         })
       }
@@ -145,7 +191,6 @@ function Threebig ({ location, dispatch, threebig }) {
         },
       }))
     }
-
   return (
     <div className={styles[`${PrefixCls}-outer`]}>
       <Nav title={name} dispatch={dispatch}/>
@@ -158,8 +203,7 @@ function Threebig ({ location, dispatch, threebig }) {
         onTabClick={handleTabClick}
         renderTabBar={props => <Tabs.DefaultTabBar {...props} page={3}/>}>
         <div>
-          {getContents(itemData, fixData,selectedIndex)}
-          <BaseLine/>
+          {itemData.length>0&&getContents(itemData,refreshId,fixData,selectedIndex)}
         </div>
       </Tabs>
     </div>

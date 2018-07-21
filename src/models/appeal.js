@@ -108,6 +108,7 @@ export default modelExtend(model, {
       }
     },
     * collent ({ payload }, { call, put, select }) {
+      console.log(payload)
       const { id, shoucang } = payload, { success } = yield call(collectAppeal, { ...payload, workId: id })
       if (success) {
         const { dataList } = yield select(_ => _[namespace]),

@@ -1,5 +1,6 @@
 import React from 'react'
 import styles from './index.less'
+import classNames from 'classnames'
 import { Icon } from 'antd-mobile'
 
 const PrefixCls = 'hawkbutton'
@@ -34,11 +35,11 @@ class HawkButton extends React.Component {
   }
 
   render () {
-    const text = this.props.btnStatus ? '结束' : '开始',
+    const text = this.props.btnStatus ? '结束记录' :`开始记录`,
       color = this.props.btnStatus ? 'red' : '#108ee9', { isLoading } = this.state
     return (
       <div className={styles[`${PrefixCls}-outer`]} onClick={this.handleClick}>
-        <div className={styles[`${PrefixCls}-outer-button`]} style={{ background: color }}>
+        <div className={classNames(styles[`${PrefixCls}-outer-button`],{[styles.active]:this.props.btnStatus})} style={{ background: color }}>
           {isLoading ? <Icon type='loading'/> : text}
         </div>
       </div>

@@ -1,43 +1,81 @@
 import React from 'react'
 import { connect } from 'dva'
-import { WhiteSpace, Tabs, Card } from 'components'
+import { WhiteSpace, Tabs } from 'components'
 import Nav from 'components/nav'
-import PullToRefresh from 'components/pulltorefresh'
+import ListView from 'components/listview'
+import {twoStupidRow} from 'components/row'
 import Layout from 'components'
-import styles from './index.less'
+
 
 
 const PrefixCls = 'twostupid', { BaseLine } = Layout
 
 function Twostupid ({ location, dispatch, twostupid }) {
   const { name = '' } = location.query,
-    { selectedIndex, tabs, dataList } = twostupid
-
+    { selectedIndex, tabs, dataList=[],refreshValue,paginations,scrollerTop} = twostupid
   const handleTabItemClick = (data, index) => {
+    const {value=''} = data
       dispatch({
-        type: 'twostupid/querySelect',
+        type: 'twostupid/updateState',
         payload: {
+          refreshValue:value,
           selected: index,
-          ...data
+        },
+      })
+      dispatch({
+        type: 'twostupid/queryListview',
+        payload: {
+          refreshValue:value,
+          selected: index,
+          isRefresh: true
         },
       })
 
     },
-    layoutItem = (data) => {
-      return data && data.map((item, i) => {
-         return <div key={item.id}  className={styles[`${PrefixCls}-outer`]}>
-            <Card>
-              <Card.Header
-                title="问题类型"
-                extra={<span>{item.wentifenlei}</span>}
-              />
-              <Card.Body>
-                <div>{item.neirong}</div>
-              </Card.Body>
-            </Card>
-          </div>
+
+    onRefresh = (refreshValue, callback) => {
+      dispatch({
+        type: `${PrefixCls}/queryListview`,
+        payload: {
+          refreshValue,
+          callback,
+          isRefresh: true
+        }
       })
+    },
+    onEndReached = (refreshValue, callback) => {
+      dispatch({
+        type: `${PrefixCls}/queryListview`,
+        payload: {
+          refreshValue,
+          callback
+        }
+      })
+    },
+    onScrollerTop = (top) => {
+      if (typeof top !='undefined' && !isNaN(top * 1))
+        dispatch({
+          type: `${PrefixCls}/updateState`,
+          payload: {
+            scrollerTop: top
+          }
+        })
+    },
+    getContents = (lists,refreshValue) => {
+      const {current, total, size} = paginations,
+        hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total),
+        result= []
+      result.push(
+        <ListView layoutHeader={''} dataSource={lists} layoutRow={twoStupidRow}
+                  onEndReached={onEndReached.bind(null,refreshValue)}
+                  onRefresh={onRefresh.bind(null, refreshValue)} hasMore={hasMore}
+                  onScrollerTop={onScrollerTop.bind(null)}
+                  scrollerTop={scrollerTop}
+        />
+      )
+      return result
     }
+
   return (
     <div>
       <Nav title={name} dispatch={dispatch}/>
@@ -51,7 +89,7 @@ function Twostupid ({ location, dispatch, twostupid }) {
         renderTabBar={props => <Tabs.DefaultTabBar {...props} page={3} />}
       >
         <div>
-          {layoutItem(dataList)}
+          {dataList.length>0&&getContents(dataList,refreshValue)}
         </div>
       </Tabs>
     </div>

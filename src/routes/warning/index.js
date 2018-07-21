@@ -4,6 +4,7 @@ import { connect } from 'dva'
 import Nav from 'components/nav'
 import { routerRedux } from 'dva/router'
 import VociePrev from 'components/voicePrev'
+import NotesModal from 'components/notesmodal'
 import classNames from 'classnames'
 import {
   List,
@@ -262,7 +263,7 @@ class Warning extends Component {
           let msg = code == -999 ? message : '请允许系统访问您的位置。'
           Toast.offline(msg, 2)
         }
-      cnGetCurrentPosition(onSuccess, onError, 60 * 1000 * 3)
+      cnGetCurrentPosition(onSuccess, onError)
     }
   }
 
@@ -295,18 +296,45 @@ class Warning extends Component {
     clearInterval(int)
     clearTimeout(stop)
   }
+  handleNavClick = () => {
+   this.props.dispatch({
+     type:`${PrefixCls}/updateState`,
+     payload:{
+       notesvisible:true
+     }
+   })
+  }
+  notesModalClick = () => {
+    this.props.dispatch({
+      type:`${PrefixCls}/updateState`,
+      payload:{
+        notesvisible:false
+      }
+    })
+  }
+  renderNav = (isFankui) => {
+   if(!isFankui){
+     return (
+       <span onClick={this.handleNavClick}>诉求须知</span>
+     )
+   }else {
+     return ''
+   }
 
+  }
   render () {
-    const { name = '' } = this.props.location.query, { appealType, animating, location } = this.props.warning
+    const { name = '' } = this.props.location.query, { appealType, animating, location,notesvisible,content,isFankui} = this.props.warning
     let { address = {} } = JSON.parse(location),
-      currentPostions = address.street || ''
+      currentPostions = address.street || address.district || address.city || ''
 
     const { getFieldProps, getFieldError } = this.props.form,
       { unit, bits, minutes, mediaFileUrl, mediaFile, mediaFileLength, loadPostions } = this.state
 
     return (
       <div onClick={this.handleDivClick.bind(this)}>
-        <Nav title={name} dispatch={this.props.dispatch}/>
+        <Nav title={name} dispatch={this.props.dispatch}
+             renderNavRight={this.renderNav(isFankui)}
+        />
         <div className={styles[`${PrefixCls}-outer`]}>
           <form>
             <div className={styles[`${PrefixCls}-outer-title`]}>
@@ -327,10 +355,11 @@ class Warning extends Component {
             </div>
             <div className={styles[`${PrefixCls}-outer-type`]} onClick={this.handleGetType}>
               <Picker data={appealType} cols={1} {...getFieldProps('type', {
-                rules: [{ required: true }],
+                rules: [{ required: true,message: '请选择诉求类型' }],
               })}
+                      error={!!getFieldError('type') && Toast.fail(getFieldError('type'))}
               >
-                <List.Item arrow="horizontal">诉求类型</List.Item>
+                <List.Item arrow="horizontal">{isFankui?'反馈类型':'诉求类型'}</List.Item>
               </Picker>
             </div>
             <List.Item className={styles[`${PrefixCls}-outer-content`]}>
@@ -346,24 +375,33 @@ class Warning extends Component {
                 placeholder={'在此输入发表内容，注意时间、地点、涉及人物等要素'}
               />
             </List.Item>
-            <InputItem
-              {...getFieldProps('positions', {
-                initialValue: currentPostions,
-                rules: [{ required: false, message: '标题必须输入' },
-                  {
-                    max: 10, message: '当前位置最多只能输入10个字',
-                  }],
-              })}
-              clear
+           <div style={{borderBottom:'1px solid #ddd'}}>
+             <InputItem
+               {...getFieldProps('positions', {
+                 initialValue: currentPostions
+               })}
+               clear
+               error={!!getFieldError('positions') && Toast.fail(getFieldError('positions'))}
+               placeholder="请输入您的位置"
+               extra={currentPostions == '' ? loadPostions ? <Icon type='loading'/> :
+                 <span onClick={this.getCurrentLocation.bind(this)}><Icon
+                   type={getLocalIcon('/others/location.svg')}/></span> : ''}
+             >
+               当前位置
+             </InputItem>
+           </div>
+            {isFankui?'':
+              <InputItem
+                type='number'
+                {...getFieldProps('phone', {
+                  initialValue: ''
+                })}
 
-              error={!!getFieldError('positions') && Toast.fail(getFieldError('positions'))}
-              placeholder="请输入您的位置"
-              extra={currentPostions == '' ? loadPostions ? <Icon type='loading'/> :
-                <span onClick={this.getCurrentLocation.bind(this)}><Icon
-                  type={getLocalIcon('/others/location.svg')}/></span> : ''}
-            >
-              当前位置
-            </InputItem>
+                placeholder="非必填"
+              >
+                联系电话
+              </InputItem>
+            }
             <div className={styles[`${PrefixCls}-outer-img`]}>
               <div>
                 <p>添加图片</p>
@@ -390,7 +428,7 @@ class Warning extends Component {
                      onTouchStart={this.handleVoiceRecordingStart}
                      onTouchEnd={this.handleVoiceRecordingEnd}
                 >
-                  按住录音
+                  按下录音
                 </div>
               </div>
               <ActivityIndicator
@@ -399,19 +437,23 @@ class Warning extends Component {
                 animating={this.state.isVoice}
               />
             </div>
-            <div className={styles[`${PrefixCls}-outer-voice-isOpen`]}>
-              <List>
-                <List.Item
-                  extra={<Switch
-                    {...getFieldProps('isOpen', {
-                      initialValue: true,
-                      valuePropName: 'checked',
-                    })}
-                    platform="android"
-                  />}
-                >允许公开我的信息</List.Item>
-              </List>
-            </div>
+            {
+              isFankui?''
+                :
+                <div className={styles[`${PrefixCls}-outer-voice-isOpen`]}>
+                  <List>
+                    <List.Item
+                      extra={<Switch
+                        {...getFieldProps('isOpen', {
+                          initialValue: true,
+                          valuePropName: 'checked',
+                        })}
+                        platform="android"
+                      />}
+                    >允许公开我的信息</List.Item>
+                  </List>
+                </div>
+            }
             <div className={styles[`${PrefixCls}-outer-button`]}>
               <Button type="ghost" inline size="small" onClick={this.onSubmit}>提交</Button>
             </div>
@@ -422,6 +464,7 @@ class Warning extends Component {
           text='正在上传...'
           animating={animating}
         />
+        <NotesModal visible={notesvisible&&!isFankui} handleClick={this.notesModalClick}  content={content}/>
       </div>
     )
   }

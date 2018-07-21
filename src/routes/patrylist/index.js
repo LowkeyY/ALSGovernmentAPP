@@ -14,7 +14,7 @@ const PrefixCls = 'patrylist', { BaseLine } = Layout,
 function Patrylist ({ location, dispatch, patrylist }) {
   const { name = '', theIndex = 0 } = location.query,
     { patryListData } = patrylist,
-  handleItemOnclick = ({externalUrl = '', id = '', pathname = 'details'}) => {
+  handleItemOnclick = ({externalUrl = '', id = '', route = 'details'}) => {
     if (externalUrl != '' && externalUrl.startsWith('http')) {
       dispatch(routerRedux.push({
         pathname: 'iframe',
@@ -25,7 +25,7 @@ function Patrylist ({ location, dispatch, patrylist }) {
       }))
     } else {
       dispatch(routerRedux.push({
-        pathname: `/${pathname}`,
+        pathname: `/${route}`,
         query: {
           name,
           dataId: id,

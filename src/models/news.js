@@ -38,22 +38,24 @@ export default modelExtend(model, {
     setup ({ dispatch, history }) {
       history.listen(({ pathname, query, action }) => {
         if (pathname === '/news') {
-          const { id = '', name = '' } = query
-          dispatch({
-            type: 'updateState',
-            payload: {
-              id,
-              name,
-              scrollerTop: 0,
-              paginations: getDefaultPaginations()
-            },
-          })
-          dispatch({
-            type: 'query',
-            payload: {
-              dataId: id,
-            },
-          })
+           if(action=="PUSH"){
+             const { id = '', name = '' } = query
+             dispatch({
+               type: 'updateState',
+               payload: {
+                 id,
+                 name,
+                 scrollerTop: 0,
+                 paginations: getDefaultPaginations()
+               },
+             })
+             dispatch({
+               type: 'query',
+               payload: {
+                 dataId: id,
+               },
+             })
+           }
         }
       })
     },

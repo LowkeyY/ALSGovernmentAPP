@@ -17,7 +17,7 @@ let lastHref,
   progessStart = false
 const App = ({ children, dispatch, app, loading, location }) => {
   let { pathname } = location
-  const { spinning = false, tabBars, users, updates: { upgraded = false, urls = '' }, showModal } = app
+  const { spinning = false, tabBars, users, updates: { upgraded = false, urls = '' }, showModal,noViewCount=0} = app
   pathname = pathname.startsWith('/') ? pathname : `/${pathname}`
   pathname = pathname.endsWith('/index.html') ? '/' : pathname //Android配置首页自启动
   const href = window.location.href,
@@ -69,8 +69,14 @@ const App = ({ children, dispatch, app, loading, location }) => {
       }
     }
 
-  }
-
+  },
+    getDot= (pathname,noViewCount) =>{
+     if(pathname==='/mine'&&noViewCount>0){
+      return true
+      }else{
+      return false
+      }
+    }
   if (pathname !== '/' && menusArray.length && !menusArray.includes(pathname)) {
     return (<div>
       <Loader spinning={loading.effects[`${pathname.startsWith('/') ? pathname.substr(1) : pathname}/query`]}/>
@@ -91,6 +97,7 @@ const App = ({ children, dispatch, app, loading, location }) => {
             key: index,
             selectedIcon: _.icon,
             selected: pathname === _.route,
+            dot:getDot(_.route,noViewCount),
             onPress: () => {
               const { appends = {}, route } = _
               dispatch(routerRedux.push({

@@ -80,7 +80,6 @@ function Livelihood ({ location, dispatch, livelihood }) {
   return (
     <div>
       <Nav title={name} dispatch={dispatch}/>
-      <WhiteSpace size="md"/>
       <div className={styles[`${PrefixCls}-outer`]}>
         <div>
           <Tabs

@@ -5,7 +5,7 @@ import { routerRedux } from 'dva/router'
 import { Icon, WhiteSpace, Accordion, Button, Eventlisten, Toast, List } from 'components'
 import ChartRoom from 'components/chatroom'
 import Nav from 'components/nav'
-import { getLocalIcon, getImages,hasSystemEmoji } from 'utils'
+import { getLocalIcon, getImages, replaceSystemEmoji } from 'utils'
 import styles from './index.less'
 
 let globalIndex = 0
@@ -23,13 +23,11 @@ const PrefixCls = 'taskdetails',
 
 function TaskDetails ({ location, dispatch, taskdetails, app }) {
   const { name = '' } = location.query,
-    { chartArr, val, isDisabled, taskInfo, taskTitle, localArr, imageArr, workId, flowState, flowLeve, flowId, taskId, isShowButton, isOpen, viewImageIndex, taskType, taskUrgency, creatDate, endDate } = taskdetails,
+    { chartArr, val, isDisabled, taskInfo, taskTitle, localArr, imageArr, workId, flowState, flowLeve, flowId, taskId, isShowButton, isOpen, viewImageIndex, taskType, taskUrgency, creatDate, endDate, complete, isWork } = taskdetails,
     { isSuccess } = chartArr,
     { users: { userid, useravatar } } = app
   const onSubmit = ({ msgType = 0, content = '' }) => {
-   if(hasSystemEmoji(content)){
-     Toast.fail('不支持的字符',2)
-   }
+
       let _Key = `${taskId}${globalIndex++}`,
         params = { msgType, taskId, _Key },
         appendLoacl = { ...params, isMySelf: true },
@@ -40,6 +38,11 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
       switch (msgType) {
         case 0: {
           if (content != '') {
+            content = replaceSystemEmoji(content)
+            if (content == '') {
+              errorMessages = '不能发送系统自带表情。'
+              break
+            }
             params.msgInfo = content
             appendLoacl.msgInfo = content
           } else {
@@ -91,11 +94,11 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
         Toast.offline(errorMessages)
       }
     },
-    readMessage = (msgId) => {
+    readMessage = (taskId) => {
       dispatch({
         type: 'taskdetails/readMessage',
         payload: {
-          msgId: msgId,
+          taskId,
         },
       })
     },
@@ -109,7 +112,6 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
           },
         })
       }
-      readMessage(msgId)
     },
     handleTaskClick = (type) => {
       dispatch({
@@ -133,13 +135,43 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
         },
       })
     },
-
-    getTaskButtons = (flowLeve, flowState) => {
+    handleCompleteButtonClick = () => {
+      dispatch({
+        type: 'taskdetails/completeButtonTask',
+        payload: {
+          workId,
+          taskId,
+          flowId,
+        },
+      })
+    },
+    handleZhihuiClick = () => {
+      dispatch({
+        type: 'taskdetails/zhiHuiConformTask',
+        payload: {
+          taskId,
+          workId,
+        },
+      })
+    },
+    getCompleteButtons = (complete) => {
+      if (complete != '0') {
+        return <div>
+          <Button type="primary" inline size="small" style={{ marginRight: '4px' }}
+                  onClick={handleCompleteButtonClick}>完成</Button>
+        </div>
+      } else {
+        return ''
+      }
+    },
+    getTaskButtons = (flowLeve, flowState, complete, isWork) => {
       if (flowLeve == '3' && flowState == '0') {
         return <div>
-          <Button type="primary" inline size="small" style={{ marginRight: '40px',background:'#35aa47',borderColor:'#35aa47' }}
+          <Button type="primary" inline size="small"
+                  style={{ marginRight: '40px', background: '#35aa47', borderColor: '#35aa47' }}
                   onClick={handleTaskClick.bind(null, 'conform')}>接受</Button>
-          <Button type="primary" inline size="small" style={{ marginRight: '4px',background:'#f3565d',borderColor:'#f3565d' }}
+          <Button type="primary" inline size="small"
+                  style={{ marginRight: '4px', background: '#f3565d', borderColor: '#f3565d' }}
                   onClick={handleTaskClick.bind(null, 'back')}
           >退回</Button>
         </div>
@@ -148,13 +180,22 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
           <Button type="primary" inline size="small" style={{ marginRight: '4px' }}
                   onClick={handleCompleteClick}>完成</Button>
         </div>
+      } else if (complete != '0') {
+        return <div>
+          <Button type="primary" inline size="small" style={{ marginRight: '4px' }}
+                  onClick={handleCompleteButtonClick}>完成</Button>
+        </div>
+      } else if (isWork == '7') {
+        return <div>
+          <Button type="primary" inline size="small" style={{ marginRight: '4px' }}
+                  onClick={handleZhihuiClick}>完成</Button>
+        </div>
       }
     },
     handleListClick = ({ workId, isTask = true, taskId }) => {
       dispatch({
         type: 'seekdetails/updateState',
         payload: {
-          isTask,
           workId,
           taskId,
         },
@@ -163,22 +204,34 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
         pathname: `/seekdetails`,
         query: {
           id: workId,
+          isTask: true,
         },
       }))
+    },
+    renderNav = (taskId) => {
+      return (
+        <span onClick={handleNavClick.bind(null,taskId)}>发布任务</span>
+      )
+    },
+    handleNavClick = () => {
+      dispatch(routerRedux.push({
+        pathname: `/selectmembers`,
+        query: {
+          taskId
+        },
+      }))
+    },
+    props = {
+      handlerSubmit: onSubmit,
+      dispatch,
+      isDisabled,
+      isOpen,
+      viewImageIndex,
+      isSuccess,
     }
-
-
-  const props = {
-    handlerSubmit: onSubmit,
-    dispatch,
-    isDisabled,
-    isOpen,
-    viewImageIndex,
-    isSuccess,
-  }
   return (
     <div>
-      <Nav title='任务详情' dispatch={dispatch}/>
+      <Nav title='任务详情' dispatch={dispatch} navEvent={readMessage.bind(null, taskId)} renderNavRight={renderNav(taskId)}/>
       <div className={styles[`${PrefixCls}-outer`]}>
         <div className={styles[`${PrefixCls}-outer-title`]}>
           {taskTitle}
@@ -218,10 +271,19 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
           isShowButton
             ?
             <div className={styles[`${PrefixCls}-outer-control`]}>
-              {getTaskButtons(flowLeve, flowState)}
+              {getTaskButtons(flowLeve, flowState, complete, isWork)}
             </div> :
             ''
         }
+        {/*{*/}
+        {/*isShowButton*/}
+        {/*?*/}
+        {/*<div className={styles[`${PrefixCls}-outer-control`]}>*/}
+        {/*{getCompleteButtons(complete)}*/}
+        {/*</div>*/}
+        {/*:*/}
+        {/*''*/}
+        {/*}*/}
         <div className={styles[`${PrefixCls}-outer-chat`]}>
           <Icon type={getLocalIcon('/others/chat.svg')} size="md"/>
           <span className={styles[`${PrefixCls}-outer-details-title`]}>【任务汇报】</span>

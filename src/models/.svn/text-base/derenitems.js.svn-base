@@ -6,7 +6,7 @@ import { queryPartyTabs, queryPartyData } from 'services/querylist'
 const getDefaultPaginations = () => ({
     current: 1,
     total: 0,
-    size: 5
+    size: 10
   }),
   namespace='derenitems'
 
@@ -83,27 +83,6 @@ export default modelExtend(model, {
       }
     },
 
-    // * querySelect ({ payload }, { call, put, select }) {
-    //   const { id = '',selected = -1 } = payload, { selectedIndex } = yield select(state => state.derenitems)
-    //   if (selected != -1) {
-    //     yield put({
-    //       type: 'updateState',
-    //       payload: {
-    //         selectedIndex: selected,
-    //       },
-    //     })
-    //   }
-    //   const result = yield call(queryPartyData, { dataId: id })
-    //   if (result) {
-    //     let { data = [] } = result
-    //     yield put({
-    //       type: 'updateState',
-    //       payload: {
-    //         itemData:data
-    //       },
-    //     })
-    //   }
-    // },
     * queryListview({payload}, {call, put, select}) {
       const {callback = '', isRefresh = false, selected = -1 } = payload,
         _this = yield select(_ => _[`${namespace}`]),

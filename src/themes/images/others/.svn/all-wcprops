@@ -1,7 +1,7 @@
 K 25
 svn:wc:ra_dav:version-url
-V 46
-/svn/MYALSAPP/!svn/ver/89/themes/images/others
+V 47
+/svn/MYALSAPP/!svn/ver/164/themes/images/others
 END
 building.png
 K 25
@@ -14,4 +14,16 @@ K 25
 svn:wc:ra_dav:version-url
 V 59
 /svn/MYALSAPP/!svn/ver/1/themes/images/others/nomessage.png
+END
+minebg.png
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/MYALSAPP/!svn/ver/164/themes/images/others/minebg.png
+END
+greenbg.png
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/MYALSAPP/!svn/ver/162/themes/images/others/greenbg.png
 END

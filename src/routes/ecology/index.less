@@ -1,7 +1,7 @@
 @PrefixCls:ecology;
 
 .@{PrefixCls}-itembox{
-  background:rgba(157,255,0,.1);
+  background-size: cover;
    padding: 20px 20px;
    width: 100%;
   height: 300px;
@@ -13,7 +13,7 @@
   border-bottom: 2px solid #ddd;
   &-left{
     width: 38%;
-    border-right: 2px solid #ddd;
+    border-right: 2px solid #888;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -39,7 +39,7 @@
     &-top{
       height: 50%;
       box-sizing: border-box;
-      border-bottom: 2px solid #ddd;
+      border-bottom: 2px solid #888;
       display: flex;
       align-items: center;
       & img{
@@ -74,16 +74,4 @@
     max-height: 200px;
   }
 }
-.@{PrefixCls}-item {
-  & span {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-  }
-  & img {
-    width: 180px;
-    height: 140px;
-  }
-}
+

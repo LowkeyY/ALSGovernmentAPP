@@ -61,7 +61,7 @@ function Comp ({ location, dispatch, lanmusub }) {
       })
     },
     onScrollerTop = (top) => {
-      if (top && !isNaN(top * 1))
+      if (typeof top !='undefined'&& !isNaN(top * 1))
         dispatch({
           type: `${PrefixCls}/updateState`,
           payload: {
@@ -100,14 +100,13 @@ function Comp ({ location, dispatch, lanmusub }) {
   return (
     <div>
       <Nav title={name} dispatch={dispatch}/>
-      <WhiteSpace size="md"/>
       <SearchBar
         placeholder={`在${name || '此页面'}中搜索`}
         maxLength={20}
         onFocus={handleSearchClick.bind(this, lanmusub)}
       />
       {bannerDatas.length > 0 && <Banner {...bannerProps} />}
-      <WhiteSpace size="sm"/>
+      <WhiteSpace size="xs"/>
       {lists.length > 0 && getContents(lists)}
     </div>
   )

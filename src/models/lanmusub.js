@@ -86,7 +86,7 @@ export default modelExtend(model, {
         start = isRefresh ? 1 : current,
         result = yield call(queryPartyData, { dataId: id,nowPage: start, showCount: size  })
       if (result) {
-        let {data = [], totalCount = 0} = result,
+        let {data = [], totalCount = 0,noBanner=false} = result,
           newLists = []
         newLists = start == 1 ? data : [...lists, ...data]
         yield put({
@@ -97,7 +97,7 @@ export default modelExtend(model, {
               total: totalCount * 1,
               current: start + 1
             },
-            bannerDatas:getBanners(data),
+            bannerDatas:noBanner? [] : getBanners(newLists),
             lists:newLists
           },
         })

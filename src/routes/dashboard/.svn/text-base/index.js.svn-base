@@ -91,12 +91,11 @@ function Dashboard ({ dashboard, loading, dispatch, app }) {
     <div className={styles[`${PrefixCls}-outer`]} onTouchStart={handleScroll} onTouchEnd={handleScroll}>
       <div className={styles[`${PrefixCls}-top`]}>
         <Header dispatch={dispatch} isLogin={isLogin}/>
-        <WhiteSpace size="sm"/>
         {bannerDatas.length > 0 && <Banner {...bannerProps} />}
-        <WhiteSpace size="sm"/>
-        {noticeDatas.length > 0 && <NoticeBar datas={noticeDatas} handleClick={handleDataClick}/>}
+        <WhiteSpace size="xs"/>
+        {noticeDatas.length > 0 && <NoticeBar dispatch={dispatch} datas={noticeDatas} handleClick={handleDataClick}/>}
       </div>
-      <WhiteSpace size="sm"/>
+      <WhiteSpace size="xs"/>
       {/*{isScroll ?*/}
         {/*getContent() :*/}
         {/*<PullToRefresh sibilingsHasBanner={true} children={*/}

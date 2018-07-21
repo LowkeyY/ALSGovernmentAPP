@@ -1,3 +1,4 @@
+@import '../../themes/default.less';
 @PrefixCls:integralcard;
 .@{PrefixCls}-outer{
   width: 48%;
@@ -30,7 +31,7 @@
 
       &-button{
         padding: 4px 6px;
-        background: #0e80d2;
+        background: @primary-color;
         color: white;
       }
     }

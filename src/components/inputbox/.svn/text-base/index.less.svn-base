@@ -1,3 +1,4 @@
+@import "../../themes/default";
 @PrefixCls: inputbox;
 
 .@{PrefixCls}-outer {
@@ -23,7 +24,7 @@
       border: 0 none;
       background: #fff;
       height: 70px;
-      border-bottom:4px solid #4eaaf7;
+      border-bottom:4px solid @primary-color;
     }
     & > div {
       margin-right: 40px;
@@ -92,7 +93,7 @@
         & span {
           width: 180px;
           height: 180px;
-          background: #108ee9;
+          background: @primary-color;
           border-radius: 50%;
           display: flex;
           justify-content: center;

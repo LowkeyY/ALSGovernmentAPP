@@ -4,7 +4,7 @@ import { model } from 'models/common'
 import { getAllTask } from 'services/querylist'
 import { sendMsgFiles,readMessage } from 'services/sendmsgfile'
 import { routerRedux } from 'dva/router'
-import { taskStatus, completeTask } from 'services/taskstatus'
+import { taskStatus, completeTask,completeButtonTask,zhiHuiConformTask } from 'services/taskstatus'
 import { Toast } from 'components'
 
 
@@ -42,6 +42,8 @@ export default modelExtend(model, {
     taskUrgency: '',
     creatDate: '',
     endDate: '',
+    complete:'0',
+    isWork:''
   },
   subscriptions: {
     setup ({ dispatch, history }) {
@@ -69,7 +71,7 @@ export default modelExtend(model, {
   },
   effects: {
     * getTaskList ({ payload }, { call, put, select }) {
-      const { success = false, data = {}, taskTitle = '', workId, taskInfo = '', flowId = '', flowLeve = '', flowState = '', taskId = '', taskType = '', taskUrgency='', creatDate='', endDate='' } = yield call(getAllTask, payload)
+      const { success = false, data = {}, taskTitle = '', workId, taskInfo = '', flowId = '', flowLeve = '', flowState = '', taskId = '', taskType = '', taskUrgency='', creatDate='', endDate='',complete='0',isWork='' } = yield call(getAllTask, payload)
       if (success) {
         yield put({
           type: 'updateState',
@@ -85,7 +87,9 @@ export default modelExtend(model, {
             taskType,
             taskUrgency,
             creatDate,
-            endDate
+            endDate,
+            complete,
+            isWork
           },
         })
       }
@@ -131,6 +135,30 @@ export default modelExtend(model, {
     },
     * completeTask ({ payload }, { call, put, select }) {
       const data = yield call(completeTask, payload)
+      if (data.success) {
+        yield put({
+          type: 'updateState',
+          payload: {
+            isShowButton: false,
+          },
+        })
+        Toast.success('操作成功')
+      }
+    },
+    * completeButtonTask ({ payload }, { call, put, select }) {
+      const data = yield call(completeButtonTask, payload)
+      if (data.success) {
+        yield put({
+          type: 'updateState',
+          payload: {
+            isShowButton: false,
+          },
+        })
+        Toast.success('操作成功')
+      }
+    },
+    * zhiHuiConformTask ({ payload }, { call, put, select }) {
+      const data = yield call(zhiHuiConformTask, payload)
       if (data.success) {
         yield put({
           type: 'updateState',

@@ -3,24 +3,12 @@ import modelExtend from 'dva-model-extend'
 import { model } from 'models/common'
 import { getJicengshenying } from 'services/querylist'
 
-const defaultTabs = [
-    { id: 1, title: '待办理' },
-    { id: 2, title: '急需办理' },
-    { id: 3, title: '已办理' },
-    { id: 4, title: '已逾期' },
-  ],
-  defaultList = [
-    {
-      bumen: '匿名',
-      zeren: '2018-8-15 08:59',
-      dingban: '张家界',
-      title: '漏水了',
-      status: '已批转',
-      yijian: '大会覅苏打回访水电费莱克斯顿就发d放大来看结构来看范德萨价格破is打工的时间分工都是佛厉害胜多负少的了多少积分离开是的覅偶第三方第三个风口浪尖的撒供货商大两房和技术都恢复',
-      id: 1,
-    },
-  ],
-  defaultSelectedIndex = 0
+const getDefaultPaginations = () => ({
+  current: 1,
+  total: 0,
+  size:10,
+}),
+  namespace = 'basevoice'
 export default modelExtend(model, {
   namespace: 'basevoice',
   state: {
@@ -29,12 +17,14 @@ export default modelExtend(model, {
       { id: 3, title: '已办结' },
       { id: 4, title: '已逾期' }],
     lists: [],
-    selectedIndex: defaultSelectedIndex,
+    selectedIndex: 0,
+    scrollerTop: 0,
+    paginations: getDefaultPaginations(),
   },
   subscriptions: {
     setup ({ dispatch, history }) {
       dispatch({
-        type: 'query',
+        type: 'queryListview',
         payload: {
           types: 1,
         },
@@ -47,6 +37,8 @@ export default modelExtend(model, {
             payload: {
               id,
               name,
+              scrollerTop: 0,
+              paginations: getDefaultPaginations(),
             },
           })
         }
@@ -55,8 +47,10 @@ export default modelExtend(model, {
   },
 
   effects: {
-    * query ({ payload }, { call, put, select }) {
-      const { selected = -1, ...others } = payload
+    * queryListview ({ payload }, { call, put, select }) {
+      const {callback = '', isRefresh = false, selected = -1 } = payload,
+        _this = yield select(_ => _[`${namespace}`]),
+        {paginations: {current, total, size},lists,selectedIndex} = _this
       if (selected != -1) {
         yield put({
           type: 'updateState',
@@ -65,15 +59,25 @@ export default modelExtend(model, {
           },
         })
       }
-      const { success = true, datas = [] } = yield call(getJicengshenying, others)
+      const start = isRefresh ? 1 : current,
+     { success = true, datas = [],totalCount=0 } = yield call(getJicengshenying,{types:selectedIndex+1, nowPage: start, showCount: size} )
       if (success) {
+         let newLists = []
+        newLists = start == 1 ? datas : [...lists, ...datas]
         yield put({
           type: 'updateState',
           payload: {
-            lists: datas,
+            paginations: {
+              ..._this.paginations,
+              total: totalCount * 1,
+              current: start + 1
+            },
+            lists:newLists
           },
         })
       }
+      if (callback)
+        callback()
     },
   },
 })

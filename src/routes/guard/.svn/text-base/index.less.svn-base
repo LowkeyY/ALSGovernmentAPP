@@ -1,32 +1,17 @@
 @PrefixCls:guard;
 
-.@{PrefixCls}-item {
-  & span {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-  }
-  & img {
-    width: 180px;
-    height: 140px;
-    padding: 20px 0;
-  }
 
-  &-status{
-    display: flex;
-    justify-content: space-between;
-    & :nth-child(1) {
-      font-size: 20px;
-      color: #666;
-    }
-  }
-}
 
 .@{PrefixCls}-message-title{
 
   & h3{
     margin: 0;
+  }
+}
+.@{PrefixCls}-message-outer{
+  :global{
+    .am-list-body .am-list-extra{
+      flex-basis: 15%;
+    }
   }
 }

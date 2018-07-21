@@ -2,9 +2,9 @@ import React from 'react'
 import { connect } from 'dva'
 import { routerRedux } from 'dva/router'
 import Nav from 'components/nav'
-import PullToRefresh from 'components/pulltorefresh'
+import ListView from 'components/listview'
 import { List, WhiteSpace, SearchBar, Tabs, Card, WingBlank ,Layout} from 'components'
-import { baseVoice } from 'components/row'
+import { baseVoiceRow } from 'components/row'
 import styles from './index.less'
 
 
@@ -14,47 +14,61 @@ function Basevoice ({ location, dispatch, basevoice }){
 
   const { name = '' } = location.query
   const PrefixCls = 'basevoice',
-    { tabs, lists, selectedIndex } = basevoice,
+    { tabs, lists, selectedIndex,paginations,scrollerTop } = basevoice,
     handleTabItemClick = (data, index) => {
       dispatch({
-        type: 'basevoice/query',
+        type: 'basevoice/updateState',
         payload: {
-          selected: index,
-          types: data.id,
+          selectedIndex:index,
         },
       })
-
+      dispatch({
+        type: 'basevoice/queryListview',
+        payload: {
+          selected: index,
+          selectedIndex:index,
+          isRefresh: true
+        },
+      })
     },
-    handleCardClick = (id) => {
-
+    onRefresh = (callback) => {
+      dispatch({
+        type: `${PrefixCls}/queryListview`,
+        payload: {
+          callback,
+          isRefresh: true
+        }
+      })
     },
-    layoutInputItem = (others) => {
-      const { bumen, zeren, dingban, shixian, fangshi, xiaohao, sumu } = others
-      return <Item>
-        <div className={styles[`${PrefixCls}-card-items`]}>
-          <span>交办部门：</span>{bumen}<br/>
-          <span>责任人：</span>{zeren}<br/>
-          <span>盯办人:</span>{dingban}<br/>
-          <span>完成时限：</span>{shixian}<br/>
-          <span>解决方式：</span>{fangshi}<br/>
-          <span>销号情况：</span>{xiaohao}<br/>
-        </div>
-      </Item>
+    onEndReached = (callback) => {
+      dispatch({
+        type: `${PrefixCls}/queryListview`,
+        payload: {
+          callback
+        }
+      })
     },
-    layoutItem = (data) => {
-      const { yijian, ...others } = data,
-        result = []
-      if (yijian != '') {
-        result.push(<WhiteSpace/>)
-        result.push(
-          <Card full={true}>
-            <Card.Header title={<span className={styles[`${PrefixCls}-card-title`]}>{yijian}</span>}/>
-            <Card.Body>
-              {layoutInputItem(others)}
-            </Card.Body>
-          </Card>)
-        result.push(<WhiteSpace/>)
-      }
+    onScrollerTop = (top) => {
+      if (typeof top !='undefined' && !isNaN(top * 1))
+        dispatch({
+          type: `${PrefixCls}/updateState`,
+          payload: {
+            scrollerTop: top
+          }
+        })
+    },
+    getContents = (lists) => {
+      const {current, total, size} = paginations,
+        hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total),
+        result= []
+      result.push(
+        <ListView layoutHeader={''} dataSource={lists} layoutRow={baseVoiceRow}
+                  onEndReached={onEndReached}
+                  onRefresh={onRefresh} hasMore={hasMore}
+                  onScrollerTop={onScrollerTop.bind(null)}
+                  scrollerTop={scrollerTop}
+        />
+      )
       return result
     }
 
@@ -69,13 +83,9 @@ function Basevoice ({ location, dispatch, basevoice }){
         swipeable={false}
         onTabClick={handleTabItemClick}
       >
-        <WingBlank size="sm">
-          <PullToRefresh sibilingsHasBanner={true} children={lists && lists.map((data, index) => {
-            return <div key={data.id}>
-              {layoutItem(data, handleCardClick)}
-            </div>
-          })}/>
-        </WingBlank>
+        <div>
+          {lists.length>0&&getContents(lists)}
+        </div>
       </Tabs>
     </div>
   )

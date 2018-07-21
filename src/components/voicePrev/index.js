@@ -37,7 +37,7 @@ class VociePrev extends React.Component {
     return (
       <div className={styles[`${PrefixCls}-outer`]}>
         <div className={styles[`${PrefixCls}-box`]}>
-          <div className={styles[`${PrefixCls}-box-contentbox`]} style={{ paddingRight:`${voiceLength}`}}
+          <div className={styles[`${PrefixCls}-box-contentbox`]} style={{ paddingRight:`${voiceLength}px`}}
                onClick={this.handleVoiceClick}>
             <Voice wave={this.state.listening} isLeft={true}/>
           </div>

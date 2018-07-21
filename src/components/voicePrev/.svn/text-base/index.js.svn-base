@@ -33,11 +33,11 @@ class VociePrev extends React.Component {
   }
   render () {
     const { mediaFileTimer = 0, mediaFileUrl = '' } = this.props,
-      voiceLength = Math.min(15+(mediaFileTimer*8),80)
+      voiceLength = Math.min(15+(mediaFileTimer*4),100)
     return (
       <div className={styles[`${PrefixCls}-outer`]}>
         <div className={styles[`${PrefixCls}-box`]}>
-          <div className={styles[`${PrefixCls}-box-contentbox`]} style={{ paddingRight:`${voiceLength}`}}
+          <div className={styles[`${PrefixCls}-box-contentbox`]} style={{ paddingRight:`${voiceLength}px`}}
                onClick={this.handleVoiceClick}>
             <Voice wave={this.state.listening} isLeft={true}/>
           </div>
