@@ -4,7 +4,7 @@ module.exports = {
   // baseURL: 'http://172.168.40.146:8080',
   // wsURL: 'ws://172.168.40.146:8080/websocket/chat/',
   // baseURL: 'http://114.246.157.12:9200',
-  // baseURL: 'http://192.168.3.118:8080',
+  // baseURL: 'http://192.168.0.202:9200',
   baseURL: 'http://www.myals.gov.cn:9000',
   wsURL: 'ws://www.myals.gov.cn:9000/websocket/chat/',
   userTag: {
@@ -72,6 +72,7 @@ module.exports = {
     ZhiHuiConformTaskApi:'/ExternalItems/taskRelease/zhiHuiConformTask.jcp',
     FazhandangyuanxinxiApi:'/ExternalItems/dangjian/fazhandangyuanxinxi.jcp',
     FazhandangyuanListApi:'/ExternalItems/dangjian/fazhandangyuanList.jcp',
-    QueryMembersApi:'/ExternalItems/taskRelease/interface/AppSelectUser.jcp'
+    QueryMembersApi:'/ExternalItems/taskRelease/interface/getSelectTaskUser.jcp',
+    SendTaskApi:'/ExternalItems/taskRelease/interface/appTaskCreat.jcp',
   },
 }

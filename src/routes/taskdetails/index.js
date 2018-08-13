@@ -1,78 +1,78 @@
-import { Component } from 'react'
-import ReactDOM from 'react-dom'
-import { connect } from 'dva'
-import { routerRedux } from 'dva/router'
-import { Icon, WhiteSpace, Accordion, Button, Eventlisten, Toast, List } from 'components'
-import ChartRoom from 'components/chatroom'
-import Nav from 'components/nav'
-import { getLocalIcon, getImages, replaceSystemEmoji } from 'utils'
-import styles from './index.less'
+import { Component } from 'react';
+import ReactDOM from 'react-dom';
+import { connect } from 'dva';
+import { routerRedux } from 'dva/router';
+import { Icon, WhiteSpace, Accordion, Button, Eventlisten, Toast, List } from 'components';
+import ChartRoom from 'components/chatroom';
+import Nav from 'components/nav';
+import { getLocalIcon, getImages, replaceSystemEmoji } from 'utils';
+import styles from './index.less';
 
-let globalIndex = 0
+let globalIndex = 0;
 const Item = List.Item,
-  Brief = Item.Brief
+  Brief = Item.Brief;
 const PrefixCls = 'taskdetails',
   appendItems = (lists, id) => {
-    const result = []
+    const result = [];
     lists.map(list => {
-      let isMySelf = list.hasOwnProperty('isMySelf') ? list['isMySelf'] : list['msgcUser'] == id
-      result.push({ ...list, isMySelf })
-    })
-    return result
-  }
+      let isMySelf = list.hasOwnProperty('isMySelf') ? list['isMySelf'] : list['msgcUser'] == id;
+      result.push({ ...list, isMySelf });
+    });
+    return result;
+  };
 
 function TaskDetails ({ location, dispatch, taskdetails, app }) {
   const { name = '' } = location.query,
     { chartArr, val, isDisabled, taskInfo, taskTitle, localArr, imageArr, workId, flowState, flowLeve, flowId, taskId, isShowButton, isOpen, viewImageIndex, taskType, taskUrgency, creatDate, endDate, complete, isWork } = taskdetails,
     { isSuccess } = chartArr,
-    { users: { userid, useravatar } } = app
+    { users: { userid, useravatar } } = app;
   const onSubmit = ({ msgType = 0, content = '' }) => {
-
+      
       let _Key = `${taskId}${globalIndex++}`,
         params = { msgType, taskId, _Key },
         appendLoacl = { ...params, isMySelf: true },
         images = [],
         files = {},
-        errorMessages = ''
-
+        errorMessages = '';
+      
       switch (msgType) {
         case 0: {
           if (content != '') {
-            content = replaceSystemEmoji(content)
+            content = replaceSystemEmoji(content);
             if (content == '') {
-              errorMessages = '不能发送系统自带表情。'
-              break
+              errorMessages = '不能发送系统自带表情。';
+              break;
             }
-            params.msgInfo = content
-            appendLoacl.msgInfo = content
+            params.msgInfo = content;
+            appendLoacl.msgInfo = content;
           } else {
-            errorMessages = '不能发送空消息。'
+            errorMessages = '不能发送空消息。';
           }
-          break
+          break;
         }
         case 1: {
           if (content != '') {
             images = {
               'msgFile': content,
-            }
-            appendLoacl.msgInfo = URL.createObjectURL(content)
+            };
+            appendLoacl.msgInfo = URL.createObjectURL(content);
           } else {
-            errorMessages = '图片无法获取。'
+            errorMessages = '图片无法获取。';
           }
-          break
+          break;
         }
         case 2: {
-          const { file = '', url = '', timers = 5 } = content
+          const { file = '', url = '', timers = 5 } = content;
           if (file != '' && url != '') {
             files = {
               'msgFile': file,
-            }
-            appendLoacl.msgInfo = url
-            appendLoacl.timers = timers
+            };
+            appendLoacl.msgInfo = url;
+            appendLoacl.timers = timers;
           } else {
-            errorMessages = '文件无法获取。'
+            errorMessages = '文件无法获取。';
           }
-          break
+          break;
         }
       }
       if (errorMessages == '') {
@@ -81,7 +81,7 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
           payload: {
             appends: { ...appendLoacl, _status: 1 },
           },
-        })
+        });
         dispatch({
           type: 'taskdetails/sendMsgFiles',
           payload: {
@@ -89,9 +89,9 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
             images,
             files,
           },
-        })
+        });
       } else {
-        Toast.offline(errorMessages)
+        Toast.offline(errorMessages);
       }
     },
     readMessage = (taskId) => {
@@ -100,17 +100,17 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
         payload: {
           taskId,
         },
-      })
+      });
     },
     onCnevent = (appendMessage) => {
-      const { taskId: _id = '', msgId, ...others } = appendMessage
+      const { taskId: _id = '', msgId, ...others } = appendMessage;
       if (_id != '' && _id == taskId) {
         dispatch({
           type: 'taskdetails/appendMessage',
           payload: {
             appends: others,
           },
-        })
+        });
       }
     },
     handleTaskClick = (type) => {
@@ -123,7 +123,7 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
           flowId,
           type,
         },
-      })
+      });
     },
     handleCompleteClick = (completeTask) => {
       dispatch({
@@ -133,7 +133,7 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
           taskId,
           flowId,
         },
-      })
+      });
     },
     handleCompleteButtonClick = () => {
       dispatch({
@@ -143,25 +143,36 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
           taskId,
           flowId,
         },
-      })
+      });
     },
     handleZhihuiClick = () => {
       dispatch({
         type: 'taskdetails/zhiHuiConformTask',
         payload: {
-          taskId,
+          hztaskId:taskId,
           workId,
         },
-      })
+      });
+    },
+    handleBackClick = () => {
+      dispatch({
+        type: 'taskdetails/backTask',
+        payload: {
+          taskId,
+          flowId,
+          pageType: 'back'
+        },
+      });
+      
     },
     getCompleteButtons = (complete) => {
       if (complete != '0') {
         return <div>
           <Button type="primary" inline size="small" style={{ marginRight: '4px' }}
                   onClick={handleCompleteButtonClick}>完成</Button>
-        </div>
+        </div>;
       } else {
-        return ''
+        return '';
       }
     },
     getTaskButtons = (flowLeve, flowState, complete, isWork) => {
@@ -174,22 +185,30 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
                   style={{ marginRight: '4px', background: '#f3565d', borderColor: '#f3565d' }}
                   onClick={handleTaskClick.bind(null, 'back')}
           >退回</Button>
-        </div>
+        </div>;
       } else if (flowLeve == '3' && flowState == '3') {
         return <div>
           <Button type="primary" inline size="small" style={{ marginRight: '4px' }}
                   onClick={handleCompleteClick}>完成</Button>
-        </div>
+        </div>;
       } else if (complete != '0') {
         return <div>
           <Button type="primary" inline size="small" style={{ marginRight: '4px' }}
                   onClick={handleCompleteButtonClick}>完成</Button>
-        </div>
+        </div>;
       } else if (isWork == '7') {
         return <div>
           <Button type="primary" inline size="small" style={{ marginRight: '4px' }}
                   onClick={handleZhihuiClick}>完成</Button>
-        </div>
+        </div>;
+      }
+    },
+    getBackTaskButtons =() => {
+      if (isWork != "1" && isWork != "6" && isWork != "7"&&flowLeve!='0') {
+        return <div><Button type="primary" inline size="small" style={{ marginRight: '4px' }}
+                            onClick={handleBackClick}>退回任务</Button></div>;
+      }else {
+        return ''
       }
     },
     handleListClick = ({ workId, isTask = true, taskId }) => {
@@ -199,27 +218,32 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
           workId,
           taskId,
         },
-      })
+      });
       dispatch(routerRedux.push({
         pathname: `/seekdetails`,
         query: {
           id: workId,
           isTask: true,
         },
-      }))
+      }));
     },
     renderNav = (taskId) => {
-      return (
-        <span onClick={handleNavClick.bind(null,taskId)}>发布任务</span>
-      )
+      if (isWork == '0' || isWork == '2') {
+        return <span onClick={handleSendClick.bind(null, taskId)}>发布任务</span>;
+      } else {
+        return '';
+      }
     },
-    handleNavClick = () => {
+    handleSendClick = () => {
       dispatch(routerRedux.push({
         pathname: `/selectmembers`,
         query: {
-          taskId
+          taskId,
+          workId,
+          isWork,
+          flowLeve,
         },
-      }))
+      }));
     },
     props = {
       handlerSubmit: onSubmit,
@@ -228,10 +252,11 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
       isOpen,
       viewImageIndex,
       isSuccess,
-    }
+    };
   return (
     <div>
-      <Nav title='任务详情' dispatch={dispatch} navEvent={readMessage.bind(null, taskId)} renderNavRight={renderNav(taskId)}/>
+      <Nav title='任务详情' dispatch={dispatch} navEvent={readMessage.bind(null, taskId)}
+           renderNavRight={renderNav(taskId, isWork)} />
       <div className={styles[`${PrefixCls}-outer`]}>
         <div className={styles[`${PrefixCls}-outer-title`]}>
           {taskTitle}
@@ -239,7 +264,7 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
         <Accordion className={styles[`${PrefixCls}-outer-taskdetails`]}>
           <Accordion.Panel header={
             <div className={styles[`${PrefixCls}-outer-taskdetails-title`]}>
-              <Icon type={getLocalIcon('/others/task.svg')} size="md"/>
+              <Icon type={getLocalIcon('/others/task.svg')} size="md" />
               <span>【任务详情】</span>
             </div>
           }>
@@ -272,6 +297,7 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
             ?
             <div className={styles[`${PrefixCls}-outer-control`]}>
               {getTaskButtons(flowLeve, flowState, complete, isWork)}
+              {getBackTaskButtons(isWork)}
             </div> :
             ''
         }
@@ -285,18 +311,18 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
         {/*''*/}
         {/*}*/}
         <div className={styles[`${PrefixCls}-outer-chat`]}>
-          <Icon type={getLocalIcon('/others/chat.svg')} size="md"/>
+          <Icon type={getLocalIcon('/others/chat.svg')} size="md" />
           <span className={styles[`${PrefixCls}-outer-details-title`]}>【任务汇报】</span>
         </div>
       </div>
-      <ChartRoom {...props} localArr={appendItems(chartArr, userid)} useravatar={useravatar}/>
-      <Eventlisten willCallback={onCnevent}/>
+      <ChartRoom {...props} localArr={appendItems(chartArr, userid)} useravatar={useravatar} />
+      <Eventlisten willCallback={onCnevent} />
     </div>
-  )
+  );
 }
 
 export default connect(({ loading, taskdetails, app }) => ({
   loading,
   taskdetails,
   app,
-}))(TaskDetails)
+}))(TaskDetails);

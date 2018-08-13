@@ -5,7 +5,9 @@ import styles from './index.less'
 const PrefixCls = 'banner'
 
 class Banner extends React.Component {
-
+  constructor(props){
+    super()
+  }
   state = {
     data: [],
     slideIndex: 0,
@@ -18,14 +20,22 @@ class Banner extends React.Component {
       })
     }, 300)
   }
-
+  onHandleChange = (num) =>{
+    if(this.props && this.props.dispatch)
+      this.props.dispatch({
+        type:'dashboard/updateState',
+        payload:{
+          selectedIndex:num
+        }
+      })
+  }
   render () {
-    const {slideIndex} = this.state;
+    const selectedIndex= this.props.selectedIndex;
     return (
      <div className={styles[`${PrefixCls}-outer`]} style={{clear:'both'}}>
        <Carousel
          className="space-carousel"
-         selectedIndex={slideIndex}
+         selectedIndex={selectedIndex}
          autoplayInterval={5000}
          autoplay
          infinite
@@ -42,6 +52,7 @@ class Banner extends React.Component {
            height:'2px',
            borderRadius:'0'
          }}
+         afterChange={this.onHandleChange.bind(this)}
        >
          {this.props.datas && this.props.datas.map((data, i) => (
            <div

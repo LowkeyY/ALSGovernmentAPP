@@ -40,34 +40,34 @@ const App = ({ children, dispatch, app, loading, location }) => {
     NProgress.done()
   }
   const update = (url, upgraded) => {
-    if (upgraded) {
-      return <Modal
-        visible={true}
-        transparent
-        maskClosable={false}
-        title="当前版本过低"
-        footer={[{ text: '立刻升级', onPress: () => cnUpdate(url) }]}
-      >
-        <div>
-          为保证正常使用，请先升级应用
-        </div>
-      </Modal>
-    } else {
-      if (isFirst) {
-        Modal.alert('版本更新', '点击升级我的阿拉善', [
-          {
-            text: '暂不升级', onPress: () => dispatch({
-              type: 'app/updateState',
-              payload: {
-                showModal: false,
-              },
-            }), style: 'default',
-          },
-          { text: '立刻升级', onPress: () => cnUpdate(url) },
-        ])
-        isFirst = false
-      }
-    }
+    // if (upgraded) {
+    //   return <Modal
+    //     visible={true}
+    //     transparent
+    //     maskClosable={false}
+    //     title="当前版本过低"
+    //     footer={[{ text: '立刻升级', onPress: () => cnUpdate(url) }]}
+    //   >
+    //     <div>
+    //       为保证正常使用，请先升级应用
+    //     </div>
+    //   </Modal>
+    // } else {
+    //   if (isFirst) {
+    //     Modal.alert('版本更新', '点击升级我的阿拉善', [
+    //       {
+    //         text: '暂不升级', onPress: () => dispatch({
+    //           type: 'app/updateState',
+    //           payload: {
+    //             showModal: false,
+    //           },
+    //         }), style: 'default',
+    //       },
+    //       { text: '立刻升级', onPress: () => cnUpdate(url) },
+    //     ])
+    //     isFirst = false
+    //   }
+    // }
 
   },
     getDot= (pathname,noViewCount) =>{

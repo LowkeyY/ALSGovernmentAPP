@@ -31,6 +31,7 @@ export default modelExtend(model, {
     noticeDatas: [],
     grids: [],
     isScroll: false,
+    selectedIndex:0
   },
 
   subscriptions: {

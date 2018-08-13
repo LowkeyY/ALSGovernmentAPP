@@ -23,25 +23,6 @@ const NoticeBar = (props) => {
     },
     currentData = props.datas || []
   return (
-    /*<div className={styles[`${PrefixCls}-outer`]}>
-      <img onClick={props.handleImgClick} src={require('./img/news.png')} alt="" onClick={handleClick}/>
-      <Carousel className="my-carousel"
-                vertical
-                dots={false}
-                dragging={false}
-                swiping={false}
-                autoplay
-                infinite
-      >
-        {
-          props.datas && props.datas.map((data, index) =>
-            <div onClick={props.handleClick.bind(null , data)}
-                 className={styles[`${PrefixCls}-outer-container`]}
-                 key={index}>{data.title}</div>)
-        }
-      </Carousel>
-    </div>*/
-
     <div className={styles[`${PrefixCls}-outer`]}>
       {/*<Icon style={{width:'50px'}} type={getLocalIcon('/others/tip.svg')}/>*/}
       {currentData.length > 0 ? <img src={getGif()} alt=""/> : ''}
@@ -51,8 +32,9 @@ const NoticeBar = (props) => {
                 dots={false}
                 dragging={false}
                 swiping={false}
-                autoplayInterval={5000}
-                autoplay
+                // autoplayInterval={5000}
+                selectedIndex={props.selectedIndex}
+                // autoplay
                 infinite
       >
         {

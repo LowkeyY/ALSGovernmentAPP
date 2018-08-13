@@ -106,6 +106,7 @@ function VolunteerDetails({location, dispatch, volunteerdetails, app}) {
           currentSelect: newSelect
         }
       })
+       console.log(newSelect)
     },
     handleSubmits = () => {
       if (currentSelect.length > 0) {

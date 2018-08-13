@@ -9,6 +9,7 @@ import { getLocalIcon } from 'utils'
 import Banner from 'components/banner/index'
 import PullToRefresh from 'components/pulltorefresh'
 import NoticeBar from 'components/cunovsnoticebar'
+import HeadLine from 'components/headline'
 
 const PrefixCls = 'dashboard',
   Item = List.Item,
@@ -18,7 +19,7 @@ function Dashboard ({ dashboard, loading, dispatch, app }) {
   const { Header, BaseLine } = Layout,
     headerProps = {
       dispatch,
-    }, { bannerDatas, noticeDatas, isScroll, grids } = dashboard, { isLogin } = app
+    }, { bannerDatas, noticeDatas, isScroll, grids,selectedIndex=0 } = dashboard, { isLogin } = app
   const handleGridClick_2 = ({ pathname, ...others }) => {//切换路由
       others.id = '25536211-52fd-4f66-b235-6d7a27b49f00'
       others.name = '守护'
@@ -50,9 +51,10 @@ function Dashboard ({ dashboard, loading, dispatch, app }) {
     handleImgClick = (data) => {
       console.log('handleImgClick', data)
     },
-    bannerProps = {
-      datas: bannerDatas,
+    headLineProps = {
+      bannerDatas: bannerDatas,
       handleClick: handleDataClick,
+      datas:noticeDatas,
     },
     handleScroll = (e) => {
       if (e.target) {
@@ -91,16 +93,10 @@ function Dashboard ({ dashboard, loading, dispatch, app }) {
     <div className={styles[`${PrefixCls}-outer`]} onTouchStart={handleScroll} onTouchEnd={handleScroll}>
       <div className={styles[`${PrefixCls}-top`]}>
         <Header dispatch={dispatch} isLogin={isLogin}/>
-        {bannerDatas.length > 0 && <Banner {...bannerProps} />}
+        <HeadLine {...headLineProps} dispatch={dispatch} selectedIndex={selectedIndex} />
         <WhiteSpace size="xs"/>
-        {noticeDatas.length > 0 && <NoticeBar dispatch={dispatch} datas={noticeDatas} handleClick={handleDataClick}/>}
       </div>
       <WhiteSpace size="xs"/>
-      {/*{isScroll ?*/}
-        {/*getContent() :*/}
-        {/*<PullToRefresh sibilingsHasBanner={true} children={*/}
-          {/**/}
-        {/*}/>}*/}
         <div className={styles[`${PrefixCls}-outer-content`]}>{getContent()}</div>
     </div>
   )
