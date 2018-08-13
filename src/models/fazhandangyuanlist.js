@@ -1,14 +1,17 @@
-import { parse } from 'qs'
-import modelExtend from 'dva-model-extend'
-import { routerRedux } from 'dva/router'
-import { model } from 'models/common'
-import { Toast } from 'components'
-import { getFazhandangyuanList } from 'services/fazhandangyuan'
+import { parse } from 'qs';
+import modelExtend from 'dva-model-extend';
+import { routerRedux } from 'dva/router';
+import { model } from 'models/common';
+import { Toast } from 'components';
+import { getFazhandangyuanList } from 'services/fazhandangyuan';
 
 const namespace = 'fazhandangyuanlist',
   defaultState = () => ({
     items: [],
-  })
+    showPopover: false,
+    isEdit: false,
+    currentSelect: []
+  });
 
 export default modelExtend(model, {
   namespace,
@@ -19,30 +22,31 @@ export default modelExtend(model, {
   subscriptions: {
     setup ({ dispatch, history }) {
       history.listen(location => {
-        let { pathname, query, action } = location
+        let { pathname, query, action } = location;
         if (pathname.startsWith(`/${namespace}`)) {
-          const { liuchengId = '7a9bf0d6-824c-4e04-9775-d268a5ab0325' } = query
-          if (action == 'PUSH') {
+          const { liuchengId = '7a9bf0d6-824c-4e04-9775-d268a5ab0325' } = query;
+          if (action === 'PUSH') {
             dispatch({
               type: 'updateState',
               payload: {
                 liuchengId,
               },
-            })
+            });
           }
           dispatch({
             type: 'query',
             payload: {
               liuchengId,
             },
-          })
+          });
         }
-      })
+      });
     },
   },
   effects: {
     * query ({ payload }, { call, put, select }) {
-      const result = yield call(getFazhandangyuanList, payload), { success = false, message = '发生未知错误。', ...others } = result
+      const result = yield call(getFazhandangyuanList, payload),
+        { success = false, message = '发生未知错误。', ...others } = result;
       if (success) {
         yield put({
           type: 'updateState',
@@ -50,11 +54,11 @@ export default modelExtend(model, {
             ...defaultState(),
             ...others,
           },
-        })
+        });
       } else {
-        Toast.fail(message, 2)
-        yield put(routerRedux.goBack())
+        Toast.fail(message, 2);
+        yield put(routerRedux.goBack());
       }
     },
   },
-})
+});

@@ -112,7 +112,7 @@ function VolunteerDetails({location, dispatch, volunteerdetails, app}) {
       if (currentSelect.length > 0) {
         dispatch({
           type: `${PrefixCls}/submit`
-        })
+        });
       } else {
         Toast.info('请选择帮扶对象。', 2)
       }

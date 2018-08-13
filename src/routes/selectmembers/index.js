@@ -91,10 +91,12 @@ function Selectmembers ({ location, dispatch, selectmembers }) {
                     {data.data.map((data, index) => {
                       return (
                         <CheckboxItem
+                          checked={currentSelect.includes(data)}
                           key={index}
                           onClick={handleSelectClick.bind(this, data)}
                         >
                           <span>{data.name}</span>
+                          <span style={{ marginLeft: '20px' }}>{data.isMaster !== '' ? '管理员' : ''}</span>
                           <p className={styles[`${PrefixCls}-dept`]}>{data.deptPath}</p>
                         </CheckboxItem>
                       );

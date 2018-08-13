@@ -1,6 +1,6 @@
-import Loader from './Loader'
-import * as Layout from './Layout'
-import Eventlisten from './eventlistener'
+import Loader from './Loader';
+import * as Layout from './Layout';
+import Eventlisten from './eventlistener';
 import {
   WhiteSpace,
   Button,
@@ -29,7 +29,9 @@ import {
   Modal,
   NavBar,
   DatePicker,
-} from 'antd-mobile'
+  Drawer,
+  Popover
+} from 'antd-mobile';
 
 module.exports = {
   WhiteSpace,
@@ -61,5 +63,7 @@ module.exports = {
   Eventlisten,
   Modal,
   NavBar,
-  DatePicker
-}
+  DatePicker,
+  Drawer,
+  Popover
+};
