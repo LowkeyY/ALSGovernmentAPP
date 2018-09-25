@@ -10,12 +10,25 @@
     background: #fff;
     border-bottom: 2px solid #ddd;
   }
-  &-date {
-    font-size: 30px;
-    text-align: right;
+  &-info {
     background: #fff;
-    padding: 15px 60px;
-    color: #aaa;
+    padding:30px 60px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 30px;
+    &-date {
+      color: #aaa;
+    }
+    &-praise{
+
+      &>span{
+        display: flex;
+        align-items: center;
+       & span{
+         margin-right: 10px;
+       }
+      }
+    }
   }
   &-content {
     padding: 20px 20px 40px 20px;
@@ -27,7 +40,7 @@
       max-height: 100% !important;
       height: auto !important;
     }
-    & video audio{
+    & video audio {
       width: 100%;
       text-align: center;
     }

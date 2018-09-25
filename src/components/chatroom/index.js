@@ -65,7 +65,6 @@ class ChatRoom extends Component {
       let src = e.target.src,
         curImageIndex = -1
       if (src && (curImageIndex = arr.indexOf(src)) != -1) {
-x
         this.props.dispatch({
           type: 'taskdetails/updateState',
           payload: {

@@ -1,55 +1,76 @@
+import { parse } from 'qs';
+import modelExtend from 'dva-model-extend';
+import { model } from 'models/common';
+import { queryPartyData } from 'services/querylist';
 
-import {parse} from 'qs'
-import modelExtend from 'dva-model-extend'
-import { model } from 'models/common'
-import { queryPatryList } from 'services/querylist'
+const getDefaultPaginations = () => ({
+    current: 1,
+    total: 0,
+    size: 10,
+  }),
+  namespace = 'patrylist';
 
 export default modelExtend(model, {
   namespace: 'patrylist',
-  state:{
-    dataId:'',
-    patryListData:[]
+  state: {
+    lists: [],
+    id: '',
+    name: '',
+    scrollerTop: 0,
+    paginations: getDefaultPaginations(),
+    refreshId: ''
   },
   subscriptions: {
-    setup({dispatch, history}) {
-      history.listen(({pathname, query, action}) => {
-       const {id} =query
+    setup ({ dispatch, history }) {
+      history.listen(({ pathname, query, action }) => {
         if (pathname === '/patrylist') {
-          dispatch({
-            type: "query",
-            payload:{
-              dataId:id
-            }
-          })
+          if (action === 'PUSH') {
+            const { id = '', name = '' } = query;
+            dispatch({
+              type: 'updateState',
+              payload: {
+                id,
+                name,
+                scrollerTop: 0,
+                paginations: getDefaultPaginations(),
+              },
+            });
+            dispatch({
+              type: 'queryListview',
+              payload: {
+                ...query,
+              },
+            });
+          }
         }
-      })
+      });
     },
   },
   effects: {
-    * query({payload}, {call, put, select}) {
-      const data = yield call(queryPatryList,payload);
-      if(data){
+    * queryListview ({ payload }, { call, put, select }) {
+      const { callback = '', isRefresh = false, } = payload,
+        _this = yield select(_ => _[`${namespace}`]),
+        { paginations: { current, total, size }, lists, id } = _this,
+        start = isRefresh ? 1 : current,
+        result = yield call(queryPartyData, { dataId: id, nowPage: start, showCount: size });
+      if (result) {
+        let { data = [], totalCount = 0 } = result,
+          newLists = [];
+        newLists = start === 1 ? data : [...lists, ...data];
         yield put({
           type: 'updateState',
           payload: {
-            patryListData:data.data
+            paginations: {
+              ..._this.paginations,
+              total: totalCount * 1,
+              current: start + 1
+            },
+            lists: newLists
           },
-        })
+        });
       }
-    }
+      if (callback)
+        callback();
+    },
   },
-  reducers:{
-    resetState(state, {payload}) {
-      return {
-
-      }
-    },
-    updateData(state, {payload}) {
-      return {
-        ...state,
-        ...payload
-      }
-    },
-
-  }
-})
+});

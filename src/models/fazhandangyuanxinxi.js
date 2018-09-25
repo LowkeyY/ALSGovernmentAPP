@@ -1,9 +1,9 @@
-import { parse } from 'qs'
-import modelExtend from 'dva-model-extend'
-import { routerRedux } from 'dva/router'
-import { model } from 'models/common'
-import { Toast } from 'components'
-import { getFazhandangyuanxinxi, postFazhandangyuanxinxi } from 'services/fazhandangyuan'
+import { parse } from 'qs';
+import modelExtend from 'dva-model-extend';
+import { routerRedux } from 'dva/router';
+import { model } from 'models/common';
+import { Toast } from 'components';
+import { getFazhandangyuanxinxi, postFazhandangyuanxinxi } from 'services/fazhandangyuan';
 
 const namespace = 'fazhandangyuanxinxi',
   defaultState = () => ({
@@ -14,14 +14,14 @@ const namespace = 'fazhandangyuanxinxi',
     uploading: false,
   }),
   getImages = (arr) => {
-    let newArr = []
-    if(arr&&Array.isArray(arr)){
-      arr.map((data,index)=>{
-        newArr.push(data.url)
-      })
+    let newArr = [];
+    if (arr && Array.isArray(arr)) {
+      arr.map((data, index) => {
+        newArr.push(data.url);
+      });
     }
-    return newArr
-  }
+    return newArr;
+  };
 
 export default modelExtend(model, {
   namespace,
@@ -29,14 +29,14 @@ export default modelExtend(model, {
     liuchengId: '',
     ...defaultState(),
     isOpen: false,
-    images:[]
+    images: []
   },
   subscriptions: {
     setup ({ dispatch, history }) {
       history.listen(location => {
-        let { pathname, query, action } = location
+        let { pathname, query, action } = location;
         if (pathname.startsWith(`/${namespace}`)) {
-          const { liuchengId = '' , sort_id = '' , shenhe_tag = ''} = query
+          const { liuchengId = '', sort_id = '', shenhe_tag = '' } = query;
           if (action == 'PUSH') {
             dispatch({
               type: 'updateState',
@@ -46,7 +46,7 @@ export default modelExtend(model, {
                 shenhe_tag,
                 isOpen: false,
               },
-            })
+            });
             dispatch({
               type: 'query',
               payload: {
@@ -54,52 +54,52 @@ export default modelExtend(model, {
                 sort_id,
                 shenhe_tag,
               },
-            })
+            });
           }
         }
-      })
+      });
     },
   },
   effects: {
     * query ({ payload }, { call, put, select }) {
       const result = yield call(getFazhandangyuanxinxi, payload), { success = false, message = '发生未知错误。', ...others } = result,
-        {attachments} = others
+        { attachments } = others;
       if (success) {
         yield put({
           type: 'updateState',
           payload: {
             ...defaultState(),
             ...others,
-            images:getImages(attachments)
+            images: getImages(attachments)
           },
-        })
+        });
       } else {
-        Toast.fail(message, 2)
-        yield put(routerRedux.goBack())
+        Toast.fail(message, 2);
+        yield put(routerRedux.goBack());
       }
     },
     * submits ({ payload }, { call, put, select }) {
       const { attachments = [], ...others } = yield select(_ => _[namespace]),
         filekey = [],
         fileContents = [],
-        uploadFiles = {}
+        uploadFiles = {};
       attachments.map((file, index) => {
-        let key = `${namespace}_file_${index}`
+        let key = `${namespace}_file_${index}`;
         if (file.file) {
-          filekey.push(key)
-          uploadFiles[key] = file.file
+          filekey.push(key);
+          uploadFiles[key] = file.file;
         } else {
-          fileContents.push(file.url)
+          fileContents.push(file.url);
         }
-      })
+      });
       if (filekey.length > 0) {
-        others.fileKey = filekey.join(',')
+        others.fileKey = filekey.join(',');
       }
-      others.fileContents = fileContents.length > 0 ? fileContents.join(',') : ''
+      others.fileContents = fileContents.length > 0 ? fileContents.join(',') : '';
       const { success = false, message = '发生未知错误。', ...result } = yield call(postFazhandangyuanxinxi, {
         ...others,
         ...payload,
-      }, uploadFiles, {})
+      }, uploadFiles, {});
       if (success) {
         yield put({
           type: 'updateState',
@@ -107,10 +107,12 @@ export default modelExtend(model, {
             ...defaultState(),
             ...result,
           },
-        })
+        });
+        Toast.success('修改成功，请等待审核', 2);
+        yield put(routerRedux.goBack());
       } else {
-        Toast.fail(message, 2)
+        Toast.fail(message, 2);
       }
     },
   },
-})
+});

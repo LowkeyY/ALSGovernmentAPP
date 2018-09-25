@@ -326,40 +326,52 @@
 // }
 
 
-import styles from './index.less'
-import React from 'react'
-import { List, Badge, Icon, Tag, Card } from 'antd-mobile'
-import { getErrorImg, getImages, getLocalIcon } from 'utils'
-import StatusBox from 'components/statusbox'
-import Rate from 'rc-rate'
-import '../../../node_modules/rc-rate/assets/index.css'
+import styles from './index.less';
+import React from 'react';
+import { List, Badge, Icon, Tag, Card } from 'antd-mobile';
+import { getErrorImg, getImages, getLocalIcon } from 'utils';
+import StatusBox from 'components/statusbox';
+import Rate from 'rc-rate';
+import { doDecode } from 'utils';
+import '../../../node_modules/rc-rate/assets/index.css';
 
 const PrefixCls = 'row',
   Item = List.Item,
-  Brief = Item.Brief
-
+  Brief = Item.Brief;
+const getInfo = (info) => {
+  if (info) {
+    try {
+      return doDecode(info);
+    } catch (e) {
+    }
+  }
+  return {};
+};
 module.exports = {
-  layoutRow: (rowData, sectionID, rowID, onClick) => {
-    const { title = '', image = '', time = '', isNew = false } = rowData
+  layoutRow: (rowData, sectionID, rowID, onClick, dispatch, headName, hasDate = 'true') => {
+    const { title = '', image = '', time = '', isNew = false, infos = '' } = rowData;
     let result = (
       <Item className={styles[`${PrefixCls}-item`]}
             key={`${PrefixCls}-${sectionID}-${rowID}`}
-            thumb={image || ''} multipleLine wrap arrow='horizontal'
-            onClick={onClick.bind(null, rowData)}
+            thumb={image || ''}
+            multipleLine
+            wrap
+            arrow="horizontal"
+            onClick={onClick.bind(null, rowData, dispatch, headName)}
       >
         <span>{title}</span>
-        <Brief>{time}</Brief>
+        {hasDate === 'true' ? <Brief>{time}</Brief> : ''}
       </Item>
-    )
+    );
     return isNew ?
       <div className={styles[`${PrefixCls}-newbox`]}><Badge key={`badge - ${sectionID} - ${rowID}`} text={'新'} corner>
         {result}
       </Badge></div>
       :
-      result
+      result;
   },
   message: (rowData, sectionID, rowID, onClick) => {
-    let isNew = rowData.flag === '0'
+    let isNew = rowData.flag === '0';
     let result = (
       <Item
         className={'row'}
@@ -377,30 +389,31 @@ module.exports = {
           {rowData.time}
         </Brief>
       </Item>
-    )
-
+    );
+    
     return !isNew ? result :
       <Badge key={`badge - ${sectionID} - ${rowID}`} text={'新'} corner>
         {result}
-      </Badge>
+      </Badge>;
   },
-
+  
   lawyerList: (rowData, handleOnclick = () => {
   }) => {
     return rowData && rowData.map((data, i) => {
-      const { _attributes = {}, title, image } = data, { tel = '', office, info = [], irate = '0' } = _attributes
+      const { _attributes = {}, title, image } = data,
+        { tel = '', office, info = [], irate = '0' } = _attributes;
       return (
         <div key={i} className={styles[`${PrefixCls}-lawyer-outer`]} onClick={handleOnclick.bind(null, data)}>
           <div className={styles[`${PrefixCls}-lawyer-outer-left`]}>
-            <img src={getImages(image, 'user')} alt=""/>
+            <img src={getImages(image, 'user')} alt="" />
             <div className={styles[`${PrefixCls}-lawyer-outer-right`]}>
               <div className={styles[`${PrefixCls}-lawyer-outer-right-title`]}>
                 <span className={styles[`${PrefixCls}-lawyer-outer-right-title-name`]}>{title}</span>
-                <Rate style={{ fontSize: '16px' }} defaultValue={irate}/>
-                {/*<span><Icon type={getLocalIcon('/others/king.svg')}/></span>*/}
+                <Rate style={{ fontSize: '16px' }} defaultValue={irate} />
+                {/* <span><Icon type={getLocalIcon('/others/king.svg')}/></span> */}
               </div>
               <div className={styles[`${PrefixCls}-lawyer-outer-right-adress`]}>
-                <span><Icon type={getLocalIcon('/login/phone.svg')} size='xxs'/></span>
+                <span><Icon type={getLocalIcon('/login/phone.svg')} size="xxs" /></span>
                 <div className={styles[`${PrefixCls}-lawyer-outer-right-adress-info`]}>{tel}</div>
               </div>
               <div className={styles[`${PrefixCls}-lawyer-outer-right-adress-info`]}>{office}</div>
@@ -414,21 +427,22 @@ module.exports = {
             </div>
           </div>
           <div className={styles[`${PrefixCls}-lawyer-outer-phone`]} onClick={(e) => e.stopPropagation()}><a
-            href={`tel:${tel}`}><Icon type={getLocalIcon('/others/call.svg')} size='lg'/></a></div>
+            href={`tel:${tel}`}
+          ><Icon type={getLocalIcon('/others/call.svg')} size="lg" /></a></div>
         </div>
-      )
-    })
-
+      );
+    });
   },
-
+  
   officeList: (rowData, handleOnclick = () => {
   }) => {
     return rowData && rowData.map((data, i) => {
-      const { _attributes = {}, title, image } = data, { type = [], year = 1, tel = '', rates = 0 } = _attributes
+      const { _attributes = {}, title, image } = data,
+        { type = [], year = 1, tel = '', rates = 0 } = _attributes;
       return (
         <div key={i} className={styles[`${PrefixCls}-office-outer`]} onClick={handleOnclick.bind(null, data)}>
           <div className={styles[`${PrefixCls}-office-outer-left`]}>
-            {image && <img src={getImages(image)} alt=""/>}
+            {image && <img src={getImages(image)} alt="" />}
           </div>
           <div className={styles[`${PrefixCls}-office-outer-right`]}>
             <div className={styles[`${PrefixCls}-office-outer-right-title`]}>
@@ -447,48 +461,35 @@ module.exports = {
             <div className={styles[`${PrefixCls}-office-outer-right-info`]}>
               <div className={styles[`${PrefixCls}-office-outer-right-info-left`]}>
                 <div>{tel}</div>
-                <Rate style={{ fontSize: '20px' }} defaultValue={rates}/>
+                <Rate style={{ fontSize: '20px' }} defaultValue={rates} />
               </div>
               <div className={styles[`${PrefixCls}-office-outer-right-info-right`]}
-                   onClick={(e) => e.stopPropagation()}>
+                   onClick={(e) => e.stopPropagation()}
+              >
                 <a href={`tel:${tel}`}>咨询</a>
               </div>
             </div>
           </div>
         </div>
-      )
-    })
+      );
+    });
   },
-  integralList: ({ title = '', number = 0, info = '', index = 0, isCount = 0, userPhoto = '', isUser = false }) => {
+  integralList: ({ bbfr = '', bfr = '', bfxx = '', userPhoto = '' }) => {
     return (
       <div className={styles[`${PrefixCls}-integral-outer`]}>
         <div className={styles[`${PrefixCls}-integral-outer-left`]}>
-          <span>{index}</span>
-          {
-            isUser ? <div className={styles[`${PrefixCls}-integral-outer-left-img`]}>
-                <img src={getImages(userPhoto, 'user')} alt=""/>
-              </div>
-              :
-              ''
-          }
-          <span>{title}</span>
+          <div className={styles[`${PrefixCls}-integral-outer-left-img`]}>
+            <img src={getImages(userPhoto, 'user')} alt="" />
+          </div>
+          <span>{bfr}</span>
         </div>
         <div className={styles[`${PrefixCls}-integral-outer-right`]}>
           <div className={styles[`${PrefixCls}-integral-outer-right-info`]}>
-            <span>{number}</span>
-            <span>{info}</span>
+            <span>{bfxx}</span>
           </div>
-          {
-            isCount > 0 ? <div className={styles[`${PrefixCls}-integral-outer-right-star`]}>
-                <span>{isCount}</span>
-                <span><Icon type={getLocalIcon('/others/star.svg')}/></span>
-              </div>
-              :
-              ''
-          }
         </div>
       </div>
-    )
+    );
   },
   companyList: ({ title = '', number = 0, info = '', index = 0, isCount = 0 }) => {
     return (
@@ -496,7 +497,7 @@ module.exports = {
         <div className={styles[`${PrefixCls}-integral-outer-left`]}>
           <span>{index}</span>
           <div className={styles[`${PrefixCls}-integral-outer-left-img`]}>
-            <img src={getImages('', 'user')} alt=""/>
+            <img src={getImages('', 'user')} alt="" />
           </div>
           <span>{title}</span>
         </div>
@@ -508,59 +509,67 @@ module.exports = {
           {
             isCount > 0 ? <div className={styles[`${PrefixCls}-integral-outer-right-star`]}>
                 <span>{isCount}</span>
-                <span><Icon type={getLocalIcon('/others/star.svg')}/></span>
+                <span><Icon type={getLocalIcon('/others/star.svg')} /></span>
               </div>
               :
               ''
           }
         </div>
       </div>
-    )
+    );
   },
   appealList: (rowData, sectionID, rowID, isLogin, handleCardClick, handleCollectClick) => {
     const { username, createDate, positions, title, state, content, images, answers, shoucang, id, shState, userPhoto, situatton } = rowData,
       stopPropagation = (e) => {
-        e.stopPropagation()
+        e.stopPropagation();
       },
       getShtate = () => {
-        return <StatusBox bg='#9c9595' status='不在办理范围'/>
+        return <StatusBox bg="#9c9595" status="不在办理范围" />;
       },
       getStatus = (status) => {
         switch (status) {
           case '0' :
-            return <StatusBox bg='#f5b90c' status='待审核'/>
+            return <StatusBox bg="#f5b90c" status="待审核" />;
           case '1' :
           case '2' :
           case '3' :
           case '4' :
           case '6' :
           case '7' :
-            return <StatusBox bg='#29ad2e' status='处理中'/>
+            return <StatusBox bg="#29ad2e" status="处理中" />;
           case '5' :
-            return <StatusBox bg='#d45b5b' status='已完成'/>
+            return <StatusBox bg="#d45b5b" status="已完成" />;
         }
       },
       getImagesPage = (images, cls = '') => {
         if (cnIsArray(images) && images.length) {
-          let i = 0
+          let i = 0;
           return (
             <div className={styles[`${cls}-attrs`]}>
-              {images.map((src, i) => i < 2 ?
-                <div key={i} className={styles[`${cls}-attrs-img`]}
-                     style={{ backgroundImage: 'url(' + src + ')' }}></div> : '')}
+              {images.map((src, i) => (i < 2 ?
+                <div key={i}
+                     className={styles[`${cls}-attrs-img`]}
+                     style={{ backgroundImage: `url(${src})` }}
+                /> : ''))}
             </div>
-          )
+          );
         }
-        return ''
+        return '';
       },
-      cls = `${PrefixCls}-card`
+      cls = `${PrefixCls}-card`;
     return (
       <div key={id} className={styles[cls]} onClick={handleCardClick.bind(null, rowData)}>
         <div className={styles[`${cls}-info`]}>
-          <img src={getImages(userPhoto, 'user')} alt=""/>
+          <img src={getImages(userPhoto, 'user')} alt="" />
           <div className={styles[`${cls}-info-details`]}>
-            <div className={styles[`${cls}-info-details-name`]}><span>{username}</span><span
-              className={styles[`${cls}-info-details-name-type`]}>诉求类型：{situatton}</span></div>
+            <div className={styles[`${cls}-info-details-name`]}>
+              <span>{username}</span>
+              {situatton !== 'undefined' ?
+                <span className={styles[`${cls}-info-details-name-type`]}>诉求类型：{situatton}</span>
+                :
+                ''
+              }
+            </div>
             <div className={styles[`${cls}-info-details-others`]}>
               <div className={styles[`${cls}-info-details-others-date`]}>
                 <span>{createDate}</span>
@@ -574,12 +583,14 @@ module.exports = {
         <div className={styles[`${cls}-content-status`]} onClick={stopPropagation}>
           <span>{shState == '2' ? getShtate() : getStatus(state)}</span>
           <span>
-            <Tag className={isLogin ? '' : styles[`${cls}-content-status-tag`]} selected={shoucang}
-                 onChange={handleCollectClick.bind(null, rowData)}>
-            <Icon type={getLocalIcon('/others/collectionblack.svg')}/>
+            <Tag className={isLogin ? '' : styles[`${cls}-content-status-tag`]}
+                 selected={shoucang}
+                 onChange={handleCollectClick.bind(null, rowData)}
+            >
+              <Icon type={getLocalIcon('/others/collectionblack.svg')} />
               {shoucang ? <span className={styles[`${cls}-content-status-collection`]}>已收藏</span>
                 : <span className={styles[`${cls}-content-status-collection`]}>收藏</span>}
-                </Tag>
+            </Tag>
           </span>
         </div>
         <div className={styles[`${cls}-content`]}>
@@ -591,12 +602,11 @@ module.exports = {
         </div>
         {getImagesPage(images, cls)}
       </div>
-    )
+    );
   },
   twoStupidRow: (rowData, sectionID, rowID) => {
-
-    const { wentifenlei = '', neirong = '' } = rowData
-    return <div key={rowID} className={styles[`${PrefixCls}-towstupidouter`]}>
+    const { wentifenlei = '', neirong = '' } = rowData;
+    return (<div key={rowID} className={styles[`${PrefixCls}-towstupidouter`]}>
       <Card>
         <Card.Header
           title="问题类型"
@@ -606,37 +616,35 @@ module.exports = {
           <div>{neirong}</div>
         </Card.Body>
       </Card>
-    </div>
+    </div>);
   },
   baseVoiceRow: (rowData, sectionID, rowID) => {
     const { yijian, ...others } = rowData,
       layoutInputItem = (others) => {
-        const { bumen, zeren, dingban, shixian, fangshi, xiaohao, sumu } = others
-        return <div className={styles[`${PrefixCls}-basevoice-items`]}>
-          <span>交办部门：</span>{bumen}<br/>
-          <span>责任人：</span>{zeren}<br/>
-          <span>盯办人:</span>{dingban}<br/>
-          <span>完成时限：</span>{shixian}<br/>
-          <span>解决方式：</span>{fangshi}<br/>
-          <span>销号情况：</span>{xiaohao}<br/>
-        </div>
-
-      }
+        const { bumen, zeren, dingban, shixian, fangshi, xiaohao, sumu } = others;
+        return (<div className={styles[`${PrefixCls}-basevoice-items`]}>
+          <span>交办部门：</span>{bumen}<br />
+          <span>责任人：</span>{zeren}<br />
+          <span>盯办人:</span>{dingban}<br />
+          <span>完成时限：</span>{shixian}<br />
+          <span>解决方式：</span>{fangshi}<br />
+          <span>销号情况：</span>{xiaohao}<br />
+        </div>);
+      };
     if (yijian != '') {
-      return <div key={rowID} className={styles[`${PrefixCls}-basevoice`]}>
-        <Card full={true}>
-          <Card.Header title={<span className={styles[`${PrefixCls}-basevoice-title`]}>{yijian}</span>}/>
+      return (<div key={rowID} className={styles[`${PrefixCls}-basevoice`]}>
+        <Card full>
+          <Card.Header title={<span className={styles[`${PrefixCls}-basevoice-title`]}>{yijian}</span>} />
           <Card.Body>
             {layoutInputItem(others)}
           </Card.Body>
         </Card>
-      </div>
+      </div>);
     }
-
   },
-
+  
   patryWorkRow: (rowData, sectionID, rowID) => {
-    const { zuzhi, wenti } = rowData
+    const { zuzhi, wenti } = rowData;
     return (
       <div key={rowID} className={styles[`${PrefixCls}-organization`]}>
         <Card>
@@ -650,14 +658,14 @@ module.exports = {
           </Card.Body>
         </Card>
       </div>
-    )
+    );
   },
   legalRow: (rowData, sectionID, rowID) => {
-    const { uname, uavatar, createDate, positions, questions, types, replys, replyDate } = rowData
+    const { uname, uavatar, createDate, positions, questions, types, replys, replyDate } = rowData;
     return (
       <div className={styles[`${PrefixCls}-legalcards`]}>
         <div className={styles[`${PrefixCls}-legalinfo`]}>
-          <img src={getImages(uavatar, 'user')} alt=""/>
+          <img src={getImages(uavatar, 'user')} alt="" />
           <div className={styles[`${PrefixCls}-legalinfo-details`]}>
             <div className={styles[`${PrefixCls}-legalinfo-details-name`]}><span>{uname}</span>
               <div className={styles[`${PrefixCls}-legalask-info`]}>
@@ -675,9 +683,9 @@ module.exports = {
           </div>
         </div>
         <div className={styles[`${PrefixCls}-legalask`]}>
-             <span>
-              {questions}
-             </span>
+          <span>
+            {questions}
+          </span>
         </div>
         {replys != '' ?
           <div className={styles[`${PrefixCls}-legalreply`]}>
@@ -689,94 +697,227 @@ module.exports = {
           ''
         }
       </div>
-    )
+    );
   },
   notaryRow: (rowData, sectionID, rowID) => {
-    const { _attributes = {}, title, image } = rowData, { tel = '', number = '', office = '' } = _attributes
+    const { _attributes = {}, title, image } = rowData,
+      { tel = '', number = '', office = '' } = _attributes;
     return (
       <div key={rowID} className={styles[`${PrefixCls}-notary-outer`]}>
         <div className={styles[`${PrefixCls}-notary-outer-left`]}>
-          <img src={getImages(image, 'user')} alt=""/>
+          <img src={getImages(image, 'user')} alt="" />
           <div className={styles[`${PrefixCls}-notary-outer-right`]}>
             <div className={styles[`${PrefixCls}-notary-outer-right-title`]}>
               <span className={styles[`${PrefixCls}-notary-outer-right-title-name`]}>{title}</span>
             </div>
             <div className={styles[`${PrefixCls}-notary-outer-right-adress`]}>
-              <span><Icon type={getLocalIcon('/login/phone.svg')} size='xxs'/></span>
+              <span><Icon type={getLocalIcon('/login/phone.svg')} size="xxs" /></span>
               <div className={styles[`${PrefixCls}-notary-outer-right-adress-info`]}>{tel}</div>
             </div>
             <div className={styles[`${PrefixCls}-notary-outer-right-adress`]}>
-              <span><Icon type={getLocalIcon('/others/NO.svg')} size='xxs'/></span>
+              <span><Icon type={getLocalIcon('/others/NO.svg')} size="xxs" /></span>
               <div className={styles[`${PrefixCls}-notary-outer-right-adress-info`]}>{number}</div>
             </div>
             <div className={styles[`${PrefixCls}-notary-outer-right-adress-info`]}>{office}</div>
           </div>
         </div>
         <div className={styles[`${PrefixCls}-lawyer-outer-phone`]} onClick={(e) => e.stopPropagation()}><a
-          href={`tel:${tel}`}><Icon type={getLocalIcon('/others/call.svg')} size='lg'/></a></div>
+          href={`tel:${tel}`}
+        ><Icon type={getLocalIcon('/others/call.svg')} size="lg" /></a></div>
       </div>
-    )
+    );
   },
   taskRow: (rowData, sectionID, rowID, onClick) => {
-    const { noViewCount, taskTitle, content, taskInfo } = rowData
+    const { noViewCount, taskTitle, taskInfo, cuName, creatDate } = rowData;
     return (
-          <Item
-            key={rowID}
-            multipleLine
-            onClick={onClick.bind(null, rowData)}
-            wrap
-            extra={<Badge text={noViewCount > 0 ? noViewCount : ''} overflowCount={99}/>}
-            align="top"
-          >
-            <div className={`${styles[`${PrefixCls}-message-title`]}`}>
-              <h3>{taskTitle}</h3>
-            </div>
-            <div className={styles[`${PrefixCls}-message-content`]}>{content}</div>
-            <Brief>
-              {taskInfo}
-            </Brief>
-          </Item>
-    )
+      <div className={`${styles[`${PrefixCls}-task-outer`]}`}>
+        <Item
+          key={rowID}
+          multipleLine
+          onClick={onClick.bind(null, rowData)}
+          wrap
+          extra={<Badge text={noViewCount > 0 ? noViewCount : ''} overflowCount={99} />}
+          align="top"
+        >
+          <div className={`${styles[`${PrefixCls}-task-title`]}`}>
+            <h3>{taskTitle}</h3>
+          </div>
+          <div className={`${styles[`${PrefixCls}-task-content`]}`}>
+            {taskInfo}
+          </div>
+          <div className={styles[`${PrefixCls}-task-info`]}>
+            <div className={styles[`${PrefixCls}-task-info-createUser`]}>创建人：{cuName}</div>
+            <div className={styles[`${PrefixCls}-task-info-createTime`]}>{creatDate}</div>
+          </div>
+        </Item>
+      </div>
+    );
   },
-  reactRow: (rowData, sectionID, rowID, onClick) => {
+  reactRow: (rowData, onClick) => {
     const getShstate = (shtate, state) => {
         if (shtate == '0') {
-          return <span style={{ color: '#ccb820' }}>●正在审核</span>
+          return <span style={{ color: '#ccb820' }}>●正在审核</span>;
         } else if (shtate == '2') {
-          return <span style={{ color: '#9c9595' }}>●不在办理范围</span>
-        } else {
-          return getStatus(state)
+          return <span style={{ color: '#9c9595' }}>●不在办理范围</span>;
         }
+        return getStatus(state);
       },
       getStatus = (status) => {
         switch (status) {
           case '0' :
-            return <span style={{ color: '#f5b90c' }}>●待审核</span>
+            return <span style={{ color: '#f5b90c' }}>●待审核</span>;
           case '1' :
           case '2' :
           case '3' :
           case '4' :
           case '6' :
           case '7' :
-            return <span style={{ color: '#29ad2e' }}>●处理中</span>
+            return <span style={{ color: '#29ad2e' }}>●处理中</span>;
           case '5' :
-            return <span style={{ color: '#d45b5b' }}>●已完成</span>
+            return <span style={{ color: '#d45b5b' }}>●已完成</span>;
         }
-      }
-      const {content,createDate,shState,state } = rowData
+      };
+    const { title, creatDate, shState, state, id } = rowData;
     return (
-        <Item
-          key={rowID}
-          className={styles[`${PrefixCls}-item`]}
-          multipleLine
-          onClick={onClick.bind(this, rowData)}
-        >
-          {content}
-          <div className={styles[`${PrefixCls}-item-status`]}>
-            <span>{createDate}</span>
-            <span>{getShstate(shState, state)}</span>
-          </div>
-        </Item>
-    )
+      <Item
+        key={id}
+        className={styles[`${PrefixCls}-item`]}
+        multipleLine
+        onClick={onClick.bind(this, rowData)}
+      >
+        {title}
+        <div className={styles[`${PrefixCls}-item-status`]}>
+          <span>{creatDate}</span>
+          <span>{getShstate(shState, state)}</span>
+        </div>
+      </Item>
+    );
   },
-}
+  specialRow: (rowData, sectionID, rowID, onClick, dispatch, headName) => {
+    const { image = '' } = rowData;
+    return (
+      <div key={rowID}
+           className={styles[`${PrefixCls}-special-outer`]}
+           onClick={onClick.bind(null, rowData, dispatch, headName)}>
+        <div className={styles[`${PrefixCls}-special-outer-img`]}>
+          <div className={styles[`${PrefixCls}-special-outer-img-image`]} style={{ backgroundImage: `url(${image})` }}>
+            {/*<div className={styles[`${PrefixCls}-special-mask`]}>*/}
+            {/*<h3>{title}</h3>*/}
+            {/*<span>{time}</span>*/}
+            {/*</div>*/}
+          </div>
+        </div>
+      </div>
+    );
+  },
+  twinsRow: (rowData, sectionID, rowID, onClick, dispatch, headName) => {
+    const { title = '', image = '' } = rowData;
+    return (
+      <div
+        key={rowID}
+        className={styles[`${PrefixCls}-twins-outer`]}
+        onClick={onClick.bind(null, rowData, dispatch, headName)}>
+        <div className={styles[`${PrefixCls}-twins-outer-img`]}>
+          <div className={styles[`${PrefixCls}-twins-outer-img-image`]} style={{ backgroundImage: `url(${image})` }}>
+            <div className={styles[`${PrefixCls}-twins-title`]}>
+              {title}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  },
+  sceneryRow: (rowData, sectionID, rowID, onClick, dispatch, headName) => {
+    const { title = '', image = '' } = rowData;
+    return (
+      <div key={rowID}
+           className={styles[`${PrefixCls}-special-outer`]}
+           onClick={onClick.bind(null, rowData, dispatch, headName)}>
+        <div className={styles[`${PrefixCls}-special-outer-img`]}>
+          <div className={styles[`${PrefixCls}-special-outer-img-image`]} style={{ backgroundImage: `url(${image})` }}>
+            <div className={styles[`${PrefixCls}-special-title`]}>
+              {title}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  },
+  diaryRow: (rowData, sectionID, rowID, onClick) => {
+    const { creatData, creatUser, title } = rowData;
+    return (
+      <Item
+        key={rowID}
+        multipleLine
+        onClick={onClick.bind(null, rowData)}
+        wrap
+        align="top"
+      >
+        <div className={`${styles[`${PrefixCls}-message-title`]}`}>
+          <h3>{title}</h3>
+        </div>
+        
+        <Brief>
+          {`${creatUser}-${creatData}记`}
+        </Brief>
+      </Item>
+    );
+  },
+  liveRow: (rowData, sectionID, rowID, onClick, dispatch, headName) => {
+    const { title = '', image = '', time = '', isNew = false, infos = '' } = rowData;
+    const { tel = '', info = '' } = getInfo(infos);
+    let result = (
+      <Item className={styles[`${PrefixCls}-item`]}
+            key={`${PrefixCls}-${sectionID}-${rowID}`}
+            thumb={image || ''}
+            multipleLine
+            wrap
+            arrow="horizontal"
+            onClick={onClick.bind(null, rowData, dispatch, headName)}
+      >
+        <span className={styles[`${PrefixCls}-live-title`]}>{title}</span>
+        <div className={styles[`${PrefixCls}-live-info`]}>{info}</div>
+        <div className={styles[`${PrefixCls}-live-bottom`]}>
+          <div className={styles[`${PrefixCls}-live-time`]}>
+            {time}
+          </div>
+          <div className={styles[`${PrefixCls}-live-phone`]}>
+            <span>{tel}</span>
+            <a href={`tel:${tel}`} onClick={(e) => e.stopPropagation()}>
+              <Icon type={getLocalIcon('/others/call.svg')} />
+            </a>
+          </div>
+        </div>
+      </Item>
+    );
+    return isNew ?
+      <div className={styles[`${PrefixCls}-newbox`]}><Badge key={`badge - ${sectionID} - ${rowID}`} text={'新'} corner>
+        {result}
+      </Badge></div>
+      :
+      result;
+  },
+  eventRow: (rowData, sectionID, rowID, onClick, dispatch, headName, hasDate = 'true') => {
+    const { title = '', image = '', isNew = false, infos = '' } = rowData;
+    const { dept = '' } = getInfo(infos);
+    let result = (
+      <Item className={styles[`${PrefixCls}-item`]}
+            key={`${PrefixCls}-${sectionID}-${rowID}`}
+            thumb={image || ''}
+            multipleLine
+            wrap
+            arrow="horizontal"
+            onClick={onClick.bind(null, rowData, dispatch, headName)}
+      >
+        <span>{title}</span>
+        {dept !== '' ? <Brief>{`办理部门:${dept}`}</Brief> : ''}
+      </Item>
+    );
+    return isNew ?
+      <div className={styles[`${PrefixCls}-newbox`]}><Badge key={`badge - ${sectionID} - ${rowID}`} text={'新'} corner>
+        {result}
+      </Badge></div>
+      :
+      result;
+  },
+};

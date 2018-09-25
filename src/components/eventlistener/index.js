@@ -1,45 +1,52 @@
-import ReactDOM from 'react-dom'
+import ReactDOM from 'react-dom';
 
 class Comp extends React.Component {
-
-  constructor(props) {
-    super(props)
-    this.onMessage = this.onMessage.bind(this)
-    this.onCnevent = this.onCnevent.bind(this)
+  constructor (props) {
+    super(props);
+    this.onMessage = this.onMessage.bind(this);
+    this.onCnevent = this.onCnevent.bind(this);
   }
-
-  onMessage(message) {
-    const {data = {}} = message, {type = '', userId = ''} = data
+  
+  onMessage (message) {
+    const { data = {} } = message,
+      { type = '', userId = '' } = data;
     if (type === 'shouhu' && userId != '') {
-      this.props.willCallback(data)
+      this.props.willCallback(data);
+    }
+    if (type === 'dangjian') {
+      this.props.willCallback(data);
+    }
+    if (type === 'rcdt') {
+      this.props.willCallback(data);
     }
   }
-
-  onCnevent(e) {
-    const {cneventParam = {}} = (e || {}), {__type = '', ...others} = cneventParam
+  
+  onCnevent (e) {
+    const { cneventParam = {} } = (e || {}),
+      { __type = '', ...others } = cneventParam;
     if (__type === 'wsmessage') {
-      this.props.willCallback(others)
+      this.props.willCallback(others);
     }
   }
-
-  componentDidMount() {
-    window.addEventListener('message', this.onMessage)
-    window.addEventListener('cnevent', this.onCnevent)
+  
+  componentDidMount () {
+    window.addEventListener('message', this.onMessage);
+    window.addEventListener('cnevent', this.onCnevent);
   }
-
-  componentWillUnmount() {
-    window.removeEventListener('message', this.onMessage)
-    window.removeEventListener('cnevent', this.onCnevent)
+  
+  componentWillUnmount () {
+    window.removeEventListener('message', this.onMessage);
+    window.removeEventListener('cnevent', this.onCnevent);
   }
-
-  render() {
-    return (<div></div>)
+  
+  render () {
+    return (<div />);
   }
-
+  
   static defaultProps = {
     willCallback: () => {
     },
-  }
+  };
 }
 
-export default Comp
+export default Comp;

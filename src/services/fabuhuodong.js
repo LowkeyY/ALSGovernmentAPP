@@ -3,10 +3,11 @@ import {request, config} from 'utils'
 const {api} = config
 const {Getfabuhuodong, Getbangfuduixiang , Postfabuhuodong} = api
 
-export async function Fabuhuodong() {
+export async function Fabuhuodong(payload) {
   return request({
     url: Getfabuhuodong,
     method: 'get',
+    data:payload
   })
 }
 

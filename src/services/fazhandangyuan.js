@@ -1,13 +1,13 @@
-import { request, config, formsubmit } from 'utils'
+import { request, config, formsubmit } from 'utils';
 
-const { api: { FazhandangyuanApi , FazhandangyuanxinxiApi , FazhandangyuanListApi} } = config
+const { api: { FazhandangyuanApi, FazhandangyuanxinxiApi, FazhandangyuanListApi } } = config;
 
 export async function getFazhandangyuan (payload) {
   return request({
     url: FazhandangyuanApi,
     method: 'get',
     data: payload,
-  })
+  });
 }
 
 export async function getFazhandangyuanList (payload) {
@@ -15,7 +15,15 @@ export async function getFazhandangyuanList (payload) {
     url: FazhandangyuanListApi,
     method: 'get',
     data: payload,
-  })
+  });
+}
+
+export async function deleteMembers (payload) {
+  return request({
+    url: FazhandangyuanListApi,
+    method: 'post',
+    data: payload,
+  });
 }
 
 export async function getFazhandangyuanxinxi (payload) {
@@ -23,15 +31,15 @@ export async function getFazhandangyuanxinxi (payload) {
     url: FazhandangyuanxinxiApi,
     method: 'get',
     data: payload,
-  })
+  });
 }
 
 export async function postFazhandangyuan (params = {}, images, files) {
-  params.isOriginal = true
-  return formsubmit(FazhandangyuanApi, params, images, files, true)
+  params.isOriginal = true;
+  return formsubmit(FazhandangyuanApi, params, images, files, true);
 }
 
 export async function postFazhandangyuanxinxi (params = {}, images, files) {
-  params.isOriginal = true
-  return formsubmit(FazhandangyuanxinxiApi, params, images, files, true)
+  params.isOriginal = true;
+  return formsubmit(FazhandangyuanxinxiApi, params, images, files, true);
 }

@@ -1,0 +1,67 @@
+@PrefixCls: diarydetails;
+
+.@{PrefixCls}-outer {
+  width: 100%;
+  overflow: hidden;
+
+}
+
+.@{PrefixCls}-header {
+  padding: 30px 20px;
+  background: #fff;
+
+  &-name {
+    font-size: 34px;
+    margin-bottom: 20px;
+    & span {
+      color: #108ee9;
+    }
+  }
+  &-date {
+    font-size: 28px;
+    color: #666;
+  }
+}
+
+.@{PrefixCls}-type {
+  padding: 30px 90px;
+  background: #fff;
+  &-item {
+    font-size: 30px;
+    padding: 10px 20px;
+    color: #fff;
+    background: #108ee9;
+
+  }
+}
+
+.@{PrefixCls}-content {
+  background: #fff;
+  padding: 20px;
+
+  &-details {
+    line-height: 1.5em;
+    text-indent: 2em;
+    font-size: 30px;
+  }
+
+}
+.@{PrefixCls}-files{
+  background: #fff;
+  padding: 20px;
+  &-images {
+    width: 100%;
+    margin: 20px 0;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    & div {
+      width: 49%;
+      height: 250px;
+      margin-right: 1%;
+      background-size: cover;
+      margin-bottom: 1%;
+    }
+  }
+}

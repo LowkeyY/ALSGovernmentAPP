@@ -1,119 +1,104 @@
-import { parse } from 'qs'
-import modelExtend from 'dva-model-extend'
-import { model } from 'models/common'
-import { Toast } from 'components'
-import { postionsToString } from 'utils'
-import { routerRedux } from 'dva/router'
-import { queryAppealType, sendAppealInfo } from 'services/queryappeal'
-import { GetAboutInfo } from 'services/querycontent'
+import { parse } from 'qs';
+import modelExtend from 'dva-model-extend';
+import { model } from 'models/common';
+import { Toast } from 'components';
+import { routerRedux } from 'dva/router';
+import { sendLegalMediation, getEducationType, getMediationType } from 'services/queryappeal';
 
 const getType = (datas = []) => {
-  const currentDatas = JSON.parse(datas)
-  currentDatas.map(items => {
-    items.label = items.name
-  })
-  return currentDatas
-}
+    let currentDatas;
+    if (Array.isArray(datas)) {
+      currentDatas = datas;
+    } else {
+      currentDatas = JSON.parse(datas);
+    }
+    currentDatas.map(items => {
+      items.label = items.name;
+      if (items.id) {
+        items.value = items.id;
+      }
+    });
+    return currentDatas;
+  }
 export default modelExtend(model, {
   namespace: 'legalmediation',
   state: {
-    appealType: [],
+    disputeType: [],
+    educationType: [],
     files: {},
     animating: false,
     name: '',
-    location: '',
-    notesvisible: false,
-    content: '',
-    isFankui: false,
   },
   subscriptions: {
     setup ({ dispatch, history }) {
-      dispatch({
-        type: 'queryAbout',
-        payload: {
-          key: 'suqiu',
-        },
-      })
       history.listen(({ pathname, action, query }) => {
         if (pathname === '/legalmediation') {
-          const { name = '', location = postionsToString({}),isFankui=false } = query
+          const { name = '' } = query;
           dispatch({
             type: 'updateState',
             payload: {
               name,
-              location,
-              isFankui:isFankui==='true'?true:false
             },
+          });
+          dispatch({
+            type:'queryEducationType'
           })
           dispatch({
-            type: 'query',
+            type:'queryMediationType'
           })
         }
-      })
+      });
     },
   },
   effects: {
-    * query ({ payload }, { call, put, select }) {
-      const { isFankui } = yield select(_ => _.legalmediation),
-        data = yield call(queryAppealType,{isFankui:isFankui?'2':'1'})
+    * queryEducationType ({ payload }, { call, put, select }) {
+      const data = yield call(getEducationType);
       if (data) {
         yield put({
           type: 'updateState',
           payload: {
-            appealType: getType(data.datas),
+            educationType: getType(data.data),
           },
-        })
+        });
       }
     },
-    * sendAppealInfo ({ payload }, { call, put, select }) {
+    * queryMediationType ({ payload }, { call, put, select }) {
+      const data = yield call(getMediationType);
+      if (data) {
+        yield put({
+          type: 'updateState',
+          payload: {
+            disputeType: getType(data.data),
+          },
+        });
+      }
+    },
+    * sendLegalMediation ({ payload }, { call, put, select }) {
       const { images = [], mediaFile = {}, ...others } = payload,
-        { location,isFankui } = yield select(_ => _.legalmediation),
-        { success, workId = '' } = yield call(sendAppealInfo, {
+        { location } = yield select(_ => _.legalmediation),
+        { success } = yield call(sendLegalMediation, {
           ...others,
           location,
-          isFankui: isFankui ? '2' : '1',
-        }, images, mediaFile)
+        }, images, mediaFile);
       if (success) {
         yield put({
           type: 'updateState',
           payload: {
             animating: false,
           },
-        })
-        yield put(routerRedux.replace({
-          pathname: '/seekdetails',
-          query: {
-            id: workId,
-          },
-        }))
+        });
+        Toast.success('上传成功');
+        yield put(routerRedux.goBack());
       } else {
         yield put({
           type: 'updateState',
           payload: {
             animating: false,
           },
-        })
-        Toast.offline(data.message)
+        });
+        Toast.offline('未知错误请稍后再试');
       }
     },
-    * queryAbout ({ payload }, { call, put, select }) {
-      const data = yield call(GetAboutInfo, payload), { content = '', autoShow = false } = data
-      if (data.success) {
-        yield put({
-          type: 'updateState',
-          payload: {
-            content,
-          },
-        })
-        if (autoShow) {
-          yield put({
-            type: 'updateState',
-            payload: {
-              notesvisible: true,
-            },
-          })
-        }
-      }
-    },
+    
   },
-})
+});

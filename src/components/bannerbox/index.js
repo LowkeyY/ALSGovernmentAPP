@@ -1,26 +1,27 @@
-import React from 'react'
-import { Carousel  } from 'antd-mobile'
-import ReactDOM from 'react-dom'
-import styles from './index.less'
-const PrefixCls = 'bannerbox'
+import React from 'react';
+import { Carousel } from 'antd-mobile';
+import PropTypes from 'prop-types';
+import styles from './index.less';
+
+const PrefixCls = 'bannerbox';
 
 class BannerBox extends React.Component {
-
   state = {
     data: [],
     slideIndex: 0,
-    isLoad:false
-  }
+    isLoad: false
+  };
+  
   componentWillMount () {
     setTimeout(() => {
       this.setState({
         data: this.props.datas,
-      })
-    }, 300)
+      });
+    }, 300);
   }
-
+  
   render () {
-    const {slideIndex} = this.state;
+    const { slideIndex } = this.state;
     return (
       <Carousel
         className="space-carousel"
@@ -40,10 +41,10 @@ class BannerBox extends React.Component {
             style={{
               display: 'block',
               position: 'relative',
-              top: this.state.slideIndex === i ?8 :20,
+              top: this.state.slideIndex === i ? 8 : 20,
               boxShadow: '2px 1px 1px rgba(0, 0, 0, 0.2)',
             }}
-            onClick={this.props.handleClick.bind(null , data)}
+            onClick={this.props.handleClick.bind(null, data, this.props.dispatch)}
           >
             <img
               ref={el => this.banner = el}
@@ -51,10 +52,10 @@ class BannerBox extends React.Component {
               alt=""
               style={{ width: '100%', verticalAlign: 'top' }}
               onLoad={() => {
-                if(!this.state.isLoad){
+                if (!this.state.isLoad) {
                   this.setState({
-                    isLoad:true
-                  })
+                    isLoad: true
+                  });
                   window.dispatchEvent(new Event('resize'));
                 }
               }}
@@ -62,9 +63,15 @@ class BannerBox extends React.Component {
           </div>
         ))}
       </Carousel>
-    )
+    );
   }
-
 }
 
-export default BannerBox
+BannerBox.propTypes = {
+  handleClick: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired
+};
+BannerBox.defaultProps = {
+  datas: [],
+};
+export default BannerBox;

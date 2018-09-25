@@ -1,60 +1,54 @@
-import React from 'react'
-import {Carousel,Icon} from 'antd-mobile'
-import ReactDOM from 'react-dom'
-import { routerRedux } from 'dva/router'
-import { getLocalIcon } from 'utils'
-import styles from './index.less'
+import React from 'react';
+import { Carousel, Icon } from 'antd-mobile';
+import PropTypes from 'prop-types';
+import { routerRedux } from 'dva/router';
+import { getLocalIcon } from 'utils';
+import styles from './index.less';
 
-const PrefixCls = 'headline',
-defaultGifArr = [
-  require('../../themes/images/gif/tip.gif'),
-  require('../../themes/images/gif/tip1.gif'),
-  require('../../themes/images/gif/tip2.gif'),
-]
+const PrefixCls = 'headline';
+
 class HeadLine extends React.Component {
-  constructor(props) {
-    super()
+  constructor (props) {
+    super();
   }
-
+  
   state = {
     data: [],
     isLoad: false
-  }
-
-  componentWillMount() {
+  };
+  
+  componentWillMount () {
     setTimeout(() => {
       this.setState({
         data: this.props.datas,
-      })
-    }, 300)
+      });
+    }, 300);
   }
-
+  
   onHandleChange = (num) => {
     this.props.dispatch({
       type: 'dashboard/updateState',
       payload: {
         selectedIndex: num
       }
-    })
-  }
+    });
+  };
   handleClick = ({ pathname = 'lanmusub' }) => {
     props.dispatch(routerRedux.push({
       pathname: `/${pathname}`,
       query: {
         name: '阿拉善头条',
       },
-    }))
-  }
-  getGif = () => {
-    return defaultGifArr[Math.floor(Math.random() * 3)]
-  }
-
-  render() {
-
-    const selectedIndex = this.props.selectedIndex, currentData = this.props.datas || []
+    }));
+  };
+  
+  
+  render () {
+    
+    const selectedIndex = this.props.selectedIndex, currentData = this.props.datas || [];
     return (
       <div>
-        <div className={styles[`${PrefixCls}-outer`]} style={{clear: 'both'}}>
+        <div className={styles[`${PrefixCls}-outer`]} style={{ clear: 'both' }}>
           <Carousel
             className="space-carousel"
             selectedIndex={selectedIndex}
@@ -80,49 +74,56 @@ class HeadLine extends React.Component {
               <div
                 className={styles[`${PrefixCls}-image`]}
                 key={`a_${i}`}
-                onClick={this.props.handleClick.bind(null, data)}
+                onClick={this.props.handleClick.bind(null, data, this.props.dispatch)}
               >
                 <img
                   ref={el => this.banner = el}
                   src={`${data.url}`}
                   alt=""
-                  style={{width: '100%', verticalAlign: 'top'}}
+                  style={{ width: '100%', verticalAlign: 'top' }}
                   onLoad={() => {
                     if (!this.state.isLoad) {
                       this.setState({
                         isLoad: true
-                      })
+                      });
                       window.dispatchEvent(new Event('resize'));
                     }
                   }}
                 />
+                <div>{data.name}</div>
               </div>
             ))}
           </Carousel>
         </div>
         <div className={styles[`${PrefixCls}-noticeouter`]}>
-          {currentData.length > 0 ? <img src={this.getGif()} alt=""/> : ''}
-          <span style={{color: '#ddd'}}>|</span>
+          <div className={styles[`${PrefixCls}-noticeouter-title`]}><Icon
+            type={getLocalIcon('/dashboard/weather.svg')} /></div>
+          <span style={{ color: '#ddd' }}>|</span>
           <Carousel className="my-carousel"
                     vertical
+                    autoplayInterval={4000}
+                    autoplay
                     dots={false}
                     dragging={false}
                     swiping={false}
-                    selectedIndex={this.props.selectedIndex}
                     infinite
           >
             {
               currentData.length > 0 && currentData.map((data, index) =>
-                <div onClick={this.props.handleClick.bind(null, data)}
-                     className={styles[`${PrefixCls}-noticeouter-container`]}
-                     key={index}><span style={{paddingRight: '5px', color: '#888'}}></span>{data.title}</div>)
+                <div className={styles[`${PrefixCls}-noticeouter-container`]}
+                     key={index}><span style={{ paddingRight: '5px', color: '#888' }}></span>{data.text}</div>)
             }
           </Carousel>
         </div>
       </div>
-    )
+    );
   }
-
 }
-
-export default HeadLine
+HeadLine.propTypes = {
+  handleClick: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired
+};
+HeadLine.defaultProps = {
+  bannerDatas: []
+};
+export default HeadLine;

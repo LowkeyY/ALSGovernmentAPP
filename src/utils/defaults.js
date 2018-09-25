@@ -104,5 +104,5 @@ const defaultGrids = [
     'lanmutabshouhu': require('themes/images/nmenus/lanmutabshouhu.png'),
     'ecology': require('themes/images/nmenus/shengtai.png'),
     'defualt': require('themes/images/nmenus/suqiu.png'),
-  }
-export default { defaultGrids, defaultGridIcon, defaultTabBars, defaultTabBarIcon }
+  };
+export default { defaultGrids, defaultGridIcon, defaultTabBars, defaultTabBarIcon };

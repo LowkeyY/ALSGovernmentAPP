@@ -21,7 +21,9 @@ const PrefixCls = 'fazhandangyuan',
   };
 
 function Comp ({ location, dispatch, fazhandangyuan, form }) {
-  const { name = '发展党员' } = location.query, { title, isShenhe = false, items = [], btnText = '', uploading = false, imageFiles = [], liuchengId, subject = '', sort_id = '' } = fazhandangyuan, { getFieldProps, getFieldError } = form;
+  const { name = '发展党员' } = location.query,
+    { title, isShenhe = false, items = [], btnText = '', uploading = false, imageFiles = [], liuchengId, subject = '', sort_id = '', shenhe_tag = '', selfList = false } = fazhandangyuan,
+    { getFieldProps, getFieldError } = form;
   
   const handleSubmits = () => {
       if (uploading) {
@@ -70,7 +72,7 @@ function Comp ({ location, dispatch, fazhandangyuan, form }) {
     },
     handleOnClick = ({ sort_id = '', shenhe_tag = '' }) => {
       dispatch(routerRedux.push({
-        pathname: `/fazhandangyuanxinxi`,
+        pathname: '/fazhandangyuanxinxi',
         query: {
           liuchengId,
           sort_id,
@@ -81,7 +83,7 @@ function Comp ({ location, dispatch, fazhandangyuan, form }) {
   const layoutItem = (item) => {
       const { type = 'text', lable = '', key = '' } = item,
         result = [];
-      if (key != '') {
+      if (key !== '') {
         switch (type) {
           case 'text':
             result.push(
@@ -103,15 +105,16 @@ function Comp ({ location, dispatch, fazhandangyuan, form }) {
                 <div className={styles[`${PrefixCls}-sendtitle`]}>{lable}</div>
                 <div>
                   {<span className={styles[`${PrefixCls}-formbox`]}
-                         onClick={cnTakePhoto.bind(null, handleCameraClick, 1)}>
-                  <Icon type={getLocalIcon('/media/camerawhite.svg')} />
-                </span>}
+                         onClick={cnTakePhoto.bind(null, handleCameraClick, 1)}
+                  >
+                    <Icon type={getLocalIcon('/media/camerawhite.svg')} />
+                  </span>}
                 </div>
                 <ImagePicker
                   files={imageFiles}
                   onChange={handleOnChange}
-                  multiple={true}
-                  accept='image/*'
+                  multiple
+                  accept="image/*"
                 />
               </div>);
             break;
@@ -131,9 +134,11 @@ function Comp ({ location, dispatch, fazhandangyuan, form }) {
     },
     layoutShenheItem = (item, onClick) => {
       const { sort_id = '', title, status = '0', statusText = '', dates = '' } = item;
-      return sort_id != '' ? (
+      return sort_id !== '' ? (
         <Item className={styles[`${PrefixCls}-item`]}
-              multipleLine wrap arrow='horizontal'
+              multipleLine
+              wrap
+              arrow="horizontal"
               onClick={handleOnClick.bind(null, item)}
         
         >
@@ -164,11 +169,28 @@ function Comp ({ location, dispatch, fazhandangyuan, form }) {
         });
       }
       return isShenhe === true ? <List>{result}</List> : <form>{result}</form>;
+    },
+    handleAddClick = () => {
+      
+      dispatch(routerRedux.push({
+        pathname: '/fazhandangyuan',
+        query: {
+          selfList: true,
+          shenhe_tag
+        }
+      }));
+    },
+    renderNav = () => {
+      if (!selfList && sort_id > 0 && !isShenhe) {
+        return (<div onClick={handleAddClick}>历史步骤</div>);
+      } else {
+        return '';
+      }
     };
   
   return (
     <div className={styles[`${PrefixCls}-outer`]}>
-      <Nav title={name} dispatch={dispatch} />
+      <Nav title={name} dispatch={dispatch} renderNavRight={renderNav()} />
       <WhiteSpace size="md" />
       {
         isShenhe ?
@@ -182,11 +204,13 @@ function Comp ({ location, dispatch, fazhandangyuan, form }) {
       }
       <WhiteSpace size="md" />
       <div className={styles[`${PrefixCls}-container`]}>{layoutItems()}</div>
-      <div style={{ height: '100px' }}></div>
+      <div style={{ height: '100px' }} />
       <div className={styles[`${PrefixCls}-button`]}>
         {btnText.length > 0 ?
-          <WingBlank><Button type="primary" loading={uploading}
-                             onClick={handleSubmits}>{btnText}</Button></WingBlank> : ''}
+          <WingBlank><Button type="primary"
+                             loading={uploading}
+                             onClick={handleSubmits}
+          >{btnText}</Button></WingBlank> : ''}
       </div>
     </div>
   );

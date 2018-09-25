@@ -2,7 +2,6 @@ import { parse } from 'qs'
 import modelExtend from 'dva-model-extend'
 import { model } from 'models/common'
 import { queryPartyData } from 'services/querylist'
-import defaultIcon from 'themes/images/nmenus/lvyou.png'
 
 
 const getBanners = (datas = []) => {

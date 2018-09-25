@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'dva';
-import { WhiteSpace, Accordion, List, Checkbox, Modal, Toast } from 'components';
+import { WhiteSpace, Accordion, List, Checkbox, Modal, Toast, SearchBar } from 'components';
 import Nav from 'components/nav';
+import { routerRedux } from 'dva/router';
 import TitleBox from 'components/titlecontainer';
 import styles from './index.less';
 
@@ -58,14 +59,34 @@ function Selectmembers ({ location, dispatch, selectmembers }) {
       }
       
     },
+    // handleSearchClick = () => {
+    //   dispatch(routerRedux.push({
+    //     pathname: '/searchuser',
+    //   }));
+    // },
     renderNav = () => {
       return (
         <span onClick={handleNavClick.bind(null, currentSelect)}>发布</span>
       );
     },
+    handleSearchClick = (val) => {
+      dispatch({
+        type: 'selectmembers/queryUsers',
+        payload: {
+          searchText: val
+        }
+      });
+    },
+    handleCancelClick = () => {
+      dispatch({
+        type: 'selectmembers/queryMembers',
+      });
+      console.log(currentSelect)
+    },
     handleSelectClick = (key) => {
       let newSelect = [], index = -1;
-      if ((index = currentSelect.indexOf(key)) != -1)
+      if ((index = currentSelect.indexOf(key)) !==
+        -1)
         newSelect = [...currentSelect.slice(0, index), ...currentSelect.slice(index + 1)];
       else
         newSelect = [...currentSelect, key];
@@ -76,11 +97,12 @@ function Selectmembers ({ location, dispatch, selectmembers }) {
         }
       });
     };
-  
   return (
     <div>
       <Nav title={name} dispatch={dispatch} renderNavRight={renderNav()} />
-      <WhiteSpace size="md" />
+      <div>
+        <SearchBar placeholder="搜索" maxLength={8} onSubmit={handleSearchClick} onCancel={handleCancelClick} />
+      </div>
       <div>
         {
           lists && lists.map((data, i) => {
@@ -97,7 +119,7 @@ function Selectmembers ({ location, dispatch, selectmembers }) {
                         >
                           <span>{data.name}</span>
                           <span style={{ marginLeft: '20px' }}>{data.isMaster !== '' ? '管理员' : ''}</span>
-                          <p className={styles[`${PrefixCls}-dept`]}>{data.deptPath}</p>
+                          <p className={styles[`${PrefixCls}-dept`]}>{data.deptPath.substring(1)}</p>
                         </CheckboxItem>
                       );
                     })}

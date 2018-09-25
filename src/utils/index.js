@@ -1,49 +1,34 @@
 /* global window */
-import classnames from 'classnames'
-import lodash from 'lodash'
-import config from './config'
-import request from './request'
-import cookie from './cookie'
-import defaultImg from 'themes/images/default/default.png'
-import defaultUserIcon from 'themes/images/default/userIcon.png'
-import formsubmit from './formsubmit'
+import classnames from 'classnames';
+import lodash from 'lodash';
+import config from './config';
+import request from './request';
+import cookie from './cookie';
+import defaultImg from 'themes/images/default/default.png';
+import defaultUserIcon from 'themes/images/default/userIcon.png';
+import formsubmit from './formsubmit';
 
-const { userTag: { username, usertoken, userpower, userid, useravatar, usertype }, privateApi: { sumbitUrlPositions } } = config, { _cs, _cr, _cg } = cookie
+const { userTag: { username, usertoken, userpower, userid, useravatar, usertype }, privateApi: { sumbitUrlPositions } } = config,
+  { _cs, _cr, _cg } = cookie;
 // 连字符转驼峰
 String.prototype.hyphenToHump = function () {
   return this.replace(/-(\w)/g, (...args) => {
-    return args[1].toUpperCase()
-  })
-}
+    return args[1].toUpperCase();
+  });
+};
 
 // 驼峰转连字符
 String.prototype.humpToHyphen = function () {
   return this.replace(/([A-Z])/g, '-$1')
-    .toLowerCase()
-}
+    .toLowerCase();
+};
 
 // 日期格式化
-Date.prototype.format = function (format) {
-  const o = {
-    'M+': this.getMonth() + 1,
-    'd+': this.getDate(),
-    'h+': this.getHours(),
-    'H+': this.getHours(),
-    'm+': this.getMinutes(),
-    's+': this.getSeconds(),
-    'q+': Math.floor((this.getMonth() + 3) / 3),
-    S: this.getMilliseconds(),
-  }
-  if (/(y+)/.test(format)) {
-    format = format.replace(RegExp.$1, `${this.getFullYear()}`.substr(4 - RegExp.$1.length))
-  }
-  for (let k in o) {
-    if (new RegExp(`(${k})`).test(format)) {
-      format = format.replace(RegExp.$1, RegExp.$1.length === 1 ? o[k] : (`00${o[k]}`).substr(`${o[k]}`.length))
-    }
-  }
-  return format
-}
+const DateChange = function (format) {
+  let date = new Date(format);
+  let newDate = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+  return newDate;
+};
 
 
 /**
@@ -52,12 +37,12 @@ Date.prototype.format = function (format) {
  */
 
 const queryURL = (name) => {
-  let reg = new RegExp(`(^|&)${name}=([^&]*)(&|$)`, 'i')
+  let reg = new RegExp(`(^|&)${name}=([^&]*)(&|$)`, 'i');
   let r = window.location.search.substr(1)
-    .match(reg)
-  if (r != null) return decodeURI(r[2])
-  return null
-}
+    .match(reg);
+  if (r != null) return decodeURI(r[2]);
+  return null;
+};
 
 /**
  * 数组内查询
@@ -68,60 +53,60 @@ const queryURL = (name) => {
  */
 const queryArray = (array, key, keyAlias = 'key') => {
   if (!(array instanceof Array)) {
-    return null
+    return null;
   }
-  const item = array.filter(_ => _[keyAlias] === key)
+  const item = array.filter(_ => _[keyAlias] === key);
   if (item.length) {
-    return item[0]
+    return item[0];
   }
-  return null
-}
+  return null;
+};
 
 const getImages = (path = '', type = 'defaultImg') => {
   if (path instanceof Blob || path.startsWith('blob:')) {
-    return path
+    return path;
   }
   if (path == '' || !path) {
-    return type === 'defaultImg' ? defaultImg : defaultUserIcon
+    return type === 'defaultImg' ? defaultImg : defaultUserIcon;
   }
   return path.startsWith('http://') || path.startsWith('https://') ? path
-    : (config.baseURL + (path.startsWith('/') ? '' : '/') + path)
-}
+    : (config.baseURL + (path.startsWith('/') ? '' : '/') + path);
+};
 
 const getErrorImg = (el) => {
   if (el && el.target) {
-    el.target.src = defaultImg
-    el.target.onerror = null
+    el.target.src = defaultImg;
+    el.target.onerror = null;
   }
-}
+};
 
 const setLoginIn = ({ user_token, user_name, user_power, user_id, user_avatar, user_type }) => {
-  _cs(username, user_name)
-  _cs(userpower, user_power)
-  _cs(usertoken, user_token)
-  _cs(userid, user_id)
-  _cs(useravatar, user_avatar)
-  _cs(usertype, user_type)
-  cnSetAlias(user_name , user_token);
-}
+  _cs(username, user_name);
+  _cs(userpower, user_power);
+  _cs(usertoken, user_token);
+  _cs(userid, user_id);
+  _cs(useravatar, user_avatar);
+  _cs(usertype, user_type);
+  cnSetAlias(user_name, user_token);
+};
 const setLoginOut = () => {
-  _cr(username)
-  _cr(userpower)
-  _cr(usertoken)
-  _cr(userid)
-  _cr(useravatar)
-  _cr(usertype)
-  cnDeleteAlias(_cg(username) , _cg(usertoken));
-}
+  _cr(username);
+  _cr(userpower);
+  _cr(usertoken);
+  _cr(userid);
+  _cr(useravatar);
+  _cr(usertype);
+  cnDeleteAlias(_cg(username), _cg(usertoken));
+};
 const getLocalIcon = (icon) => {
-  const regex = /\/([^\/]+?)\./g
-  let addIconName = []
+  const regex = /\/([^\/]+?)\./g;
+  let addIconName = [];
   if (icon.startsWith('/') && (addIconName = regex.exec(icon)) && addIconName.length > 1) {
-    const addIcon = require(`svg/${icon.substr(1)}`)
-    return `${addIconName[1]}`
+    const addIcon = require(`svg/${icon.substr(1)}`);
+    return `${addIconName[1]}`;
   }
-  return icon
-}
+  return icon;
+};
 
 /**
  *
@@ -129,30 +114,39 @@ const getLocalIcon = (icon) => {
  * @returns {number} 父元素不是body时元素相对body的offsetTop
  */
 const getOffsetTopByBody = (el) => {
-  let offsetTop = 0
+  let offsetTop = 0;
   while (el && el.tagName !== 'BODY') {
-    offsetTop += el.offsetTop
-    el = el.offsetParent
+    offsetTop += el.offsetTop;
+    el = el.offsetParent;
   }
-  return offsetTop
-}
-
+  return offsetTop;
+};
+/**
+ * @param str 字符串
+ * @returns {string}
+ */
+const interceptStr = (str) => {
+  if (str.length > 7) {
+    return `${str.substring(0, 7)}...`;
+  }
+  return str;
+};
 const doDecode = (json) => {
-  return eval('(' + json + ')')
-}
+  return eval(`(${json})`);
+};
 
 const postionsToString = ({ address = {}, latitude = '', longitude = '', radius = '' }) => JSON.stringify({
   address,
   latitude,
   longitude,
   radius,
-})
+});
 
 const postCurrentPosition = ({ serverId = '', entityId = '' }) => {
-/*  if (serverId != '' && entityId != '' && _cg(usertoken) != '') {
-    cnNeedPositions(_cg(userid), config.baseURL + sumbitUrlPositions)
-  }*/
-}
+  /*  if (serverId != '' && entityId != '' && _cg(usertoken) != '') {
+      cnNeedPositions(_cg(userid), config.baseURL + sumbitUrlPositions)
+    } */
+};
 const replaceSystemEmoji = (content) => {
   const ranges = [
     '\ud83c[\udf00-\udfff]',
@@ -160,7 +154,7 @@ const replaceSystemEmoji = (content) => {
     '\ud83d[\ude80-\udeff]'
   ];
   return content.replace(new RegExp(ranges.join('|'), 'g'), '').replace(/\[\/.+?\]/g, '');
-}
+};
 
 const hasSystemEmoji = (content) => {
   const ranges = [
@@ -169,9 +163,13 @@ const hasSystemEmoji = (content) => {
     '\ud83d[\ude80-\udeff]'
   ];
   return content.match(new RegExp(ranges.join('|'), 'g'));
-}
-
-
+};
+const getTitle = (title) => {
+  
+    return title.length>8?title.substring(0,7) + '...':title;
+  
+  
+};
 module.exports = {
   config,
   request,
@@ -192,5 +190,8 @@ module.exports = {
   setLoginOut,
   postCurrentPosition,
   replaceSystemEmoji,
-  hasSystemEmoji
-}
+  hasSystemEmoji,
+  interceptStr,
+  DateChange,
+  getTitle
+};

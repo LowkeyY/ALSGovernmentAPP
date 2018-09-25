@@ -1,7 +1,8 @@
 import React from 'react'
 import { connect } from 'dva'
-import { WhiteSpace } from 'components'
+import { WhiteSpace,Icon} from 'components'
 import Nav from 'components/nav'
+import { getLocalIcon } from 'utils'
 import IntegralCard from 'components/integralcard'
 import styles from './index.less'
 
@@ -18,9 +19,20 @@ function Integral ({ location, dispatch, integral }) {
       <Nav title={name} dispatch={dispatch}/>
       <div className={styles[`${PrefixCls}-outer`]}>
         <div className={styles[`${PrefixCls}-outer-head`]}>
-            <span>我的积分</span>
-            <span className={styles[`${PrefixCls}-outer-head-coin`]}>{`${0}金币`}</span>
+           <div className={styles[`${PrefixCls}-outer-head-item`]}>
+             <span><Icon type={getLocalIcon('/others/coin.svg')}/></span>
+             <span>金币(0)</span>
+           </div>
+          <div className={styles[`${PrefixCls}-outer-head-item`]}>
+            <span><Icon type={getLocalIcon('/others/exchange.svg')}/></span>
+            <span>兑换记录</span>
+          </div>
+          <div className={styles[`${PrefixCls}-outer-head-item`]}>
+            <span><Icon type={getLocalIcon('/others/rule.svg')}/></span>
+            <span>金币规则</span>
+          </div>
         </div>
+        <WhiteSpace/>
         <div className={styles[`${PrefixCls}-outer-title`]}>
             <span>积分兑换</span>
         </div>

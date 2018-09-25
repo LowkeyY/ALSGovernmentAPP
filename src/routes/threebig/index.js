@@ -201,7 +201,7 @@ function Threebig ({ location, dispatch, threebig }) {
         tabs={tabs}
         swipeable={false}
         onTabClick={handleTabClick}
-        renderTabBar={props => <Tabs.DefaultTabBar {...props} page={3}/>}>
+        renderTabBar={props => <Tabs.DefaultTabBar {...props} page={4}/>}>
         <div>
           {itemData.length>0&&getContents(itemData,refreshId,fixData,selectedIndex)}
         </div>

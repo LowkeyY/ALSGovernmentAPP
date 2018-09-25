@@ -1,70 +1,72 @@
-import React from 'react'
-import { connect } from 'dva'
-import { WhiteSpace, Icon, List ,Tag} from 'components'
-import Nav from 'components/nav'
-import { getImages, getErrorImg, getLocalIcon } from 'utils'
-import NoMessage from 'components/nomessage'
-import { baseURL, api } from 'utils/config'
-import { routerRedux } from 'dva/router'
-import styles from './index.less'
-import TitleBox from 'components/titlecontainer'
-import SeekReply from 'components/seekreply'
-import StatusBox from 'components/statusbox'
-import VociePrev from 'components/voicePrev'
-import WxImageViewer from 'react-wx-images-viewer'
+import React from 'react';
+import { connect } from 'dva';
+import { WhiteSpace, Icon, List, Tag } from 'components';
+import Nav from 'components/nav';
+import { getImages, getErrorImg, getLocalIcon } from 'utils';
+import NoMessage from 'components/nomessage';
+import { baseURL, api } from 'utils/config';
+import { routerRedux } from 'dva/router';
+import styles from './index.less';
+import TitleBox from 'components/titlecontainer';
+import SeekReply from 'components/seekreply';
+import StatusBox from 'components/statusbox';
+import VociePrev from 'components/voicePrev';
+import WxImageViewer from 'react-wx-images-viewer';
 
 const Item = List.Item,
-  Brief = Item.Brief, { positionApi } = api,
-  PrefixCls = 'seekdetails'
+  { positionApi } = api,
+  PrefixCls = 'seekdetails';
 
 function SeekDetails ({ location, dispatch, seekdetails }) {
-  const { name, currentData, isOpen, viewImageIndex, isTask, workId, taskId } = seekdetails,
-    { username, situatton,createDate, positions, title, content, images, answers, voicePath, userPhoto ,status,shState,isCollect} = currentData
+  const { name, currentData, isOpen, viewImageIndex, isTask } = seekdetails,
+    { id, taskId } = location.query,
+    { username, situatton, createDate, positions, title, content, images, answers, voicePath, userPhoto, status, shState, isCollect } = currentData;
   const getImagesPage = (images) => {
       if (cnIsArray(images) && images.length) {
         return (
           <div className={styles[`${PrefixCls}-content-images`]}>
-            {images.map((src,i) => <div key={i} data-src={src} className='imgbox' style={{ backgroundImage: `url(${src})` }}></div>)}
+            {images.map((src, i) => <div key={i} data-src={src} className="imgbox"
+                                         style={{ backgroundImage: `url(${src})` }} />)}
           </div>
-        )
+        );
       }
-      return ''
+      return '';
     },
     replacSrc = (src = '') => {
       return src.replaceAll('\\', '/')
-        .replace(':80/', '')
+        .replace(':80/', '');
     },
     has = (images = [], src = '') => {
-      let result = -1
+      let result = -1;
       images.map((image, index) => {
-        if (replacSrc(image) == replacSrc(src)) {
-          result = index
+        if (replacSrc(image) === replacSrc(src)) {
+          result = index;
         }
-      })
-      return result
+      });
+      return result;
     },
     getShtate = () => {
-      return <StatusBox bg='#9c9595' status='不在办理范围'/>
+      return <StatusBox bg="#9c9595" status="不在办理范围" />;
     },
     getStatus = (status) => {
       switch (status) {
         case '0' :
-          return <StatusBox bg='#f5b90c' status='待审核'/>
+          return <StatusBox bg="#f5b90c" status="待审核" />;
         case '1' :
         case '2' :
         case '3' :
         case '4' :
         case '6' :
         case '7' :
-          return <StatusBox bg='#29ad2e' status='处理中'/>
+          return <StatusBox bg="#29ad2e" status="处理中" />;
         case '5' :
-          return <StatusBox bg='#d45b5b' status='已完成'/>
+          return <StatusBox bg="#d45b5b" status="已完成" />;
       }
     },
     handleDivClick = (e) => {
       if (e.target.className === 'imgbox') {
         let src = e.target.dataset.src,
-          curImageIndex = images.indexOf(src)
+          curImageIndex = images.indexOf(src);
         if (src) {
           dispatch({
             type: `${PrefixCls}/updateState`,
@@ -72,7 +74,7 @@ function SeekDetails ({ location, dispatch, seekdetails }) {
               isOpen: true,
               viewImageIndex: curImageIndex < 0 ? 0 : curImageIndex,
             },
-          })
+          });
         }
       }
     },
@@ -82,26 +84,28 @@ function SeekDetails ({ location, dispatch, seekdetails }) {
         payload: {
           isOpen: false,
         },
-      })
+      });
     },
     handlePositionClick = ({ route = 'iframe', name = '定位' }) => {
-      const src = `${baseURL}${positionApi}?workId${workId}&taskId=${taskId}`
-      dispatch(routerRedux.push({
-        pathname: `/${route}`,
-        query: {
-          name,
-          externalUrl: src,
-        },
-      }))
-    }
-
+      if (id && id !== '') {
+        const src = `${baseURL}${positionApi}?workId${id}&taskId=${taskId}`;
+        dispatch(routerRedux.push({
+          pathname: `/${route}`,
+          query: {
+            name,
+            externalUrl: src,
+          },
+        }));
+      }
+    };
+  
   return (
     <div>
-      <Nav title={name} dispatch={dispatch}/>
+      <Nav title={name} dispatch={dispatch} />
       <div className={styles[`${PrefixCls}-outer`]}>
         <div className={styles[`${PrefixCls}-header`]}>
           <div className={styles[`${PrefixCls}-header-info`]}>
-            <img src={getImages(userPhoto, 'user')} alt=""/>
+            <img src={getImages(userPhoto, 'user')} alt="" />
             <div className={styles[`${PrefixCls}-header-info-box`]}>
               <div className={styles[`${PrefixCls}-header-info-box-name`]}>{username}</div>
               <div className={styles[`${PrefixCls}-header-info-box-date`]}>
@@ -109,41 +113,46 @@ function SeekDetails ({ location, dispatch, seekdetails }) {
             </div>
           </div>
         </div>
-        <div className={styles[`${PrefixCls}-outer-type`]}><span>诉求类型：{situatton}</span><span>{positions}</span></div>
+        <div className={styles[`${PrefixCls}-outer-type`]}>
+          {situatton !== 'undefined' ? <span>诉求类型：{situatton}</span> : ''}
+          <span>{positions}</span>
+        </div>
         <div className={styles[`${PrefixCls}-content`]} onClick={handleDivClick}>
           <div className={styles[`${PrefixCls}-content-title`]}>
             <span>{title}</span>
             {isTask ? <span onClick={handlePositionClick}>
-              <Icon type={getLocalIcon('/others/location.svg')} size='lg'/>
+              <Icon type={getLocalIcon('/others/location.svg')} size="lg" />
             </span> : ''}
           </div>
           <div className={styles[`${PrefixCls}-content-status`]}>
-            <span style={{ color: '#1ab99d' }}>当前状态:<span>{shState=='2'?getShtate():getStatus(status)}</span></span>
-            {isCollect?<div><Tag disabled><Icon type={getLocalIcon('/others/collectionblack.svg')}/>已收藏</Tag ></div>:''}
+            <span
+              style={{ color: '#1ab99d' }}>当前状态:<span>{shState == '2' ? getShtate() : getStatus(status)}</span></span>
+            {isCollect ?
+              <div><Tag disabled><Icon type={getLocalIcon('/others/collectionblack.svg')} />已收藏</Tag></div> : ''}
           </div>
           <div>
-            {voicePath != '' ? <VociePrev mediaFileUrl={voicePath} mediaFileTimer={0}/> : ''}
+            {voicePath !== '' ? <VociePrev mediaFileUrl={voicePath} mediaFileTimer={0} /> : ''}
           </div>
           <div className={styles[`${PrefixCls}-content-details`]}><span>问题详情：{content}</span></div>
           {getImagesPage(images)}
         </div>
-        <WhiteSpace/>
-        <TitleBox title={'回复'}/>
+        <WhiteSpace />
+        <TitleBox title={'回复'} />
         {
-          answers && answers.map((data) => {
-            return <SeekReply {...data}/>
+          answers && answers.map((data, i) => {
+            return <SeekReply key={i} {...data} />;
           })
         }
       </div>
       {
-        isOpen && viewImageIndex != -1 ?
-          <WxImageViewer onClose={onViemImageClose} urls={images} index={viewImageIndex}/> : ''
+        isOpen && viewImageIndex !== -1 ?
+          <WxImageViewer onClose={onViemImageClose} urls={images} index={viewImageIndex} /> : ''
       }
     </div>
-  )
+  );
 }
 
 export default connect(({ loading, seekdetails }) => ({
   loading,
   seekdetails,
-}))(SeekDetails)
+}))(SeekDetails);

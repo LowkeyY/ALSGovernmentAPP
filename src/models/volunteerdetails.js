@@ -1,53 +1,58 @@
-import modelExtend from 'dva-model-extend'
-import {model} from 'models/common'
-import {Toast} from 'components'
-import {routerRedux} from 'dva/router';
-import {Bangfuduixiang, submitHuodong} from 'services/fabuhuodong'
+import modelExtend from 'dva-model-extend';
+import { model } from 'models/common';
+import { Toast } from 'components';
+import { routerRedux } from 'dva/router';
+import { Bangfuduixiang, submitHuodong } from 'services/fabuhuodong';
 
 const defaultInitState = () => ({
-  id: '',
-  name: '',
-  currentSelect: [],
-  userInfos: [],
-  currentData: {},
-  deptIds: ''
-}), namespace = 'volunteerdetails'
+    dataId: '',
+    name: '',
+    currentSelect: [],
+    userInfos: [],
+    currentData: {},
+    deptIds: '',
+    typeId: ''
+  }),
+  namespace = 'volunteerdetails';
 export default modelExtend(model, {
   namespace,
   state: {
-    ...defaultInitState()
+    ...defaultInitState(),
+    isShowModal: false
   },
   subscriptions: {
-    setup({dispatch, history}) {
-      history.listen(({pathname, query, action}) => {
+    setup ({ dispatch, history }) {
+      
+      history.listen(({ pathname, query, action }) => {
         if (pathname === '/volunteerdetails') {
           if (action === 'PUSH') {
-            const {id = '', name = ''} = query
+            const { dataId = '', name = '' } = query;
             dispatch({
               type: 'updateState',
               payload: {
                 ...defaultInitState(),
-                id,
-                name
+                dataId,
+                name,
+                isShowModal: false
               },
-            })
+            });
             dispatch({
               type: 'query',
               payload: {
-                id
+                id: dataId
               },
-            })
+            });
           }
         }
-      })
+      });
     },
   },
   effects: {
-    * query({payload}, {call, put, select}) {
-      const {id = ''} = payload,
-        {success = false, ...result} = yield call(Bangfuduixiang, {dataId: id})
+    * query ({ payload }, { call, put, select }) {
+      const { id = '' } = payload,
+        { success = false, ...result } = yield call(Bangfuduixiang, { dataId: id });
       if (success) {
-        let {bfrJa = [], deptId = '', ...others} = result
+        let { bfrJa = [], deptId = '', ...others } = result;
         yield put({
           type: 'updateState',
           payload: {
@@ -57,20 +62,33 @@ export default modelExtend(model, {
             deptIds: deptId,
             userInfos: bfrJa
           },
-        })
+        });
       }
     },
-    * submit({payload}, {call, put, select}) {
-      const {id = '', deptIds = '', currentSelect = []} = yield select(_ => _[namespace])
-      if (id != '') {
+    * submit ({ payload }, { call, put, select }) {
+      const { dataId = '', deptIds = '', currentSelect = [] } = yield select(_ => _[namespace]);
+      if (dataId != '') {
         const result = yield call(submitHuodong, {
-          huodongId: id,
+          huodongId: dataId,
           jubanfangId: deptIds,
           bangfurenId: currentSelect.join(',')
-        })
+        });
       }
-      Toast.success('感谢您的参与。', 2)
-      yield put(routerRedux.goBack())
+      Toast.success('感谢您的参与。', 2);
+      yield put(routerRedux.goBack());
+    },
+    * submitActive ({ payload }, { call, put, select }) {
+      const { dataId = '', deptIds = '', currentSelect = [], typeId = '' } = yield select(_ => _[namespace]);
+      if (dataId !== '') {
+        const result = yield call(submitHuodong, {
+          huodongId: dataId,
+          jubanfangId: deptIds,
+          bangfurenId: currentSelect.join(','),
+          bfxx: typeId
+        });
+      }
+      Toast.success('感谢您的参与。', 2);
+      yield put(routerRedux.goBack());
     }
   }
-})
+});

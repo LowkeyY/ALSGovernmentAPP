@@ -1,28 +1,29 @@
-import React from 'react'
-import { connect } from 'dva'
-import { WingBlank, WhiteSpace, Tabs, Badge, List, SearchBar } from 'components'
-import Nav from 'components/nav'
-import { routerRedux } from 'dva/router'
-import {layoutRow} from 'components/row'
-import ListView from 'components/listview'
-import Banner from 'components/banner'
-import styles from './index.less'
+import React from 'react';
+import { connect } from 'dva';
+import { WingBlank, WhiteSpace, Tabs, Badge, List, SearchBar } from 'components';
+import Nav from 'components/nav';
+import { routerRedux } from 'dva/router';
+import { layoutRow } from 'components/row';
+import ListView from 'components/listview';
+import Banner from 'components/banner';
+import styles from './index.less';
+import { handleListClick } from 'utils/commonevent';
 
 const PrefixCls = 'lanmutab',
   Item = List.Item,
-  Brief = Item.Brief
+  Brief = Item.Brief;
 
 function Comp ({ location, dispatch, lanmutab }) {
-  const { name = '', selectedIndex = 0, grids, lists, bannerDatas, fixedLanmu,paginations, scrollerTop,refreshId} = lanmutab,
+  const { name = '', selectedIndex = 0, grids, lists, bannerDatas, fixedLanmu, paginations, scrollerTop, refreshId } = lanmutab,
     handleItemOnclick = ({ externalUrl = '', id, route = 'details' }) => {
-      if (externalUrl != '' && externalUrl.startsWith('http')) {
+      if (externalUrl !== '' && externalUrl.startsWith('http')) {
         dispatch(routerRedux.push({
           pathname: 'iframe',
           query: {
             name,
-            externalUrl: externalUrl,
+            externalUrl,
           },
-        }))
+        }));
       } else {
         dispatch(routerRedux.push({
           pathname: `/${route}`,
@@ -31,7 +32,7 @@ function Comp ({ location, dispatch, lanmutab }) {
             id,
             dataId: id,
           },
-        }))
+        }));
       }
     },
     handleFiexdItemOnclick = ({ route, id, title }) => {
@@ -42,7 +43,7 @@ function Comp ({ location, dispatch, lanmutab }) {
             name: title,
             id,
           },
-        }))
+        }));
       }
     },
     onRefresh = (refreshId, callback) => {
@@ -53,7 +54,7 @@ function Comp ({ location, dispatch, lanmutab }) {
           callback,
           isRefresh: true
         }
-      })
+      });
     },
     onEndReached = (refreshId, callback) => {
       dispatch({
@@ -62,125 +63,133 @@ function Comp ({ location, dispatch, lanmutab }) {
           refreshId,
           callback
         }
-      })
+      });
     },
     onScrollerTop = (top) => {
-      if (typeof top !='undefined' && !isNaN(top * 1))
+      if (typeof top !== 'undefined' && !isNaN(top * 1)) {
         dispatch({
           type: `${PrefixCls}/updateState`,
           payload: {
             scrollerTop: top
           }
-        })
-    },
-    getRefreshId = (arr) => {
-      if(Array.isArray(arr)&&arr.length>0){
-        return arr[0]
+        });
       }
     },
-    getContents = (lists,grids) => {
-        const {current, total, size} = paginations,
-          hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total),
-          result= []
-         if(selectedIndex==0){
-           result.push(
-             <ListView layoutHeader={''} dataSource={lists} layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleItemOnclick)}
-                       onEndReached={onEndReached.bind(null, refreshId)}
-                       onRefresh={onRefresh.bind(null, refreshId)} hasMore={hasMore}
-                       onScrollerTop={onScrollerTop.bind(null)}
-                       scrollerTop={scrollerTop}
-             />
-           )
-         }else {
-           lists.map((list, i) => {
-             const { id = '' } = list
-             if (id != '') {
-               result.push(
-                 <Item key={id} className={styles[`${PrefixCls}-item`]}
-                       thumb={list.image || ''} multipleLine wrap arrow='horizontal'
-                       onClick={handleItemOnclick.bind(null, list)}>
-                   <span>{list.title}</span><Brief>{list.time}</Brief>
-                 </Item>,
-               )
-             }
-           })
-         }
-
-      return result
+    getContents = (lists, grids) => {
+      const { current, total, size } = paginations,
+        hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total),
+        result = [];
+      if (selectedIndex == 0) {
+        result.push(
+          <ListView layoutHeader={''}
+            dataSource={lists}
+            layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
+            onEndReached={onEndReached.bind(null, refreshId)}
+            onRefresh={onRefresh.bind(null, refreshId)}
+            hasMore={hasMore}
+            onScrollerTop={onScrollerTop.bind(null)}
+            scrollerTop={scrollerTop}
+          />
+        );
+      } else {
+        lists.map((list, i) => {
+          const { id = '' } = list;
+          if (id !== '') {
+            result.push(
+              <Item key={id}
+                className={styles[`${PrefixCls}-item`]}
+                thumb={list.image || ''}
+                multipleLine
+                wrap
+                arrow="horizontal"
+                onClick={handleItemOnclick.bind(null, list)}
+              >
+                <span>{list.title}</span><Brief>{list.time}</Brief>
+              </Item>,
+            );
+          }
+        });
+      }
+      
+      return result;
     },
     getTabs = () => {
-      const result = []
+      const result = [];
       grids.map((grid, i) => {
-        const { title = '' } = grid
+        const { title = '' } = grid;
         if (title != '') {
-          result.push({ ...grid })
+          result.push({ ...grid });
         }
-      })
-      return result
+      });
+      return result;
     },
     getFixedItem = () => {
-      const result = []
+      const result = [];
       if (Object.keys(fixedLanmu).length > 0 && fixedLanmu.title) {
-        result.push(<WhiteSpace size="sm" style={{ backgroundColor: '#ddd' }}/>)
+        result.push(<WhiteSpace size="sm" style={{ backgroundColor: '#ddd' }} />);
         result.push(<List>
           <Item className={styles[`${PrefixCls}-fixeditem`]}
-                thumb={fixedLanmu.image || ''} multipleLine wrap arrow='horizontal'
-                onClick={handleFiexdItemOnclick.bind(null, fixedLanmu)}>
+            thumb={fixedLanmu.image || ''}
+            multipleLine
+            wrap
+            arrow="horizontal"
+            onClick={handleFiexdItemOnclick.bind(null, fixedLanmu)}
+          >
             <span>{fixedLanmu.title}</span><Brief>{fixedLanmu.infos}</Brief>
           </Item>
-        </List>)
-        result.push(<WhiteSpace size="sm" style={{ backgroundColor: '#ddd' }}/>)
+        </List>);
+        result.push(<WhiteSpace size="sm" style={{ backgroundColor: '#ddd' }} />);
       }
-      return result
+      return result;
     },
     getCurrentView = () => {
-      const result = []
+      const result = [];
       if (selectedIndex == 0 && bannerDatas.length > 0) {
         const props = {
           datas: bannerDatas,
           handleClick: (data) => {
-            console.log(data)
+            console.log(data);
           },
-        }
-        result.push(<Banner {...props}/>)
-        result.push(getFixedItem())
+        };
+        result.push(<Banner {...props} />);
+        result.push(getFixedItem());
       }
-      result.push(getContents(lists,grids))
-      return <div>{result}</div>
+      result.push(getContents(lists, grids));
+      return <div>{result}</div>;
     },
     handleTabClick = (data, index) => {
-      const { route = '', title = '' ,id} = data
+      const { route = '', title = '', id } = data;
       dispatch({
         type: 'lanmutab/updateState',
         payload: {
-          refreshId:id
+          refreshId: id
         },
-      })
+      });
       dispatch({
         type: 'lanmutab/queryListview',
         payload: {
-          refreshId:id,
+          refreshId: id,
           selected: index,
           isRefresh: true
         },
-      })
+      });
     },
-    handleSearchClick = ({id=''}) => {
+    handleSearchClick = ({ id = '' }) => {
       dispatch(routerRedux.push({
-        pathname: `/search`,
+        pathname: '/search',
         query: {
           router: PrefixCls,
           id
         },
-      }))
-    }
+      }));
+    };
   return (
     <div className={styles[`${PrefixCls}-outer`]}>
-      <Nav title={name} dispatch={dispatch}/>
+      <Nav title={name} dispatch={dispatch} />
       <SearchBar
         placeholder={`在${name || '此页面'}中搜索`}
         maxLength={20}
-        onFocus={handleSearchClick.bind(this,lanmutab)}
+        onFocus={handleSearchClick.bind(this, lanmutab)}
       />
       <Tabs
         initialPage={0}
@@ -192,11 +201,11 @@ function Comp ({ location, dispatch, lanmutab }) {
         {getCurrentView()}
       </Tabs>
     </div>
-
-  )
+  
+  );
 }
 
 export default connect(({ loading, lanmutab }) => ({
   loading,
   lanmutab,
-}))(Comp)
+}))(Comp);

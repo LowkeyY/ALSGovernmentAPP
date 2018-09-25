@@ -1,5 +1,5 @@
 var cunovs = {
-  cnVersion: '3.2.1',
+  cnVersion: '7.0.0',
   cnGlobalIndex: 0,
   cnhtmlSize: 0,
   cnhtmlHeight: document.documentElement.clientHeight,
@@ -227,7 +227,7 @@ var cunovs = {
       cnPrn(media)
       onSuccess(media)*/
             }, onError);
-            
+
           });
         }, onError);
       }
@@ -320,6 +320,10 @@ var cunovs = {
       }
     }
   },
+  cnOpen: function(url , target , params , callback){
+    target = target || '_blank';
+    window.open(url , target)
+  },
 };
 
 window.cnApply = cunovs.cnIsDefined(Object.assign) ? Object.assign : function (target, source) {
@@ -348,6 +352,17 @@ if (typeof String.prototype.startsWith != 'function') {
         cnSetStatusBarStyle();
       }
       cnClearBadge();
+      if(cordova.InAppBrowser) {
+        cnOpen = function (url, target, params, callback) {
+          target = target || '_self'
+          params = params || 'location=yes,hideurlbar=yes,toolbarcolor=#4eaaf7,navigationbuttoncolor=#ffffff,closebuttoncolor=#ffffff'
+          callback = callback || new Function()
+          var ref = cordova.InAppBrowser.open(url, target, params, callback),
+            spinner = '<!DOCTYPE html><html><head><meta name=\'viewport\' content=\'width=device-width,height=device-height,initial-scale=1\'><style>.loader {position: absolute;    margin-left: -2em;    left: 50%;    top: 50%;    margin-top: -2em;    border: 5px solid #f3f3f3;    border-radius: 50%;    border-top: 5px solid #3498db;    width: 50px;    height: 50px;    -webkit-animation: spin 1.5s linear infinite;    animation: spin 1.5s linear infinite;}@-webkit-keyframes spin {  0% { -webkit-transform: rotate(0deg); } 100% { -webkit-transform: rotate(360deg); }}@keyframes spin {  0% { transform: rotate(0deg); }  100% { transform:rotate(360deg); }}</style></head><body><div class=\'loader\'></div></body></html>'
+          ref.executeScript({ code: '(function() {document.write("' + spinner + '");window.location.href=\'' + url + '\';})()' })
+
+        }
+      }
     } catch (exception) {
     }
   }
@@ -358,7 +373,7 @@ if (typeof String.prototype.startsWith != 'function') {
     , cunovsWebSocketUrl = ''
     , cunovsWebSocketUserId = ''
     , cnnovsWebSocketStatus = '';
-  
+
   window.cnGetWebSocket = function (url, id) {
     if (cnIsDefined(url) && url) {
       if (cnIsDefined(id) && id) {
@@ -377,7 +392,7 @@ if (typeof String.prototype.startsWith != 'function') {
           };
           cunovsWebSocket.onopen = function () {
             cnnovsWebSocketStatus = 'open';
-            
+
           };
           cunovsWebSocket.onclose = function () {
             cnnovsWebSocketStatus = 'close';
@@ -433,7 +448,7 @@ if (typeof String.prototype.startsWith != 'function') {
   document.addEventListener('deviceready', onDeviceReady, false);
   document.addEventListener('resume', onResume, false);
   document.addEventListener('backbutton', onExitApp, false);
-  
+
   function resizeBaseFontSize () {
     var rootHtml = document.documentElement
       , deviceWidth = rootHtml.clientWidth;
@@ -443,7 +458,7 @@ if (typeof String.prototype.startsWith != 'function') {
     cnhtmlSize = deviceWidth / 7.5;
     rootHtml.style.fontSize = cnhtmlSize + 'px';
   }
-  
+
   resizeBaseFontSize();
   window.addEventListener('resize', resizeBaseFontSize, false);
   window.addEventListener('orientationchange', resizeBaseFontSize, false);

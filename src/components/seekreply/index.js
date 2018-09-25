@@ -1,8 +1,9 @@
 import styles from './index.less'
 const PrefixCls = 'seekreply'
 function SeekReply(props) {
+ 
   return (
-    <div className={styles[`${PrefixCls}-outer`]}>
+    <div key={props.key} className={styles[`${PrefixCls}-outer`]}>
        <div className={styles[`${PrefixCls}-outer-title`]}>
          转办意见：
        </div>

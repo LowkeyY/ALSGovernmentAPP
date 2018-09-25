@@ -1,77 +1,76 @@
-import React from 'react'
-import { connect } from 'dva'
-import { List, InputItem, Switch, Checkbox, Range, Button, Card, WingBlank, WhiteSpace, Toast } from 'components'
-import Nav from 'components/nav'
-import { routerRedux } from 'dva/router'
-import styles from './index.less'
+import React from 'react';
+import { connect } from 'dva';
+import { List, InputItem, Switch, Checkbox, Range, Button, Card, WingBlank, WhiteSpace, Toast } from 'components';
+import Nav from 'components/nav';
+import { routerRedux } from 'dva/router';
+import styles from './index.less';
 
 const PrefixCls = 'survey',
   Item = List.Item,
-  Brief = Item.Brief,
-  CheckboxItem = Checkbox.CheckboxItem
+  CheckboxItem = Checkbox.CheckboxItem;
 
 function Comp ({ location, dispatch, survey, form }) {
   const { name = '', title = '', lists = [], values = {}, issues = {}, isSubmit } = survey,
     getFieldErrors = () => {
-      const result = []
+      const result = [];
       Object.keys(issues)
         .map(key => {
           if (!values.hasOwnProperty(key) || !values[key].length) {
-            result.push(`"${issues[key]}"必须填写。`)
+            result.push(`"${issues[key]}"必须填写。`);
           }
-        })
-      return result
+        });
+      return result;
     },
     handleSubmits = () => {
-      const errors = getFieldErrors()
+      const errors = getFieldErrors();
       if (errors.length == 0) {
         dispatch({
           type: 'survey/sumbit',
           payload: {
             values,
           },
-        })
+        });
       } else {
-        Toast.fail(errors[0])
+        Toast.fail(errors[0]);
       }
     },
     handleOnChange = (item, value) => {
-      const { multiple, id } = item
+      const { multiple, id } = item;
       if (multiple) {
-        let currentValue = values[id]
+        let currentValue = values[id];
         if (currentValue.includes(value)) {
-          currentValue.remove(value)
+          currentValue.remove(value);
         } else {
-          currentValue.push(value)
+          currentValue.push(value);
         }
-        values[id] = currentValue
+        values[id] = currentValue;
       } else {
-        values[id] = [value]
+        values[id] = [value];
       }
       dispatch({
         type: 'survey/updateState',
         payload: {
           values,
         },
-      })
+      });
     },
     layoutInputItem = (list) => {
-      const { title = '', items = [], isRequired = false, id } = list
+      const { title = '', items = [], isRequired = false, id } = list;
       return (<List renderHeader={() => <span className={styles[`${PrefixCls}-list-title`]}>{title}</span>}>
           {items.map(item => {
-            const { value = '', label = '' } = item
+            const { value = '', label = '' } = item;
             return label && value ?
               <CheckboxItem key={value}
                             checked={values[id] && values[id].includes(value)}
                             onChange={handleOnChange.bind(null, list, value)}> {label}
-              </CheckboxItem> : ''
+              </CheckboxItem> : '';
           })}
         </List>
-      )
-    }
+      );
+    };
   return (
     <div className={styles[`${PrefixCls}-outer`]}>
-      <Nav title={name} dispatch={dispatch}/>
+      <Nav title={name} dispatch={dispatch} />
       <div className={styles[`${PrefixCls}-content`]}>
         <WingBlank size="sm">
           <Card>
@@ -82,15 +81,15 @@ function Comp ({ location, dispatch, survey, form }) {
               {lists.map(list => layoutInputItem(list))}
             </Card.Body>
             <Card.Footer
-              content={<Button type="primary" loading={isSubmit} onClick={isSubmit ? '' : handleSubmits}>提交</Button>}/>
+              content={<Button type="primary" loading={isSubmit} onClick={isSubmit ? '' : handleSubmits}>提交</Button>} />
           </Card>
         </WingBlank>
       </div>
     </div>
-  )
+  );
 }
 
 export default connect(({ loading, survey }) => ({
   loading,
   survey,
-}))(Comp)
+}))(Comp);

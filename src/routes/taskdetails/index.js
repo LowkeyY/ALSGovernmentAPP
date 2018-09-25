@@ -15,7 +15,7 @@ const PrefixCls = 'taskdetails',
   appendItems = (lists, id) => {
     const result = [];
     lists.map(list => {
-      let isMySelf = list.hasOwnProperty('isMySelf') ? list['isMySelf'] : list['msgcUser'] == id;
+      let isMySelf = list.hasOwnProperty('isMySelf') ? list.isMySelf : list.msgcUser == id;
       result.push({ ...list, isMySelf });
     });
     return result;
@@ -23,21 +23,19 @@ const PrefixCls = 'taskdetails',
 
 function TaskDetails ({ location, dispatch, taskdetails, app }) {
   const { name = '' } = location.query,
-    { chartArr, val, isDisabled, taskInfo, taskTitle, localArr, imageArr, workId, flowState, flowLeve, flowId, taskId, isShowButton, isOpen, viewImageIndex, taskType, taskUrgency, creatDate, endDate, complete, isWork } = taskdetails,
+    { chartArr, val, isDisabled, taskInfo, taskTitle, localArr, imageArr, workId, flowState, flowLeve, flowId, taskId, isShowButton, isOpen, viewImageIndex, taskType, taskUrgency, creatDate, endDate, complete, isWork, isUpTable, qingshi } = taskdetails,
     { isSuccess } = chartArr,
     { users: { userid, useravatar } } = app;
   const onSubmit = ({ msgType = 0, content = '' }) => {
-      
       let _Key = `${taskId}${globalIndex++}`,
         params = { msgType, taskId, _Key },
         appendLoacl = { ...params, isMySelf: true },
         images = [],
         files = {},
         errorMessages = '';
-      
       switch (msgType) {
         case 0: {
-          if (content != '') {
+          if (content !== '') {
             content = replaceSystemEmoji(content);
             if (content == '') {
               errorMessages = '不能发送系统自带表情。';
@@ -51,9 +49,9 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
           break;
         }
         case 1: {
-          if (content != '') {
+          if (content !== '') {
             images = {
-              'msgFile': content,
+              msgFile: content,
             };
             appendLoacl.msgInfo = URL.createObjectURL(content);
           } else {
@@ -63,9 +61,9 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
         }
         case 2: {
           const { file = '', url = '', timers = 5 } = content;
-          if (file != '' && url != '') {
+          if (file !== '' && url !== '') {
             files = {
-              'msgFile': file,
+              msgFile: file,
             };
             appendLoacl.msgInfo = url;
             appendLoacl.timers = timers;
@@ -75,7 +73,7 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
           break;
         }
       }
-      if (errorMessages == '') {
+      if (errorMessages === '') {
         dispatch({
           type: 'taskdetails/appendMessage',
           payload: {
@@ -104,7 +102,7 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
     },
     onCnevent = (appendMessage) => {
       const { taskId: _id = '', msgId, ...others } = appendMessage;
-      if (_id != '' && _id == taskId) {
+      if (_id !== '' && _id === taskId) {
         dispatch({
           type: 'taskdetails/appendMessage',
           payload: {
@@ -149,7 +147,7 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
       dispatch({
         type: 'taskdetails/zhiHuiConformTask',
         payload: {
-          hztaskId:taskId,
+          hztaskId: taskId,
           workId,
         },
       });
@@ -163,80 +161,144 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
           pageType: 'back'
         },
       });
-      
+    },
+    handleTableClick = () => {
+      dispatch(routerRedux.push({
+        pathname: '/tasktable',
+        query: {
+          taskId,
+          flowId,
+          workId
+        }
+      }));
+    },
+    handleReactClick = () => {
+      dispatch(routerRedux.push({
+        pathname: '/taskreact',
+        query: {
+          workId
+        }
+      }));
     },
     getCompleteButtons = (complete) => {
-      if (complete != '0') {
-        return <div>
-          <Button type="primary" inline size="small" style={{ marginRight: '4px' }}
-                  onClick={handleCompleteButtonClick}>完成</Button>
-        </div>;
-      } else {
-        return '';
+      if (complete !== '0') {
+        return (<div>
+          <Button type="primary"
+                  inline
+                  size="small"
+                  style={{ marginRight: '4px' }}
+                  onClick={handleCompleteButtonClick}
+          >完成</Button>
+        </div>);
       }
+      return '';
     },
     getTaskButtons = (flowLeve, flowState, complete, isWork) => {
-      if (flowLeve == '3' && flowState == '0') {
-        return <div>
-          <Button type="primary" inline size="small"
+      if (flowLeve === '3' && flowState === '0') {
+        return (<div>
+          <Button type="primary"
+                  inline
+                  size="small"
                   style={{ marginRight: '40px', background: '#35aa47', borderColor: '#35aa47' }}
-                  onClick={handleTaskClick.bind(null, 'conform')}>接受</Button>
-          <Button type="primary" inline size="small"
+                  onClick={handleTaskClick.bind(null, 'conform')}
+          >接受</Button>
+          <Button type="primary"
+                  inline
+                  size="small"
                   style={{ marginRight: '4px', background: '#f3565d', borderColor: '#f3565d' }}
                   onClick={handleTaskClick.bind(null, 'back')}
           >退回</Button>
-        </div>;
-      } else if (flowLeve == '3' && flowState == '3') {
-        return <div>
-          <Button type="primary" inline size="small" style={{ marginRight: '4px' }}
-                  onClick={handleCompleteClick}>完成</Button>
-        </div>;
-      } else if (complete != '0') {
-        return <div>
-          <Button type="primary" inline size="small" style={{ marginRight: '4px' }}
-                  onClick={handleCompleteButtonClick}>完成</Button>
-        </div>;
-      } else if (isWork == '7') {
-        return <div>
-          <Button type="primary" inline size="small" style={{ marginRight: '4px' }}
-                  onClick={handleZhihuiClick}>完成</Button>
-        </div>;
+        </div>);
+      } else if (flowLeve === '3' && flowState === '3') {
+        return (<div>
+          <Button type="primary"
+                  inline
+                  size="small"
+                  style={{ marginRight: '4px' }}
+                  onClick={handleCompleteClick}
+          >完成</Button>
+        </div>);
+      } else if (complete !== '0') {
+        return (<div>
+          <Button type="primary"
+                  inline
+                  size="small"
+                  style={{ marginRight: '4px' }}
+                  onClick={handleCompleteButtonClick}
+          >完成</Button>
+        </div>);
+      } else if (isWork === '7') {
+        return (<div>
+          <Button type="primary"
+                  inline
+                  size="small"
+                  style={{ marginRight: '4px' }}
+                  onClick={handleZhihuiClick}
+          >完成</Button>
+        </div>);
       }
     },
-    getBackTaskButtons =() => {
-      if (isWork != "1" && isWork != "6" && isWork != "7"&&flowLeve!='0') {
-        return <div><Button type="primary" inline size="small" style={{ marginRight: '4px' }}
-                            onClick={handleBackClick}>退回任务</Button></div>;
-      }else {
-        return ''
+    getBackTaskButtons = () => {
+      if (isWork !== '1' && isWork !== '6' && isWork !== '7' && flowLeve !== '0') {
+        return (<div>
+          <Button
+            type="primary"
+            inline
+            size="small"
+            style={{ marginRight: '4px' }}
+            onClick={handleBackClick}
+          >退回任务</Button></div>);
       }
+      return '';
+    },
+    getUpTableButtons = () => {
+      if (isUpTable !== '0') {
+        return (<div>
+          <Button
+            type="primary"
+            inline
+            size="small"
+            style={{ marginRight: '4px' }}
+            onClick={handleTableClick}
+          >提交表单</Button></div>);
+      }
+      return '';
+    },
+    getReactButtons = () => {
+      if (flowLeve === '-1' && qingshi === '1') {
+        return (<div>
+          <Button
+            type="primary"
+            inline
+            size="small"
+            style={{ marginRight: '4px' }}
+            onClick={handleReactClick}
+          >请示反馈</Button></div>);
+      }
+      return '';
     },
     handleListClick = ({ workId, isTask = true, taskId }) => {
-      dispatch({
-        type: 'seekdetails/updateState',
-        payload: {
-          workId,
-          taskId,
-        },
-      });
-      dispatch(routerRedux.push({
-        pathname: `/seekdetails`,
-        query: {
-          id: workId,
-          isTask: true,
-        },
-      }));
+      if (workId !== '') {
+        
+        dispatch(routerRedux.push({
+          pathname: '/seekdetails',
+          query: {
+            id: workId,
+            isTask: true,
+            taskId
+          },
+        }));
+      }
     },
     renderNav = (taskId) => {
-      if (isWork == '0' || isWork == '2') {
+      if (isWork === '0' || isWork === '2') {
         return <span onClick={handleSendClick.bind(null, taskId)}>发布任务</span>;
-      } else {
-        return '';
       }
+      return '';
     },
     handleSendClick = () => {
       dispatch(routerRedux.push({
-        pathname: `/selectmembers`,
+        pathname: '/selectmembers',
         query: {
           taskId,
           workId,
@@ -255,8 +317,11 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
     };
   return (
     <div>
-      <Nav title='任务详情' dispatch={dispatch} navEvent={readMessage.bind(null, taskId)}
-           renderNavRight={renderNav(taskId, isWork)} />
+      <Nav title="任务详情"
+           dispatch={dispatch}
+           navEvent={readMessage.bind(null, taskId)}
+           renderNavRight={renderNav(taskId, isWork)}
+      />
       <div className={styles[`${PrefixCls}-outer`]}>
         <div className={styles[`${PrefixCls}-outer-title`]}>
           {taskTitle}
@@ -267,11 +332,12 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
               <Icon type={getLocalIcon('/others/task.svg')} size="md" />
               <span>【任务详情】</span>
             </div>
-          }>
+          }
+          >
             <span className={styles[`${PrefixCls}-outer-taskdetails-content`]}>
               <div className={styles[`${PrefixCls}-outer-taskdetails-content-info`]}>
                 <div className={styles[`${PrefixCls}-outer-taskdetails-content-info-type`]}>
-                  <span>警务类型：{taskType}</span>
+                  {taskType!=='undefined' ? <span>警务类型：{taskType}</span> : ''}
                   <span>紧急程度：{taskUrgency}</span>
                 </div>
                 <div className={styles[`${PrefixCls}-outer-taskdetails-content-info-date`]}>
@@ -279,16 +345,16 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
                   <div>结束时间：{endDate}</div>
                 </div>
               </div>
-             <List>
-               <Item
-                 arrow="horizontal"
-                 multipleLine
-                 wrap={true}
-                 onClick={handleListClick.bind(this, taskdetails)}
-               >
-          {taskInfo}
-        </Item>
-             </List>
+              <List>
+                <Item
+                  arrow="horizontal"
+                  multipleLine
+                  wrap
+                  onClick={handleListClick.bind(this, taskdetails)}
+                >
+                  {taskInfo}
+                </Item>
+              </List>
             </span>
           </Accordion.Panel>
         </Accordion>
@@ -296,20 +362,13 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
           isShowButton
             ?
             <div className={styles[`${PrefixCls}-outer-control`]}>
+              {getReactButtons()}
               {getTaskButtons(flowLeve, flowState, complete, isWork)}
+              {getUpTableButtons()}
               {getBackTaskButtons(isWork)}
             </div> :
             ''
         }
-        {/*{*/}
-        {/*isShowButton*/}
-        {/*?*/}
-        {/*<div className={styles[`${PrefixCls}-outer-control`]}>*/}
-        {/*{getCompleteButtons(complete)}*/}
-        {/*</div>*/}
-        {/*:*/}
-        {/*''*/}
-        {/*}*/}
         <div className={styles[`${PrefixCls}-outer-chat`]}>
           <Icon type={getLocalIcon('/others/chat.svg')} size="md" />
           <span className={styles[`${PrefixCls}-outer-details-title`]}>【任务汇报】</span>

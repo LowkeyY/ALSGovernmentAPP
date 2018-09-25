@@ -1,19 +1,13 @@
 @PrefixCls: commonlist;
-.@{PrefixCls}-outer{
+.@{PrefixCls}-outer {
   min-height: 100vh;
 
 }
-.@{PrefixCls}-iframes {
-  & iframe {
-    width: 100px;
-    height: 100px;
-  }
-}
-.@{PrefixCls}-entrance{
-  background: #fff;
-  text-align: center;
-  padding: 20px 0;
-  & img {
-    height: 120px;
+
+.@{PrefixCls}-grids {
+  :global {
+    .am-grid.am-grid-square .am-grid-item:before {
+      padding-bottom: 75%;
+    }
   }
 }

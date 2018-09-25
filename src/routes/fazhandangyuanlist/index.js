@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'dva';
 import { WhiteSpace, List, Badge, Icon, Checkbox, Button, Modal } from 'components';
 import { routerRedux } from 'dva/router';
+import NoMessage from 'components/nomessage';
 import Nav from 'components/nav';
 import styles from './index.less';
 
@@ -13,8 +14,8 @@ const PrefixCls = 'fazhandangyuanlist',
 
 function Comp ({ location, dispatch, fazhandangyuanlist }) {
   const { name = '' } = location.query,
-    { items = [], showPopover = false, isEdit = false, currentSelect } = fazhandangyuanlist,
-    handleItemClick = (data,shenhe_tag) => {
+    { items = [], isEdit = false, currentSelect } = fazhandangyuanlist,
+    handleItemClick = (data, shenhe_tag) => {
       dispatch(routerRedux.push({
         pathname: '/fazhandangyuan',
         query: {
@@ -36,14 +37,6 @@ function Comp ({ location, dispatch, fazhandangyuanlist }) {
           return 'red';
       }
     },
-    handleAddClick = () => {
-      dispatch(routerRedux.push({
-        pathname: '/fazhandangyuan',
-        query: {
-          // id,
-        },
-      }));
-    },
     handleEditClick = (e) => {
       e.preventDefault();
       e.stopPropagation();
@@ -58,14 +51,24 @@ function Comp ({ location, dispatch, fazhandangyuanlist }) {
       dispatch({
         type: 'fazhandangyuanlist/updateState',
         payload: {
-          isEdit: false
+          isEdit: false,
+          currentSelect: []
+        }
+      });
+    },
+    deleteMembers = () => {
+      dispatch({
+        type: 'fazhandangyuanlist/deleteMembers',
+        payload: {
+          liuchengId: '7a9bf0d6-824c-4e04-9775-d268a5ab0325',
+          shenhe_tags: currentSelect.join()
         }
       });
     },
     handleDeleteClick = () => {
       Modal.alert('删除', '确定删除所选人员？', [
         { text: '取消', onPress: () => console.log('cancel') },
-        { text: '确定', onPress: () => console.log('ok') },
+        { text: '确定', onPress: () => deleteMembers() },
       ]);
     },
     handleSelectClick = (key) => {
@@ -82,12 +85,15 @@ function Comp ({ location, dispatch, fazhandangyuanlist }) {
       });
     },
     renderNav = () => {
-      return (
-        <div onClick={handleEditClick}>删除</div>
-      );
+      if (items.length > 0) {
+        return (
+          <div onClick={handleEditClick}>删除</div>
+        );
+      }
+      return '';
     },
     getCurrentList = (item) => {
-      const { userName = '', userTag = '', statusText = '', status = '', shenhe_tag = '', ...others } = item;
+      const { userName = '', userTag = '', statusText = '', status = '', dates = '', shenhe_tag = '', ...others } = item;
       if (isEdit) {
         return (
           <CheckboxItem
@@ -126,7 +132,7 @@ function Comp ({ location, dispatch, fazhandangyuanlist }) {
             }}
           />}
         >
-          <span>{userName}</span>
+          <div><span>{userName}</span><span className={styles[`${PrefixCls}-date`]}>{dates}</span></div>
           <Brief>{userTag}</Brief>
         </Item>
       );
@@ -145,13 +151,17 @@ function Comp ({ location, dispatch, fazhandangyuanlist }) {
         </div> :
         ''
       }
-      <List>
-        {items.length > 0 && items.map(item => {
-          return (
-            <div>{getCurrentList(item)}</div>
-          );
-        })}
-      </List>
+      {
+        items.length > 0 ?
+          <List>
+            {items.map(item => {
+              return (
+                <div>{getCurrentList(item)}</div>
+              );
+            })}
+          </List> :
+          <NoMessage />
+      }
     </div>
   );
 }

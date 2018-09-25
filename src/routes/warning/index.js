@@ -1,11 +1,11 @@
-import { Component } from 'react'
-import { createForm } from 'rc-form'
-import { connect } from 'dva'
-import Nav from 'components/nav'
-import { routerRedux } from 'dva/router'
-import VociePrev from 'components/voicePrev'
-import NotesModal from 'components/notesmodal'
-import classNames from 'classnames'
+import { Component } from 'react';
+import { createForm } from 'rc-form';
+import { connect } from 'dva';
+import Nav from 'components/nav';
+import { routerRedux } from 'dva/router';
+import VociePrev from 'components/voicePrev';
+import NotesModal from 'components/notesmodal';
+import classNames from 'classnames';
 import {
   List,
   InputItem,
@@ -18,19 +18,18 @@ import {
   Switch,
   Icon,
   ActivityIndicator,
-} from 'components'
-import { getLocalIcon, postionsToString ,replaceSystemEmoji,pattern} from 'utils'
-import styles from './index.less'
+} from 'components';
+import { getLocalIcon, postionsToString, replaceSystemEmoji } from 'utils';
+import styles from './index.less';
 
 let int,
   stop,
-  warningBaseIndex = 0
-const PrefixCls = 'warning'
+  warningBaseIndex = 0;
+const PrefixCls = 'warning';
 
 class Warning extends Component {
-
   constructor (props) {
-    super(props)
+    super(props);
     this.state = {
       files: [],
       multiple: true,
@@ -43,9 +42,9 @@ class Warning extends Component {
       mediaFileLength: '',
       mediaUploadFile: {},
       loadPostions: false,
-    }
+    };
   }
-
+  
   getVoiceText = (unit, bits, minutes) => {
     return (
       <div>
@@ -56,83 +55,81 @@ class Warning extends Component {
           松开 结束
         </div>
       </div>
-    )
-  }
-
-  addSeconds () {//计时器
-    const { unit, bits, minutes } = this.state
+    );
+  };
+  
+  addSeconds () { // 计时器
+    const { unit, bits, minutes } = this.state;
     this.setState({
       unit: unit + 1,
-    })
+    });
     if (unit >= 9) {
       this.setState({
         unit: 0,
         bits: bits + 1,
-      })
+      });
     }
     if (bits >= 6) {
       this.setState({
         bits: 0,
         minutes: minutes + 1,
-      })
+      });
     }
   }
-
-  startTimer () {//启动计时器
-    const that = this
-    int = setInterval(function () {
-      that.addSeconds()
-    }, 1000)
+  
+  startTimer () { // 启动计时器
+    const that = this;
+    int = setInterval(() => {
+      that.addSeconds();
+    }, 1000);
   }
-
+  
   handleGetType = () => {
     /*    this.props.dispatch({
           type: 'warning/queryAppeal',
-        })*/
-  }
+        }) */
+  };
   onChange = (files, type, index) => {
     let reg = /image/,
-      result = []
+      result = [];
     files.map((data, i) => {
       if (!reg.test(data.file.type)) {
-
-        Toast.fail('这不是图片哟！！！', 2)
+        Toast.fail('这不是图片哟！！！', 2);
       } else {
-        result.push(data)
+        result.push(data);
       }
-    })
+    });
     this.setState({
       files: result,
-    })
-
-  }
-  getKey = (name) => (name && `${name}` || 'warningBaseIndex') + `_${warningBaseIndex++}`
+    });
+  };
+  getKey = (name) => `${name && `${name}` || 'warningBaseIndex'}_${warningBaseIndex++}`;
   getUploadFiles = () => {
     const uploadFiles = {},
-      uploadKey = []
+      uploadKey = [];
     this.state.files.map((file, i) => {
       if (file.file) {
-        let key = this.getKey(`file_${i}`)
-        uploadKey.push(key)
-        uploadFiles[key] = file.file
+        let key = this.getKey(`file_${i}`);
+        uploadKey.push(key);
+        uploadFiles[key] = file.file;
       }
-    })
+    });
     return {
       uploadFiles,
       uploadKey: uploadKey.join(','),
-    }
-  }
+    };
+  };
   onCancel = () => {
-    this.props.dispatch(routerRedux.goBack())
-  }
+    this.props.dispatch(routerRedux.goBack());
+  };
   changeValue = (obj) => {
-    for (let i in obj){
-     if (typeof (obj[i])==='string'){
-       obj[i]=replaceSystemEmoji(obj[i])
-     }
+    for (let i in obj) {
+      if (typeof (obj[i]) === 'string') {
+        obj[i] = replaceSystemEmoji(obj[i]);
+      }
     }
-    return obj
-  }
+    return obj;
+  };
   onSubmit = () => {
     this.props.form.validateFields({
       force: true,
@@ -140,8 +137,9 @@ class Warning extends Component {
       if (!error) {
         const data = {
             ...this.props.form.getFieldsValue(),
-          }, { uploadFiles, uploadKey } = this.getUploadFiles(),
-          { mediaUploadFile } = this.state
+          },
+          { uploadFiles, uploadKey } = this.getUploadFiles(),
+          { mediaUploadFile } = this.state;
         this.props.dispatch({
           type: 'warning/sendAppealInfo',
           payload: {
@@ -150,49 +148,48 @@ class Warning extends Component {
             fileKey: uploadKey,
             mediaFile: mediaUploadFile,
           },
-        })
+        });
         this.props.dispatch({
           type: 'warning/updateState',
           payload: {
             animating: true,
           },
-        })
+        });
       } else {
-        Toast.fail('请确认信息是否正确。')
+        Toast.fail('请确认信息是否正确。');
       }
-    })
-  }
+    });
+  };
   handleVoiceRecordingStart = () => {
     window.getSelection ? window.getSelection()
-      .removeAllRanges() : document.selection.empty()
+      .removeAllRanges() : document.selection.empty();
     this.setState({
       isVoice: true,
       onRecording: true,
-    })
-    stop = setTimeout(() => {//延迟1s执行
-
-      const { isVoice, onRecording } = this.state
+    });
+    stop = setTimeout(() => { // 延迟1s执行
+      const { isVoice, onRecording } = this.state;
       if (isVoice === true && onRecording === true) {
-        let mediaFile = cnStartRecord('', this.mediaFileOnSuccess.bind(this), this.mediaFileOnError.bind(this))
-
+        let mediaFile = cnStartRecord('', this.mediaFileOnSuccess.bind(this), this.mediaFileOnError.bind(this));
+        
         this.setState({
           mediaFile,
-        })
-        this.startTimer()
+        });
+        this.startTimer();
       }
-    }, 300)
-  }
+    }, 300);
+  };
   handleVoiceRecordingEnd = () => {
     window.getSelection ? window.getSelection()
-      .removeAllRanges() : document.selection.empty()
+      .removeAllRanges() : document.selection.empty();
     let { unit, bits, minutes, mediaFile, mediaFileLength } = this.state,
-      updates = {}
-
+      updates = {};
+    
     if (mediaFile) {
-      mediaFile.timers = mediaFileLength = (minutes * 60 + bits * 10 + unit)
-      mediaFile = cnStopRecord(this.state.mediaFile)
-      updates.mediaFile = mediaFile
-      updates.mediaFileLength = mediaFileLength
+      mediaFile.timers = mediaFileLength = (minutes * 60 + bits * 10 + unit);
+      mediaFile = cnStopRecord(this.state.mediaFile);
+      updates.mediaFile = mediaFile;
+      updates.mediaFileLength = mediaFileLength;
     }
     this.setState({
       isVoice: false,
@@ -202,81 +199,76 @@ class Warning extends Component {
       minutes: 0,
       mediaFile,
       ...updates,
-    })
-    clearInterval(int)
-    clearTimeout(stop)
-  }
+    });
+    clearInterval(int);
+    clearTimeout(stop);
+  };
   dataUrlToImageSrc = (dataUrl) => {
-    let imageHeader = 'data:image/jpeg;base64,'
+    let imageHeader = 'data:image/jpeg;base64,';
     if (dataUrl && !dataUrl.startsWith(imageHeader)) {
-      return `${imageHeader}${dataUrl}`
+      return `${imageHeader}${dataUrl}`;
     }
-    return dataUrl
-  }
+    return dataUrl;
+  };
   handleCameraClick = (blob, dataUrl) => {
-    const { files } = this.state
-    files.push({ file: blob, url: this.dataUrlToImageSrc(dataUrl) })
+    const { files } = this.state;
+    files.push({ file: blob, url: this.dataUrlToImageSrc(dataUrl) });
     this.setState({
       files,
-    })
-  }
-
+    });
+  };
+  
   mediaFileOnSuccess (blob, params) {
-
-    const { name = '', nativeURL = '' } = params
+    const { name = '', nativeURL = '' } = params;
     let pos = name.lastIndexOf('.'),
-      key = pos == -1 ? name : name.substr(0, pos)
+      key = pos == -1 ? name : name.substr(0, pos);
     this.setState({
       mediaUploadFile: {
-        'voiceFile': blob,
+        voiceFile: blob,
       },
       mediaFileUrl: nativeURL,
-    })
+    });
   }
-
+  
   mediaFileOnError (error) {
-
-    handleVoiceRecordingEnd()
-
+    handleVoiceRecordingEnd();
   }
-
+  
   getCurrentLocation () {
-    const { loadPostions } = this.state
+    const { loadPostions } = this.state;
     if (!loadPostions) {
       this.setState({
         loadPostions: true,
-      })
+      });
       const onSuccess = (postions = {}) => {
-
           this.setState({
             loadPostions: false,
-          })
+          });
           this.props.dispatch({
             type: 'warning/updateState',
             payload: {
               location: postionsToString(postions),
             },
-          })
+          });
         },
         onError = ({ message = '', code = -999 }) => {
-          btnVisible(false)
-          let msg = code == -999 ? message : '请允许系统访问您的位置。'
-          Toast.offline(msg, 2)
-        }
-      cnGetCurrentPosition(onSuccess, onError)
+          btnVisible(false);
+          let msg = code == -999 ? message : '请允许系统访问您的位置。';
+          Toast.offline(msg, 2);
+        };
+      cnGetCurrentPosition(onSuccess, onError);
     }
   }
-
+  
   handleDivClick () {
     let { isVoice, onRecording, unit, bits, minutes, mediaFile, mediaFileLength } = this.state,
-      updates = {}
+      updates = {};
     if (isVoice && onRecording) {
-
       if (mediaFile) {
-        mediaFile.timers = mediaFileLength = (minutes * 60 + bits * 10 + unit)
-        mediaFile = cnStopRecord(this.state.mediaFile)
-        updates.mediaFile = mediaFile
-        updates.mediaFileLength = mediaFileLength
+        mediaFile.timers = mediaFileLength = (minutes * 60 + bits * 10 + unit);
+        mediaFile = cnStopRecord(this.state.mediaFile);
+        updates.mediaFile = mediaFile;
+        updates.mediaFileLength = mediaFileLength;
       }
       this.setState({
         isVoice: false,
@@ -286,54 +278,54 @@ class Warning extends Component {
         minutes: 0,
         mediaFile,
         ...updates,
-      })
-      clearInterval(int)
-      clearTimeout(stop)
+      });
+      clearInterval(int);
+      clearTimeout(stop);
     }
   }
-
+  
   componentWillUnmount () {
-    clearInterval(int)
-    clearTimeout(stop)
+    clearInterval(int);
+    clearTimeout(stop);
   }
+  
   handleNavClick = () => {
-   this.props.dispatch({
-     type:`${PrefixCls}/updateState`,
-     payload:{
-       notesvisible:true
-     }
-   })
-  }
+    this.props.dispatch({
+      type: `${PrefixCls}/updateState`,
+      payload: {
+        notesvisible: true
+      }
+    });
+  };
   notesModalClick = () => {
     this.props.dispatch({
-      type:`${PrefixCls}/updateState`,
-      payload:{
-        notesvisible:false
+      type: `${PrefixCls}/updateState`,
+      payload: {
+        notesvisible: false
       }
-    })
-  }
-  renderNav = (isFankui) => {
-   if(!isFankui){
-     return (
-       <span onClick={this.handleNavClick}>诉求须知</span>
-     )
-   }else {
-     return ''
-   }
-
-  }
+    });
+  };
+  renderNav = () => {
+    return (
+      <span onClick={this.handleNavClick}>诉求须知</span>
+    );
+  };
+  
   render () {
-    const { name = '' } = this.props.location.query, { appealType, animating, location,notesvisible,content,isFankui} = this.props.warning
+    const { name = '' } = this.props.location.query,
+      { appealType, animating, location, notesvisible, content } = this.props.warning;
     let { address = {} } = JSON.parse(location),
-      currentPostions = address.street || address.district || address.city || ''
-
+      currentPostions = address.street || address.district || address.city || '';
+    
     const { getFieldProps, getFieldError } = this.props.form,
-      { unit, bits, minutes, mediaFileUrl, mediaFile, mediaFileLength, loadPostions } = this.state
+      { unit, bits, minutes, mediaFileUrl, mediaFile, mediaFileLength, loadPostions } = this.state;
+    
 
     return (
       <div onClick={this.handleDivClick.bind(this)}>
-        <Nav title={name} dispatch={this.props.dispatch}
-             renderNavRight={this.renderNav(isFankui)}
+        <Nav title={name}
+          dispatch={this.props.dispatch}
+          renderNavRight={this.renderNav()}
         />
         <div className={styles[`${PrefixCls}-outer`]}>
           <form>
@@ -342,8 +334,8 @@ class Warning extends Component {
                 {...getFieldProps('title', {
                   initialValue: '',
                   rules: [{ required: true, message: '标题必须输入' },
-                    { max: 10, message: '标题最多能输入10个字'}
-                    ],
+                    { max: 10, message: '标题最多能输入10个字' }
+                  ],
                 })}
                 clear
                 error={!!getFieldError('title') && Toast.fail(getFieldError('title'))}
@@ -354,12 +346,14 @@ class Warning extends Component {
               </InputItem>
             </div>
             <div className={styles[`${PrefixCls}-outer-type`]} onClick={this.handleGetType}>
-              <Picker data={appealType} cols={1} {...getFieldProps('type', {
-                rules: [{ required: true,message: '请选择诉求类型' }],
-              })}
-                      error={!!getFieldError('type') && Toast.fail(getFieldError('type'))}
+              <Picker data={appealType}
+                cols={1}
+                {...getFieldProps('type', {
+                  rules: [{ required: false, message: '请选择诉求类型' }],
+                })}
+                error={!!getFieldError('type') && Toast.fail(getFieldError('type'))}
               >
-                <List.Item arrow="horizontal">{isFankui?'反馈类型':'诉求类型'}</List.Item>
+                <List.Item arrow="horizontal">诉求类型</List.Item>
               </Picker>
             </div>
             <List.Item className={styles[`${PrefixCls}-outer-content`]}>
@@ -375,38 +369,36 @@ class Warning extends Component {
                 placeholder={'在此输入发表内容，注意时间、地点、涉及人物等要素'}
               />
             </List.Item>
-           <div style={{borderBottom:'1px solid #ddd'}}>
-             <InputItem
-               {...getFieldProps('positions', {
-                 initialValue: currentPostions
-               })}
-               clear
-               error={!!getFieldError('positions') && Toast.fail(getFieldError('positions'))}
-               placeholder="请输入您的位置"
-               extra={currentPostions == '' ? loadPostions ? <Icon type='loading'/> :
-                 <span onClick={this.getCurrentLocation.bind(this)}><Icon
-                   type={getLocalIcon('/others/location.svg')}/></span> : ''}
-             >
-               当前位置
-             </InputItem>
-           </div>
-            {isFankui?'':
+            <div style={{ borderBottom: '1px solid #ddd' }}>
               <InputItem
-                type='number'
-                {...getFieldProps('phone', {
-                  initialValue: ''
+                {...getFieldProps('positions', {
+                  initialValue: currentPostions
                 })}
-
-                placeholder="非必填"
+                clear
+                error={!!getFieldError('positions') && Toast.fail(getFieldError('positions'))}
+                placeholder="请输入您的位置"
+                extra={currentPostions == '' ? loadPostions ? <Icon type="loading" /> :
+                  <span onClick={this.getCurrentLocation.bind(this)}><Icon
+                  type={getLocalIcon('/others/location.svg')}
+                /></span> : ''}
               >
-                联系电话
+                当前位置
               </InputItem>
-            }
+            </div>
+            <InputItem
+              type="number"
+              {...getFieldProps('phone', {
+                initialValue: ''
+              })}
+              placeholder="非必填"
+            >
+              联系电话
+            </InputItem>
             <div className={styles[`${PrefixCls}-outer-img`]}>
               <div>
                 <p>添加图片</p>
                 {this.state.files.length >= 4 ? '' : <span onClick={cnTakePhoto.bind(null, this.handleCameraClick, 1)}>
-                  <Icon type={getLocalIcon('/media/camerawhite.svg')}/>
+                  <Icon type={getLocalIcon('/media/camerawhite.svg')} />
                 </span>}
               </div>
               <ImagePicker
@@ -415,18 +407,19 @@ class Warning extends Component {
                 onImageClick={(index, fs) => console.log(index, fs)}
                 selectable={this.state.files.length < 4}
                 multiple={this.state.multiple}
-                accept='image/*'
+                accept="image/*"
               />
             </div>
             <div className={styles[`${PrefixCls}-outer-voice`]}>
               <p className={styles[`${PrefixCls}-outer-voice-title`]}>发送语音</p>
               <div className={styles[`${PrefixCls}-outer-voice-container`]}>
                 <div className={styles[`${PrefixCls}-outer-voice-container-files`]}>
-                  {mediaFile != '' ? <VociePrev mediaFileUrl={mediaFileUrl} mediaFileTimer={mediaFileLength}/> : ''}
+                  {mediaFile != '' ? <VociePrev mediaFileUrl={mediaFileUrl} mediaFileTimer={mediaFileLength} /> : ''}
                 </div>
-                <div className={classNames(styles[`${PrefixCls}-outer-voice-container-button`],{[styles.active]:this.state.isVoice})}
-                     onTouchStart={this.handleVoiceRecordingStart}
-                     onTouchEnd={this.handleVoiceRecordingEnd}
+                <div
+                  className={classNames(styles[`${PrefixCls}-outer-voice-container-button`], { [styles.active]: this.state.isVoice })}
+                  onTouchStart={this.handleVoiceRecordingStart}
+                  onTouchEnd={this.handleVoiceRecordingEnd}
                 >
                   按下录音
                 </div>
@@ -437,23 +430,19 @@ class Warning extends Component {
                 animating={this.state.isVoice}
               />
             </div>
-            {
-              isFankui?''
-                :
-                <div className={styles[`${PrefixCls}-outer-voice-isOpen`]}>
-                  <List>
-                    <List.Item
-                      extra={<Switch
-                        {...getFieldProps('isOpen', {
-                          initialValue: true,
-                          valuePropName: 'checked',
-                        })}
-                        platform="android"
-                      />}
-                    >允许公开我的信息</List.Item>
-                  </List>
-                </div>
-            }
+            <div className={styles[`${PrefixCls}-outer-voice-isOpen`]}>
+              <List>
+                <List.Item
+                  extra={<Switch
+                    {...getFieldProps('isOpen', {
+                      initialValue: true,
+                      valuePropName: 'checked',
+                    })}
+                    platform="android"
+                  />}
+                >允许公开我的信息</List.Item>
+              </List>
+            </div>
             <div className={styles[`${PrefixCls}-outer-button`]}>
               <Button type="ghost" inline size="small" onClick={this.onSubmit}>提交</Button>
             </div>
@@ -461,27 +450,17 @@ class Warning extends Component {
         </div>
         <ActivityIndicator
           toast
-          text='正在上传...'
+          text="正在上传..."
           animating={animating}
         />
-        <NotesModal visible={notesvisible&&!isFankui} handleClick={this.notesModalClick}  content={content}/>
+        <NotesModal visible={notesvisible} handleClick={this.notesModalClick} content={content} />
       </div>
-    )
+    );
   }
 }
 
 export default connect(({ loading, warning }) => ({
   loading,
   warning,
-}))(createForm()(Warning))
-/*
-* 警务/非警务
-*
-*
-*
-*1、报警类型（最好可选，加入其它或者可添加）
-2、简单描述（针对问题简单的进行描述）
-3、拍摄现场（针对现场进行拍照取证，并提交用户点击按钮的时间）
-4、所在位置（实现出获取到的位置，供用户修改，与系统自动提交的位置并行，互不影响）
-5、匿名报警（对外公布信息时，不显示用户信息而已）
-*/
+}))(createForm()(Warning));
+

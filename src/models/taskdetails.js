@@ -44,7 +44,9 @@ export default modelExtend(model, {
     creatDate: '',
     endDate: '',
     complete: '0',
-    isWork: ''
+    isWork: '',
+    isUpTable: '',
+    qingshi: ''
   },
   subscriptions: {
     setup ({ dispatch, history }) {
@@ -67,12 +69,11 @@ export default modelExtend(model, {
           });
         }
       });
-      
     },
   },
   effects: {
     * getTaskList ({ payload }, { call, put, select }) {
-      const { success = false, data = {}, taskTitle = '', workId, taskInfo = '', flowId = '', flowLeve = '', flowState = '', taskId = '', taskType = '', taskUrgency = '', creatDate = '', endDate = '', complete = '0', isWork = '' } = yield call(getAllTask, payload);
+      const { success = false, data = {}, taskTitle = '', workId, taskInfo = '', flowId = '', flowLeve = '', flowState = '', taskId = '', taskType = '', taskUrgency = '', creatDate = '', endDate = '', complete = '0', isWork = '', isUpTable = '', qingshi = '' } = yield call(getAllTask, payload);
       if (success) {
         yield put({
           type: 'updateState',
@@ -90,7 +91,9 @@ export default modelExtend(model, {
             creatDate,
             endDate,
             complete,
-            isWork
+            isWork,
+            isUpTable,
+            qingshi
           },
         });
       }
