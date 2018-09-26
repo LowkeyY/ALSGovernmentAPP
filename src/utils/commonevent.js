@@ -114,7 +114,6 @@ const handleGridClick = ({ route = '', title, externalUrl = '', infos = '', ...o
     
   },
   handleListClick = ({ externalUrl = '', id, infos = '' }, dispatch, title = '') => {
-    
     if (externalUrl !== '' && externalUrl.startsWith('http')) {
       if (cnOpen) {
         cnOpen(externalUrl);
@@ -128,15 +127,18 @@ const handleGridClick = ({ route = '', title, externalUrl = '', infos = '', ...o
         }));
       }
     } else {
-      if (infos !== '') {
-        const { id = '', route = '' } = getInfo(infos);
-        dispatch(routerRedux.push({
-          pathname: `/${route}`,
-          query: {
-            name: title,
-            id,
-          },
-        }));
+      const { route = '' } = getInfo(infos);
+      if (infos !== '' && route !== '') {
+        const { id = '' } = getInfo(infos);
+        if (route !== '') {
+          dispatch(routerRedux.push({
+            pathname: `/${route}`,
+            query: {
+              name: title,
+              id,
+            },
+          }));
+        }
       } else {
         dispatch(routerRedux.push({
           pathname: `/details`,
