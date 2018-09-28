@@ -17,11 +17,13 @@ const PrefixCls = 'communitylist',
 
 function CommunityList ({ location, dispatch, communitylist }) {
   const { name = '', dataList = [], selectedIndex } = communitylist;
-  
+
   const activeList = (lists, handleItemOnclick) => {
+    console.log(lists)
       const result = [];
       lists && lists.map((list, i) => {
         result.push(
+        <div className={styles[`${PrefixCls}-listbox`]}>
           <Item className={styles[`${PrefixCls}-box`]}
                 thumb={list.img || ''}
                 multipleLine
@@ -38,8 +40,9 @@ function CommunityList ({ location, dispatch, communitylist }) {
                 {list.hdsj}
               </p>
             </Brief>
-          </Item>,
+          </Item>
           <div className={styles[`${PrefixCls}-list-state`]}>{list.state === '0' ? '可报名' : '已有人报名'}</div>
+        </div>
         );
       });
       return <List>{result}</List>;
@@ -55,7 +58,7 @@ function CommunityList ({ location, dispatch, communitylist }) {
         }));
       } else {
         dispatch(routerRedux.push({
-          pathname: `/communityjoin`,
+          pathname: '/communityjoin',
           query: {
             name,
             id
@@ -81,17 +84,17 @@ function CommunityList ({ location, dispatch, communitylist }) {
     getContent = () => {
       return <List>{activeList(dataList, handleItemOnclick)}</List>;
     };
-  
+
   return (
     <div className={styles[`${PrefixCls}-outer`]}>
       <Nav title={name} dispatch={dispatch} />
       <Tabs tabs={tabs}
-            initialPage={selectedIndex}
-            swipeable={false}
-            onChange={(tab, index) => {
-              handleTabClick(tab, index);
-            }}
-      
+        initialPage={selectedIndex}
+        swipeable={false}
+        onChange={(tab, index) => {
+          handleTabClick(tab, index);
+        }}
+
       >
         <div>
           <WhiteSpace size="xs" />

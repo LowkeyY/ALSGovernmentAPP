@@ -1,52 +1,52 @@
-import Cookie from 'js-cookie'
-import {userTag} from './config'
+import Cookie from 'js-cookie';
+import { userTag } from './config';
 
-const {usertoken} = userTag,
-  has = () => typeof(localStorage) !== 'undefined',
+const { usertoken } = userTag,
+  has = () => typeof (localStorage) !== 'undefined',
   set = (key, value) => {
     if (has) {
-      localStorage.setItem(key, value)
+      localStorage.setItem(key, value);
     }
   },
   get = (key) => {
-    let rs = ''
+    let rs = '';
     if (has) {
-      rs = localStorage.getItem(key)
+      rs = localStorage.getItem(key);
     }
-    return rs || ''
+    return rs || '';
   },
   remove = (key) => {
     if (has) {
-      localStorage.removeItem(key)
+      localStorage.removeItem(key);
     }
-  }
+  };
 
 export const _cs = (key, value, expire) => {
 /*  Cookie.set(key, value, {
     path: '/',
     expires: 365,
-  })*/
-  set(key, value)
-}
+  }) */
+  set(key, value);
+};
 
 export const _cr = (key) => {
   Cookie.remove(key, {
     path: '/',
-  })
-  remove(key)
-}
+  });
+  remove(key);
+};
 
 export const _cg = (key) => {
-  const cf = usertoken !== key,//先从cookie中获取
-    v = cf ? Cookie.get(key) : get(key)
-  return v && v != 'undefined' ? v : ((cf ? get(key) : Cookie.get(key)) || '')
-}
+  const cf = usertoken !== key, // 先从cookie中获取
+    v = cf ? Cookie.get(key) : get(key);
+  return v && v != 'undefined' ? v : ((cf ? get(key) : Cookie.get(key)) || '');
+};
 
-export const _cgj = (key) => (Cookie.getJSON(key) || {})
+export const _cgj = (key) => (Cookie.getJSON(key) || {});
 
 export default {
   _cs,
   _cr,
   _cg,
   _cgj,
-}
+};

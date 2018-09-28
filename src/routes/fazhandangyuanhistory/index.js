@@ -62,11 +62,9 @@ function Comp ({ location, dispatch, fazhandangyuanlist }) {
       ]);
     },
     handleSelectClick = (key) => {
-      let newSelect = [], index = -1;
-      if ((index = currentSelect.indexOf(key)) != -1)
-        newSelect = [...currentSelect.slice(0, index), ...currentSelect.slice(index + 1)];
-      else
-        newSelect = [...currentSelect, key];
+      let newSelect = [], 
+        index = -1;
+      if ((index = currentSelect.indexOf(key)) != -1) { newSelect = [...currentSelect.slice(0, index), ...currentSelect.slice(index + 1)]; } else { newSelect = [...currentSelect, key]; }
       dispatch({
         type: `${PrefixCls}/updateState`,
         payload: {
@@ -132,8 +130,12 @@ function Comp ({ location, dispatch, fazhandangyuanlist }) {
       <Nav title={name} dispatch={dispatch} renderNavRight={renderNav()} />
       {isEdit ?
         <div className={styles[`${PrefixCls}-editbutton`]}>
-          <Button type="ghost" inline size="small" onClick={handleDeleteClick}
-                  style={{ marginRight: '20px' }}>删除</Button>
+          <Button type="ghost"
+            inline
+            size="small"
+            onClick={handleDeleteClick}
+            style={{ marginRight: '20px' }}
+          >删除</Button>
           <Button type="ghost" inline size="small" onClick={handleCancelClick}>取消</Button>
         </div> :
         ''

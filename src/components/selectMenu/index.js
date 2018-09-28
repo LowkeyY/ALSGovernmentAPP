@@ -22,12 +22,12 @@ const getTop = (targetRef) => {
 class SelectMenu extends React.Component {
   constructor (props) {
     super(props);
-    const { items = [], values = [], multiSelect = true, targetRef = "" } = props;
+    const { items = [], values = [], multiSelect = true, targetRef = '' } = props;
     console.log(props);
     this.state = {
       initData: [...items],
       values: Array.isArray(values) ? [...values] : [values],
-      multiSelect: multiSelect,
+      multiSelect,
       top: getTop(targetRef),
       height: cnhtmlHeight / 1.5
     };
@@ -44,7 +44,6 @@ class SelectMenu extends React.Component {
       values: value
     });
     this.props.addUsers(value);
-    
   };
   onMaskClick = (e) => {
     e.preventDefault();
@@ -54,25 +53,25 @@ class SelectMenu extends React.Component {
   
   render () {
     const { initData, values, multiSelect, top } = this.state,
-      PrefixCls = "selectmenu";
+      PrefixCls = 'selectmenu';
     initData.map(data => {
-      if (!data.label && data.text)
-        data.label = data.text;
+      if (!data.label && data.text) { data.label = data.text; }
     });
     return (
       <div className={`${PrefixCls}-container`}>
-        <div className={`${PrefixCls}-mask`} onTouchEnd={this.onMaskClick} ref="mask"></div>
+        <div className={`${PrefixCls}-mask`} onTouchEnd={this.onMaskClick} ref="mask" />
         <div className={`${PrefixCls}-content`}>
-          <div style={{ top: top }} className={`${PrefixCls}`}>
+          <div style={{ top }} className={`${PrefixCls}`}>
             <Menu className={`${PrefixCls}-menu`}
-                  data={initData}
-                  value={values}
-                  level={1}
-                  onOk={this.onOk}
-                  onCancel={this.onCancel}
-                  onChange={this.onChange}
-                  height={this.state.height}
-                  multiSelect={multiSelect} />
+              data={initData}
+              value={values}
+              level={1}
+              onOk={this.onOk}
+              onCancel={this.onCancel}
+              onChange={this.onChange}
+              height={this.state.height}
+              multiSelect={multiSelect}
+            />
           </div>
         </div>
       </div>

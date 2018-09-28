@@ -10,10 +10,10 @@ import { handleGridClick, handleBannerClick, handleListClick } from 'utils/commo
 
 const PrefixCls = 'patrybuild';
 const PatryBuild = ({ loading, location, dispatch, patrybuild }) => {
-  
-  const { name = '' } = location.query, { grids, paginations, scrollerTop, refreshId, banners, lists } = patrybuild;
+  const { name = '' } = location.query, 
+    { grids, paginations, scrollerTop, refreshId, banners, lists } = patrybuild;
  
-  const  onRefresh = (params, callback) => {
+  const onRefresh = (params, callback) => {
       dispatch({
         type: `${PrefixCls}/queryListview`,
         payload: {
@@ -51,13 +51,13 @@ const PatryBuild = ({ loading, location, dispatch, patrybuild }) => {
         
         result.push(
           <ListView layoutHeader={() => title}
-                    dataSource={items}
-                    layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
-                    onEndReached={onEndReached.bind(null, { id, title })}
-                    onRefresh={onRefresh.bind(null, { id, title })}
-                    hasMore={hasMore}
-                    onScrollerTop={onScrollerTop.bind(null)}
-                    scrollerTop={scrollerTop}
+            dataSource={items}
+            layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
+            onEndReached={onEndReached.bind(null, { id, title })}
+            onRefresh={onRefresh.bind(null, { id, title })}
+            hasMore={hasMore}
+            onScrollerTop={onScrollerTop.bind(null)}
+            scrollerTop={scrollerTop}
           />
         );
       }

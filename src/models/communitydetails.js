@@ -17,7 +17,6 @@ export default modelExtend(model, {
   },
   subscriptions: {
     setup ({ dispatch, history }) {
-      
       history.listen(({ pathname, query, action }) => {
         if (pathname === '/communitydetails') {
           if (action === 'PUSH') {
@@ -61,8 +60,8 @@ export default modelExtend(model, {
       if (success) {
         Toast.success('参与成功');
         yield put(routerRedux.goBack());
-      }else{
-        Toast.fail('系统出错，请稍后再试')
+      } else {
+        Toast.fail('系统出错，请稍后再试');
       }
     },
   }

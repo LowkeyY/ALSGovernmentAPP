@@ -59,7 +59,7 @@ function Routemap ({ location, dispatch, routemap, app }) {
       <Nav title={name} dispatch={dispatch} />
       <div style={{ position: 'relative' }}>
         <Ifreams src={`${baseURL + iframeUrlguiji + (userId === '' ? '' : `?userId=${userId}`)}`}
-                 dispatch={dispatch}
+          dispatch={dispatch}
         />
         {serverId !== '' && entityId !== '' ?
           <HawkButton btnStatus={guijiId !== ''} handleClick={handleGuijiClick} /> : ''}

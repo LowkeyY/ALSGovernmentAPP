@@ -1,7 +1,7 @@
-import { request, config ,formsubmit} from 'utils'
+import { request, config, formsubmit } from 'utils';
 
-const {api} = config
-const {SetUpAPi,ResetPasswordApi} = api
+const { api } = config;
+const { SetUpAPi, ResetPasswordApi } = api;
 
 // export async function setUserInfo (data) {
 //   return request({
@@ -11,12 +11,12 @@ const {SetUpAPi,ResetPasswordApi} = api
 //   })
 // }
 export async function setUserInfo (params = {}, images, files) {
-  return formsubmit(SetUpAPi, params, images, files, true)
+  return formsubmit(SetUpAPi, params, images, files, true);
 }
 export async function resetPassword (data) {
   return request({
     url: ResetPasswordApi,
     method: 'post',
     data,
-  })
+  });
 }

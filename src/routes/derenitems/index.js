@@ -49,13 +49,13 @@ function Derenitems ({ location, dispatch, derenitems }) {
         result = [];
       result.push(
         <ListView layoutHeader={''}
-                  dataSource={lists}
-                  layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
-                  onEndReached={onEndReached.bind(null, refreshId)}
-                  onRefresh={onRefresh.bind(null, refreshId)}
-                  hasMore={hasMore}
-                  onScrollerTop={onScrollerTop.bind(null)}
-                  scrollerTop={scrollerTop}
+          dataSource={lists}
+          layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
+          onEndReached={onEndReached.bind(null, refreshId)}
+          onRefresh={onRefresh.bind(null, refreshId)}
+          hasMore={hasMore}
+          onScrollerTop={onScrollerTop.bind(null)}
+          scrollerTop={scrollerTop}
         />
       );
       return result;
@@ -76,7 +76,7 @@ function Derenitems ({ location, dispatch, derenitems }) {
             pathname: 'iframe',
             query: {
               name: title,
-              externalUrl: externalUrl,
+              externalUrl,
             },
           }));
         }
@@ -110,7 +110,7 @@ function Derenitems ({ location, dispatch, derenitems }) {
             pathname: 'iframe',
             query: {
               name: title,
-              externalUrl: externalUrl,
+              externalUrl,
             },
           }));
         }

@@ -1,29 +1,29 @@
-import modelExtend from 'dva-model-extend'
-import { model } from 'models/common'
-import { GetTowStupid ,GetTowStupidList} from 'services/querylist'
+import modelExtend from 'dva-model-extend';
+import { model } from 'models/common';
+import { GetTowStupid, GetTowStupidList } from 'services/querylist';
 
 const getTabs = (arr) => {
-  arr.map((item,i)=>{
-    item.title=item.name
-  })
-  return arr
-},
+    arr.map((item, i) => {
+      item.title = item.name;
+    });
+    return arr;
+  },
   getDefaultPaginations = () => ({
     current: 1,
     total: 0,
-    size:10,
+    size: 10,
   }),
-  namespace = 'twostupid'
+  namespace = 'twostupid';
 
 export default modelExtend(model, {
   namespace: 'twostupid',
   state: {
-    tabs:[],
-    dataList:[],
+    tabs: [],
+    dataList: [],
     selectedIndex: 0,
     scrollerTop: 0,
     paginations: getDefaultPaginations(),
-    refreshValue:''
+    refreshValue: ''
   },
   subscriptions: {
     setup ({ dispatch, history }) {
@@ -32,10 +32,10 @@ export default modelExtend(model, {
         payload: {
 
         },
-      })
+      });
       history.listen(({ pathname, query, action }) => {
         if (pathname === '/twostupid') {
-          const { id = '', name = '' } = query
+          const { id = '', name = '' } = query;
           dispatch({
             type: 'updateState',
             payload: {
@@ -45,39 +45,38 @@ export default modelExtend(model, {
               scrollerTop: 0,
               paginations: getDefaultPaginations(),
             },
-          })
+          });
         }
-      })
+      });
     },
   },
   effects: {
     * query ({ payload }, { call, put, select }) {
-      const  { selectedIndex } = yield select(state => state.twostupid)
-      const { success = true, datas = [] } = yield call(GetTowStupid)
-        if(success){
-          yield put({
-            type:'updateState',
-            payload:{
-              tabs:getTabs(datas)
-            }
-          })
-          if (datas.length > 0) {
-            const { value = '' } =datas[selectedIndex]
-            yield put({
-              type: 'updateState',
-              payload: {
-                refreshValue:value,
-              },
-            })
-            yield put({
-              type: 'queryListview',
-              payload: {
-                refreshValue:value,
-              },
-            })
+      const { selectedIndex } = yield select(state => state.twostupid);
+      const { success = true, datas = [] } = yield call(GetTowStupid);
+      if (success) {
+        yield put({
+          type: 'updateState',
+          payload: {
+            tabs: getTabs(datas)
           }
+        });
+        if (datas.length > 0) {
+          const { value = '' } = datas[selectedIndex];
+          yield put({
+            type: 'updateState',
+            payload: {
+              refreshValue: value,
+            },
+          });
+          yield put({
+            type: 'queryListview',
+            payload: {
+              refreshValue: value,
+            },
+          });
         }
-
+      }
     },
     // * querySelect ({ payload }, { call, put, select }) {
     //   const { value = '', selected = -1 } = payload, { selectedIndex } = yield select(state => state.twostupid)
@@ -104,24 +103,24 @@ export default modelExtend(model, {
     //     })
     //   }
     // },
-    * queryListview({payload}, {call, put, select}) {
-      const {callback = '', isRefresh = false, selected = -1 } = payload,
+    * queryListview ({ payload }, { call, put, select }) {
+      const { callback = '', isRefresh = false, selected = -1 } = payload,
         _this = yield select(_ => _[`${namespace}`]),
-        {paginations: {current, total, size}, dataList,selectedIndex,refreshValue} = _this
+        { paginations: { current, total, size }, dataList, selectedIndex, refreshValue } = _this;
       if (selected != -1) {
         yield put({
           type: 'updateState',
           payload: {
             selectedIndex: selected,
           },
-        })
+        });
       }
       const start = isRefresh ? 1 : current,
-        result = yield call(GetTowStupidList, {type:refreshValue, nowPage: start, showCount: size})
+        result = yield call(GetTowStupidList, { type: refreshValue, nowPage: start, showCount: size });
       if (result) {
-        let {datas = [], totalCount = 0} = result,
-          newLists = []
-        newLists = start == 1 ? JSON.parse(datas) : [...dataList, ...JSON.parse(datas)]
+        let { datas = [], totalCount = 0 } = result,
+          newLists = [];
+        newLists = start == 1 ? JSON.parse(datas) : [...dataList, ...JSON.parse(datas)];
         yield put({
           type: 'updateState',
           payload: {
@@ -130,12 +129,11 @@ export default modelExtend(model, {
               total: totalCount * 1,
               current: start + 1
             },
-            dataList:newLists
+            dataList: newLists
           },
-        })
+        });
       }
-      if (callback)
-        callback()
+      if (callback) { callback(); }
     },
   }
-})
+});

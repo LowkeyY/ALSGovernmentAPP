@@ -423,8 +423,8 @@ class CreateTask extends Component {
                   </div>
                   <div className={styles[`${PrefixCls}-outer-type`]}>
                     <Picker data={appealType}
-                            cols={1}
-                            {...getFieldProps('type')}
+                      cols={1}
+                      {...getFieldProps('type')}
                     >
                       <List.Item arrow="horizontal">反馈类型</List.Item>
                     </Picker>
@@ -451,7 +451,7 @@ class CreateTask extends Component {
                       error={!!getFieldError('positions') && Toast.fail(getFieldError('positions'))}
                       placeholder="请输入您的位置"
                       extra={currentPostions === '' ? loadPostions ? <Icon type="loading" /> :
-                        <span onClick={this.getCurrentLocation.bind(this)}><Icon
+                      <span onClick={this.getCurrentLocation.bind(this)}><Icon
                           type={getLocalIcon('/others/location.svg')}
                         /></span> : ''}
                     >
@@ -462,9 +462,9 @@ class CreateTask extends Component {
                     <div>
                       <p>添加图片</p>
                       {this.state.files.length >= 4 ? '' :
-                        <span onClick={cnTakePhoto.bind(null, this.handleCameraClick, 1)}>
-                  <Icon type={getLocalIcon('/media/camerawhite.svg')} />
-                </span>}
+                      <span onClick={cnTakePhoto.bind(null, this.handleCameraClick, 1)}>
+                          <Icon type={getLocalIcon('/media/camerawhite.svg')} />
+                        </span>}
                     </div>
                     <ImagePicker
                       files={this.state.files}
@@ -532,22 +532,22 @@ class CreateTask extends Component {
                     </div>
                     <div className={styles[`${PrefixCls}-outer-type`]}>
                       <Picker data={appealType}
-                              cols={1}
-                              {...getFieldProps('taskType', {
-                                rules: [{ required: false, message: '请选择任务类型' }],
-                              })}
-                              error={!!getFieldError('taskType') && Toast.fail(getFieldError('taskType'))}
+                        cols={1}
+                        {...getFieldProps('taskType', {
+                          rules: [{ required: false, message: '请选择任务类型' }],
+                        })}
+                        error={!!getFieldError('taskType') && Toast.fail(getFieldError('taskType'))}
                       >
                         <List.Item arrow="horizontal">任务类型</List.Item>
                       </Picker>
                     </div>
                     <div className={styles[`${PrefixCls}-outer-type`]}>
                       <Picker data={noticeType}
-                              cols={1}
-                              {...getFieldProps('taskUrgency', {
-                                rules: [{ required: true, message: '请选择紧急程度' }],
-                              })}
-                              error={!!getFieldError('taskUrgency') && Toast.fail(getFieldError('taskUrgency'))}
+                        cols={1}
+                        {...getFieldProps('taskUrgency', {
+                          rules: [{ required: true, message: '请选择紧急程度' }],
+                        })}
+                        error={!!getFieldError('taskUrgency') && Toast.fail(getFieldError('taskUrgency'))}
                       >
                         <List.Item arrow="horizontal">任务紧急程度</List.Item>
                       </Picker>
@@ -582,8 +582,11 @@ class CreateTask extends Component {
                       />
                     </List.Item>
                     <div className={styles[`${PrefixCls}-outer-button`]}>
-                      <Button type="ghost" inline size="small"
-                              onClick={this.onTaskSubmit.bind(this, selectedUsers)}>提交</Button>
+                      <Button type="ghost"
+                        inline
+                        size="small"
+                        onClick={this.onTaskSubmit.bind(this, selectedUsers)}
+                      >提交</Button>
                     </div>
                   </form>
                 </div>
@@ -613,8 +616,8 @@ class CreateTask extends Component {
                 </div>
                 <div className={styles[`${PrefixCls}-outer-type`]}>
                   <Picker data={appealType}
-                          cols={1}
-                          {...getFieldProps('type')}
+                    cols={1}
+                    {...getFieldProps('type')}
                   >
                     <List.Item arrow="horizontal">反馈类型</List.Item>
                   </Picker>
@@ -641,7 +644,7 @@ class CreateTask extends Component {
                     error={!!getFieldError('positions') && Toast.fail(getFieldError('positions'))}
                     placeholder="请输入您的位置"
                     extra={currentPostions === '' ? loadPostions ? <Icon type="loading" /> :
-                      <span onClick={this.getCurrentLocation.bind(this)}><Icon
+                    <span onClick={this.getCurrentLocation.bind(this)}><Icon
                         type={getLocalIcon('/others/location.svg')}
                       /></span> : ''}
                   >
@@ -652,9 +655,9 @@ class CreateTask extends Component {
                   <div>
                     <p>添加图片</p>
                     {this.state.files.length >= 4 ? '' :
-                      <span onClick={cnTakePhoto.bind(null, this.handleCameraClick, 1)}>
-                  <Icon type={getLocalIcon('/media/camerawhite.svg')} />
-                </span>}
+                    <span onClick={cnTakePhoto.bind(null, this.handleCameraClick, 1)}>
+                        <Icon type={getLocalIcon('/media/camerawhite.svg')} />
+                      </span>}
                   </div>
                   <ImagePicker
                     files={this.state.files}
@@ -704,7 +707,6 @@ class CreateTask extends Component {
       </div>
     );
   }
-  
 }
 
 export default connect(({ loading, createtask }) => ({

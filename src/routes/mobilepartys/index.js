@@ -115,15 +115,14 @@ class MobilePartys extends Component {
                 clear
                 error={!!getFieldError('idcard') && Toast.fail(getFieldError('idcard'))}
                 placeholder="身份证号"
-              >
-              </InputItem>
+              />
             </div>
             <Picker data={dataType}
-                    cols={1}
-                    {...getFieldProps('type', {
-                      rules: [{ required: true, message: '请选择转接类型' }],
-                    })}
-                    error={!!getFieldError('type') && Toast.fail(getFieldError('type'))}
+              cols={1}
+              {...getFieldProps('type', {
+                rules: [{ required: true, message: '请选择转接类型' }],
+              })}
+              error={!!getFieldError('type') && Toast.fail(getFieldError('type'))}
             >
               <List.Item arrow="horizontal">转接类型</List.Item>
             </Picker>
@@ -139,8 +138,7 @@ class MobilePartys extends Component {
                 clear
                 error={!!getFieldError('currentorganization') && Toast.fail(getFieldError('currentorganization'))}
                 placeholder="组织部名称"
-              >
-              </InputItem>
+              />
             </div>
             <div className={styles[`${PrefixCls}-outer-box`]}>
               <div className={styles[`${PrefixCls}-outer-boxtitle`]}>要转移的目标组织部：</div>
@@ -153,8 +151,7 @@ class MobilePartys extends Component {
                 clear
                 error={!!getFieldError('transferorganization') && Toast.fail(getFieldError('transferorganization'))}
                 placeholder="组织部名称"
-              >
-              </InputItem>
+              />
             </div>
             <div className={styles[`${PrefixCls}-outer-box`]}>
               <InputItem

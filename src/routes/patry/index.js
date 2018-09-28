@@ -145,7 +145,7 @@ function Patry ({ location, dispatch, patry }) {
     },
     handleMoreCilck = (id, title) => {
       dispatch(routerRedux.push({
-        pathname: `/lanmusub`,
+        pathname: '/lanmusub',
         query: {
           name: title,
           id,
@@ -158,7 +158,7 @@ function Patry ({ location, dispatch, patry }) {
       if (title !== '' && items.length > 0) {
         result.push(
           <div>
-            <TitleBox title={title} more={true} handleClick={handleMoreCilck.bind(null, id, title)} />
+            <TitleBox title={title} more handleClick={handleMoreCilck.bind(null, id, title)} />
             <ListView
               dataSource={items}
               layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
@@ -180,7 +180,7 @@ function Patry ({ location, dispatch, patry }) {
       <Banner datas={getBannerDatas(patryDate)} dispatch={dispatch} handleClick={handleBannerClick} />}
       <div>
         {getGridbox(patryDate).length > 0 &&
-        <Menu handleGridClick={handleGridbox} columnNum={4} datas={getGridbox(patryDate)} isCarousel={true} />}
+        <Menu handleGridClick={handleGridbox} columnNum={4} datas={getGridbox(patryDate)} isCarousel />}
       </div>
       <TitleBox title="专题活动" />
       <div>{getFixBanner(patryDate)}</div>

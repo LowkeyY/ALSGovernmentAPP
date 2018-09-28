@@ -7,7 +7,7 @@ import ListView from 'components/listview';
 import { taskRow } from 'components/row';
 import styles from './index.less';
 
-const PrefixCls = 'tasklist'
+const PrefixCls = 'tasklist';
 
 function TaskList ({ location, dispatch, tasklist }) {
   const { name = '' } = location.query,

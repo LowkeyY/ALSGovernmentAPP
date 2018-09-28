@@ -66,13 +66,13 @@ function Lvyou ({ location, dispatch, lvyou }) {
         
         result.push(
           <ListView layoutHeader={() => title}
-                    dataSource={items}
-                    layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
-                    onEndReached={onEndReached.bind(null, { id, title })}
-                    onRefresh={onRefresh.bind(null, { id, title })}
-                    hasMore={hasMore}
-                    onScrollerTop={onScrollerTop.bind(null)}
-                    scrollerTop={scrollerTop}
+            dataSource={items}
+            layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
+            onEndReached={onEndReached.bind(null, { id, title })}
+            onRefresh={onRefresh.bind(null, { id, title })}
+            hasMore={hasMore}
+            onScrollerTop={onScrollerTop.bind(null)}
+            scrollerTop={scrollerTop}
           />
         );
       }
@@ -81,7 +81,7 @@ function Lvyou ({ location, dispatch, lvyou }) {
     bannerProps = {
       datas: bannerDatas,
       handleClick: handleBannerClick,
-      dispatch: dispatch,
+      dispatch,
       name
     },
     handleSearchClick = ({ id = '' }) => {

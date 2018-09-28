@@ -16,7 +16,7 @@ export async function getEducationType (payload) {
     method: 'get',
     data: payload
   });
-}export async function getMediationType (payload) {
+} export async function getMediationType (payload) {
   return request({
     url: getMediationTypeApi,
     method: 'get',

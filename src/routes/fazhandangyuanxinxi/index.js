@@ -185,17 +185,17 @@ function Comp ({ location, dispatch, fazhandangyuanxinxi, form }) {
         result.push(
           <div className={styles[`${PrefixCls}-button`]}>
             {<WingBlank><Button type="primary"
-                                loading={uploading}
-                                onClick={handleSubmits}
+              loading={uploading}
+              onClick={handleSubmits}
             >{btnText}</Button></WingBlank>}
           </div>);
       }
       return result;
-    }
+    };
   
   return (
     <div className={styles[`${PrefixCls}-outer`]}>
-      <Nav title={name} dispatch={dispatch}  />
+      <Nav title={name} dispatch={dispatch} />
       <WhiteSpace size="md" />
       <PartyMembersTitle title={subject} />
       <WhiteSpace size="md" />

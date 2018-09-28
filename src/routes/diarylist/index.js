@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
-import { WhiteSpace, Icon,Modal } from 'components';
+import { WhiteSpace, Icon, Modal } from 'components';
 import { routerRedux } from 'dva/router';
 import Nav from 'components/nav';
 import ListView from 'components/listview';
@@ -11,7 +11,8 @@ import styles from './index.less';
 const PrefixCls = 'diarylist';
 
 function DiaryList ({ location, dispatch, diarylist, app }) {
-  const { name = '' } = location.query, { isLogin } = app,
+  const { name = '' } = location.query, 
+    { isLogin } = app,
     { scrollerTop = 0, diaryList, paginations = {} } = diarylist,
     handlerTaskClick = ({ id = '' }) => {
       dispatch(routerRedux.push(

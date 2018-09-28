@@ -18,7 +18,7 @@ function Task110 ({ location, dispatch, task110 }) {
         pathname: '/task110Details',
         query: {
           id,
-          name:'任务详情'
+          name: '任务详情'
         },
       }));
     };
@@ -31,7 +31,7 @@ function Task110 ({ location, dispatch, task110 }) {
           dataList.length > 0 ?
             dataList.map((data) => {
               const { title, creatDate } = data;
-              return <Item
+              return (<Item
                 className={styles[`${PrefixCls}-item`]}
                 multipleLine
                 arrow="horizontal"
@@ -39,7 +39,7 @@ function Task110 ({ location, dispatch, task110 }) {
               >
                 {title}
                 <Brief>{creatDate}</Brief>
-              </Item>;
+              </Item>);
             })
             :
             <NoMessage />

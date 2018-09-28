@@ -7,7 +7,8 @@ import Nav from 'components/nav';
 const CheckboxItem = Checkbox.CheckboxItem;
 
 function SearchUser ({ location, dispatch, searchuser }) {
-  const { name = '搜索用户' } = location.query, { lists = [] } = searchuser;
+  const { name = '搜索用户' } = location.query, 
+    { lists = [] } = searchuser;
   const handleSearchClick = (val) => {
     dispatch({
       type: 'searchuser/queryUsers',
@@ -20,9 +21,7 @@ function SearchUser ({ location, dispatch, searchuser }) {
     <div>
       <Nav title={name} dispatch={dispatch} />
       <SearchBar placeholder="搜索" maxLength={8} onSubmit={handleSearchClick} />
-      <div>
-      
-      </div>
+      <div />
     </div>
   );
 }

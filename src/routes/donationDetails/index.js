@@ -22,7 +22,6 @@ function DonationDetails ({ location, dispatch, donationDetails }) {
         {
           dataList.length > 0 ?
             dataList.map((data) => {
-              
               return integralList(data);
             })
             :

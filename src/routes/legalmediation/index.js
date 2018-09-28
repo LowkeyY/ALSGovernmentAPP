@@ -171,11 +171,11 @@ class Legalmediation extends Component {
               </InputItem>
               <List>
                 <Picker data={sex}
-                        cols={1}
-                        {...getFieldProps('SQ_SEX', {
-                          rules: [{ required: true, message: '请选择性别' }],
-                        })}
-                        error={!!getFieldError('SQ_SEX') && Toast.fail(getFieldError('SQ_SEX'))}
+                  cols={1}
+                  {...getFieldProps('SQ_SEX', {
+                    rules: [{ required: true, message: '请选择性别' }],
+                  })}
+                  error={!!getFieldError('SQ_SEX') && Toast.fail(getFieldError('SQ_SEX'))}
                 >
                   <List.Item arrow="horizontal">性别</List.Item>
                 </Picker>
@@ -195,11 +195,11 @@ class Legalmediation extends Component {
               </InputItem>
               <List>
                 <Picker data={educationType}
-                        cols={1}
-                        {...getFieldProps('SQ_EDUCATION', {
-                          rules: [{ required: true, message: '请选择文化程度' }],
-                        })}
-                        error={!!getFieldError('SQ_EDUCATION') && Toast.fail(getFieldError('SQ_EDUCATION'))}
+                  cols={1}
+                  {...getFieldProps('SQ_EDUCATION', {
+                    rules: [{ required: true, message: '请选择文化程度' }],
+                  })}
+                  error={!!getFieldError('SQ_EDUCATION') && Toast.fail(getFieldError('SQ_EDUCATION'))}
                 >
                   <List.Item arrow="horizontal">文化程度</List.Item>
                 </Picker>
@@ -244,11 +244,11 @@ class Legalmediation extends Component {
               </InputItem>
               <List>
                 <Picker data={sex}
-                        cols={1}
-                        {...getFieldProps('BSQ_SEX', {
-                          rules: [{ required: true, message: '请选择性别' }],
-                        })}
-                        error={!!getFieldError('BSQ_SEX') && Toast.fail(getFieldError('BSQ_SEX'))}
+                  cols={1}
+                  {...getFieldProps('BSQ_SEX', {
+                    rules: [{ required: true, message: '请选择性别' }],
+                  })}
+                  error={!!getFieldError('BSQ_SEX') && Toast.fail(getFieldError('BSQ_SEX'))}
                 >
                   <List.Item arrow="horizontal">性别</List.Item>
                 </Picker>
@@ -268,11 +268,11 @@ class Legalmediation extends Component {
               </InputItem>
               <List>
                 <Picker data={educationType}
-                        cols={1}
-                        {...getFieldProps('BSQ_EDUCATION', {
-                          rules: [{ required: true, message: '请选择文化程度' }],
-                        })}
-                        error={!!getFieldError('BSQ_EDUCATION') && Toast.fail(getFieldError('BSQ_EDUCATION'))}
+                  cols={1}
+                  {...getFieldProps('BSQ_EDUCATION', {
+                    rules: [{ required: true, message: '请选择文化程度' }],
+                  })}
+                  error={!!getFieldError('BSQ_EDUCATION') && Toast.fail(getFieldError('BSQ_EDUCATION'))}
                 >
                   <List.Item arrow="horizontal">文化程度</List.Item>
                 </Picker>
@@ -302,11 +302,11 @@ class Legalmediation extends Component {
             </div>
             <WhiteSpace />
             <Picker data={disputeType}
-                    cols={1}
-                    {...getFieldProps('DISPUTE_TYPE', {
-                      rules: [{ required: true, message: '请选择类别' }],
-                    })}
-                    error={!!getFieldError('disputeType') && Toast.fail(getFieldError('disputeType'))}
+              cols={1}
+              {...getFieldProps('DISPUTE_TYPE', {
+                rules: [{ required: true, message: '请选择类别' }],
+              })}
+              error={!!getFieldError('disputeType') && Toast.fail(getFieldError('disputeType'))}
             >
               <List.Item arrow="horizontal">纠纷类型</List.Item>
             </Picker>

@@ -26,7 +26,7 @@ function Livelihood ({ location, dispatch, livelihood }) {
           pathname: 'iframe',
           query: {
             name: title,
-            externalUrl: externalUrl,
+            externalUrl,
           },
         }));
       } else {
@@ -110,27 +110,26 @@ function Livelihood ({ location, dispatch, livelihood }) {
           );
         }
         return result;
-      } else {
-        const result = [],
-          { title = '', id = '', items = [] } = lists;
-        if (title !== '' && items.length > 0) {
-          const { current, total, size } = paginations,
-            hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total);
+      } 
+      const result = [],
+        { title = '', id = '', items = [] } = lists;
+      if (title !== '' && items.length > 0) {
+        const { current, total, size } = paginations,
+          hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total);
           
-          result.push(
-            <ListView layoutHeader={() => title}
-                      dataSource={items}
-                      layoutRow={(rowData, sectionID, rowID) => liveRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
-                      onEndReached={onEndReached.bind(null, { id, title })}
-                      onRefresh={onRefresh.bind(null, { id, title })}
-                      hasMore={hasMore}
-                      onScrollerTop={onScrollerTop.bind(null)}
-                      scrollerTop={scrollerTop}
-            />
-          );
-        }
-        return result;
+        result.push(
+          <ListView layoutHeader={() => title}
+            dataSource={items}
+            layoutRow={(rowData, sectionID, rowID) => liveRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
+            onEndReached={onEndReached.bind(null, { id, title })}
+            onRefresh={onRefresh.bind(null, { id, title })}
+            hasMore={hasMore}
+            onScrollerTop={onScrollerTop.bind(null)}
+            scrollerTop={scrollerTop}
+          />
+        );
       }
+      return result;
     },
     handleSearchClick = ({ id = '' }) => {
       dispatch(routerRedux.push({
@@ -154,7 +153,7 @@ function Livelihood ({ location, dispatch, livelihood }) {
           >
             <div>
               {selectIndex === 1 ? <div>{lists.length > 0 && getContents(lists[0], selectIndex)}</div> :
-                <div className={styles[`${PrefixCls}-outer-container`]}>
+              <div className={styles[`${PrefixCls}-outer-container`]}>
                   {renderContent(tips)}
                 </div>}
               {selectIndex === 0 ? <div> {lists.length > 0 && getContents(lists[0], selectIndex)}</div> : ''}

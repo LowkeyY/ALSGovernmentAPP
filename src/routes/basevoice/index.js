@@ -1,35 +1,35 @@
-import React from 'react'
-import { connect } from 'dva'
-import { routerRedux } from 'dva/router'
-import Nav from 'components/nav'
-import ListView from 'components/listview'
-import { List, WhiteSpace, SearchBar, Tabs, Card, WingBlank ,Layout} from 'components'
-import { baseVoiceRow } from 'components/row'
-import styles from './index.less'
+import React from 'react';
+import { connect } from 'dva';
+import { routerRedux } from 'dva/router';
+import Nav from 'components/nav';
+import ListView from 'components/listview';
+import { List, WhiteSpace, SearchBar, Tabs, Card, WingBlank, Layout } from 'components';
+import { baseVoiceRow } from 'components/row';
+import styles from './index.less';
 
 
 const Item = List.Item,
-  Brief = Item.Brief,{BaseLine} = Layout
-function Basevoice ({ location, dispatch, basevoice }){
-
-  const { name = '' } = location.query
+  Brief = Item.Brief, 
+  { BaseLine } = Layout;
+function Basevoice ({ location, dispatch, basevoice }) {
+  const { name = '' } = location.query;
   const PrefixCls = 'basevoice',
-    { tabs, lists, selectedIndex,paginations,scrollerTop } = basevoice,
+    { tabs, lists, selectedIndex, paginations, scrollerTop } = basevoice,
     handleTabItemClick = (data, index) => {
       dispatch({
         type: 'basevoice/updateState',
         payload: {
-          selectedIndex:index,
+          selectedIndex: index,
         },
-      })
+      });
       dispatch({
         type: 'basevoice/queryListview',
         payload: {
           selected: index,
-          selectedIndex:index,
+          selectedIndex: index,
           isRefresh: true
         },
-      })
+      });
     },
     onRefresh = (callback) => {
       dispatch({
@@ -38,7 +38,7 @@ function Basevoice ({ location, dispatch, basevoice }){
           callback,
           isRefresh: true
         }
-      })
+      });
     },
     onEndReached = (callback) => {
       dispatch({
@@ -46,36 +46,40 @@ function Basevoice ({ location, dispatch, basevoice }){
         payload: {
           callback
         }
-      })
+      });
     },
     onScrollerTop = (top) => {
-      if (typeof top !='undefined' && !isNaN(top * 1))
+      if (typeof top !== 'undefined' && !isNaN(top * 1)) {
         dispatch({
           type: `${PrefixCls}/updateState`,
           payload: {
             scrollerTop: top
           }
-        })
+        });
+      }
     },
     getContents = (lists) => {
-      const {current, total, size} = paginations,
+      const { current, total, size } = paginations,
         hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total),
-        result= []
+        result = [];
       result.push(
-        <ListView layoutHeader={''} dataSource={lists} layoutRow={baseVoiceRow}
-                  onEndReached={onEndReached}
-                  onRefresh={onRefresh} hasMore={hasMore}
-                  onScrollerTop={onScrollerTop.bind(null)}
-                  scrollerTop={scrollerTop}
+        <ListView layoutHeader={''}
+          dataSource={lists}
+          layoutRow={baseVoiceRow}
+          onEndReached={onEndReached}
+          onRefresh={onRefresh}
+          hasMore={hasMore}
+          onScrollerTop={onScrollerTop.bind(null)}
+          scrollerTop={scrollerTop}
         />
-      )
-      return result
-    }
+      );
+      return result;
+    };
 
   return (
     <div>
-      <Nav title={name} dispatch={dispatch}/>
-      <WhiteSpace size="md"/>
+      <Nav title={name} dispatch={dispatch} />
+      <WhiteSpace size="md" />
       <Tabs
         // initialPage={0}
         page={selectedIndex}
@@ -84,14 +88,14 @@ function Basevoice ({ location, dispatch, basevoice }){
         onTabClick={handleTabItemClick}
       >
         <div>
-          {lists.length>0&&getContents(lists)}
+          {lists.length > 0 && getContents(lists)}
         </div>
       </Tabs>
     </div>
-  )
+  );
 }
 
 export default connect(({ loading, basevoice }) => ({
   loading,
   basevoice,
-}))(Basevoice)
+}))(Basevoice);

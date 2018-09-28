@@ -1,6 +1,6 @@
-import React from 'react'
-import { connect } from 'dva'
-import { Component } from 'react'
+import React from 'react';
+import { connect } from 'dva';
+import { Component } from 'react';
 import {
   WhiteSpace,
   Tabs,
@@ -16,15 +16,15 @@ import {
   Toast,
   ActivityIndicator,
   Layout,
-} from 'components'
-import { getLocalIcon, getImages, replaceSystemEmoji} from 'utils'
-import Nav from 'components/nav'
-import { createForm } from 'rc-form'
-import TitleBox from 'components/titlecontainer'
-import { legalRow } from 'components/row'
-import ListView from 'components/listview'
-import { routerRedux } from 'dva/router'
-import styles from './index.less'
+} from 'components';
+import { getLocalIcon, getImages, replaceSystemEmoji } from 'utils';
+import Nav from 'components/nav';
+import { createForm } from 'rc-form';
+import TitleBox from 'components/titlecontainer';
+import { legalRow } from 'components/row';
+import ListView from 'components/listview';
+import { routerRedux } from 'dva/router';
+import styles from './index.less';
 
 const PrefixCls = 'legallist',
   tabs = [
@@ -48,12 +48,12 @@ const PrefixCls = 'legallist',
       label: '交通事故',
       value: '4',
     },
-  ]
+  ];
 
 
 class Comp extends Component {
   constructor (props) {
-    super(props)
+    super(props);
   }
 
   handleItemOnclick = ({ externalUrl = '', id, pathname = 'details' }) => {
@@ -62,9 +62,9 @@ class Comp extends Component {
         pathname: 'iframe',
         query: {
           name,
-          externalUrl: externalUrl,
+          externalUrl,
         },
-      }))
+      }));
     } else {
       this.props.dispatch(routerRedux.push({
         pathname: `/${pathname}`,
@@ -72,7 +72,7 @@ class Comp extends Component {
           name,
           dataId: id,
         },
-      }))
+      }));
     }
   }
   handleTabClick = (data, index) => {
@@ -82,56 +82,58 @@ class Comp extends Component {
         ...data,
         selected: index,
       },
-    })
+    });
   }
   changeValue = (obj) => {
-    for (let i in obj){
-      if (typeof (obj[i])==='string'){
-        obj[i]=replaceSystemEmoji(obj[i])
+    for (let i in obj) {
+      if (typeof (obj[i]) === 'string') {
+        obj[i] = replaceSystemEmoji(obj[i]);
       }
     }
-    return obj
+    return obj;
   }
   onSubmit = () => {
     this.props.form.validateFields({
       force: true,
     }, (error) => {
       if (!error) {
-        const data = this.changeValue(this.props.form.getFieldsValue())
+        const data = this.changeValue(this.props.form.getFieldsValue());
         this.props.dispatch({
           type: 'legallist/sendLegallistInfo',
           payload: {
             ...data,
           },
-        })
+        });
         this.props.form.resetFields();
         this.props.dispatch({
           type: 'legallist/updateState',
           payload: {
             animating: true,
           },
-        })
+        });
       }
-    })
+    });
   }
 
   render () {
     const { getFieldProps, getFieldError } = this.props.form,
       { name = '', lists, animating, paginations, scrollerTop, legalType, resetValue } = this.props.legallist,
-      { id } = this.props.location.query, { BaseLine } = Layout, { contents = '', tels = '', positions = '', isNiming = true } = resetValue,
+      { id } = this.props.location.query, 
+      { BaseLine } = Layout, 
+      { contents = '', tels = '', positions = '', isNiming = true } = resetValue,
       handleNavClick = (id, { title = '找律师' }) => {
         this.props.dispatch(routerRedux.push({
-          pathname: `/lawyerlist`,
+          pathname: '/lawyerlist',
           query: {
             name: title,
             id,
           },
-        }))
+        }));
       },
       renderNav = (id) => {
         return (
           <span onClick={handleNavClick.bind(this, id)}>找律师</span>
-        )
+        );
       },
       onRefresh = (callback) => {
         this.props.dispatch({
@@ -140,7 +142,7 @@ class Comp extends Component {
             callback,
             isRefresh: true,
           },
-        })
+        });
       },
       onEndReached = (callback) => {
         this.props.dispatch({
@@ -148,43 +150,48 @@ class Comp extends Component {
           payload: {
             callback,
           },
-        })
+        });
       },
       onScrollerTop = (top) => {
-        if (typeof top != 'undefined' && !isNaN(top * 1)) {
+        if (typeof top !== 'undefined' && !isNaN(top * 1)) {
           this.props.dispatch({
             type: `${PrefixCls}/updateState`,
             payload: {
               scrollerTop: top,
             },
-          })
+          });
         }
       },
       getContents = (lists) => {
         const { current, total, size } = paginations,
           hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total),
-          result = []
+          result = [];
         result.push(
-          <ListView layoutHeader={''} dataSource={lists} layoutRow={legalRow}
-                    onEndReached={onEndReached}
-                    onRefresh={onRefresh} hasMore={hasMore}
-                    onScrollerTop={onScrollerTop.bind(null)}
-                    scrollerTop={scrollerTop}
+          <ListView layoutHeader={''}
+            dataSource={lists}
+            layoutRow={legalRow}
+            onEndReached={onEndReached}
+            onRefresh={onRefresh}
+            hasMore={hasMore}
+            onScrollerTop={onScrollerTop.bind(null)}
+            scrollerTop={scrollerTop}
           />,
-        )
+        );
 
-        return result
-      }
+        return result;
+      };
     return (
       <div className={styles[`${PrefixCls}-outer`]}>
-        <Nav title={name} dispatch={this.props.dispatch} renderNavRight={renderNav(id)}/>
-        <WhiteSpace size="sm"/>
+        <Nav title={name} dispatch={this.props.dispatch} renderNavRight={renderNav(id)} />
+        <WhiteSpace size="sm" />
         <div>
           <div>
-            <Picker data={legalType} cols={1} {...getFieldProps('types', {
-              rules: [{ required: true, message: '请选择咨询类型' }],
-            })}
-                    error={!!getFieldError('types') && Toast.fail(getFieldError('types'))}
+            <Picker data={legalType}
+              cols={1}
+              {...getFieldProps('types', {
+                rules: [{ required: true, message: '请选择咨询类型' }],
+              })}
+              error={!!getFieldError('types') && Toast.fail(getFieldError('types'))}
             >
               <List.Item arrow="horizontal">咨询类型</List.Item>
             </Picker>
@@ -204,7 +211,7 @@ class Comp extends Component {
           </List.Item>
           <div>
             <InputItem
-              type='number'
+              type="number"
               {...getFieldProps('tels', {
                 initialValue: tels,
               })}
@@ -235,28 +242,28 @@ class Comp extends Component {
                 />}
               >是否隐私发布</List.Item>
             </List>
-            <WhiteSpace/>
+            <WhiteSpace />
             <WingBlank>
               <Button onClick={this.onSubmit} type="primary">确认发布</Button>
             </WingBlank>
-            <WhiteSpace/>
+            <WhiteSpace />
           </div>
-          <TitleBox title='咨询列表'/>
+          <TitleBox title="咨询列表" />
           <div>
-            {lists.length > 0 ? getContents(lists) : <BaseLine/>}
+            {lists.length > 0 ? getContents(lists) : <BaseLine />}
           </div>
         </div>
         <ActivityIndicator
           toast
-          text='正在上传...'
+          text="正在上传..."
           animating={animating}
         />
       </div>
-    )
+    );
   }
 }
 
 export default connect(({ loading, legallist }) => ({
   loading,
   legallist,
-}))(createForm()(Comp))
+}))(createForm()(Comp));

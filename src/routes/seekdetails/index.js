@@ -25,8 +25,11 @@ function SeekDetails ({ location, dispatch, seekdetails }) {
       if (cnIsArray(images) && images.length) {
         return (
           <div className={styles[`${PrefixCls}-content-images`]}>
-            {images.map((src, i) => <div key={i} data-src={src} className="imgbox"
-                                         style={{ backgroundImage: `url(${src})` }} />)}
+            {images.map((src, i) => (<div key={i}
+              data-src={src}
+              className="imgbox"
+              style={{ backgroundImage: `url(${src})` }}
+            />))}
           </div>
         );
       }
@@ -126,7 +129,8 @@ function SeekDetails ({ location, dispatch, seekdetails }) {
           </div>
           <div className={styles[`${PrefixCls}-content-status`]}>
             <span
-              style={{ color: '#1ab99d' }}>当前状态:<span>{shState == '2' ? getShtate() : getStatus(status)}</span></span>
+              style={{ color: '#1ab99d' }}
+            >当前状态:<span>{shState == '2' ? getShtate() : getStatus(status)}</span></span>
             {isCollect ?
               <div><Tag disabled><Icon type={getLocalIcon('/others/collectionblack.svg')} />已收藏</Tag></div> : ''}
           </div>

@@ -25,13 +25,14 @@ class Banner extends React.Component {
   }
   
   onHandleChange = (num) => {
-    if (this.props && this.props.dispatch)
+    if (this.props && this.props.dispatch) {
       this.props.dispatch({
         type: 'dashboard/updateState',
         payload: {
           selectedIndex: num
         }
       });
+    }
   };
   
   render () {

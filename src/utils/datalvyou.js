@@ -23,5 +23,5 @@ const datas = [
     images: [require('themes/images/lvyou/4/1.jpg'), require('themes/images/lvyou/4/2.jpg'), require('themes/images/lvyou/4/3.jpg')],
     createDate: '2018-5-08',
   },
-]
-export default datas
+];
+export default datas;

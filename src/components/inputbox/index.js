@@ -1,16 +1,16 @@
-import { Component } from 'react'
-import styles from './index.less'
-import { Button, Icon } from 'antd-mobile'
-import { getLocalIcon } from 'utils'
-import ReactDOM from 'react-dom'
+import { Component } from 'react';
+import styles from './index.less';
+import { Button, Icon } from 'antd-mobile';
+import { getLocalIcon } from 'utils';
+import ReactDOM from 'react-dom';
 
-const PrefixCls = 'inputbox'
-var int,
-  stop
+const PrefixCls = 'inputbox';
+let int,
+  stop;
 
 class InputBox extends Component {
   constructor (props) {
-    super(props)
+    super(props);
     this.state = {
       isRecording: false,
       onRecording: false,
@@ -20,89 +20,89 @@ class InputBox extends Component {
       mediaFile: '',
       mediaFileUrl: '',
       mediaFileLength: '',
-    }
+    };
   }
 
-  addSeconds () {//计时器
-    const { unit, bits, minutes } = this.state
+  addSeconds () { // 计时器
+    const { unit, bits, minutes } = this.state;
     this.setState({
       unit: unit + 1,
-    })
+    });
     if (unit >= 9) {
       this.setState({
         unit: 0,
         bits: bits + 1,
-      })
+      });
     }
     if (bits >= 6) {
       this.setState({
         bits: 0,
         minutes: minutes + 1,
-      })
+      });
     }
   }
 
-  startTimer () {//启动计时器
-    const that = this
-    int = setInterval(function () {
-      that.addSeconds()
-    }, 1000)
+  startTimer () { // 启动计时器
+    const that = this;
+    int = setInterval(() => {
+      that.addSeconds();
+    }, 1000);
   }
 
   recording () {
     this.setState({
       isRecording: !this.state.isRecording,
-    })
+    });
   }
 
   mediaFileOnSuccess (blob, params) {
-    const { name = '', timers = 5, nativeURL = '' } = params
+    const { name = '', timers = 5, nativeURL = '' } = params;
     this.props.handlerSubmit({
       msgType: 2,
       content: {
         file: blob,
         url: nativeURL,
-        timers: timers,
+        timers,
       },
-    })
+    });
   }
 
   mediaFileOnError (error) {
-    console.log(error)
+    console.log(error);
   }
 
   onRecording (e) {
     window.getSelection ? window.getSelection()
-      .removeAllRanges() : document.selection.empty()
-    const that = this
-    console.log('---- onRecording!!!')
+      .removeAllRanges() : document.selection.empty();
+    const that = this;
+    console.log('---- onRecording!!!');
     this.setState({
       onRecording: true,
-    })
-    stop = setTimeout(() => {//延迟1s执行
-      console.log(this.state)
-      const { onRecording } = this.state
+    });
+    stop = setTimeout(() => { // 延迟1s执行
+      console.log(this.state);
+      const { onRecording } = this.state;
       if (onRecording === true) {
-        let mediaFile = cnStartRecord('', this.mediaFileOnSuccess.bind(this), this.mediaFileOnError.bind(this))
+        let mediaFile = cnStartRecord('', this.mediaFileOnSuccess.bind(this), this.mediaFileOnError.bind(this));
         this.setState({
           mediaFile,
-        })
-        this.startTimer()
+        });
+        this.startTimer();
       }
-    }, 300)
+    }, 300);
   }
 
   stopRecording (e) {
     window.getSelection ? window.getSelection()
-      .removeAllRanges() : document.selection.empty()
+      .removeAllRanges() : document.selection.empty();
     let { unit, bits, minutes, mediaFile, mediaFileLength } = this.state,
-      updates = {}
-    console.log('---- stopRecording!!!', 'mediaFile:', mediaFile)
+      updates = {};
+    console.log('---- stopRecording!!!', 'mediaFile:', mediaFile);
     if (mediaFile) {
-      mediaFile.timers = mediaFileLength = (minutes * 60 + bits * 10 + unit)
-      mediaFile = cnStopRecord(this.state.mediaFile)
-      updates.mediaFile = mediaFile
-      updates.mediaFileLength = mediaFileLength
+      mediaFile.timers = mediaFileLength = (minutes * 60 + bits * 10 + unit);
+      mediaFile = cnStopRecord(this.state.mediaFile);
+      updates.mediaFile = mediaFile;
+      updates.mediaFileLength = mediaFileLength;
     }
     this.setState({
       onRecording: false,
@@ -111,24 +111,23 @@ class InputBox extends Component {
       minutes: 0,
       mediaFile,
       ...updates,
-    })
-    clearInterval(int)
-    clearTimeout(stop)
+    });
+    clearInterval(int);
+    clearTimeout(stop);
     this.setState({
       isRecording: false,
-    })
-
+    });
   }
 
   onImageFilesChange (e) {
-    const { target = '' } = e
+    const { target = '' } = e;
     if (target) {
-      const { files } = target
+      const { files } = target;
       this.props.handlerSubmit({
         msgType: 1,
         content: files[0],
-      })
-      target.value = ''
+      });
+      target.value = '';
     }
   }
 
@@ -136,37 +135,37 @@ class InputBox extends Component {
     this.props.handlerSubmit({
       msgType: 1,
       content: bolb,
-    })
+    });
   }
 
   handleTextSubmit () {
-    const input = ReactDOM.findDOMNode(this.lv)
+    const input = ReactDOM.findDOMNode(this.lv);
     if (input.value != '') {
       this.props.handlerSubmit({
         content: input.value,
-      })
-      input.value = ''
+      });
+      input.value = '';
     }
-    return false
+    return false;
   }
 
   handleFocus () {
     this.setState({
       isRecording: false,
-    })
+    });
   }
 
   handleDivClick () {
     let { unit, bits, minutes, mediaFile, mediaFileLength, onRecording } = this.state,
-      updates = {}
+      updates = {};
 
     if (onRecording) {
-      console.log('---- stopRecording!!!', 'mediaFile:', mediaFile)
+      console.log('---- stopRecording!!!', 'mediaFile:', mediaFile);
       if (mediaFile) {
-        mediaFile.timers = mediaFileLength = (minutes * 60 + bits * 10 + unit)
-        mediaFile = cnStopRecord(this.state.mediaFile)
-        updates.mediaFile = mediaFile
-        updates.mediaFileLength = mediaFileLength
+        mediaFile.timers = mediaFileLength = (minutes * 60 + bits * 10 + unit);
+        mediaFile = cnStopRecord(this.state.mediaFile);
+        updates.mediaFile = mediaFile;
+        updates.mediaFileLength = mediaFileLength;
       }
       this.setState({
         onRecording: false,
@@ -175,9 +174,9 @@ class InputBox extends Component {
         minutes: 0,
         mediaFile,
         ...updates,
-      })
-      clearInterval(int)
-      clearTimeout(stop)
+      });
+      clearInterval(int);
+      clearTimeout(stop);
     }
   }
 
@@ -185,47 +184,50 @@ class InputBox extends Component {
     const display = this.state.isRecording ? 'block' : 'none',
       isOnRecording = this.state.onRecording,
       { unit, bits, minutes } = this.state,
-      voiceSvg = this.state.isRecording ? 'voice-o' : 'voices'
+      voiceSvg = this.state.isRecording ? 'voice-o' : 'voices';
 
     return (
       <div className={styles[`${PrefixCls}-outer`]} onClick={this.handleDivClick.bind(this)}>
         <div className={styles[`${PrefixCls}-outer-inputbox`]}>
-          <input type="text" ref={el => this.lv = el} onFocus={this.handleFocus.bind(this)}/>
+          <input type="text" ref={el => this.lv = el} onFocus={this.handleFocus.bind(this)} />
           <div>
-            <Button type="primary" size="small" inline
-                    onClick={this.handleTextSubmit.bind(this)}
-                    style={{ height: '0.8rem', lineHeight: '0.8rem' }}>发送</Button>
+            <Button type="primary"
+              size="small"
+              inline
+              onClick={this.handleTextSubmit.bind(this)}
+              style={{ height: '0.8rem', lineHeight: '0.8rem' }}
+            >发送</Button>
           </div>
         </div>
         <div className={styles[`${PrefixCls}-outer-mediabox`]}>
-           <span onClick={this.recording.bind(this)}>
-             <Icon type={getLocalIcon(`/media/${voiceSvg}.svg`)} size="md"/>
-           </span>
+          <span onClick={this.recording.bind(this)}>
+            <Icon type={getLocalIcon(`/media/${voiceSvg}.svg`)} size="md" />
+          </span>
           <span className={styles[`${PrefixCls}-outer-mediabox-photo`]}>
             <input
-              id='file'
+              id="file"
               type="file"
               accept="image/*"
               multiple="multiple"
               onChange={this.onImageFilesChange.bind(this)}
             />
-            <Icon type={getLocalIcon('/media/photo.svg')} size="md"/>
+            <Icon type={getLocalIcon('/media/photo.svg')} size="md" />
           </span>
           <span onClick={cnTakePhoto.bind(null, this.handleCameraSubmit.bind(this), 1)}>
-              <Icon type={getLocalIcon('/media/camera.svg')} size="md"/>
-            </span>
+            <Icon type={getLocalIcon('/media/camera.svg')} size="md" />
+          </span>
         </div>
-        <div className={styles[`${PrefixCls}-outer-recording`]} style={{ display: display }}>
+        <div className={styles[`${PrefixCls}-outer-recording`]} style={{ display }}>
           <div className={styles[`${PrefixCls}-outer-recording-box`]}>
             <div className={styles[`${PrefixCls}-outer-recording-box-timer`]}>
               {
                 isOnRecording
                   ?
-                  <span>
-                   <b>····</b>
+                    <span>
+                    <b>····</b>
                     {`${minutes}:${bits}${unit}`}
                     <b>····</b>
-                   </span>
+                  </span>
                   :
                   <span>按住说话</span>
               }
@@ -235,15 +237,15 @@ class InputBox extends Component {
               onTouchStart={this.onRecording.bind(this)}
               onTouchEnd={this.stopRecording.bind(this)}
             >
-           <span>
-              <Icon type={getLocalIcon('/media/voice-white.svg')} size="lg"/>
-           </span>
+              <span>
+                <Icon type={getLocalIcon('/media/voice-white.svg')} size="lg" />
+              </span>
             </div>
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 
-export default InputBox
+export default InputBox;

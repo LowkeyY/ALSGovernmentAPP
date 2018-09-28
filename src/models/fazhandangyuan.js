@@ -55,7 +55,8 @@ export default modelExtend(model, {
   },
   effects: {
     * query ({ payload }, { call, put, select }) {
-      const result = yield call(getFazhandangyuan, payload), { success = false, message = '发生未知错误。', ...others } = result;
+      const result = yield call(getFazhandangyuan, payload), 
+        { success = false, message = '发生未知错误。', ...others } = result;
       if (success) {
         yield put({
           type: 'updateState',
@@ -67,7 +68,6 @@ export default modelExtend(model, {
       } else {
         Toast.fail(message, 2);
         yield put(routerRedux.goBack());
-        
       }
     },
     * submits ({ payload }, { call, put, select }) {

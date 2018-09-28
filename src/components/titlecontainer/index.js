@@ -9,7 +9,8 @@ function TitleBox (props) {
   return (
     <List className={styles[`${PrefixCls}-list`]}>
       <List.Item extra={props.more ? <div onClick={props.handleClick}>更多></div> : ''}><span
-        className={styles[`${PrefixCls}-title`]} />{props.title}
+        className={styles[`${PrefixCls}-title`]}
+      />{props.title}
       </List.Item>
     </List>
   );

@@ -36,7 +36,6 @@ export default modelExtend(model, {
           }
         });
       }
-      
     },
     
   }

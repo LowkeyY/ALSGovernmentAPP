@@ -378,9 +378,9 @@ class Warning extends Component {
                 error={!!getFieldError('positions') && Toast.fail(getFieldError('positions'))}
                 placeholder="请输入您的位置"
                 extra={currentPostions == '' ? loadPostions ? <Icon type="loading" /> :
-                  <span onClick={this.getCurrentLocation.bind(this)}><Icon
-                  type={getLocalIcon('/others/location.svg')}
-                /></span> : ''}
+                <span onClick={this.getCurrentLocation.bind(this)}><Icon
+                    type={getLocalIcon('/others/location.svg')}
+                  /></span> : ''}
               >
                 当前位置
               </InputItem>

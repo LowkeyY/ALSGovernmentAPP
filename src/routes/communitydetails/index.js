@@ -25,7 +25,7 @@ function CommunityDetails ({ location, dispatch, communitydetails, app }) {
           dispatch({
             type: 'communitydetails/joinCommunity',
             payload: {
-              hdid:id
+              hdid: id
             }
           });
         } else {

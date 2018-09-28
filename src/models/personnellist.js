@@ -13,8 +13,7 @@ export default modelExtend(model, {
     setup ({ dispatch, history }) {
       history.listen(({ pathname, action, query }) => {
         const { id = '', name = '' } = query;
-        if (pathname === `/personnellist`) {
-        
+        if (pathname === '/personnellist') {
           dispatch({
             type: 'query',
             payload: {
@@ -26,7 +25,7 @@ export default modelExtend(model, {
     },
   },
   effects: {
-    * query ({ payload  }, { call, put, select }) {
+    * query ({ payload }, { call, put, select }) {
       const { success = false, data = [], message = '获取数据失败。' } = yield call(queryPartyData, payload);
       if (success) {
         yield put({

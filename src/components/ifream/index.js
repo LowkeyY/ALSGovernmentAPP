@@ -5,7 +5,8 @@ import PropTypes from 'prop-types';
 import { Loader, Eventlisten, Modal } from 'components';
 import styles from './index.less';
 
-const alert = Modal.alert, PrefixCls = 'ifream';
+const alert = Modal.alert, 
+  PrefixCls = 'ifream';
 
 class Iframes extends React.Component {
   constructor (props) {
@@ -46,7 +47,7 @@ class Iframes extends React.Component {
     const { id, name, type } = data;
     if (type === 'dangjian') {
       this.props.dispatch(routerRedux.push({
-        pathname: `/lanmusub`,
+        pathname: '/lanmusub',
         query: {
           id,
           name
@@ -55,7 +56,7 @@ class Iframes extends React.Component {
     } else if (type === 'shouhu') {
       const { userId = '' } = data;
       this.props.dispatch(routerRedux.push({
-        pathname: `/routemap`,
+        pathname: '/routemap',
         query: {
           userId,
           name: '轨迹查询'
@@ -101,9 +102,9 @@ class Iframes extends React.Component {
     return (
       <div>
         <iframe id="cnComponentIfream"
-                ref={el => this.lv = el}
-                src={this.props.src}
-                style={{ width: '100%', height: this.props.height || this.state.height, border: 0 }}
+          ref={el => this.lv = el}
+          src={this.props.src}
+          style={{ width: '100%', height: this.props.height || this.state.height, border: 0 }}
         />
         <Loader spinning={this.state.isLoading} />
         <Eventlisten willCallback={this.onPatry.bind(this)} />

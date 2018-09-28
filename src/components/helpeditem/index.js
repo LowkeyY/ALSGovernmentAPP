@@ -1,26 +1,23 @@
-import React from 'react'
-import styles from './index.less'
-import defaultIcon from 'themes/images/nmenus/lvyou.png'
+import React from 'react';
+import styles from './index.less';
+import defaultIcon from 'themes/images/nmenus/lvyou.png';
 
-const PrefixCls = 'menu'
+const PrefixCls = 'menu';
 
 
 class HelpItem extends React.Component {
   constructor (props) {
-    super(props)
-    this.state = {}
+    super(props);
+    this.state = {};
   }
 
-  render() {
+  render () {
     return (
       <div className={styles[`${PrefixCls}-outer`]}>
-        <div className={styles[`${PrefixCls}-outer-names`]}></div>
-        <div className={styles[`${PrefixCls}-outer-checkboxes`]}>
-
-        </div>
+        <div className={styles[`${PrefixCls}-outer-names`]} />
+        <div className={styles[`${PrefixCls}-outer-checkboxes`]} />
       </div>
-    )
+    );
   }
-
 }
-export default HelpItem
+export default HelpItem;

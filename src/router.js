@@ -29,8 +29,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/dashboard/'));
             }, 'dashboard');
           },
-        }
-        , {
+        },
+        {
           path: 'warning',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -38,8 +38,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/warning/'));
             }, 'warning');
           },
-        }
-        , {
+        },
+        {
           path: 'livelihood',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -47,8 +47,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/livelihood/'));
             }, 'livelihood');
           },
-        }
-        , {
+        },
+        {
           path: 'ecology',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -56,8 +56,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/ecology/'));
             }, 'ecology');
           },
-        }
-        , {
+        },
+        {
           path: 'guard',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -65,8 +65,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/guard/'));
             }, 'guard');
           },
-        }
-        , {
+        },
+        {
           path: 'news',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -82,9 +82,9 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/newsdetails/'));
             }, 'newsdetails');
           },
-        }
+        },
         
-        , {
+        {
           path: 'deren',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -92,8 +92,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/deren/'));
             }, 'deren');
           },
-        }
-        , {
+        },
+        {
           path: 'patry',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -101,8 +101,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/patry/'));
             }, 'patry');
           },
-        }
-        , {
+        },
+        {
           path: 'appeal',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -118,8 +118,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/seekdetails/'));
             }, 'seekdetails');
           },
-        }
-        , {
+        },
+        {
           path: 'taskdetails',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -127,8 +127,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/taskdetails/'));
             }, 'taskdetails');
           },
-        }
-        , {
+        },
+        {
           path: 'details',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -136,8 +136,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/details/'));
             }, 'details');
           },
-        }
-        , {
+        },
+        {
           path: 'login',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -145,8 +145,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/login/'));
             }, 'login');
           },
-        }
-        , {
+        },
+        {
           path: 'mine',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -202,16 +202,16 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/lanmutab/'));
             }, 'lanmutab');
           },
-        }
-        , {
+        },
+        {
           path: 'iframe',
           getComponent (nextState, cb) {
             require.ensure([], require => {
               cb(null, require('routes/iframe/'));
             }, 'iframe');
           },
-        }
-        , {
+        },
+        {
           path: 'legallist',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -219,8 +219,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/legallist/'));
             }, 'legallist');
           },
-        }
-        , {
+        },
+        {
           path: 'derenitems',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -228,8 +228,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/derenitems/'));
             }, 'derenitems');
           },
-        }
-        , {
+        },
+        {
           path: 'volunteer',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -237,8 +237,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/volunteer/'));
             }, 'volunteer');
           },
-        }
-        , {
+        },
+        {
           path: 'camel',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -246,8 +246,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/camel/'));
             }, 'camel');
           },
-        }
-        , {
+        },
+        {
           path: 'survey',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -255,8 +255,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/survey/'));
             }, 'survey');
           },
-        }
-        , {
+        },
+        {
           path: 'basevoice',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -264,8 +264,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/basevoice/'));
             }, 'basevoice');
           },
-        }
-        , {
+        },
+        {
           path: 'commonlist',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -281,8 +281,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/lanmutabshouhu/'));
             }, 'lanmutabshouhu');
           },
-        }
-        , {
+        },
+        {
           path: 'integral',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -290,8 +290,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/integral/'));
             }, 'integral');
           },
-        }
-        , {
+        },
+        {
           path: 'payment',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -299,8 +299,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/payment/'));
             }, 'payment');
           },
-        }
-        , {
+        },
+        {
           path: 'opinion',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -308,8 +308,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/opinion/'));
             }, 'opinion');
           },
-        }
-        , {
+        },
+        {
           path: 'setup',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -317,8 +317,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/setup/'));
             }, 'setup');
           },
-        }
-        , {
+        },
+        {
           path: 'myappeal',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -326,8 +326,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/myappeal/'));
             }, 'myappeal');
           },
-        }
-        , {
+        },
+        {
           path: 'volunteerdetails',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -335,8 +335,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/volunteerdetails/'));
             }, 'volunteerdetails');
           },
-        }
-        , {
+        },
+        {
           path: 'incorrupt',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -344,8 +344,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/incorrupt/'));
             }, 'incorrupt');
           },
-        }
-        , {
+        },
+        {
           path: 'search',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -353,8 +353,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/search/'));
             }, 'search');
           },
-        }
-        , {
+        },
+        {
           path: 'threebig',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -362,8 +362,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/threebig/'));
             }, 'threebig');
           },
-        }
-        , {
+        },
+        {
           path: 'patryworklist',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -371,8 +371,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/patryworklist/'));
             }, 'patryworklist');
           },
-        }
-        , {
+        },
+        {
           path: 'twostupid',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -380,8 +380,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/twostupid/'));
             }, 'twostupid');
           },
-        }
-        , {
+        },
+        {
           path: 'lawyerlist',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -389,8 +389,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/lawyerlist/'));
             }, 'lawyerlist');
           },
-        }
-        , {
+        },
+        {
           path: 'aboutus',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -398,8 +398,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/aboutus/'));
             }, 'aboutus');
           },
-        }
-        , {
+        },
+        {
           path: 'notary',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -407,8 +407,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/notary/'));
             }, 'notary');
           },
-        }
-        , {
+        },
+        {
           path: 'partymembers',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -416,8 +416,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/partymembers/'));
             }, 'partymembers');
           },
-        }
-        , {
+        },
+        {
           path: 'learnlist',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -425,8 +425,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/learnlist/'));
             }, 'learnlist');
           },
-        }
-        , {
+        },
+        {
           path: 'fazhandangyuan',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -434,8 +434,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/fazhandangyuan/'));
             }, 'fazhandangyuan');
           },
-        }
-        , {
+        },
+        {
           path: 'partyintegral',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -443,8 +443,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/partyintegral/'));
             }, 'partyintegral');
           },
-        }
-        , {
+        },
+        {
           path: 'fazhandangyuanxinxi',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -452,8 +452,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/fazhandangyuanxinxi/'));
             }, 'fazhandangyuanxinxi');
           },
-        }
-        , {
+        },
+        {
           path: 'fazhandangyuanlist',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -461,8 +461,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/fazhandangyuanlist/'));
             }, 'fazhandangyuanlist');
           },
-        }
-        , {
+        },
+        {
           path: 'selectmembers',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -470,8 +470,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/selectmembers/'));
             }, 'selectmembers');
           },
-        }
-        , {
+        },
+        {
           path: 'legalmediation',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -479,8 +479,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/legalmediation/'));
             }, 'legalmediation');
           },
-        }
-        , {
+        },
+        {
           path: 'fazhandangyuanstep',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -488,8 +488,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/fazhandangyuanstep/'));
             }, 'fazhandangyuanstep');
           },
-        }
-        , {
+        },
+        {
           path: 'tspatry',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -497,8 +497,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/tspatry/'));
             }, 'tspatry');
           },
-        }
-        , {
+        },
+        {
           path: 'patrybuild',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -506,8 +506,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/patrybuild/'));
             }, 'patrybuild');
           },
-        }
-        , {
+        },
+        {
           path: 'donationDetails',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -515,8 +515,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/donationDetails/'));
             }, 'donationDetails');
           },
-        }
-        , {
+        },
+        {
           path: 'routemap',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -524,8 +524,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/routemap/'));
             }, 'routemap');
           },
-        }
-        , {
+        },
+        {
           path: 'patryprivate',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -533,8 +533,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/patryprivate/'));
             }, 'patryprivate');
           },
-        }
-        , {
+        },
+        {
           path: 'createtask',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -542,8 +542,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/createtask/'));
             }, 'createtask');
           },
-        }
-        , {
+        },
+        {
           path: 'task110',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -551,8 +551,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/task110/'));
             }, 'task110');
           },
-        }
-        , {
+        },
+        {
           path: 'task110details',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -560,8 +560,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/task110details/'));
             }, 'task110details');
           },
-        }
-        , {
+        },
+        {
           path: 'tasklist',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -569,8 +569,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/tasklist/'));
             }, 'tasklist');
           },
-        }
-        , {
+        },
+        {
           path: 'taskstatistics',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -578,8 +578,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/taskstatistics/'));
             }, 'taskstatistics');
           },
-        }
-        , {
+        },
+        {
           path: 'patrymap',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -587,8 +587,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/patrymap/'));
             }, 'patrymap');
           },
-        }
-        , {
+        },
+        {
           path: 'patrymaplist',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -596,8 +596,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/patrymaplist/'));
             }, 'patrymaplist');
           },
-        }
-        , {
+        },
+        {
           path: 'speciallist',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -605,8 +605,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/speciallist/'));
             }, 'speciallist');
           },
-        }
-        , {
+        },
+        {
           path: 'personnellist',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -623,8 +623,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/personnelmap/'));
             }, 'personnelmap');
           },
-        }
-        , {
+        },
+        {
           path: 'twinsbox',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -632,8 +632,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/twinsbox/'));
             }, 'twinsbox');
           },
-        }
-        , {
+        },
+        {
           path: 'diary',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -641,8 +641,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/diary/'));
             }, 'diary');
           },
-        }
-        , {
+        },
+        {
           path: 'diarylist',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -650,8 +650,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/diarylist/'));
             }, 'diarylist');
           },
-        }
-        , {
+        },
+        {
           path: 'diarydetails',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -659,8 +659,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/diarydetails/'));
             }, 'diarydetails');
           },
-        }
-        , {
+        },
+        {
           path: 'mobilepartys',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -668,8 +668,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/mobilepartys/'));
             }, 'mobilepartys');
           },
-        }
-        , {
+        },
+        {
           path: 'communitylist',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -677,8 +677,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/communitylist/'));
             }, 'communitylist');
           },
-        }
-        , {
+        },
+        {
           path: 'communitydetails',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -686,8 +686,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/communitydetails/'));
             }, 'communitydetails');
           },
-        }
-        , {
+        },
+        {
           path: 'communityjoin',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -695,8 +695,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/communityjoin/'));
             }, 'communityjoin');
           },
-        }
-        , {
+        },
+        {
           path: 'searchuser',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -704,8 +704,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/searchuser/'));
             }, 'searchuser');
           },
-        }
-        , {
+        },
+        {
           path: 'tasktable',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -713,8 +713,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/tasktable/'));
             }, 'tasktable');
           },
-        }
-        , {
+        },
+        {
           path: 'taskreact',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -722,8 +722,8 @@ const Routers = function ({ history, app }) {
               cb(null, require('routes/taskreact/'));
             }, 'taskreact');
           },
-        }
-        , {
+        },
+        {
           path: '*',
           getComponent (nextState, cb) {
             const { location: { pathname } } = nextState;

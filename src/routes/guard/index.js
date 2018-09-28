@@ -23,7 +23,7 @@ function Guard ({ location, dispatch, guard, app }) {
           pathname: 'iframe',
           query: {
             name: title,
-            externalUrl: externalUrl,
+            externalUrl,
           },
         }));
       } else {
@@ -42,7 +42,7 @@ function Guard ({ location, dispatch, guard, app }) {
       <TitleBox title="系统通知" />
       <div>
         {bannerDatas.length > 0 ?
-          <Banner datas={bannerDatas} handleClick={handleBannerClick} dispatch={dispatch} name={name} hasTitle={true} />
+          <Banner datas={bannerDatas} handleClick={handleBannerClick} dispatch={dispatch} name={name} hasTitle />
           :
           <div className={styles[`${PrefixCls}-notice`]}>暂无通知</div>
         }

@@ -1,17 +1,18 @@
-import modelExtend from 'dva-model-extend'
-import { model } from 'models/common'
-import { GetPatryWorkList } from 'services/querylist'
-const   getDefaultPaginations = () => ({
+import modelExtend from 'dva-model-extend';
+import { model } from 'models/common';
+import { GetPatryWorkList } from 'services/querylist';
+
+const getDefaultPaginations = () => ({
     current: 1,
     total: 0,
-    size:10,
+    size: 10,
   }),
-  namespace = 'patryworklist'
+  namespace = 'patryworklist';
 
 export default modelExtend(model, {
   namespace: 'patryworklist',
   state: {
-     dataList:[],
+    dataList: [],
     scrollerTop: 0,
     paginations: getDefaultPaginations(),
   },
@@ -19,10 +20,10 @@ export default modelExtend(model, {
     setup ({ dispatch, history }) {
       history.listen(({ pathname, query, action }) => {
         if (pathname === '/patryworklist') {
-          const { id = '', name = '' } = query
+          const { id = '', name = '' } = query;
           dispatch({
             type: 'queryListview',
-          })
+          });
           dispatch({
             type: 'updateState',
             payload: {
@@ -31,9 +32,9 @@ export default modelExtend(model, {
               scrollerTop: 0,
               paginations: getDefaultPaginations(),
             },
-          })
+          });
         }
-      })
+      });
     },
   },
   effects: {
@@ -50,17 +51,16 @@ export default modelExtend(model, {
     //     })
     //   }
     // },
-    * queryListview ({ payload={} }, { call, put, select }) {
-
-      const { callback='', isRefresh = false,} = payload,
+    * queryListview ({ payload = {} }, { call, put, select }) {
+      const { callback = '', isRefresh = false, } = payload,
         _this = yield select(_ => _[`${namespace}`]),
-        { paginations: { current, total, size }, dataList} = _this,
+        { paginations: { current, total, size }, dataList } = _this,
         start = isRefresh ? 1 : current,
-        result = yield call(GetPatryWorkList, {nowPage: start, showCount: size  })
+        result = yield call(GetPatryWorkList, { nowPage: start, showCount: size });
       if (result) {
-        let {datas = [], totalCount = 0} = result,
-          newLists = []
-        newLists = start == 1 ?  JSON.parse(datas) : [...dataList, ... JSON.parse(datas)]
+        let { datas = [], totalCount = 0 } = result,
+          newLists = [];
+        newLists = start == 1 ? JSON.parse(datas) : [...dataList, ...JSON.parse(datas)];
         yield put({
           type: 'updateState',
           payload: {
@@ -69,12 +69,11 @@ export default modelExtend(model, {
               total: totalCount * 1,
               current: start + 1
             },
-            dataList:newLists
+            dataList: newLists
           },
-        })
+        });
       }
-      if (callback)
-        callback()
+      if (callback) { callback(); }
     },
   },
-})
+});

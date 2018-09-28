@@ -13,7 +13,7 @@ const getChartArr = (obj = {}) => {
   let chartArr = [],
     length = Object.keys(obj).length;
   for (let i = 0; i < length; i++) {
-    let newObj = obj['msgData' + i];
+    let newObj = obj[`msgData${i}`];
     if (newObj) {
       chartArr.push(newObj);
     }
@@ -79,8 +79,8 @@ export default modelExtend(model, {
           type: 'updateState',
           payload: {
             chartArr: getChartArr(data),
-            taskTitle: taskTitle,
-            taskInfo: taskInfo,
+            taskTitle,
+            taskInfo,
             flowId,
             flowLeve,
             flowState,
@@ -107,8 +107,8 @@ export default modelExtend(model, {
       let currentCharArr = [];
       chartArr.map((item = {}) => {
         let changes = {};
-        if (item.hasOwnProperty('_Key') && item['_Key'] == _Key) {
-          changes['_status'] = data.success ? 0 : 2;
+        if (item.hasOwnProperty('_Key') && item._Key == _Key) {
+          changes._status = data.success ? 0 : 2;
         }
         currentCharArr.push({ ...item, ...changes });
       });
@@ -175,7 +175,6 @@ export default modelExtend(model, {
     },
     * readMessage ({ payload }, { call, put, select }) {
       const data = yield call(readMessage, payload);
-      
     },
     * backTask ({ payload }, { call, put, select }) {
       const data = yield call(SendTask, payload);
@@ -187,7 +186,8 @@ export default modelExtend(model, {
   },
   reducers: {
     appendMessage (state, { payload }) {
-      let { chartArr } = state, { appends = {} } = payload;
+      let { chartArr } = state, 
+        { appends = {} } = payload;
       chartArr = [...chartArr, { ...appends }];
       return {
         ...state,

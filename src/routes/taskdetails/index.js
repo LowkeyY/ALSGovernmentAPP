@@ -184,10 +184,10 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
       if (complete !== '0') {
         return (<div>
           <Button type="primary"
-                  inline
-                  size="small"
-                  style={{ marginRight: '4px' }}
-                  onClick={handleCompleteButtonClick}
+            inline
+            size="small"
+            style={{ marginRight: '4px' }}
+            onClick={handleCompleteButtonClick}
           >完成</Button>
         </div>);
       }
@@ -197,43 +197,43 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
       if (flowLeve === '3' && flowState === '0') {
         return (<div>
           <Button type="primary"
-                  inline
-                  size="small"
-                  style={{ marginRight: '40px', background: '#35aa47', borderColor: '#35aa47' }}
-                  onClick={handleTaskClick.bind(null, 'conform')}
+            inline
+            size="small"
+            style={{ marginRight: '40px', background: '#35aa47', borderColor: '#35aa47' }}
+            onClick={handleTaskClick.bind(null, 'conform')}
           >接受</Button>
           <Button type="primary"
-                  inline
-                  size="small"
-                  style={{ marginRight: '4px', background: '#f3565d', borderColor: '#f3565d' }}
-                  onClick={handleTaskClick.bind(null, 'back')}
+            inline
+            size="small"
+            style={{ marginRight: '4px', background: '#f3565d', borderColor: '#f3565d' }}
+            onClick={handleTaskClick.bind(null, 'back')}
           >退回</Button>
         </div>);
       } else if (flowLeve === '3' && flowState === '3') {
         return (<div>
           <Button type="primary"
-                  inline
-                  size="small"
-                  style={{ marginRight: '4px' }}
-                  onClick={handleCompleteClick}
+            inline
+            size="small"
+            style={{ marginRight: '4px' }}
+            onClick={handleCompleteClick}
           >完成</Button>
         </div>);
       } else if (complete !== '0') {
         return (<div>
           <Button type="primary"
-                  inline
-                  size="small"
-                  style={{ marginRight: '4px' }}
-                  onClick={handleCompleteButtonClick}
+            inline
+            size="small"
+            style={{ marginRight: '4px' }}
+            onClick={handleCompleteButtonClick}
           >完成</Button>
         </div>);
       } else if (isWork === '7') {
         return (<div>
           <Button type="primary"
-                  inline
-                  size="small"
-                  style={{ marginRight: '4px' }}
-                  onClick={handleZhihuiClick}
+            inline
+            size="small"
+            style={{ marginRight: '4px' }}
+            onClick={handleZhihuiClick}
           >完成</Button>
         </div>);
       }
@@ -279,7 +279,6 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
     },
     handleListClick = ({ workId, isTask = true, taskId }) => {
       if (workId !== '') {
-        
         dispatch(routerRedux.push({
           pathname: '/seekdetails',
           query: {
@@ -318,9 +317,9 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
   return (
     <div>
       <Nav title="任务详情"
-           dispatch={dispatch}
-           navEvent={readMessage.bind(null, taskId)}
-           renderNavRight={renderNav(taskId, isWork)}
+        dispatch={dispatch}
+        navEvent={readMessage.bind(null, taskId)}
+        renderNavRight={renderNav(taskId, isWork)}
       />
       <div className={styles[`${PrefixCls}-outer`]}>
         <div className={styles[`${PrefixCls}-outer-title`]}>
@@ -337,7 +336,7 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
             <span className={styles[`${PrefixCls}-outer-taskdetails-content`]}>
               <div className={styles[`${PrefixCls}-outer-taskdetails-content-info`]}>
                 <div className={styles[`${PrefixCls}-outer-taskdetails-content-info-type`]}>
-                  {taskType!=='undefined' ? <span>警务类型：{taskType}</span> : ''}
+                  {taskType !== 'undefined' ? <span>警务类型：{taskType}</span> : ''}
                   <span>紧急程度：{taskUrgency}</span>
                 </div>
                 <div className={styles[`${PrefixCls}-outer-taskdetails-content-info-date`]}>
@@ -361,7 +360,7 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
         {
           isShowButton
             ?
-            <div className={styles[`${PrefixCls}-outer-control`]}>
+              <div className={styles[`${PrefixCls}-outer-control`]}>
               {getReactButtons()}
               {getTaskButtons(flowLeve, flowState, complete, isWork)}
               {getUpTableButtons()}

@@ -18,7 +18,6 @@ export default modelExtend(model, {
       history.listen(({ pathname, action, query }) => {
         if (pathname === '/tasktable') {
           const { name = '', id = '' } = query;
-          
         }
       });
     },

@@ -23,7 +23,7 @@ function PersonnelMap ({ location, dispatch, personnelmap }) {
             pathname: 'iframe',
             query: {
               name: title,
-              externalUrl: externalUrl,
+              externalUrl,
             },
           }));
         }
@@ -42,7 +42,7 @@ function PersonnelMap ({ location, dispatch, personnelmap }) {
       <Nav title={name} dispatch={dispatch} />
       <div className={styles.ifream}>
         {htmlBody !== '' ? <div dangerouslySetInnerHTML={getContents()} /> :
-          <Iframes src={externalUrl} dispatch={dispatch} height={'65vh'} />}
+        <Iframes src={externalUrl} dispatch={dispatch} height={'65vh'} />}
       </div>
       <div className={styles.buttonbox}>
         {buttons && buttons.map((data, i) => {
@@ -51,9 +51,11 @@ function PersonnelMap ({ location, dispatch, personnelmap }) {
               key={data.id}
               type="primary"
               inline
-              style={{ marginRight: '10px', marginBottom: '10px' }}
+              style={{ marginLeft:'20px',marginBottom: '10px',minWidth:'40%'
+              }}
               onClick={handleListClick.bind(this, data)}
-              className="am-button-borderfix">
+              className="am-button-borderfix"
+            >
               {data.title}
             </Button>
           );

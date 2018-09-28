@@ -48,13 +48,13 @@ function Patryprivate ({ location, dispatch, patryprivate }) {
         result = [];
       result.push(
         <ListView layoutHeader={''}
-                  dataSource={lists}
-                  layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
-                  onEndReached={onEndReached.bind(null, refreshId)}
-                  onRefresh={onRefresh.bind(null, refreshId)}
-                  hasMore={hasMore}
-                  onScrollerTop={onScrollerTop.bind(null)}
-                  scrollerTop={scrollerTop}
+          dataSource={lists}
+          layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
+          onEndReached={onEndReached.bind(null, refreshId)}
+          onRefresh={onRefresh.bind(null, refreshId)}
+          hasMore={hasMore}
+          onScrollerTop={onScrollerTop.bind(null)}
+          scrollerTop={scrollerTop}
         />
       );
       return result;

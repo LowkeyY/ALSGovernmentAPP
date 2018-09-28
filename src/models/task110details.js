@@ -47,7 +47,8 @@ export default modelExtend(model, {
       }
     },
     * reply110Task ({ payload }, { call, put, select }) {
-      const data = yield call(Reply110Task, payload), { text } = payload;
+      const data = yield call(Reply110Task, payload), 
+        { text } = payload;
       if (data.success) {
         Toast.success(text);
         yield put(routerRedux.goBack());

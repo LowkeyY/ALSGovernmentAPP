@@ -1,18 +1,18 @@
 
-import React from 'react'
-import { Carousel,InputItem,Toast, Button, WhiteSpace, WingBlank,ImagePicker  } from 'antd-mobile'
-import ReactDOM from 'react-dom'
-import TitleBox from 'components/titlecontainer'
-import styles from './index.less'
+import React from 'react';
+import { Carousel, InputItem, Toast, Button, WhiteSpace, WingBlank, ImagePicker } from 'antd-mobile';
+import ReactDOM from 'react-dom';
+import TitleBox from 'components/titlecontainer';
+import styles from './index.less';
 
-const PrefixCls = 'partyfolw'
+const PrefixCls = 'partyfolw';
 
 class Partyfolw extends React.Component {
   constructor (props) {
-    super(props)
+    super(props);
     this.state = {
       files: [],
-    }
+    };
   }
 
   componentWillMount () {
@@ -20,24 +20,22 @@ class Partyfolw extends React.Component {
   }
   onChange = (files, type, index) => {
     let reg = /image/,
-      result = []
+      result = [];
     files.map((data, i) => {
       if (!reg.test(data.file.type)) {
-
-        Toast.fail('这不是图片哟！！！', 2)
+        Toast.fail('这不是图片哟！！！', 2);
       } else {
-        result.push(data)
+        result.push(data);
       }
-    })
+    });
     this.setState({
       files: result,
-    })
-
+    });
   }
 
-  layoutItem (nowCount,props) {
-    const { getFieldProps, getFieldError } = props
-    switch (nowCount){
+  layoutItem (nowCount, props) {
+    const { getFieldProps, getFieldError } = props;
+    switch (nowCount) {
       case 0 :
         return (
           <div>
@@ -71,82 +69,78 @@ class Partyfolw extends React.Component {
                 rules: [{ required: true, message: '请输入身份证号' },
                 ],
               })}
-              type='number'
+              type="number"
               clear
               error={!!getFieldError('idCard') && Toast.fail(getFieldError('idCard'))}
               placeholder=""
             >
               身份证号
             </InputItem>
-            <WhiteSpace size='md'/>
-            <TitleBox title='上传附件'/>
+            <WhiteSpace size="md" />
+            <TitleBox title="上传附件" />
             <ImagePicker
               files={this.state.files}
               onChange={this.onChange}
-                onImageClick={(index, fs) => console.log(index, fs)}
+              onImageClick={(index, fs) => console.log(index, fs)}
               selectable={this.state.files.length < 4}
               multiple={this.state.multiple}
-              accept='image/*'
+              accept="image/*"
             />
           </div>
-        )
+        );
       case 1 :
         return (
           <div>
             456
           </div>
-        )
+        );
       case 2 :
         return (
           <div>
             456
           </div>
-        )
+        );
       case 3 :
         return (
           <div>
             456
           </div>
-        )
+        );
       case 4 :
         return (
           <div>
             456
           </div>
-        )
+        );
       case 5 :
         return (
           <div>
             456
           </div>
-        )
+        );
       case 6 :
         return (
           <div>
             456
           </div>
-        )
+        );
       case 7:
         return (
           <div>
             456
           </div>
-        )
+        );
     }
-
   }
 
 
   render () {
-
     return (
       <div >
-        {this.layoutItem(this.props.nowCount,this.props)}
+        {this.layoutItem(this.props.nowCount, this.props)}
       </div>
-    )
-
+    );
   }
-
 }
 
-export default Partyfolw
+export default Partyfolw;

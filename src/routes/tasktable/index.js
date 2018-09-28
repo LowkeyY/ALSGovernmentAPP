@@ -79,7 +79,7 @@ class TaskTable extends Component {
             taskId
           },
           { uploadFiles, uploadKey } = this.getUploadFiles();
-        console.log(data)
+        console.log(data);
         this.props.dispatch({
           type: 'tasktable/sendTaskTable',
           payload: {

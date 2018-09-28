@@ -146,7 +146,7 @@ export default modelExtend(model, {
         });
         yield put(routerRedux.goBack());
         Toast.success('已成功下发通知');
-      }else {
+      } else {
         yield put({
           type: 'updateState',
           payload: {

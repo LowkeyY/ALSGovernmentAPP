@@ -22,15 +22,16 @@ class Tile extends React.Component {
       appendStyle.backgroundColor = colors;
     }
     return (
-      <div key={items.id} className={styles[`${PrefixCls}-outer-item`]} style={appendStyle}
-           onClick={this.props.handleClick.bind(null, items, this.props.dispatch)}>
+      <div key={items.id}
+        className={styles[`${PrefixCls}-outer-item`]}
+        style={appendStyle}
+        onClick={this.props.handleClick.bind(null, items, this.props.dispatch)}
+      >
         <img src={image} alt="" />
         <span>{title}</span>
       </div>
     );
-    
   }
-  
 }
 
 Tile.propTypes = {

@@ -1,7 +1,7 @@
 import { request, config } from 'utils';
 
 const { api } = config;
-const { QueryManuscriptApi, QueryColumnTypeApi, JicengshengyinApi, LanmuAllApi, GetTaskListApi, GetAllTaskApi, GetTowStupidApi, GetPatryWorkListApi, GetTowStupidListApi, GetVolunteerOrderApi, GettongjibumenApi, GetUnreadMessageApi, QueryMembersApi, SendTaskApi, Get110TaskApi, Get110TaskDetailApi, Reply110TaskApi,GetTaskStatisticsApi} = api;
+const { QueryManuscriptApi, QueryColumnTypeApi, JicengshengyinApi, LanmuAllApi, GetTaskListApi, GetAllTaskApi, GetTowStupidApi, GetPatryWorkListApi, GetTowStupidListApi, GetVolunteerOrderApi, GettongjibumenApi, GetUnreadMessageApi, QueryMembersApi, SendTaskApi, Get110TaskApi, Get110TaskDetailApi, Reply110TaskApi, GetTaskStatisticsApi } = api;
 
 export async function queryPartyData (payload) {
   return request({

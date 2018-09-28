@@ -55,7 +55,6 @@ export default modelExtend(model, {
           }
         });
       }
-      
     },
   }
   

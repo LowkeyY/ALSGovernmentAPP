@@ -16,7 +16,7 @@ const getInfo = (info) => {
   getBannerDatas = (data = []) => {
     let bannerDatas = [];
     data.map((item, index) => {
-      console.log(item)
+      console.log(item);
       const { id = '', title = '', route = '', infos = '', ...others } = item;
       let { type } = getInfo(infos);
       if (type === 'banner') {
@@ -179,8 +179,7 @@ export default modelExtend(model, {
           },
         });
       }
-      if (callback)
-        callback();
+      if (callback) { callback(); }
     },
     * queryItems ({ payload }, { call, put, select }) {
       const { id = '', selected = -1 } = payload,

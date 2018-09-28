@@ -1,27 +1,28 @@
-import React from 'react'
-import { connect } from 'dva'
-import { WhiteSpace, Tabs } from 'components'
-import Nav from 'components/nav'
-import { lawyerList, officeList } from 'components/row'
-import Layout from 'components'
-import { routerRedux } from 'dva/router'
-import styles from './index.less'
+import React from 'react';
+import { connect } from 'dva';
+import { WhiteSpace, Tabs } from 'components';
+import Nav from 'components/nav';
+import { lawyerList, officeList } from 'components/row';
+import Layout from 'components';
+import { routerRedux } from 'dva/router';
+import styles from './index.less';
 
 
-const PrefixCls = 'lawyerlist', { BaseLine } = Layout
+const PrefixCls = 'lawyerlist', 
+  { BaseLine } = Layout;
 
 function Lawyerlist ({ location, dispatch, lawyerlist }) {
   const { name = '', index = 0 } = location.query,
-    { grids, selectedIndex,lists } = lawyerlist,
+    { grids, selectedIndex, lists } = lawyerlist,
     handleItemOnclick = ({ externalUrl = '', id, pathname = 'details' }) => {
       if (externalUrl != '' && externalUrl.startsWith('http')) {
         dispatch(routerRedux.push({
           pathname: 'iframe',
           query: {
             name,
-            externalUrl: externalUrl,
+            externalUrl,
           },
-        }))
+        }));
       } else {
         dispatch(routerRedux.push({
           pathname: `/${pathname}`,
@@ -29,28 +30,27 @@ function Lawyerlist ({ location, dispatch, lawyerlist }) {
             name,
             dataId: id,
           },
-        }))
+        }));
       }
     },
     getContent = () => {
-      const result = []
+      const result = [];
       if (selectedIndex == 0) {
-        result.push(lawyerList(lists , handleItemOnclick))
-
+        result.push(lawyerList(lists, handleItemOnclick));
       } else {
-        result.push(officeList(lists , handleItemOnclick))
+        result.push(officeList(lists, handleItemOnclick));
       }
-      return <div>{result}</div>
+      return <div>{result}</div>;
     },
     getTabs = () => {
-      const result = []
+      const result = [];
       grids.map((grid, i) => {
-        const { title = '' } = grid
+        const { title = '' } = grid;
         if (title != '') {
-          result.push({ ...grid })
+          result.push({ ...grid });
         }
-      })
-      return result
+      });
+      return result;
     },
     handleTabClick = (data, index) => {
       dispatch({
@@ -59,11 +59,11 @@ function Lawyerlist ({ location, dispatch, lawyerlist }) {
           ...data,
           selected: index,
         },
-      })
-    }
+      });
+    };
   return (
     <div>
-      <Nav title={name} dispatch={dispatch}/>
+      <Nav title={name} dispatch={dispatch} />
       <Tabs
         initialPage={0}
         page={selectedIndex}
@@ -74,10 +74,10 @@ function Lawyerlist ({ location, dispatch, lawyerlist }) {
         {getContent()}
       </Tabs>
     </div>
-  )
+  );
 }
 
 export default connect(({ loading, lawyerlist }) => ({
   loading,
   lawyerlist,
-}))(Lawyerlist)
+}))(Lawyerlist);

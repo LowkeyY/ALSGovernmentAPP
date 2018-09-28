@@ -19,8 +19,11 @@ function DiaryDetails ({ location, dispatch, diarydetails }) {
       if (cnIsArray(images) && images.length) {
         return (
           <div className={styles[`${PrefixCls}-files-images`]}>
-            {images.map((src, i) => <div key={i} data-src={src} className="imgbox"
-                                         style={{ backgroundImage: `url(${src})` }} />)}
+            {images.map((src, i) => (<div key={i}
+              data-src={src}
+              className="imgbox"
+              style={{ backgroundImage: `url(${src})` }}
+            />))}
           </div>
         );
       }
@@ -78,7 +81,7 @@ function DiaryDetails ({ location, dispatch, diarydetails }) {
           
         </div>
         <TitleBox title="附件" />
-        <div  className={styles[`${PrefixCls}-files`]} onClick={handleDivClick}>
+        <div className={styles[`${PrefixCls}-files`]} onClick={handleDivClick}>
           {getImagesPage(imgFile)}
         </div>
       </div>

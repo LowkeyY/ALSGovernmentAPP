@@ -105,7 +105,7 @@ function Comp ({ location, dispatch, fazhandangyuan, form }) {
                 <div className={styles[`${PrefixCls}-sendtitle`]}>{lable}</div>
                 <div>
                   {<span className={styles[`${PrefixCls}-formbox`]}
-                         onClick={cnTakePhoto.bind(null, handleCameraClick, 1)}
+                    onClick={cnTakePhoto.bind(null, handleCameraClick, 1)}
                   >
                     <Icon type={getLocalIcon('/media/camerawhite.svg')} />
                   </span>}
@@ -136,21 +136,21 @@ function Comp ({ location, dispatch, fazhandangyuan, form }) {
       const { sort_id = '', title, status = '0', statusText = '', dates = '' } = item;
       return sort_id !== '' ? (
         <Item className={styles[`${PrefixCls}-item`]}
-              multipleLine
-              wrap
-              arrow="horizontal"
-              onClick={handleOnClick.bind(null, item)}
+          multipleLine
+          wrap
+          arrow="horizontal"
+          onClick={handleOnClick.bind(null, item)}
         
         >
           <span>{`${sort_id / 10 + 1}.${title}`}</span>
           <Badge text={statusText}
-                 style={{
-                   marginLeft: 16,
-                   padding: '0 4px',
-                   backgroundColor: getColors(status * 1),
-                   borderRadius: 2,
-                   color: '#fff',
-                 }}
+            style={{
+              marginLeft: 16,
+              padding: '0 4px',
+              backgroundColor: getColors(status * 1),
+              borderRadius: 2,
+              color: '#fff',
+            }}
           />
           <Brief>{dates}</Brief>
         
@@ -171,7 +171,6 @@ function Comp ({ location, dispatch, fazhandangyuan, form }) {
       return isShenhe === true ? <List>{result}</List> : <form>{result}</form>;
     },
     handleAddClick = () => {
-      
       dispatch(routerRedux.push({
         pathname: '/fazhandangyuan',
         query: {
@@ -183,9 +182,8 @@ function Comp ({ location, dispatch, fazhandangyuan, form }) {
     renderNav = () => {
       if (!selfList && sort_id > 0 && !isShenhe) {
         return (<div onClick={handleAddClick}>历史步骤</div>);
-      } else {
-        return '';
-      }
+      } 
+      return '';
     };
   
   return (
@@ -208,8 +206,8 @@ function Comp ({ location, dispatch, fazhandangyuan, form }) {
       <div className={styles[`${PrefixCls}-button`]}>
         {btnText.length > 0 ?
           <WingBlank><Button type="primary"
-                             loading={uploading}
-                             onClick={handleSubmits}
+            loading={uploading}
+            onClick={handleSubmits}
           >{btnText}</Button></WingBlank> : ''}
       </div>
     </div>

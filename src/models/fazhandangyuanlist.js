@@ -89,8 +89,9 @@ export default modelExtend(model, {
   },
   reducers: {
     
-    'delete' (state, { payload }) {
-      const { items } = state, { shenhe_tags } = payload,
+    delete (state, { payload }) {
+      const { items } = state, 
+        { shenhe_tags } = payload,
         id = shenhe_tags.split(','),
         result = [];
       id && id.map((item, i) => {

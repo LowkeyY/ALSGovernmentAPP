@@ -69,8 +69,7 @@ export default modelExtend(model, {
           },
         });
       }
-      if (callback)
-        callback();
+      if (callback) { callback(); }
     },
   },
 });

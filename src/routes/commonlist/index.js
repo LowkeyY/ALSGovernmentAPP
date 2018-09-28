@@ -13,7 +13,8 @@ import styles from './index.less';
 const PrefixCls = 'commonlist';
 const CommonList = ({ loading, location, dispatch, commonlist, app }) => {
   const { isLogin } = app;
-  const { name = '' } = location.query, { grids, paginations, scrollerTop, refreshId, banners, lists } = commonlist;
+  const { name = '' } = location.query, 
+    { grids, paginations, scrollerTop, refreshId, banners, lists } = commonlist;
   const onRefresh = (params, callback) => {
       dispatch({
         type: `${PrefixCls}/queryListview`,
@@ -45,7 +46,7 @@ const CommonList = ({ loading, location, dispatch, commonlist, app }) => {
     },
     handleSearchClick = ({ id = '' }) => {
       dispatch(routerRedux.push({
-        pathname: `/search`,
+        pathname: '/search',
         query: {
           router: PrefixCls,
           id
@@ -61,13 +62,13 @@ const CommonList = ({ loading, location, dispatch, commonlist, app }) => {
         
         result.push(
           <ListView layoutHeader={() => title}
-                    dataSource={items}
-                    layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
-                    onEndReached={onEndReached.bind(null, { id, title })}
-                    onRefresh={onRefresh.bind(null, { id, title })}
-                    hasMore={hasMore}
-                    onScrollerTop={onScrollerTop.bind(null)}
-                    scrollerTop={scrollerTop}
+            dataSource={items}
+            layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
+            onEndReached={onEndReached.bind(null, { id, title })}
+            onRefresh={onRefresh.bind(null, { id, title })}
+            hasMore={hasMore}
+            onScrollerTop={onScrollerTop.bind(null)}
+            scrollerTop={scrollerTop}
           />
         );
       }
@@ -77,8 +78,9 @@ const CommonList = ({ loading, location, dispatch, commonlist, app }) => {
     <div>
       <Nav title={name} dispatch={dispatch} />
       <SearchBar placeholder={`在${name || '此页面'}中搜索`}
-                 maxLength={20}
-                 onFocus={handleSearchClick.bind(this, commonlist)} />
+        maxLength={20}
+        onFocus={handleSearchClick.bind(this, commonlist)}
+      />
       {banners.length > 0 && <Banner datas={banners} dispatch={dispatch} name={name} handleClick={handleBannerClick} />
       }
       <div className={styles[`${PrefixCls}-grids`]}>

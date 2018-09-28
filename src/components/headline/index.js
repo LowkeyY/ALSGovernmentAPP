@@ -44,8 +44,8 @@ class HeadLine extends React.Component {
   
   
   render () {
-    
-    const selectedIndex = this.props.selectedIndex, currentData = this.props.datas || [];
+    const selectedIndex = this.props.selectedIndex, 
+      currentData = this.props.datas || [];
     return (
       <div>
         <div className={styles[`${PrefixCls}-outer`]} style={{ clear: 'both' }}>
@@ -97,21 +97,23 @@ class HeadLine extends React.Component {
         </div>
         <div className={styles[`${PrefixCls}-noticeouter`]}>
           <div className={styles[`${PrefixCls}-noticeouter-title`]}><Icon
-            type={getLocalIcon('/dashboard/weather.svg')} /></div>
+            type={getLocalIcon('/dashboard/weather.svg')}
+          /></div>
           <span style={{ color: '#ddd' }}>|</span>
           <Carousel className="my-carousel"
-                    vertical
-                    autoplayInterval={4000}
-                    autoplay
-                    dots={false}
-                    dragging={false}
-                    swiping={false}
-                    infinite
+            vertical
+            autoplayInterval={4000}
+            autoplay
+            dots={false}
+            dragging={false}
+            swiping={false}
+            infinite
           >
             {
               currentData.length > 0 && currentData.map((data, index) =>
-                <div className={styles[`${PrefixCls}-noticeouter-container`]}
-                     key={index}><span style={{ paddingRight: '5px', color: '#888' }}></span>{data.text}</div>)
+                (<div className={styles[`${PrefixCls}-noticeouter-container`]}
+                  key={index}
+                ><span style={{ paddingRight: '5px', color: '#888' }} />{data.text}</div>))
             }
           </Carousel>
         </div>

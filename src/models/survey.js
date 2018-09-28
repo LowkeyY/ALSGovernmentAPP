@@ -1,30 +1,30 @@
-import { parse } from 'qs'
-import modelExtend from 'dva-model-extend'
-import { model } from 'models/common'
-import { routerRedux } from 'dva/router'
-import { getSurvey, submitSurvey } from 'services/survey'
+import { parse } from 'qs';
+import modelExtend from 'dva-model-extend';
+import { model } from 'models/common';
+import { routerRedux } from 'dva/router';
+import { getSurvey, submitSurvey } from 'services/survey';
 
 const appendChildren = (items) => {
-    const result = []
+    const result = [];
     items.map(item => {
-      const { boxLabel, inputValue, name } = item
+      const { boxLabel, inputValue, name } = item;
       result.push({
         value: inputValue, label: boxLabel,
-      })
-    })
-    return result
+      });
+    });
+    return result;
   },
   appendItems = (datas = []) => {
     const result = [],
       values = {},
-      issues = {}
+      issues = {};
     datas.map(data => {
       let { name = '', items = [], xtype = '', allowBlank = true, fieldLabel = '' } = data,
-        pos = -1
+        pos = -1;
       if (name != '' && xtype != '' && items.length > 0) {
-        const newItems = appendChildren(items)
+        const newItems = appendChildren(items);
         if ((pos = fieldLabel.indexOf('<font')) != -1) {
-          fieldLabel = fieldLabel.substr(0, pos)
+          fieldLabel = fieldLabel.substr(0, pos);
         }
         result.push({
           title: fieldLabel,
@@ -32,23 +32,23 @@ const appendChildren = (items) => {
           isRequired: !allowBlank,
           id: name,
           multiple: xtype == 'checkbox',
-        })
-        values[name] = []
+        });
+        values[name] = [];
         if (!allowBlank) {
-          issues[name] = fieldLabel
+          issues[name] = fieldLabel;
         }
       }
-    })
-    return { lists: result, values, issues }
+    });
+    return { lists: result, values, issues };
   },
   getSubmitValues = (values = {}) => {
-    const result = []
+    const result = [];
     Object.keys(values)
       .map(key => {
-        result.push(values[key])
-      })
-    return result
-  }
+        result.push(values[key]);
+      });
+    return result;
+  };
 
 export default modelExtend(model, {
   namespace: 'survey',
@@ -65,7 +65,7 @@ export default modelExtend(model, {
     setup ({ dispatch, history }) {
       history.listen(({ pathname, query }) => {
         if (pathname === '/survey') {
-          const { id = '' } = query
+          const { id = '' } = query;
           dispatch({
             type: 'updateState',
             payload: {
@@ -77,25 +77,26 @@ export default modelExtend(model, {
               issues: {},
               isSubmit: false,
             },
-          })
+          });
           dispatch({
             type: 'query',
             payload: {
               id,
             },
-          })
+          });
         }
-      })
+      });
     },
   },
   effects: {
     * query ({ payload }, { call, put, select }) {
       const { id = '' } = payload,
-        { success, datas = {} } = yield call(getSurvey, { pmk: id })
+        { success, datas = {} } = yield call(getSurvey, { pmk: id });
       if (success) {
-        let { title = '', items = [] } = datas, {
-          lists, values, issues,
-        } = appendItems(items)
+        let { title = '', items = [] } = datas, 
+          {
+            lists, values, issues,
+          } = appendItems(items);
         yield put({
           type: 'updateState',
           payload: {
@@ -104,7 +105,7 @@ export default modelExtend(model, {
             values,
             issues,
           },
-        })
+        });
       }
     },
     * sumbit ({ payload }, { call, put, select }) {
@@ -113,17 +114,17 @@ export default modelExtend(model, {
         payload: {
           isSubmit: true,
         },
-      })
-      const { values, types = 'save' } = payload
-      const result = yield call(submitSurvey, { types, datas: getSubmitValues(values) })
+      });
+      const { values, types = 'save' } = payload;
+      const result = yield call(submitSurvey, { types, datas: getSubmitValues(values) });
       if (result) {
-        yield put(routerRedux.goBack())
+        yield put(routerRedux.goBack());
         yield put({
           type: 'updateSubmit',
           payload: {
             isSubmit: false,
           },
-        })
+        });
       }
     },
   },
@@ -132,7 +133,7 @@ export default modelExtend(model, {
       return {
         ...state,
         ...payload,
-      }
+      };
     },
   },
-})
+});

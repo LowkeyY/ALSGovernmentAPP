@@ -1,40 +1,38 @@
-import {parse} from 'qs'
-import modelExtend from 'dva-model-extend'
-import { model } from 'models/common'
-import { queryDetails } from 'services/querycontent'
+import { parse } from 'qs';
+import modelExtend from 'dva-model-extend';
+import { model } from 'models/common';
+import { queryDetails } from 'services/querycontent';
 
 export default modelExtend(model, {
   namespace: 'patrydetails',
   state: {
-    currentData:{}
+    currentData: {}
   },
   subscriptions: {
-    setup({dispatch, history}) {
+    setup ({ dispatch, history }) {
       history.listen(location => {
-        let {pathname, query} = location;
+        let { pathname, query } = location;
         if (pathname.startsWith('/patrydetails')) {
           dispatch({
             type: 'queryDetails',
             payload: {
-              dataId:query.id
+              dataId: query.id
             }
-          })
-
+          });
         }
-      })
+      });
     }
   },
   effects: {
-    * queryDetails({payload}, {call, put, select}) {
+    * queryDetails ({ payload }, { call, put, select }) {
       const data = yield call(queryDetails, payload);
       yield put({
         type: 'updateState',
         payload: {
-          currentData:data
+          currentData: data
         },
-      })
-
+      });
     },
   }
 
-})
+});

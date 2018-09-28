@@ -1,14 +1,14 @@
-import { request, config, formsubmit } from 'utils'
+import { request, config, formsubmit } from 'utils';
 
-const { api } = config
-const { getSurveyApi, submitSurveyApi } = api
+const { api } = config;
+const { getSurveyApi, submitSurveyApi } = api;
 
 export async function getSurvey (payload) {
   return request({
     url: getSurveyApi,
     method: 'get',
     data: payload,
-  })
+  });
 }
 
 export async function submitSurvey (payload) {
@@ -16,5 +16,5 @@ export async function submitSurvey (payload) {
     url: submitSurveyApi,
     method: 'post',
     data: payload,
-  })
+  });
 }

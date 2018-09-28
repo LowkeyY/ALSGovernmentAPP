@@ -63,7 +63,6 @@ export default modelExtend(model, {
   },
   effects: {
     * query ({ payload }, { call, put, select }) {
-      
       const result = yield call(queryPartyTabs, payload);
       if (result) {
         let { data = [] } = result;
@@ -91,7 +90,6 @@ export default modelExtend(model, {
             });
           }
         }
-        
       }
     },
     * queryListview ({ payload }, { call, put, select }) {
@@ -124,8 +122,7 @@ export default modelExtend(model, {
           },
         });
       }
-      if (callback)
-        callback();
+      if (callback) { callback(); }
     }
   },
   

@@ -48,8 +48,8 @@ function VolunteerDetails ({ location, dispatch, volunteerdetails, app }) {
           result.push(
             <div key={id} className={styles[`${PrefixCls}-listitem`]}>
               <CheckboxItem key={id}
-                            checked={currentSelect.includes(id)}
-                            onClick={() => onClick(id, infoObj)}
+                checked={currentSelect.includes(id)}
+                onClick={() => onClick(id, infoObj)}
               />
               <List style={{ width: '100%', overflow: 'hidden' }}>
                 <Item
@@ -63,7 +63,7 @@ function VolunteerDetails ({ location, dispatch, volunteerdetails, app }) {
                   <span>{sex !== '' ?
                     (sex === '男' ? <Icon size="xxs" type={getLocalIcon('/others/male.svg')} />
                       :
-                      <Icon size="xxs" type={getLocalIcon('/others/female.svg')} />) : ''}</span>
+                    <Icon size="xxs" type={getLocalIcon('/others/female.svg')} />) : ''}</span>
                   <span className={styles[`${PrefixCls}-userinfo-address`]}>{`${ssjdb}-${sssq}`}</span>
                   <Brief>{znyy}</Brief>
                 </Item>
@@ -73,9 +73,9 @@ function VolunteerDetails ({ location, dispatch, volunteerdetails, app }) {
         } else {
           result.push(
             <CheckboxItem key={id}
-                          className={styles[`${PrefixCls}-userinfo`]}
-                          checked={currentSelect.includes(id)}
-                          onClick={() => onClick(id, infoObj)}
+              className={styles[`${PrefixCls}-userinfo`]}
+              checked={currentSelect.includes(id)}
+              onClick={() => onClick(id, infoObj)}
             >
               <Item
                 className={styles[`${PrefixCls}-volunteer-item`]}
@@ -86,7 +86,7 @@ function VolunteerDetails ({ location, dispatch, volunteerdetails, app }) {
                 <span>{sex !== '' ?
                   (sex === '男' ? <Icon size="xxs" type={getLocalIcon('/others/male.svg')} />
                     :
-                    <Icon size="xxs" type={getLocalIcon('/others/female.svg')} />) : ''}</span>
+                  <Icon size="xxs" type={getLocalIcon('/others/female.svg')} />) : ''}</span>
                 <span className={styles[`${PrefixCls}-userinfo-address`]}>{`${ssjdb}-${sssq}`}</span>
                 <Item wrap>{znyy}</Item>
               </Item>
@@ -188,7 +188,6 @@ function VolunteerDetails ({ location, dispatch, volunteerdetails, app }) {
       } else {
         Toast.fail('请至少选择一项');
       }
-      
     },
     renderModal = (data) => {
       return (<div className={styles[`${PrefixCls}-mask`]}>
@@ -264,7 +263,7 @@ function VolunteerDetails ({ location, dispatch, volunteerdetails, app }) {
         <div style={{ position: 'fixed', bottom: 0, width: '100%' }}>
           {isLogin && check_tilte != '' ?
             <List>{<Button type="primary"
-                           onClick={handleSubmits.bind(this, currentData)}
+              onClick={handleSubmits.bind(this, currentData)}
             >{hdlx === '1' ? '我要参与' : '我要投票'}</Button>}</List> : ''}
         </div>
       </div>

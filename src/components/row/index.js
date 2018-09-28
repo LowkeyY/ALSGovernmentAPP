@@ -352,12 +352,12 @@ module.exports = {
     const { title = '', image = '', time = '', isNew = false, infos = '' } = rowData;
     let result = (
       <Item className={styles[`${PrefixCls}-item`]}
-            key={`${PrefixCls}-${sectionID}-${rowID}`}
-            thumb={image || ''}
-            multipleLine
-            wrap
-            arrow="horizontal"
-            onClick={onClick.bind(null, rowData, dispatch, headName)}
+        key={`${PrefixCls}-${sectionID}-${rowID}`}
+        thumb={image || ''}
+        multipleLine
+        wrap
+        arrow="horizontal"
+        onClick={onClick.bind(null, rowData, dispatch, headName)}
       >
         <span>{title}</span>
         {hasDate === 'true' ? <Brief>{time}</Brief> : ''}
@@ -392,7 +392,7 @@ module.exports = {
     );
     
     return !isNew ? result :
-      <Badge key={`badge - ${sectionID} - ${rowID}`} text={'新'} corner>
+    <Badge key={`badge - ${sectionID} - ${rowID}`} text={'新'} corner>
         {result}
       </Badge>;
   },
@@ -464,7 +464,7 @@ module.exports = {
                 <Rate style={{ fontSize: '20px' }} defaultValue={rates} />
               </div>
               <div className={styles[`${PrefixCls}-office-outer-right-info-right`]}
-                   onClick={(e) => e.stopPropagation()}
+                onClick={(e) => e.stopPropagation()}
               >
                 <a href={`tel:${tel}`}>咨询</a>
               </div>
@@ -508,9 +508,9 @@ module.exports = {
           </div>
           {
             isCount > 0 ? <div className={styles[`${PrefixCls}-integral-outer-right-star`]}>
-                <span>{isCount}</span>
-                <span><Icon type={getLocalIcon('/others/star.svg')} /></span>
-              </div>
+              <span>{isCount}</span>
+              <span><Icon type={getLocalIcon('/others/star.svg')} /></span>
+            </div>
               :
               ''
           }
@@ -548,8 +548,8 @@ module.exports = {
             <div className={styles[`${cls}-attrs`]}>
               {images.map((src, i) => (i < 2 ?
                 <div key={i}
-                     className={styles[`${cls}-attrs-img`]}
-                     style={{ backgroundImage: `url(${src})` }}
+                  className={styles[`${cls}-attrs-img`]}
+                  style={{ backgroundImage: `url(${src})` }}
                 /> : ''))}
             </div>
           );
@@ -584,8 +584,8 @@ module.exports = {
           <span>{shState == '2' ? getShtate() : getStatus(state)}</span>
           <span>
             <Tag className={isLogin ? '' : styles[`${cls}-content-status-tag`]}
-                 selected={shoucang}
-                 onChange={handleCollectClick.bind(null, rowData)}
+              selected={shoucang}
+              onChange={handleCollectClick.bind(null, rowData)}
             >
               <Icon type={getLocalIcon('/others/collectionblack.svg')} />
               {shoucang ? <span className={styles[`${cls}-content-status-collection`]}>已收藏</span>
@@ -797,14 +797,15 @@ module.exports = {
     const { image = '' } = rowData;
     return (
       <div key={rowID}
-           className={styles[`${PrefixCls}-special-outer`]}
-           onClick={onClick.bind(null, rowData, dispatch, headName)}>
+        className={styles[`${PrefixCls}-special-outer`]}
+        onClick={onClick.bind(null, rowData, dispatch, headName)}
+      >
         <div className={styles[`${PrefixCls}-special-outer-img`]}>
           <div className={styles[`${PrefixCls}-special-outer-img-image`]} style={{ backgroundImage: `url(${image})` }}>
-            {/*<div className={styles[`${PrefixCls}-special-mask`]}>*/}
-            {/*<h3>{title}</h3>*/}
-            {/*<span>{time}</span>*/}
-            {/*</div>*/}
+            {/* <div className={styles[`${PrefixCls}-special-mask`]}> */}
+            {/* <h3>{title}</h3> */}
+            {/* <span>{time}</span> */}
+            {/* </div> */}
           </div>
         </div>
       </div>
@@ -816,7 +817,8 @@ module.exports = {
       <div
         key={rowID}
         className={styles[`${PrefixCls}-twins-outer`]}
-        onClick={onClick.bind(null, rowData, dispatch, headName)}>
+        onClick={onClick.bind(null, rowData, dispatch, headName)}
+      >
         <div className={styles[`${PrefixCls}-twins-outer-img`]}>
           <div className={styles[`${PrefixCls}-twins-outer-img-image`]} style={{ backgroundImage: `url(${image})` }}>
             <div className={styles[`${PrefixCls}-twins-title`]}>
@@ -831,8 +833,9 @@ module.exports = {
     const { title = '', image = '' } = rowData;
     return (
       <div key={rowID}
-           className={styles[`${PrefixCls}-special-outer`]}
-           onClick={onClick.bind(null, rowData, dispatch, headName)}>
+        className={styles[`${PrefixCls}-special-outer`]}
+        onClick={onClick.bind(null, rowData, dispatch, headName)}
+      >
         <div className={styles[`${PrefixCls}-special-outer-img`]}>
           <div className={styles[`${PrefixCls}-special-outer-img-image`]} style={{ backgroundImage: `url(${image})` }}>
             <div className={styles[`${PrefixCls}-special-title`]}>
@@ -868,12 +871,12 @@ module.exports = {
     const { tel = '', info = '' } = getInfo(infos);
     let result = (
       <Item className={styles[`${PrefixCls}-item`]}
-            key={`${PrefixCls}-${sectionID}-${rowID}`}
-            thumb={image || ''}
-            multipleLine
-            wrap
-            arrow="horizontal"
-            onClick={onClick.bind(null, rowData, dispatch, headName)}
+        key={`${PrefixCls}-${sectionID}-${rowID}`}
+        thumb={image || ''}
+        multipleLine
+        wrap
+        arrow="horizontal"
+        onClick={onClick.bind(null, rowData, dispatch, headName)}
       >
         <span className={styles[`${PrefixCls}-live-title`]}>{title}</span>
         <div className={styles[`${PrefixCls}-live-info`]}>{info}</div>
@@ -902,12 +905,12 @@ module.exports = {
     const { dept = '' } = getInfo(infos);
     let result = (
       <Item className={styles[`${PrefixCls}-item`]}
-            key={`${PrefixCls}-${sectionID}-${rowID}`}
-            thumb={image || ''}
-            multipleLine
-            wrap
-            arrow="horizontal"
-            onClick={onClick.bind(null, rowData, dispatch, headName)}
+        key={`${PrefixCls}-${sectionID}-${rowID}`}
+        thumb={image || ''}
+        multipleLine
+        wrap
+        arrow="horizontal"
+        onClick={onClick.bind(null, rowData, dispatch, headName)}
       >
         <span>{title}</span>
         {dept !== '' ? <Brief>{`办理部门:${dept}`}</Brief> : ''}

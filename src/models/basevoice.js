@@ -1,14 +1,14 @@
-import { parse } from 'qs'
-import modelExtend from 'dva-model-extend'
-import { model } from 'models/common'
-import { getJicengshenying } from 'services/querylist'
+import { parse } from 'qs';
+import modelExtend from 'dva-model-extend';
+import { model } from 'models/common';
+import { getJicengshenying } from 'services/querylist';
 
 const getDefaultPaginations = () => ({
-  current: 1,
-  total: 0,
-  size:10,
-}),
-  namespace = 'basevoice'
+    current: 1,
+    total: 0,
+    size: 10,
+  }),
+  namespace = 'basevoice';
 export default modelExtend(model, {
   namespace: 'basevoice',
   state: {
@@ -28,10 +28,10 @@ export default modelExtend(model, {
         payload: {
           types: 1,
         },
-      })
+      });
       history.listen(({ pathname, query, action }) => {
         if (pathname === '/basevoice') {
-          const { id = '', name = '' } = query
+          const { id = '', name = '' } = query;
           dispatch({
             type: 'updateState',
             payload: {
@@ -40,30 +40,30 @@ export default modelExtend(model, {
               scrollerTop: 0,
               paginations: getDefaultPaginations(),
             },
-          })
+          });
         }
-      })
+      });
     },
   },
 
   effects: {
     * queryListview ({ payload }, { call, put, select }) {
-      const {callback = '', isRefresh = false, selected = -1 } = payload,
+      const { callback = '', isRefresh = false, selected = -1 } = payload,
         _this = yield select(_ => _[`${namespace}`]),
-        {paginations: {current, total, size},lists,selectedIndex} = _this
+        { paginations: { current, total, size }, lists, selectedIndex } = _this;
       if (selected != -1) {
         yield put({
           type: 'updateState',
           payload: {
             selectedIndex: selected,
           },
-        })
+        });
       }
       const start = isRefresh ? 1 : current,
-     { success = true, datas = [],totalCount=0 } = yield call(getJicengshenying,{types:selectedIndex+1, nowPage: start, showCount: size} )
+        { success = true, datas = [], totalCount = 0 } = yield call(getJicengshenying, { types: selectedIndex + 1, nowPage: start, showCount: size });
       if (success) {
-         let newLists = []
-        newLists = start == 1 ? datas : [...lists, ...datas]
+        let newLists = [];
+        newLists = start == 1 ? datas : [...lists, ...datas];
         yield put({
           type: 'updateState',
           payload: {
@@ -72,12 +72,11 @@ export default modelExtend(model, {
               total: totalCount * 1,
               current: start + 1
             },
-            lists:newLists
+            lists: newLists
           },
-        })
+        });
       }
-      if (callback)
-        callback()
+      if (callback) { callback(); }
     },
   },
-})
+});

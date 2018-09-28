@@ -1,44 +1,45 @@
-import { PullToRefresh, Button } from 'antd-mobile'
-import ReactDOM from 'react-dom'
-import { getOffsetTopByBody } from 'utils'
+import { PullToRefresh, Button } from 'antd-mobile';
+import ReactDOM from 'react-dom';
+import { getOffsetTopByBody } from 'utils';
+
 let timer;
 class Comp extends React.Component {
   constructor (props) {
-    super(props)
+    super(props);
     this.state = {
       refreshing: false,
       down: true,
       height: document.documentElement.clientHeight
-    }
+    };
   }
 
   componentDidMount () {
-    let el
+    let el;
     if (this.ptr && (el = ReactDOM.findDOMNode(this.ptr))) {
-      if (this.props.sibilingsHasBanner) {//判断是否有banner默认false
+      if (this.props.sibilingsHasBanner) { // 判断是否有banner默认false
         window.addEventListener('resize', () => {
-          const hei = cnhtmlHeight - getOffsetTopByBody(el) - cnhtmlSize
-       if(this._isMounted){
-         setTimeout(() => this.setState({
-           height: hei,
-         }), 100)
-       }
-        })
+          const hei = cnhtmlHeight - getOffsetTopByBody(el) - cnhtmlSize;
+          if (this._isMounted) {
+            setTimeout(() => this.setState({
+              height: hei,
+            }), 100);
+          }
+        });
       } else {
-        const hei = cnhtmlHeight - getOffsetTopByBody(el) - cnhtmlSize
-         if(this._isMounted){
-           setTimeout(() => this.setState({
-             height: hei,
-           }), 100)
-         }
+        const hei = cnhtmlHeight - getOffsetTopByBody(el) - cnhtmlSize;
+        if (this._isMounted) {
+          setTimeout(() => this.setState({
+            height: hei,
+          }), 100);
+        }
       }
     }
   }
-  componentWillMount(){
-    this._isMounted = true
+  componentWillMount () {
+    this._isMounted = true;
   }
   componentWillUnmount () {
-    this._isMounted = false
+    this._isMounted = false;
   }
 
   render () {
@@ -55,14 +56,14 @@ class Comp extends React.Component {
       direction={this.state.down ? 'down' : 'up'}
       refreshing={this.state.refreshing}
       onRefresh={() => {
-        this.setState({ refreshing: true })
+        this.setState({ refreshing: true });
         setTimeout(() => {
-          this.setState({ refreshing: false })
-        }, 1000)
+          this.setState({ refreshing: false });
+        }, 1000);
       }}
     >
       {this.props.children || ''}
-    </PullToRefresh>)
+    </PullToRefresh>);
   }
 
   static defaultProps = {
@@ -71,4 +72,4 @@ class Comp extends React.Component {
   }
 }
 
-export default Comp
+export default Comp;

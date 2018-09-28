@@ -24,16 +24,17 @@ class Setup extends React.Component {
     prompt('修改昵称', '', [
       { text: '取消' },
       {
-        text: '确定', onPress: value => {
-        this.props.dispatch({
-          type: 'setup/setUserInfo',
-          payload: {
-            params: { realName: value },
-            images: {},
-            mediaFile: {},
-          },
-        });
-      },
+        text: '确定',
+        onPress: value => {
+          this.props.dispatch({
+            type: 'setup/setUserInfo',
+            payload: {
+              params: { realName: value },
+              images: {},
+              mediaFile: {},
+            },
+          });
+        },
       },
     ], 'default', `${user}`);
   };
@@ -83,19 +84,22 @@ class Setup extends React.Component {
     return (
       <div
         style={{ maxHeight: '60vh', overflowY: 'scroll', textAlign: 'left' }}
-        dangerouslySetInnerHTML={{ __html: content }} />
+        dangerouslySetInnerHTML={{ __html: content }}
+      />
     );
   };
   handleUpdateClick = (urls, appVerSion, updateInfo) => {
     if (urls !== '') {
       Modal.alert(`版本更新(${appVerSion})`, this.getContent(updateInfo), [
         {
-          text: '暂不升级', onPress: () => this.props.dispatch({
-          type: 'app/updateState',
-          payload: {
-            showModal: false,
-          },
-        }), style: 'default',
+          text: '暂不升级',
+          onPress: () => this.props.dispatch({
+            type: 'app/updateState',
+            payload: {
+              showModal: false,
+            },
+          }),
+          style: 'default',
         },
         { text: '立刻升级', onPress: () => cnUpdate(urls) },
       ]);
@@ -124,7 +128,7 @@ class Setup extends React.Component {
         accept: 'image/*',
         dataType: 'json',
         fileFieldName: 'photo',
-        chooseFile: function (files) {
+        chooseFile (files) {
           // beforeIconChange();
           doUserAvatarUpload(SetUpAPi, {}, {
             photo: files[0],
@@ -151,7 +155,7 @@ class Setup extends React.Component {
             <Item>
               <div className={`${PrefixCls}-user-icon-upload`}>
                 <FileUpload options={options}>
-                  <p className={'icon-title-avatar'} ref='chooseBtn'>
+                  <p className={'icon-title-avatar'} ref="chooseBtn">
                     <span>更换头像</span>
                   </p>
                   <div className={'icon-img-box'}>

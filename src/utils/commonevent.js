@@ -20,7 +20,7 @@ const handleGridClick = ({ route = '', title, externalUrl = '', infos = '', ...o
           pathname: 'iframe',
           query: {
             name: title,
-            externalUrl: externalUrl,
+            externalUrl,
           },
         }));
       }
@@ -67,28 +67,26 @@ const handleGridClick = ({ route = '', title, externalUrl = '', infos = '', ...o
           pathname: 'iframe',
           query: {
             name: title,
-            externalUrl: externalUrl,
+            externalUrl,
           },
         }));
       }
+    } else if (route === 'details') {
+      dispatch(routerRedux.push({
+        pathname: `/${route}`,
+        query: {
+          name,
+          dataId: id,
+        },
+      }));
     } else {
-      if (route === 'details') {
-        dispatch(routerRedux.push({
-          pathname: `/${route}`,
-          query: {
-            name,
-            dataId: id,
-          },
-        }));
-      } else {
-        dispatch(routerRedux.push({
-          pathname: `/${route}`,
-          query: {
-            name: title,
-            id,
-          },
-        }));
-      }
+      dispatch(routerRedux.push({
+        pathname: `/${route}`,
+        query: {
+          name: title,
+          id,
+        },
+      }));
     }
   },
   handleTopLineClick = (data, dispatch) => {
@@ -111,7 +109,6 @@ const handleGridClick = ({ route = '', title, externalUrl = '', infos = '', ...o
         },
       }));
     }
-    
   },
   handleListClick = ({ externalUrl = '', id, infos = '' }, dispatch, title = '') => {
     if (externalUrl !== '' && externalUrl.startsWith('http')) {
@@ -122,7 +119,7 @@ const handleGridClick = ({ route = '', title, externalUrl = '', infos = '', ...o
           pathname: 'iframe',
           query: {
             name: title,
-            externalUrl: externalUrl,
+            externalUrl,
           },
         }));
       }
@@ -141,7 +138,7 @@ const handleGridClick = ({ route = '', title, externalUrl = '', infos = '', ...o
         }
       } else {
         dispatch(routerRedux.push({
-          pathname: `/details`,
+          pathname: '/details',
           query: {
             name: title,
             dataId: id,

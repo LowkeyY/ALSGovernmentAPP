@@ -60,7 +60,8 @@ export default modelExtend(model, {
   },
   effects: {
     * query ({ payload }, { call, put, select }) {
-      const data = yield call(queryDetails, { ...payload }), { content = '', isClick, dzSum } = data,
+      const data = yield call(queryDetails, { ...payload }), 
+        { content = '', isClick, dzSum } = data,
         viewImages = getViewIamges(content);
       yield put({
         type: 'updateState',
@@ -88,8 +89,6 @@ export default modelExtend(model, {
       } else {
         Toast.fail(message);
       }
-      
-      
     },
     * getStudyTime ({ payload }, { call, put }) {
       const data = yield call(GetStudyTime, payload);

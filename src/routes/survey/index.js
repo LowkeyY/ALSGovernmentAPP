@@ -57,15 +57,16 @@ function Comp ({ location, dispatch, survey, form }) {
     layoutInputItem = (list) => {
       const { title = '', items = [], isRequired = false, id } = list;
       return (<List renderHeader={() => <span className={styles[`${PrefixCls}-list-title`]}>{title}</span>}>
-          {items.map(item => {
-            const { value = '', label = '' } = item;
-            return label && value ?
-              <CheckboxItem key={value}
-                            checked={values[id] && values[id].includes(value)}
-                            onChange={handleOnChange.bind(null, list, value)}> {label}
-              </CheckboxItem> : '';
-          })}
-        </List>
+        {items.map(item => {
+          const { value = '', label = '' } = item;
+          return label && value ?
+            <CheckboxItem key={value}
+              checked={values[id] && values[id].includes(value)}
+              onChange={handleOnChange.bind(null, list, value)}
+            > {label}
+            </CheckboxItem> : '';
+        })}
+      </List>
       );
     };
   return (
@@ -81,7 +82,8 @@ function Comp ({ location, dispatch, survey, form }) {
               {lists.map(list => layoutInputItem(list))}
             </Card.Body>
             <Card.Footer
-              content={<Button type="primary" loading={isSubmit} onClick={isSubmit ? '' : handleSubmits}>提交</Button>} />
+              content={<Button type="primary" loading={isSubmit} onClick={isSubmit ? '' : handleSubmits}>提交</Button>}
+            />
           </Card>
         </WingBlank>
       </div>

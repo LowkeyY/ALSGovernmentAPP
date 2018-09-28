@@ -9,8 +9,8 @@ import TitleBox from 'components/titlecontainer';
 const PrefixCls = 'task110Details';
 
 function Task110Details ({ location, dispatch, task110Details }) {
-  
-  const { currentData } = task110Details, { name } = location.query,
+  const { currentData } = task110Details, 
+    { name } = location.query,
     { city, miaoshu, creatDate, title, tels, province, creatUserId, stree_number, creatUser, district, stree, id } = currentData,
     handlereplyClick = (id, status) => {
       dispatch({
@@ -37,7 +37,8 @@ function Task110Details ({ location, dispatch, task110Details }) {
             <a href={`tel:${tels}`}>
               <Icon type={getLocalIcon('/others/call.svg')} size="lg" /></a></div>
           <div
-            className={styles[`${PrefixCls}-info-address`]}>{`地址：${province} ${city} ${stree} ${stree_number} ${district}`}</div>
+            className={styles[`${PrefixCls}-info-address`]}
+          >{`地址：${province} ${city} ${stree} ${stree_number} ${district}`}</div>
         </div>
         <WhiteSpace />
         <TitleBox title={'任务描述'} />
@@ -46,17 +47,19 @@ function Task110Details ({ location, dispatch, task110Details }) {
           <Button
             type="ghost"
             inline
-            onClick={handlereplyClick.bind(this,id,'接受转投')}
+            onClick={handlereplyClick.bind(this, id, '接受转投')}
             size="small"
-            style={{ borderColor: 'green', color: 'green', marginRight: '20px' }}>
+            style={{ borderColor: 'green', color: 'green', marginRight: '20px' }}
+          >
             接受转投
           </Button>
           <Button
             type="ghost"
             inline
-            onClick={handlereplyClick.bind(this,id,'不接受转投')}
+            onClick={handlereplyClick.bind(this, id, '不接受转投')}
             size="small"
-            style={{ borderColor: 'red', color: 'red' }}>
+            style={{ borderColor: 'red', color: 'red' }}
+          >
             不接受转投
           </Button>
         </div>

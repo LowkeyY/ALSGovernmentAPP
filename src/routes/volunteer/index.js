@@ -30,10 +30,10 @@ function Volunteer ({ location, dispatch, volunteer }) {
         result.push(
           <div className={styles[`${PrefixCls}-list`]}>
             <Item className={styles[`${PrefixCls}-box`]}
-                  thumb={list.image || ''}
-                  multipleLine
-                  wrap
-                  onClick={handleItemOnclick.bind(null, list)}
+              thumb={list.image || ''}
+              multipleLine
+              wrap
+              onClick={handleItemOnclick.bind(null, list)}
             >
               <span>{list.title}</span>
               <Brief>
@@ -46,7 +46,7 @@ function Volunteer ({ location, dispatch, volunteer }) {
                   <span>{list.address}</span>
                 </p>
               </Brief>
-            </Item>,
+            </Item>
             <div className={styles[`${PrefixCls}-list-state`]}>{list.state}</div>
           </div>
         );
@@ -78,14 +78,14 @@ function Volunteer ({ location, dispatch, volunteer }) {
     <div className={styles[`${PrefixCls}-outer`]}>
       <Nav title={name} dispatch={dispatch} />
       <Tabs tabs={grids}
-            initialPage={selectedIndex}
-            swipeable={false}
-            onChange={(tab, index) => {
-              handleTabClick(tab, index);
-            }}
-            onTabClick={(tab, index) => {
-              handleTabClick(tab, index);
-            }}
+        initialPage={selectedIndex}
+        swipeable={false}
+        onChange={(tab, index) => {
+          handleTabClick(tab, index);
+        }}
+        onTabClick={(tab, index) => {
+          handleTabClick(tab, index);
+        }}
       >
         {getContent()}
       </Tabs>

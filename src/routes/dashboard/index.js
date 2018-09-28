@@ -13,11 +13,13 @@ import HeadLine from 'components/headline';
 import { handleGridClick, handleTopLineClick, handleListClick } from 'utils/commonevent';
 
 const PrefixCls = 'dashboard',
-  Item = List.Item
+  Item = List.Item;
 
 function Dashboard ({ dashboard, loading, dispatch, app }) {
   const { Header } = Layout,
-    { bannerDatas, isScroll, grids, selectedIndex = 0, weath, newsList, scrollerTop, newsData } = dashboard, { isLogin } = app, { headTitle = '动态新闻' } = newsData;
+    { bannerDatas, isScroll, grids, selectedIndex = 0, weath, newsList, scrollerTop, newsData } = dashboard, 
+    { isLogin } = app, 
+    { headTitle = '动态新闻' } = newsData;
   
   const getWeather = (weath) => {
       const { date = '', type = '', notice = '', fl = '', fx = '', high = '', low = '' } = weath;
@@ -29,7 +31,7 @@ function Dashboard ({ dashboard, loading, dispatch, app }) {
     handleMoreCilck = (newsData = {}) => {
       const { id = '', headTitle = '' } = newsData;
       dispatch(routerRedux.push({
-        pathname: `/lanmusub`,
+        pathname: '/lanmusub',
         query: {
           name: '动态新闻',
           id,
@@ -37,7 +39,7 @@ function Dashboard ({ dashboard, loading, dispatch, app }) {
       }));
     },
     headLineProps = {
-      bannerDatas: bannerDatas,
+      bannerDatas,
       handleClick: handleTopLineClick,
     },
     handleScroll = (e) => {
@@ -68,7 +70,7 @@ function Dashboard ({ dashboard, loading, dispatch, app }) {
           );
         });
       result.push(
-        <Menu handleGridClick={handleGridClick} dispatch={dispatch} datas={grids} columnNum={4} isCarousel={true} />,
+        <Menu handleGridClick={handleGridClick} dispatch={dispatch} datas={grids} columnNum={4} isCarousel />,
       );
       
       return result;
@@ -118,8 +120,8 @@ function Dashboard ({ dashboard, loading, dispatch, app }) {
         <HeadLine {...headLineProps} dispatch={dispatch} selectedIndex={selectedIndex} datas={getWeather(weath)} />
       </div>
       <div className={styles[`${PrefixCls}-outer-content`]}>{getContent()}</div>
-      <WhiteSpace size='xs' />
-      <TitleBox title={headTitle} more={true} handleClick={handleMoreCilck.bind(null, newsData)} />
+      <WhiteSpace size="xs" />
+      <TitleBox title={headTitle} more handleClick={handleMoreCilck.bind(null, newsData)} />
       <div className={styles[`${PrefixCls}-container`]}>
         {newsList.length > 0 && getContents(newsList[0], dispatch)}
       </div>

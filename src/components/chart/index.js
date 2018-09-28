@@ -49,7 +49,6 @@ const defs = [{
 }];
 
 class Charts extends React.Component {
-  
   render () {
     return (
       <Chart width="100%" data={this.props.data || []} defs={defs} pixelRatio={pixelRatio}>

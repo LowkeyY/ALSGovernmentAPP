@@ -1,7 +1,7 @@
 import { request, config, formsubmit } from 'utils';
 
 const { api } = config;
-const { GetCommunityListApi, GetCommunityDetailsApi, JoinCommunityApi, GetJoinCommunityInputApi,SendJoinCommunityApi } = api;
+const { GetCommunityListApi, GetCommunityDetailsApi, JoinCommunityApi, GetJoinCommunityInputApi, SendJoinCommunityApi } = api;
 
 export async function SendJoinCommunity (params = {}, images, files) {
   return formsubmit(SendJoinCommunityApi, params, images, files, true);

@@ -1,29 +1,28 @@
-import {Icon} from 'components'
-import {getLocalIcon} from 'utils'
-import styles from './index.less'
+import { Icon } from 'components';
+import { getLocalIcon } from 'utils';
+import styles from './index.less';
 
 
 function Css3Loading (props) {
-  return(
-    <div style={{display:props.show?'block':'none'}}  >
-      <Icon type={getLocalIcon('/others/cssloading.svg')}/>
+  return (
+    <div style={{ display: props.show ? 'block' : 'none' }} >
+      <Icon type={getLocalIcon('/others/cssloading.svg')} />
     </div>
 
-  )
-
+  );
 }
 
 function LoadingFail (props) {
   return (
-    <div><Icon type={getLocalIcon('/others/loadingfail.svg')}/></div>
-  )
+    <div><Icon type={getLocalIcon('/others/loadingfail.svg')} /></div>
+  );
 }
 
 Css3Loading.defaultProps = {
-  show:true
-}
+  show: true
+};
 
-module.exports={
+module.exports = {
   Css3Loading,
   LoadingFail
-}
+};

@@ -44,15 +44,15 @@ function TwinsBox ({ location, dispatch, twinsbox }) {
         hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total),
         result = [];
       result.push(
-          <ListView layoutHeader={''}
-                    dataSource={lists}
-                    layoutRow={(rowData, sectionID, rowID) => twinsRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
-                    onEndReached={onEndReached}
-                    onRefresh={onRefresh}
-                    hasMore={hasMore}
-                    onScrollerTop={onScrollerTop.bind(null)}
-                    scrollerTop={scrollerTop}
-          />
+        <ListView layoutHeader={''}
+          dataSource={lists}
+          layoutRow={(rowData, sectionID, rowID) => twinsRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
+          onEndReached={onEndReached}
+          onRefresh={onRefresh}
+          hasMore={hasMore}
+          onScrollerTop={onScrollerTop.bind(null)}
+          scrollerTop={scrollerTop}
+        />
       );
       
       return result;
@@ -60,7 +60,7 @@ function TwinsBox ({ location, dispatch, twinsbox }) {
     bannerProps = {
       datas: bannerDatas,
       handleClick: handleBannerClick,
-      dispatch: dispatch,
+      dispatch,
       name
     },
     handleSearchClick = ({ id = '' }) => {

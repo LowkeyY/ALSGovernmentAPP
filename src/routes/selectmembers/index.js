@@ -7,7 +7,8 @@ import TitleBox from 'components/titlecontainer';
 import styles from './index.less';
 
 
-const PrefixCls = 'selectmembers', alert = Modal.alert;
+const PrefixCls = 'selectmembers', 
+  alert = Modal.alert;
 const CheckboxItem = Checkbox.CheckboxItem;
 
 function Selectmembers ({ location, dispatch, selectmembers }) {
@@ -21,16 +22,16 @@ function Selectmembers ({ location, dispatch, selectmembers }) {
       return newArr || [];
     },
     getSelectUsers = (currentSelect) => {
-      return <div>
+      return (<div>
         <div>已选择下发人员</div>
         {getItems(currentSelect).map(data => (
-          <div style={{ color: "#108ee9" }}>{data}</div>
+          <div style={{ color: '#108ee9' }}>{data}</div>
         ))}
-      </div>;
+      </div>);
     },
     
     submit = (currentSelect, isWork) => {
-      const isBack = isWork === '2' ? true : false;
+      const isBack = isWork === '2';
       let newArr = [];
       currentSelect && currentSelect.map((data, i) => {
         newArr.push(data.userId);
@@ -39,7 +40,7 @@ function Selectmembers ({ location, dispatch, selectmembers }) {
         type: `${PrefixCls}/submit`,
         payload: {
           pageType: 'creat',
-          isBack: isBack,
+          isBack,
           cldw: newArr.join(),
           taskId,
           workId,
@@ -49,7 +50,6 @@ function Selectmembers ({ location, dispatch, selectmembers }) {
     },
     handleNavClick = (currentSelect) => {
       if (currentSelect.length > 0) {
-        
         alert('确定发布？', <div>{getSelectUsers(currentSelect)}</div>, [
           { text: '再想想', onPress: () => console.log('ok') },
           { text: '确定发布', onPress: submit.bind(this, currentSelect, isWork) },
@@ -57,7 +57,6 @@ function Selectmembers ({ location, dispatch, selectmembers }) {
       } else {
         Toast.fail('您还没有选择下发对象');
       }
-      
     },
     // handleSearchClick = () => {
     //   dispatch(routerRedux.push({
@@ -81,15 +80,13 @@ function Selectmembers ({ location, dispatch, selectmembers }) {
       dispatch({
         type: 'selectmembers/queryMembers',
       });
-      console.log(currentSelect)
+      console.log(currentSelect);
     },
     handleSelectClick = (key) => {
-      let newSelect = [], index = -1;
+      let newSelect = [], 
+        index = -1;
       if ((index = currentSelect.indexOf(key)) !==
-        -1)
-        newSelect = [...currentSelect.slice(0, index), ...currentSelect.slice(index + 1)];
-      else
-        newSelect = [...currentSelect, key];
+        -1) { newSelect = [...currentSelect.slice(0, index), ...currentSelect.slice(index + 1)]; } else { newSelect = [...currentSelect, key]; }
       dispatch({
         type: `${PrefixCls}/updateState`,
         payload: {

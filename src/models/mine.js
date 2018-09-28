@@ -1,7 +1,8 @@
-import {parse} from 'qs'
-import modelExtend from 'dva-model-extend'
-import { model } from 'models/common'
-import { GetUnreadMessage } from 'services/querylist'
+import { parse } from 'qs';
+import modelExtend from 'dva-model-extend';
+import { model } from 'models/common';
+import { GetUnreadMessage } from 'services/querylist';
+
 export default modelExtend(model, {
   namespace: 'mine',
   state: {
@@ -10,30 +11,31 @@ export default modelExtend(model, {
   subscriptions: {
     setupHistory ({ dispatch, history }) {
       history.listen(({ pathname, query, action }) => {
-        if (pathname ==='/mine') {
+        if (pathname === '/mine') {
           dispatch({
             type: 'queryMessage',
-          })
+          });
         }
-      })
+      });
     }
     ,
   },
   effects: {
     * queryMessage ({ payload }, { call, put, select }) {
-      const { isLogin = false } = yield select(_ => _.app)
+      const { isLogin = false } = yield select(_ => _.app);
       if (isLogin) {
-        const data = yield call(GetUnreadMessage), { success, noViewCount = 0 } = data
+        const data = yield call(GetUnreadMessage), 
+          { success, noViewCount = 0 } = data;
         if (success) {
           yield put({
             type: 'app/updateState',
             payload: {
-              noViewCount:noViewCount*1,
+              noViewCount: noViewCount * 1,
             },
-          })
+          });
         }
       }
     }
   }
 
-})
+});

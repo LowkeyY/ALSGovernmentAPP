@@ -22,18 +22,18 @@ const Menu = (props) => {
   return (
     <div className={styles[`${PrefixCls}-outer`]}>
       <Grid data={getDatas(props.datas || [])}
-            columnNum={props.columnNum || 3}
-            hasLine={false}
-            isCarousel={props.isCarousel || false}
-            onClick={
-              (data, index) => {
-                const param = {
-                  pathname: data.route,
-                  ...data,
-                };
-                props.handleGridClick(param, props.dispatch, props.isLogin);
-              }
-            }
+        columnNum={props.columnNum || 3}
+        hasLine={false}
+        isCarousel={props.isCarousel || false}
+        onClick={
+          (data, index) => {
+            const param = {
+              pathname: data.route,
+              ...data,
+            };
+            props.handleGridClick(param, props.dispatch, props.isLogin);
+          }
+        }
       />
     </div>
   );

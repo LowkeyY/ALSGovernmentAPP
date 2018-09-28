@@ -62,7 +62,7 @@ const datas1 = [
       '第十三条　本条例自2016年7月8日起施行。此前发布的有关问责的规定，凡与本条例不一致的，按照本条例执行。'],
     createDate: '2018-5-12',
   },
-]
+];
 const datas2 = [
   {
     title: '[民情日记]扶贫助困　奉献爱心',
@@ -88,7 +88,7 @@ const datas2 = [
     contents: ['', ''],
     createDate: '2018-5-12',
   },
-]
+];
 const datas3 = [
   {
     title: '[我是共产党员]我是共产党员',
@@ -126,12 +126,11 @@ const datas3 = [
       '完成情况：已完成'],
     createDate:
       '2018-5-08',
-  }
-  ,
+  },  
 
-]
+];
 export default {
   0: datas1,
   1: datas2,
   2: datas3,
-}
+};

@@ -22,7 +22,6 @@ export default modelExtend(model, {
   },
   subscriptions: {
     setup ({ dispatch, history }) {
-      
       history.listen(({ pathname, query, action }) => {
         if (pathname === '/volunteerdetails') {
           if (action === 'PUSH') {

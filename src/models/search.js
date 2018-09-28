@@ -1,15 +1,15 @@
-import modelExtend from 'dva-model-extend'
-import {model} from './common'
-import {ListView} from 'antd-mobile'
-import {queryAppealType, queryAppealList} from 'services/queryappeal'
-import {queryPartyTabs, queryPartyData} from 'services/querylist'
+import modelExtend from 'dva-model-extend';
+import { model } from './common';
+import { ListView } from 'antd-mobile';
+import { queryAppealType, queryAppealList } from 'services/queryappeal';
+import { queryPartyTabs, queryPartyData } from 'services/querylist';
 
 const namespace = 'search',
   appendFilters = {
     appeal: [{
-      'cntype': 'radio',
-      'key': 'showType',
-      'items': [{
+      cntype: 'radio',
+      key: 'showType',
+      items: [{
         text: '全部诉求',
         value: 1,
       }, {
@@ -21,73 +21,73 @@ const namespace = 'search',
       }],
     }],
     startDate: [{
-      'cntype': 'date',
-      'key': 'startdate',
-      'title': '开始日期',
+      cntype: 'date',
+      key: 'startdate',
+      title: '开始日期',
     }],
     endDate: [{
-      'cntype': 'date',
-      'key': 'enddate',
-      'title': '截止日期',
+      cntype: 'date',
+      key: 'enddate',
+      title: '截止日期',
     }],
   },
   checkAppealData = (datas = []) => {
-    const result = []
+    const result = [];
     if (datas.length > 0) {
       result.push({
         text: '全部',
         value: '_all',
-      })
+      });
     }
     datas.map(data => {
-      const {name = '', value} = data
-      if (name && typeof(value) != 'undefined') {
-        result.push({text: name, value})
+      const { name = '', value } = data;
+      if (name && typeof (value) !== 'undefined') {
+        result.push({ text: name, value });
       }
-    })
-    return result
+    });
+    return result;
   },
-  appendDefaultFilterValues = (filters) => {//单选 添加默认值 (第一个)
-    const result = {}
+  appendDefaultFilterValues = (filters) => { // 单选 添加默认值 (第一个)
+    const result = {};
     filters.map(filter => {
-      let {key = '', cntype = '', items = []} = filter,
-        count = 0
+      let { key = '', cntype = '', items = [] } = filter,
+        count = 0;
       if (key != '' && cntype == 'radio' && items.length > 0) {
         items.map(item => {
-          const {value = null} = item
+          const { value = null } = item;
           if (value != null && count == 0) {
-            result[key] = [value]
-            count++
+            result[key] = [value];
+            count++;
           }
-        })
+        });
       }
-    })
-    return result
+    });
+    return result;
   },
   checkLanmuData = (datas = []) => {
-    const result = []
+    const result = [];
     if (datas.length > 1) {
       result.push({
         text: '全部',
         value: '_all',
-      })
+      });
     }
     datas.map(data => {
-      const {title = '', id = ''} = data
-      if (title && typeof(id) != 'undefined') {
-        result.push({text: title, value: id})
+      const { title = '', id = '' } = data;
+      if (title && typeof (id) !== 'undefined') {
+        result.push({ text: title, value: id });
       }
-    })
-    return result
+    });
+    return result;
   },
   checkPostParams = (filterValues = {}) => {
-    const result = {}
+    const result = {};
     Object.keys(filterValues)
       .map(key => {
-        let value = filterValues[key]
-        result[key] = cnIsArray(value) ? value.join(',') : value
-      })
-    return result
+        let value = filterValues[key];
+        result[key] = cnIsArray(value) ? value.join(',') : value;
+      });
+    return result;
   },
   getInitState = () => ({
     filters: [],
@@ -103,23 +103,23 @@ const namespace = 'search',
     current: 1,
     total: 0,
     size: 10,
-  })
+  });
 
 export default modelExtend(model, {
   namespace,
   state: {
-    //初始参数
+    // 初始参数
     ...getInitState(),
     scrollerTop: 0,
     paginations: getDefaultPaginations(),
   },
   subscriptions: {
-    setup({dispatch, history}) {
-      history.listen(({pathname, query, action}) => {
+    setup ({ dispatch, history }) {
+      history.listen(({ pathname, query, action }) => {
         if (pathname === `/${namespace}`) {
-          const {router = 'lanmu', id = ''} = query
+          const { router = 'lanmu', id = '' } = query;
           if (action == 'PUSH') {
-            dispatch({ //重置默认搜索参数
+            dispatch({ // 重置默认搜索参数
               type: 'updateState',
               payload: {
                 ...getInitState(),
@@ -128,43 +128,43 @@ export default modelExtend(model, {
                 scrollerTop: 0,
                 paginations: getDefaultPaginations(),
               },
-            })
+            });
             dispatch({
               type: 'query',
               payload: {
                 router,
                 id,
               },
-            })
+            });
           }
         }
-      })
+      });
     },
   },
   effects: {
-    * query({payload}, {call, put, select}) {
-      let {router, id} = payload,
+    * query ({ payload }, { call, put, select }) {
+      let { router, id } = payload,
         result = {},
-        filters = []
+        filters = [];
       if (router == 'appeal') {
-        result = yield call(queryAppealType)
-        let {datas = '[]', success = false} = result
+        result = yield call(queryAppealType);
+        let { datas = '[]', success = false } = result;
         if (success) {
           filters = [{
-            'cntype': 'radio',
-            'key': 'type',
-            'items': checkAppealData(JSON.parse(datas)),
-          }, ...appendFilters.appeal, ...appendFilters.startDate, ...appendFilters.endDate]
+            cntype: 'radio',
+            key: 'type',
+            items: checkAppealData(JSON.parse(datas)),
+          }, ...appendFilters.appeal, ...appendFilters.startDate, ...appendFilters.endDate];
         }
       } else {
-        result = yield call(queryPartyTabs, {dataId: id})
-        let {data = [], tuijian = [], success = false} = result
+        result = yield call(queryPartyTabs, { dataId: id });
+        let { data = [], tuijian = [], success = false } = result;
         if (success) {
           filters = [{
-            'cntype': 'radio',
-            'key': 'lanmuId',
-            'items': checkLanmuData([...data, ...tuijian]),
-          }, ...appendFilters.startDate, ...appendFilters.endDate]
+            cntype: 'radio',
+            key: 'lanmuId',
+            items: checkLanmuData([...data, ...tuijian]),
+          }, ...appendFilters.startDate, ...appendFilters.endDate];
         }
       }
       yield put({
@@ -173,20 +173,19 @@ export default modelExtend(model, {
           filters,
           filterValues: appendDefaultFilterValues(filters),
         },
-      })
-    }
-    ,
-    * search({payload = {}}, {call, put, select}) {
-      const {callback = ''} = payload
+      });
+    },    
+    * search ({ payload = {} }, { call, put, select }) {
+      const { callback = '' } = payload;
       const _this = yield select(_ => _[`${namespace}`]),
-        {filterValues, id, router, searchText, paginations: {current, total, size}, lists} = _this,
+        { filterValues, id, router, searchText, paginations: { current, total, size }, lists } = _this,
         params = checkPostParams(filterValues),
-        start = current
+        start = current;
       if (router == 'appeal') {
-        const result = yield call(queryAppealList, {...params, searchText, nowPage: start, showCount: size})
-        const {data = [], success = false, totalCount} = result
-        let newLists = []
-        newLists = start == 1 ? data : [...lists, ...data]
+        const result = yield call(queryAppealList, { ...params, searchText, nowPage: start, showCount: size });
+        const { data = [], success = false, totalCount } = result;
+        let newLists = [];
+        newLists = start == 1 ? data : [...lists, ...data];
         if (success) {
           yield put({
             type: 'updateState',
@@ -199,10 +198,10 @@ export default modelExtend(model, {
                 current: start + 1,
               },
             },
-          })
+          });
         }
         if (callback) {
-          callback()
+          callback();
         }
       } else {
         const result = yield call(queryPartyData, {
@@ -211,10 +210,10 @@ export default modelExtend(model, {
           ...params,
           nowPage: start,
           showCount: size,
-        })
-        const {data = [], success = false, totalCount} = result
-        let newLists = []
-        newLists = start == 1 ? data : [...lists, ...data]
+        });
+        const { data = [], success = false, totalCount } = result;
+        let newLists = [];
+        newLists = start == 1 ? data : [...lists, ...data];
         if (success) {
           yield put({
             type: 'updateState',
@@ -227,15 +226,14 @@ export default modelExtend(model, {
                 current: start + 1,
               },
             },
-          })
+          });
         }
         if (callback) {
-          callback()
+          callback();
         }
       }
-
     }
     ,
   },
   reducers: {},
-})
+});

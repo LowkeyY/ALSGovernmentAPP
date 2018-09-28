@@ -13,7 +13,7 @@ import bg from '../../themes/images/others/greenbg.png';
 import { handleGridClick, handleBannerClick, handleListClick } from 'utils/commonevent';
 
 const PrefixCls = 'ecology',
-  Item = List.Item
+  Item = List.Item;
 
 function Ecology ({ location, dispatch, ecology }) {
   const { name = '' } = location.query,

@@ -13,8 +13,6 @@ function MpaDiv (props) {
   return (
     <div key={id} className={styles.box} style={css} onClick={props.handleClick.bind(this, props.datas)} />
   );
-  
-  
 }
 
 MpaDiv.defaultProps = {

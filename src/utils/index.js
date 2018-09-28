@@ -26,7 +26,7 @@ String.prototype.humpToHyphen = function () {
 // 日期格式化
 const DateChange = function (format) {
   let date = new Date(format);
-  let newDate = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+  let newDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
   return newDate;
 };
 
@@ -165,10 +165,7 @@ const hasSystemEmoji = (content) => {
   return content.match(new RegExp(ranges.join('|'), 'g'));
 };
 const getTitle = (title) => {
-  
-    return title.length>8?title.substring(0,7) + '...':title;
-  
-  
+  return title.length > 8 ? `${title.substring(0, 7)}...` : title;
 };
 module.exports = {
   config,

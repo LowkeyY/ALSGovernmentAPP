@@ -47,13 +47,13 @@ function Comp ({ location, dispatch, lanmusub }) {
         result = [];
       result.push(
         <ListView layoutHeader={''}
-                  dataSource={lists}
-                  layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
-                  onEndReached={onEndReached}
-                  onRefresh={onRefresh}
-                  hasMore={hasMore}
-                  onScrollerTop={onScrollerTop.bind(null)}
-                  scrollerTop={scrollerTop}
+          dataSource={lists}
+          layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
+          onEndReached={onEndReached}
+          onRefresh={onRefresh}
+          hasMore={hasMore}
+          onScrollerTop={onScrollerTop.bind(null)}
+          scrollerTop={scrollerTop}
         />
       );
       
@@ -62,7 +62,7 @@ function Comp ({ location, dispatch, lanmusub }) {
     bannerProps = {
       datas: bannerDatas,
       handleClick: handleBannerClick,
-      dispatch: dispatch,
+      dispatch,
       name
     },
     handleSearchClick = ({ id = '' }) => {

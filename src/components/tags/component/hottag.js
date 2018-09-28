@@ -2,14 +2,15 @@
 import React from 'react';
 import { Link } from 'dva/router';
 import { connect } from 'dva';
-import styles from '../index.less'
+import styles from '../index.less';
+
 const PrefixCls = 'tags';
 
 class Hottag extends React.Component {
-  render() {
+  render () {
     return (
-      <div style={ { display: "inline-block" } }>
-        <div className={ styles[`${PrefixCls}-hot-tag`] }>
+      <div style={{ display: 'inline-block' }}>
+        <div className={styles[`${PrefixCls}-hot-tag`]}>
           { this.props.title }
         </div>
       </div>
@@ -23,6 +24,6 @@ class Hottag extends React.Component {
               </Link>
             </div>
             );
-    }*/
+    } */
 }
-export default Hottag
+export default Hottag;

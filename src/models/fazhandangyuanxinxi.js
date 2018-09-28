@@ -62,7 +62,8 @@ export default modelExtend(model, {
   },
   effects: {
     * query ({ payload }, { call, put, select }) {
-      const result = yield call(getFazhandangyuanxinxi, payload), { success = false, message = '发生未知错误。', ...others } = result,
+      const result = yield call(getFazhandangyuanxinxi, payload), 
+        { success = false, message = '发生未知错误。', ...others } = result,
         { attachments } = others;
       if (success) {
         yield put({

@@ -86,7 +86,7 @@ class Details extends React.Component {
                     ?
                     <span style={{ color: '#4eaaf7' }}>{`已赞(${num})`}</span>
                     :
-                    <span style={{ color: '#4eaaf7' }}>{`赞(${num})`}</span>}
+                      <span style={{ color: '#4eaaf7' }}>{`赞(${num})`}</span>}
                   <span>
                     <Icon type={getLocalIcon('/others/praise.svg')} />
                   </span>

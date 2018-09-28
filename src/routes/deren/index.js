@@ -23,7 +23,7 @@ function Comp ({ location, dispatch, deren }) {
             pathname: 'iframe',
             query: {
               name: title,
-              externalUrl: externalUrl,
+              externalUrl,
             },
           }));
         }
@@ -76,13 +76,13 @@ function Comp ({ location, dispatch, deren }) {
           hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total);
         result.push(
           <ListView layoutHeader={() => title}
-                    dataSource={items}
-                    layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
-                    onEndReached={onEndReached.bind(null, { id, title })}
-                    onRefresh={onRefresh.bind(null, { id, title })}
-                    hasMore={hasMore}
-                    onScrollerTop={onScrollerTop.bind(null)}
-                    scrollerTop={scrollerTop}
+            dataSource={items}
+            layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
+            onEndReached={onEndReached.bind(null, { id, title })}
+            onRefresh={onRefresh.bind(null, { id, title })}
+            hasMore={hasMore}
+            onScrollerTop={onScrollerTop.bind(null)}
+            scrollerTop={scrollerTop}
           />
         );
       }

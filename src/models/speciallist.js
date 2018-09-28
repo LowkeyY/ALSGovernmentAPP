@@ -3,7 +3,7 @@ import modelExtend from 'dva-model-extend';
 import { model } from 'models/common';
 import { queryPartyData } from 'services/querylist';
 
- const getDefaultPaginations = () => ({
+const getDefaultPaginations = () => ({
     current: 1,
     total: 0,
     size: 10,
@@ -69,8 +69,7 @@ export default modelExtend(model, {
           },
         });
       }
-      if (callback)
-        callback();
+      if (callback) { callback(); }
     },
   },
 });

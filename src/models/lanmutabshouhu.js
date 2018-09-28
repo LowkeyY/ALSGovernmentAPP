@@ -177,7 +177,8 @@ export default modelExtend(model, {
     * queryMessage ({ payload }, { call, put, select }) {
       const { isLogin = false } = yield select(_ => _.app);
       if (isLogin) {
-        const data = yield call(GetUnreadMessage), { success, noViewCount = 0 } = data;
+        const data = yield call(GetUnreadMessage), 
+          { success, noViewCount = 0 } = data;
         if (success) {
           yield put({
             type: 'app/updateState',

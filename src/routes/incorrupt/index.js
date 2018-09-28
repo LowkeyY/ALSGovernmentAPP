@@ -48,12 +48,14 @@ function Incorrupt ({ location, dispatch, incorrupt }) {
         hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total),
         result = [];
       result.push(
-        <ListView layoutHeader={''} dataSource={lists}
-                  layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
-                  onEndReached={onEndReached.bind(null, refreshId)}
-                  onRefresh={onRefresh.bind(null, refreshId)} hasMore={hasMore}
-                  onScrollerTop={onScrollerTop.bind(null)}
-                  scrollerTop={scrollerTop}
+        <ListView layoutHeader={''}
+          dataSource={lists}
+          layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
+          onEndReached={onEndReached.bind(null, refreshId)}
+          onRefresh={onRefresh.bind(null, refreshId)}
+          hasMore={hasMore}
+          onScrollerTop={onScrollerTop.bind(null)}
+          scrollerTop={scrollerTop}
         />,
       );
       return result;
@@ -69,11 +71,11 @@ function Incorrupt ({ location, dispatch, incorrupt }) {
             pathname: 'iframe',
             query: {
               name: title,
-              externalUrl: externalUrl,
+              externalUrl,
             },
           }));
         }
-      }else {
+      } else {
         const { route = '', id } = data;
         dispatch({
           type: 'incorrupt/updateState',

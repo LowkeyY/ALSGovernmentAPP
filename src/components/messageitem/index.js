@@ -1,13 +1,13 @@
-import { SwipeAction, List ,WhiteSpace } from 'antd-mobile';
-import {routerRedux} from 'dva/router';
+import { SwipeAction, List, WhiteSpace } from 'antd-mobile';
+import { routerRedux } from 'dva/router';
 
 function MessageItem (props) {
-  const handleClick = () =>{
-    props.dispatch(routerRedux.push('/messageroom'))
-  }
+  const handleClick = () => {
+    props.dispatch(routerRedux.push('/messageroom'));
+  };
   return (
     <div>
-      <WhiteSpace size="sm"/>
+      <WhiteSpace size="sm" />
       <List>
         <SwipeAction
           style={{ backgroundColor: '108ee9' }}
@@ -16,12 +16,12 @@ function MessageItem (props) {
             {
               text: '取消',
               onPress: () => console.log('cancel'),
-              style: { backgroundColor: '#ddd', color: 'white',padding:'0 10px' },
+              style: { backgroundColor: '#ddd', color: 'white', padding: '0 10px' },
             },
             {
               text: '删除',
               onPress: () => console.log('delete'),
-              style: { backgroundColor: '#F4333C', color: 'white',padding:'0 10px' },
+              style: { backgroundColor: '#F4333C', color: 'white', padding: '0 10px' },
             },
           ]}
 
@@ -41,6 +41,6 @@ function MessageItem (props) {
         </SwipeAction>
       </List>
     </div>
-  )
+  );
 }
-export default MessageItem
+export default MessageItem;

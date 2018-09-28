@@ -6,20 +6,20 @@ import { routerRedux } from 'dva/router';
 import { sendLegalMediation, getEducationType, getMediationType } from 'services/queryappeal';
 
 const getType = (datas = []) => {
-    let currentDatas;
-    if (Array.isArray(datas)) {
-      currentDatas = datas;
-    } else {
-      currentDatas = JSON.parse(datas);
-    }
-    currentDatas.map(items => {
-      items.label = items.name;
-      if (items.id) {
-        items.value = items.id;
-      }
-    });
-    return currentDatas;
+  let currentDatas;
+  if (Array.isArray(datas)) {
+    currentDatas = datas;
+  } else {
+    currentDatas = JSON.parse(datas);
   }
+  currentDatas.map(items => {
+    items.label = items.name;
+    if (items.id) {
+      items.value = items.id;
+    }
+  });
+  return currentDatas;
+};
 export default modelExtend(model, {
   namespace: 'legalmediation',
   state: {
@@ -41,11 +41,11 @@ export default modelExtend(model, {
             },
           });
           dispatch({
-            type:'queryEducationType'
-          })
+            type: 'queryEducationType'
+          });
           dispatch({
-            type:'queryMediationType'
-          })
+            type: 'queryMediationType'
+          });
         }
       });
     },

@@ -13,7 +13,8 @@ import { getTitle } from 'utils';
 const PrefixCls = 'patrymap';
 
 function PatryMap ({ location, dispatch, patrymap }) {
-  const { name = '' } = location.query, { mapUrl, maskDiv, menu, head } = patrymap,
+  const { name = '' } = location.query, 
+    { mapUrl, maskDiv, menu, head } = patrymap,
     handleMenuClick = ({ externalUrl = '', id, route = 'details', title, menuType }) => {
       if (menuType.type === 'statics') {
         dispatch(routerRedux.push({
@@ -23,7 +24,6 @@ function PatryMap ({ location, dispatch, patrymap }) {
             externalUrl: `http://www.myals.gov.cn:9000/cphsc/interface/dangjian/mapStatics.htm?dataId=${id}`,
           },
         }));
-        
       } else {
         dispatch(routerRedux.push({
           pathname: `/${route}`,
@@ -36,10 +36,10 @@ function PatryMap ({ location, dispatch, patrymap }) {
     },
     handleDivClick = ({ id = '', title = '' }) => {
       dispatch(routerRedux.push({
-        pathname: `/patrymap`,
+        pathname: '/patrymap',
         query: {
           name: title,
-          id: id,
+          id,
         },
       }));
     };
@@ -47,9 +47,8 @@ function PatryMap ({ location, dispatch, patrymap }) {
     <div>
       <Nav title={getTitle(name)} dispatch={dispatch} />
       <div className={styles[`${PrefixCls}-imgbox`]}>
-        <img width='100%' src={mapUrl} alt="" />
+        <img width="100%" src={mapUrl} alt="" />
         {maskDiv && maskDiv.map((data, i) => {
-          
           return <MpaDiv datas={data} handleClick={handleDivClick} />;
         })}
       </div>
@@ -57,8 +56,10 @@ function PatryMap ({ location, dispatch, patrymap }) {
       <div>
         {menu.length > 0 &&
         <Menu handleGridClick={handleMenuClick}
-              columnNum={name === '扶贫地图' || name === '左旗扶贫概况' || name === '巴彦诺日公苏木扶贫概况' ? 4 : 3} dispatch={dispatch}
-              datas={menu} />}
+          columnNum={name === '扶贫地图' || name === '左旗扶贫概况' || name === '巴彦诺日公苏木扶贫概况' ? 4 : 3}
+          dispatch={dispatch}
+          datas={menu}
+        />}
       </div>
     </div>
   );

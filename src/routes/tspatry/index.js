@@ -11,8 +11,8 @@ import { handleGridClick, handleListClick } from 'utils/commonevent';
 
 const PrefixCls = 'tspatry';
 const TsPatry = ({ loading, location, dispatch, tspatry }) => {
-  
-  const { name = '' } = location.query, { bannerDatas, grids, gridsitem, selectedIndex, selectedItemIndex, paginations, scrollerTop, refreshId, itemData } = tspatry;
+  const { name = '' } = location.query, 
+    { bannerDatas, grids, gridsitem, selectedIndex, selectedItemIndex, paginations, scrollerTop, refreshId, itemData } = tspatry;
   const handleItemTabClick = (data, index) => {
       const { externalUrl = '', title } = data;
       if (externalUrl !== '' && externalUrl.startsWith('http')) {
@@ -23,12 +23,11 @@ const TsPatry = ({ loading, location, dispatch, tspatry }) => {
             pathname: 'iframe',
             query: {
               name: title,
-              externalUrl: externalUrl,
+              externalUrl,
             },
           }));
         }
       } else {
-        
         const { route = '', title = '', id } = data;
         
         dispatch({
@@ -70,12 +69,11 @@ const TsPatry = ({ loading, location, dispatch, tspatry }) => {
             pathname: 'iframe',
             query: {
               name: title,
-              externalUrl: externalUrl,
+              externalUrl,
             },
           }));
         }
       } else {
-        
         const { route = '', title = '', id } = data;
         
         dispatch({
@@ -145,11 +143,11 @@ const TsPatry = ({ loading, location, dispatch, tspatry }) => {
       if (selectedIndex === grids.length - 1) {
         return (
           <Tabs tabs={gridsitem}
-                initialPage={selectedItemIndex}
-                swipeable={false}
-                onTabClick={(tab, index) => {
-                  handleItemTabClick(tab, index);
-                }}
+            initialPage={selectedItemIndex}
+            swipeable={false}
+            onTabClick={(tab, index) => {
+              handleItemTabClick(tab, index);
+            }}
           >
             <div>{itemData.length > 0 && getItemContents(lists, refreshId)}</div>
           </Tabs>

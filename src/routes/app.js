@@ -43,13 +43,14 @@ const App = ({ children, dispatch, app, loading, location }) => {
       return (
         <div
           style={{ maxHeight: '60vh', overflowY: 'scroll', textAlign: 'left' }}
-          dangerouslySetInnerHTML={{ __html: content }} />
+          dangerouslySetInnerHTML={{ __html: content }}
+        />
       );
     },
     update = (url, upgraded) => {
       if (upgraded) {
-        return <Modal
-          visible={true}
+        return (<Modal
+          visible
           transparent
           maskClosable={false}
           title="当前版本过低"
@@ -59,22 +60,23 @@ const App = ({ children, dispatch, app, loading, location }) => {
             <div>{`请升级${appVerSion}版本后继续访问`}</div>
             {getContent(updateInfo)}
           </div>
-        </Modal>;
-      } else {
-        if (isFirst) {
-          Modal.alert(`版本更新(${appVerSion})`, getContent(updateInfo), [
-            {
-              text: '暂不升级', onPress: () => dispatch({
+        </Modal>);
+      } 
+      if (isFirst) {
+        Modal.alert(`版本更新(${appVerSion})`, getContent(updateInfo), [
+          {
+            text: '暂不升级',
+            onPress: () => dispatch({
               type: 'app/updateState',
               payload: {
                 showModal: false,
               },
-            }), style: 'default',
-            },
-            { text: '立刻升级', onPress: () => cnUpdate(url) },
-          ]);
-          isFirst = false;
-        }
+            }),
+            style: 'default',
+          },
+          { text: '立刻升级', onPress: () => cnUpdate(url) },
+        ]);
+        isFirst = false;
       }
     },
     getDot = (pathname, noViewCount) => {
@@ -107,11 +109,11 @@ const App = ({ children, dispatch, app, loading, location }) => {
             onPress: () => {
               const { appends = {}, route } = _;
               dispatch(routerRedux.push({
-                  pathname: route,
-                  query: {
-                    ...appends,
-                  },
+                pathname: route,
+                query: {
+                  ...appends,
                 },
+              },
               ));
             },
           }, _);

@@ -48,11 +48,10 @@ function SpecialList ({ location, dispatch, speciallist }) {
           layoutHeader={''}
           dataSource={lists}
           layoutRow={(rowData, sectionID, rowID) => {
-            if(scenery === 'true') {
+            if (scenery === 'true') {
               return sceneryRow(rowData, sectionID, rowID, handleListClick, dispatch, name);
-            }else {
-              return specialRow(rowData, sectionID, rowID, handleListClick, dispatch, name);
             }
+            return specialRow(rowData, sectionID, rowID, handleListClick, dispatch, name);
           }}
           onEndReached={onEndReached}
           onRefresh={onRefresh}
@@ -63,7 +62,7 @@ function SpecialList ({ location, dispatch, speciallist }) {
       );
       
       return result;
-    }
+    };
   return (
     <div>
       <Nav title={name} dispatch={dispatch} />

@@ -4,7 +4,7 @@ import { routerRedux } from 'dva/router';
 import Nav from 'components/nav';
 import { List, WhiteSpace, SearchBar, Tabs, Layout } from 'components';
 import { layoutRow } from 'components/row';
-import TitleBox  from 'components/titlecontainer'
+import TitleBox from 'components/titlecontainer';
 import ListView from 'components/listview';
 import { handleListClick } from 'utils/commonevent';
 
@@ -15,8 +15,14 @@ function News ({ location, dispatch, news }) {
     getvideo = (data) => {
       return data && data.map(data => {
         return (
-          <video key={data.id} width="100%" preload="none" poster={data.videoView} src={data.videoSrc}
-                 controlsList="nodownload" controls="controls" />
+          <video key={data.id}
+            width="100%"
+            preload="none"
+            poster={data.videoView}
+            src={data.videoSrc}
+            controlsList="nodownload"
+            controls="controls"
+          />
         );
       });
     };
@@ -58,13 +64,13 @@ function News ({ location, dispatch, news }) {
         hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total);
       result.push(
         <ListView layoutHeader={title}
-                  dataSource={lists}
-                  layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name,false)}
-                  onEndReached={onEndReached.bind(null, refreshId)}
-                  onRefresh={onRefresh.bind(null, refreshId)}
-                  hasMore={hasMore}
-                  onScrollerTop={onScrollerTop.bind(null)}
-                  scrollerTop={scrollerTop}
+          dataSource={lists}
+          layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name, false)}
+          onEndReached={onEndReached.bind(null, refreshId)}
+          onRefresh={onRefresh.bind(null, refreshId)}
+          hasMore={hasMore}
+          onScrollerTop={onScrollerTop.bind(null)}
+          scrollerTop={scrollerTop}
         />
       );
       return result;

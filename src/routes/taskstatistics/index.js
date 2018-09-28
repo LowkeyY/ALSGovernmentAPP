@@ -17,8 +17,6 @@ const PrefixCls = 'taskstatistics';
 
 
 class TaskStatistics extends Component {
-  
-  
   getMap = (data) => {
     let map = {};
     data && data.map((item, i) => {
@@ -39,7 +37,8 @@ class TaskStatistics extends Component {
   };
   
   render () {
-    const { name = '' } = this.props.location.query, { chartData, reactList } = this.props.taskstatistics,
+    const { name = '' } = this.props.location.query, 
+      { chartData, reactList } = this.props.taskstatistics,
       { dispatch } = this.props,
       handleItemClick = ({ id }) => {
         dispatch(routerRedux.push({

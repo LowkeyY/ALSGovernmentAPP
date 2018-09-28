@@ -1,5 +1,5 @@
 var cunovs = {
-  cnVersion: '7.0.0',
+  cnVersion: '7.0.1',
   cnGlobalIndex: 0,
   cnhtmlSize: 0,
   cnhtmlHeight: document.documentElement.clientHeight,
@@ -44,7 +44,7 @@ var cunovs = {
           case '/':
           case '/dashboard': {
             StatusBar.styleDefault();
-            StatusBar.backgroundColorByHexString('#fff');
+            StatusBar.backgroundColorByHexString('#4eaaf7');
             break;
           }
           default: {

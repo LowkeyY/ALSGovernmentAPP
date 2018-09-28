@@ -268,28 +268,28 @@ class Diary extends Component {
         <Nav title={name} dispatch={this.props.dispatch} />
         <div className={styles[`${PrefixCls}-outer`]}>
           <form>
-           <div className={styles[`${PrefixCls}-outer-type`]}>
-             <InputItem
-               {...getFieldProps('title', {
-                 initialValue: '',
-                 rules: [{ required: true, message: '标题必须输入' },
-                   { max: 10, message: '标题最多能输入10个字' }
-                 ],
-               })}
-               clear
-               error={!!getFieldError('title') && Toast.fail(getFieldError('title'))}
-               placeholder="输入标题、最多输入10个字符"
-             >
+            <div className={styles[`${PrefixCls}-outer-type`]}>
+              <InputItem
+                {...getFieldProps('title', {
+                  initialValue: '',
+                  rules: [{ required: true, message: '标题必须输入' },
+                    { max: 10, message: '标题最多能输入10个字' }
+                  ],
+                })}
+                clear
+                error={!!getFieldError('title') && Toast.fail(getFieldError('title'))}
+                placeholder="输入标题、最多输入10个字符"
+              >
                标题
-             </InputItem>
-           </div>
+              </InputItem>
+            </div>
             <div className={styles[`${PrefixCls}-outer-type`]}>
               <Picker data={diaryType}
-                      cols={1}
-                      {...getFieldProps('bflx', {
-                        rules: [{ required: true, message: '请选择帮扶类型' }],
-                      })}
-                      error={!!getFieldError('bflx') && Toast.fail(getFieldError('bflx'))}
+                cols={1}
+                {...getFieldProps('bflx', {
+                  rules: [{ required: true, message: '请选择帮扶类型' }],
+                })}
+                error={!!getFieldError('bflx') && Toast.fail(getFieldError('bflx'))}
               >
                 <List.Item arrow="horizontal">帮扶类型</List.Item>
               </Picker>

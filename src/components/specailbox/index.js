@@ -12,8 +12,7 @@ const SpecialBox = (props) => {
   return (
     <div className={styles[`${PrefixCls}-outer`]} onClick={props.handleClick.bind(this, props.datas, dispatch, title)}>
       <div className={styles[`${PrefixCls}-outer-img`]}>
-        <div className={styles[`${PrefixCls}-outer-img-image`]} style={{ backgroundImage: `url(${image})` }}>
-        </div>
+        <div className={styles[`${PrefixCls}-outer-img-image`]} style={{ backgroundImage: `url(${image})` }} />
       </div>
     </div>
   );

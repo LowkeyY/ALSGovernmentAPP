@@ -50,84 +50,84 @@ const getInfo = (info) => {
     return gridDatas.length > 0 ? gridDatas : [];
   };
 export default modelExtend(model, {
-    namespace: 'guard',
-    state: {
-      grids: [],
-      bannerDatas: [],
-      isAdmin: false,
-    },
-    subscriptions: {
-      setup ({ dispatch, history }) {
-        history.listen(({ pathname, query, action }) => {
-          const { id = '' } = query;
-          if (pathname === '/guard') {
-            dispatch({
-              type: 'queryMessage',
-            });
-            dispatch({
-              type: 'updateState',
-              payload: {
-                grids: [],
-                bannerDatas: []
-              },
-            });
-            dispatch({
-              type: 'queryAdmin'
-            });
-            dispatch({
-              type: 'query',
-              payload: {
-                id
-              }
-            });
-          }
-        });
-      },
-    },
-    effects: {
-      * query ({ payload }, { call, put, select }) {
-        const { id = '' } = payload,
-          { isAdmin } = yield select(_ => _.guard),
-          result = yield call(queryPartyTabs, { dataId: id });
-        if (result) {
-          let { data = [] } = result;
-          yield put({
+  namespace: 'guard',
+  state: {
+    grids: [],
+    bannerDatas: [],
+    isAdmin: false,
+  },
+  subscriptions: {
+    setup ({ dispatch, history }) {
+      history.listen(({ pathname, query, action }) => {
+        const { id = '' } = query;
+        if (pathname === '/guard') {
+          dispatch({
+            type: 'queryMessage',
+          });
+          dispatch({
             type: 'updateState',
             payload: {
-              grids: getGridbox(data, isAdmin),
-              bannerDatas: getBannerDatas(data)
+              grids: [],
+              bannerDatas: []
             },
           });
-        }
-      },
-      * queryAdmin ({ payload }, { call, put }) {
-        const data = yield call(queryAdmin);
-        if (data.success) {
-          yield put({
-            type: 'updateState',
+          dispatch({
+            type: 'queryAdmin'
+          });
+          dispatch({
+            type: 'query',
             payload: {
-              isAdmin: data.isAdmin,
+              id
             }
           });
         }
-      },
-      * queryMessage ({ payload }, { call, put, select }) {
-        const { isLogin = false } = yield select(_ => _.app);
-        if (isLogin) {
-          const data = yield call(GetUnreadMessage),
-            { success, noViewCount = 0 } = data;
-          if (success) {
-            yield put({
-              type: 'app/updateState',
-              payload: {
-                noViewCount: noViewCount * 1,
-              },
-            });
+      });
+    },
+  },
+  effects: {
+    * query ({ payload }, { call, put, select }) {
+      const { id = '' } = payload,
+        { isAdmin } = yield select(_ => _.guard),
+        result = yield call(queryPartyTabs, { dataId: id });
+      if (result) {
+        let { data = [] } = result;
+        yield put({
+          type: 'updateState',
+          payload: {
+            grids: getGridbox(data, isAdmin),
+            bannerDatas: getBannerDatas(data)
+          },
+        });
+      }
+    },
+    * queryAdmin ({ payload }, { call, put }) {
+      const data = yield call(queryAdmin);
+      if (data.success) {
+        yield put({
+          type: 'updateState',
+          payload: {
+            isAdmin: data.isAdmin,
           }
+        });
+      }
+    },
+    * queryMessage ({ payload }, { call, put, select }) {
+      const { isLogin = false } = yield select(_ => _.app);
+      if (isLogin) {
+        const data = yield call(GetUnreadMessage),
+          { success, noViewCount = 0 } = data;
+        if (success) {
+          yield put({
+            type: 'app/updateState',
+            payload: {
+              noViewCount: noViewCount * 1,
+            },
+          });
         }
       }
+    }
       
-    },
-    reducers: {},
-  }
+  },
+  reducers: {},
+}
 );

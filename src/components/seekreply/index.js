@@ -1,15 +1,15 @@
-import styles from './index.less'
-const PrefixCls = 'seekreply'
-function SeekReply(props) {
- 
+import styles from './index.less';
+
+const PrefixCls = 'seekreply';
+function SeekReply (props) {
   return (
     <div key={props.key} className={styles[`${PrefixCls}-outer`]}>
-       <div className={styles[`${PrefixCls}-outer-title`]}>
+      <div className={styles[`${PrefixCls}-outer-title`]}>
          转办意见：
-       </div>
+      </div>
       <p>{props.contents}</p>
       <div className={styles[`${PrefixCls}-outer-date`]}><span>{props.date}</span><span>{props.positon}</span></div>
     </div>
-  )
+  );
 }
-export default SeekReply
+export default SeekReply;

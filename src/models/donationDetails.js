@@ -13,7 +13,7 @@ export default modelExtend(model, {
     setup ({ dispatch, history }) {
       history.listen(({ pathname, action, query }) => {
         const { id = '', name } = query;
-        if (pathname === `/donationDetails`) {
+        if (pathname === '/donationDetails') {
           dispatch({
             type: 'updateState',
             payload: {
@@ -42,7 +42,7 @@ export default modelExtend(model, {
         yield put({
           type: 'updateState',
           payload: {
-            dataList:bfjl
+            dataList: bfjl
           },
         });
       }
