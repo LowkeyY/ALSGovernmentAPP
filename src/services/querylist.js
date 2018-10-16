@@ -109,7 +109,7 @@ export async function GetUnreadMessage () {
 export async function QueryMembers (payload) {
   return request({
     url: QueryMembersApi,
-    method: 'post',
+    method: 'get',
     data: payload
   });
 }

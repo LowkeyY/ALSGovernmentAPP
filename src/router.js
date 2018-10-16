@@ -724,6 +724,42 @@ const Routers = function ({ history, app }) {
           },
         },
         {
+          path: 'centertask',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/centertask'));
+              cb(null, require('routes/centertask/'));
+            }, 'centertask');
+          },
+        },
+        {
+          path: 'centertaskdetails',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/centertaskdetails'));
+              cb(null, require('routes/centertaskdetails/'));
+            }, 'centertaskdetails');
+          },
+        },
+        {
+          path: 'centerreply',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/centerreply'));
+              cb(null, require('routes/centerreply/'));
+            }, 'centerreply');
+          },
+        },
+        {
+          path: 'centersendtask',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/centersendtask'));
+              cb(null, require('routes/centersendtask/'));
+            }, 'centersendtask');
+          },
+        },
+        {
           path: '*',
           getComponent (nextState, cb) {
             const { location: { pathname } } = nextState;

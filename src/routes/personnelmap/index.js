@@ -51,7 +51,7 @@ function PersonnelMap ({ location, dispatch, personnelmap }) {
               key={data.id}
               type="primary"
               inline
-              style={{ marginLeft:'20px',marginBottom: '10px',minWidth:'40%'
+              style={{ marginLeft: '20px', marginBottom: '10px', minWidth: '40%'
               }}
               onClick={handleListClick.bind(this, data)}
               className="am-button-borderfix"

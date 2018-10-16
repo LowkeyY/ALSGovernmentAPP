@@ -10,6 +10,7 @@ const getInfo = (info) => {
       try {
         return doDecode(info);
       } catch (e) {
+
       }
     }
     return {};
@@ -26,7 +27,7 @@ const getInfo = (info) => {
           title,
           ...others,
           route,
-          infos
+          infos,
         });
       }
     });
@@ -36,8 +37,18 @@ const getInfo = (info) => {
     let gridDatas = [];
     data.map((item, index) => {
       const { id = '', route = '', image = '', infos = '', ...others } = item;
-      let { type, showType = '', admin = false } = getInfo(infos);
-      if (type === 'grids') {
+      let { type, showType = '', admin = 'false' } = getInfo(infos);
+      if (isAdmin === true) {
+        if (type === 'grids') {
+          gridDatas.push({
+            id,
+            showType,
+            route: route || '/',
+            icon: image || '',
+            ...others,
+          });
+        }
+      } else if (type === 'grids' && admin === 'false') {
         gridDatas.push({
           id,
           showType,
@@ -68,17 +79,14 @@ export default modelExtend(model, {
             type: 'updateState',
             payload: {
               grids: [],
-              bannerDatas: []
+              bannerDatas: [],
             },
           });
           dispatch({
-            type: 'queryAdmin'
-          });
-          dispatch({
-            type: 'query',
+            type: 'queryAdmin',
             payload: {
-              id
-            }
+              id,
+            },
           });
         }
       });
@@ -95,19 +103,26 @@ export default modelExtend(model, {
           type: 'updateState',
           payload: {
             grids: getGridbox(data, isAdmin),
-            bannerDatas: getBannerDatas(data)
+            bannerDatas: getBannerDatas(data),
           },
         });
       }
     },
     * queryAdmin ({ payload }, { call, put }) {
-      const data = yield call(queryAdmin);
+      const data = yield call(queryAdmin), 
+        { id } = payload;
       if (data.success) {
         yield put({
           type: 'updateState',
           payload: {
             isAdmin: data.isAdmin,
-          }
+          },
+        });
+        yield put({ // 先判断admin
+          type: 'query',
+          payload: {
+            id,
+          },
         });
       }
     },
@@ -125,9 +140,9 @@ export default modelExtend(model, {
           });
         }
       }
-    }
-      
+    },
+
   },
   reducers: {},
-}
+},
 );

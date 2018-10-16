@@ -1,9 +1,9 @@
 module.exports = {
   name: 'ALS-APP',
   logo: '/logo.png',
-  
-  // baseURL: 'http://192.168.0.202:9200',
-  baseURL: 'http://www.myals.gov.cn:9000',
+
+  baseURL: 'http://192.168.0.202:9200',
+  // baseURL: 'http://www.myals.gov.cn:9000',
   wsURL: 'ws://www.myals.gov.cn:9000/websocket/chat/',
   userTag: {
     username: 'username',
@@ -99,6 +99,14 @@ module.exports = {
     getSignApi: '/ExternalItems/dangjian/interface/getQianDaoInfo.jcp',
     signApi: '/ExternalItems/dangjian/interface/QianDao.jcp',
     getTaskReactApi: '/ExternalItems/taskRelease/interface/getQingShiInfo.jcp',
-    sendTaskReactApi: '/ExternalItems/taskRelease/interface/saveQingShiInfo.jcp'
+    sendTaskReactApi: '/ExternalItems/taskRelease/interface/saveQingShiInfo.jcp',
+    GetCenterAppealApi: '/ExternalItems/policWork/getPoliceWorkPage.jcp',
+    OpenAppealApi: '/ExternalItems/policWork/interface/gongkaiFanKui.jcp',
+    CloseAppealApi: '/ExternalItems/policWork/interface/cheHuiGongkaiFanKui.jcp',
+    ReplyAppealApi: '/ExternalItems/policWork/replyWork.jcp',
+    RefuseAppealApi: '/ExternalItems/policWork/backWork.jcp',
+    CompleteAppealApi: '/ExternalItems/taskRelease/zhiHuiConformTask.jcp',
+    CenterSendTaskApi: '/ExternalItems/taskRelease/interface/AppPoliceWorkTaskCreat.jcp',
+
   },
 };

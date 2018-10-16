@@ -19,30 +19,30 @@ function CommunityList ({ location, dispatch, communitylist }) {
   const { name = '', dataList = [], selectedIndex } = communitylist;
 
   const activeList = (lists, handleItemOnclick) => {
-    console.log(lists)
+      console.log(lists);
       const result = [];
       lists && lists.map((list, i) => {
         result.push(
-        <div className={styles[`${PrefixCls}-listbox`]}>
-          <Item className={styles[`${PrefixCls}-box`]}
-                thumb={list.img || ''}
-                multipleLine
-                wrap
-                onClick={handleItemOnclick.bind(null, list)}
-          >
-            <span>{list.title}</span>
-            <Brief>
-              <p className={styles[`${PrefixCls}-item`]}>
-                <span><Icon type={getLocalIcon('/others/position.svg')} size="xxs" /></span>
-                <span>{list.hddd}</span>
-              </p>
-              <p className={styles[`${PrefixCls}-item`]}>
-                {list.hdsj}
-              </p>
-            </Brief>
-          </Item>
-          <div className={styles[`${PrefixCls}-list-state`]}>{list.state === '0' ? '可报名' : '已有人报名'}</div>
-        </div>
+          <div className={styles[`${PrefixCls}-listbox`]}>
+            <Item className={styles[`${PrefixCls}-box`]}
+              thumb={list.img || ''}
+              multipleLine
+              wrap
+              onClick={handleItemOnclick.bind(null, list)}
+            >
+              <span>{list.title}</span>
+              <Brief>
+                <p className={styles[`${PrefixCls}-item`]}>
+                  <span><Icon type={getLocalIcon('/others/position.svg')} size="xxs" /></span>
+                  <span>{list.hddd}</span>
+                </p>
+                <p className={styles[`${PrefixCls}-item`]}>
+                  {list.hdsj}
+                </p>
+              </Brief>
+            </Item>
+            <div className={styles[`${PrefixCls}-list-state`]}>{list.state === '0' ? '可报名' : '已有人报名'}</div>
+          </div>
         );
       });
       return <List>{result}</List>;

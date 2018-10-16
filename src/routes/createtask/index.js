@@ -93,10 +93,7 @@ class CreateTask extends Component {
       that.addSeconds();
     }, 1000);
   }
-  
-  handleChange (value) {
-    console.log(`selected ${value}`);
-  }
+
   
   onChange = (files, type, index) => {
     let reg = /image/,
@@ -390,7 +387,6 @@ class CreateTask extends Component {
         onCancel: this.handleCancel.bind(this, this.props.dispatch),
         addUsers
       };
-    console.log(selectedUsers);
     return (
       <div>
         <Nav title={name} dispatch={this.props.dispatch} />

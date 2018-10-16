@@ -451,7 +451,7 @@ function Appeal ({ location, dispatch, appeal, app }) {
           scrollerTop={scrollerTop}
         />);
       for (let i = 0; i < tabs.length; i++) {
-        if (i == selectedIndex) {
+        if (i === selectedIndex) {
           result.push(<div>{layoutList}</div>);
         } else {
           result.push(<div />);

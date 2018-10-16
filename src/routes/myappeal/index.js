@@ -12,7 +12,7 @@ const PrefixCls = 'myappeal',
 const getShstate = (shtate, state) => {
     if (shtate == '0') {
       return <span style={{ color: '#ccb820' }}>●正在审核</span>;
-    } else if (shtate == '2') {
+    } else if (shtate === '2') {
       return <span style={{ color: '#9c9595' }}>●不在办理范围</span>;
     }
     return getStatus(state);
@@ -48,7 +48,6 @@ function Myappeal ({ location, dispatch, myappeal }) {
   return (
     <div>
       <Nav title={name} dispatch={dispatch} />
-      <WhiteSpace size="md" />
       <List>
         {
           dataList.length > 0 ?

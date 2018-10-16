@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './index.less';
-import classNames from 'classnames';
+
 import { Icon } from 'antd-mobile';
 
 const PrefixCls = 'hawkbutton';
