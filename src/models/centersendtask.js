@@ -7,7 +7,7 @@ import {
   queryTaskurgent,
   queryUsers,
 } from 'services/queryappeal';
-import { centerSendTask } from 'services/centertask'
+import { centerSendTask } from 'services/centertask';
 import { routerRedux } from 'dva/router';
 
 const getType = (datas = []) => {
@@ -31,7 +31,7 @@ const getType = (datas = []) => {
       arr.push({
         label: item.name,
         value: item.userId,
-        dept: item.deptPath
+        dept: item.deptPath,
       });
     });
     return arr.length > 0 ? arr : [];
@@ -46,28 +46,28 @@ export default modelExtend(model, {
     name: '',
     isShowSelectMenu: false,
     userItems: [],
-    selectedUsers: []
+    selectedUsers: [],
   },
   subscriptions: {
     setup ({ dispatch, history }) {
       history.listen(({ pathname, action, query }) => {
-        if (pathname === '/centersendtask') {
-          const { name = '', } = query;
+        if (pathname === '/centersendtask' && action === 'PUSH') {
+          const { name = '' } = query;
           dispatch({
             type: 'updateState',
             payload: {
               name,
-              selectedUsers: []
+              selectedUsers: [],
             },
           });
           dispatch({
             type: 'query',
           });
           dispatch({
-            type: 'queryTaskurgent'
+            type: 'queryTaskurgent',
           });
           dispatch({
-            type: 'queryUsers'
+            type: 'queryUsers',
           });
         }
       });
@@ -92,7 +92,7 @@ export default modelExtend(model, {
           type: 'updateState',
           payload: {
             noticeType: getType(data.data),
-          }
+          },
         });
       }
     },
@@ -102,13 +102,12 @@ export default modelExtend(model, {
         yield put({
           type: 'updateState',
           payload: {
-            userItems: getUser(data.data)
-          }
+            userItems: getUser(data.data),
+          },
         });
       }
     },
     * centerSendTask ({ payload }, { call, put }) {
-      console.log(payload)
       const data = yield call(centerSendTask, { ...payload });
       console.log(data);
       if (data.success) {
@@ -129,6 +128,15 @@ export default modelExtend(model, {
         });
         Toast.offline('下发失败请稍后再试');
       }
+    },
+  },
+  reducers: {
+    updateUser (state, { payload = {} }) {
+      const { selectedUsers = [] } = payload;
+      return {
+        ...state,
+        selectedUsers,
+      };
     },
   },
 });

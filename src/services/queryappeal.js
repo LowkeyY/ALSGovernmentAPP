@@ -42,7 +42,7 @@ export async function createNewTask (payload) {
 export async function queryUsers (payload) {
   return request({
     url: ChooseUsersApi,
-    method: 'get',
+    method: 'post',
     data: payload
   });
 }

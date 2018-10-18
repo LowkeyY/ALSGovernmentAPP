@@ -54,6 +54,7 @@ class SelectMenu extends React.Component {
   render () {
     const { initData, values, multiSelect, top } = this.state,
       PrefixCls = 'selectmenu';
+    console.log(initData)
     initData.map(data => {
       if (!data.label && data.text) { data.label = data.text; }
     });

@@ -2,6 +2,7 @@ import { Component } from 'react';
 import { createForm } from 'rc-form';
 import { connect } from 'dva';
 import Nav from 'components/nav';
+import { routerRedux } from 'dva/router';
 import {
   List,
   InputItem,
@@ -16,7 +17,7 @@ import {
   Badge,
   Tabs,
   ActivityIndicator,
-  DatePicker
+  DatePicker,
 } from 'components';
 import { listRows } from 'components/row';
 import VociePrev from 'components/voicePrev';
@@ -54,7 +55,7 @@ class CreateTask extends Component {
       date: now,
     };
   }
-  
+
   getVoiceText = (unit, bits, minutes) => {
     return (
       <div>
@@ -67,7 +68,7 @@ class CreateTask extends Component {
       </div>
     );
   };
-  
+
   addSeconds () { // 计时器
     const { unit, bits, minutes } = this.state;
     this.setState({
@@ -86,7 +87,7 @@ class CreateTask extends Component {
       });
     }
   }
-  
+
   startTimer () { // 启动计时器
     const that = this;
     int = setInterval(() => {
@@ -94,7 +95,7 @@ class CreateTask extends Component {
     }, 1000);
   }
 
-  
+
   onChange = (files, type, index) => {
     let reg = /image/,
       result = [];
@@ -136,6 +137,14 @@ class CreateTask extends Component {
     }
     return obj;
   };
+  getUserValue = (arr) => {
+    let userValue = [];
+    arr && arr.map((data, i) => {
+      userValue.push(data.userId);
+    });
+    return userValue.join();
+  };
+
   onSubmit = () => {
     this.props.form.validateFields(
       ['title', 'textinfo'],
@@ -170,15 +179,15 @@ class CreateTask extends Component {
   onTaskSubmit = (selectedUsers) => {
     this.props.form.validateFields(
       ['taskTitle', 'taskInfo', 'taskUrgency', 'taskEndDate'],
-      { force: true, },
+      { force: true },
       (error) => {
         if (!error) {
           const date = this.state.date;
-          
+
           const data = {
             ...this.props.form.getFieldsValue(['taskTitle', 'taskType', 'taskInfo', 'taskUrgency']),
-            cldw: selectedUsers.join(),
-            taskEndDate: DateChange(date)
+            cldw: this.getUserValue(selectedUsers),
+            taskEndDate: DateChange(date),
           };
           this.props.dispatch({
             type: 'createtask/createNewTask',
@@ -208,7 +217,7 @@ class CreateTask extends Component {
       const { isVoice, onRecording } = this.state;
       if (isVoice === true && onRecording === true) {
         let mediaFile = cnStartRecord('', this.mediaFileOnSuccess.bind(this), this.mediaFileOnError.bind(this));
-        
+
         this.setState({
           mediaFile,
         });
@@ -221,7 +230,7 @@ class CreateTask extends Component {
       .removeAllRanges() : document.selection.empty();
     let { unit, bits, minutes, mediaFile, mediaFileLength } = this.state,
       updates = {};
-    
+
     if (mediaFile) {
       mediaFile.timers = mediaFileLength = (minutes * 60 + bits * 10 + unit);
       mediaFile = cnStopRecord(this.state.mediaFile);
@@ -254,7 +263,7 @@ class CreateTask extends Component {
       files,
     });
   };
-  
+
   mediaFileOnSuccess (blob, params) {
     const { name = '', nativeURL = '' } = params;
     let pos = name.lastIndexOf('.'),
@@ -266,11 +275,11 @@ class CreateTask extends Component {
       mediaFileUrl: nativeURL,
     });
   }
-  
+
   mediaFileOnError (error) {
     handleVoiceRecordingEnd();
   }
-  
+
   getCurrentLocation () {
     const { loadPostions } = this.state;
     if (!loadPostions) {
@@ -296,7 +305,7 @@ class CreateTask extends Component {
       cnGetCurrentPosition(onSuccess, onError);
     }
   }
-  
+
   handleDivClick () {
     let { isVoice, onRecording, unit, bits, minutes, mediaFile, mediaFileLength } = this.state,
       updates = {};
@@ -320,45 +329,51 @@ class CreateTask extends Component {
       clearTimeout(stop);
     }
   }
-  
+
   handleOkClick (dispatch) {
     dispatch({
       type: 'createtask/updateState',
       payload: {
         isShowSelectMenu: false,
-      }
+      },
     });
   }
-  
+
   handleCancel (dispatch) {
     dispatch({
       type: 'createtask/updateState',
       payload: {
         isShowSelectMenu: false,
-        selectedUsers: []
-      }
+        selectedUsers: [],
+      },
     });
   }
-  
+
   handleSelectClick (dispatch) {
-    dispatch({
-      type: 'createtask/updateState',
-      payload: {
-        isShowSelectMenu: true,
-        selectedUsers: []
-      }
-    });
+    // dispatch({
+    //   type: 'createtask/updateState',
+    //   payload: {
+    //     isShowSelectMenu: true,
+    //     selectedUsers: []
+    //   }
+    // });
+    dispatch(routerRedux.push({
+      pathname: '/workers',
+      query: {
+        currentRoute: `${PrefixCls}`,
+      },
+    }));
   }
-  
+
   componentWillUnmount () {
     clearInterval(int);
     clearTimeout(stop);
   }
-  
-  
+
+
   render () {
     const { name = '' } = this.props.location.query,
-      { appealType, animating, location, noticeType, isAdmin, isShowSelectMenu, userItems, selectedUsers } = this.props.createtask;
+      { appealType, animating, location, noticeType, isAdmin, isShowSelectMenu, userItems, selectedUsers, selectedIndex } = this.props.createtask;
     let { address = {} } = JSON.parse(location),
       currentPostions = address.street || address.district || address.city || '';
     const { getFieldProps, getFieldError } = this.props.form,
@@ -367,16 +382,14 @@ class CreateTask extends Component {
         this.props.dispatch({
           type: 'createtask/updateState',
           payload: {
-            selectedUsers: value
-          }
+            selectedUsers: value,
+          },
         });
       },
       getValue = (value) => {
         let arr = [];
-        userItems.map((data, i) => {
-          if (value.includes(data.value)) {
-            arr.push(data.label);
-          }
+        value.map((data, i) => {
+          arr.push(data.name);
         });
         return arr.length ? arr.join() : '请选择用户';
       },
@@ -385,17 +398,23 @@ class CreateTask extends Component {
         onOk: this.handleOkClick.bind(this, this.props.dispatch),
         targetRef: this.chooseUsers,
         onCancel: this.handleCancel.bind(this, this.props.dispatch),
-        addUsers
+        addUsers,
       };
     return (
       <div>
-        <Nav title={name} dispatch={this.props.dispatch} />
+        <Nav title={name} dispatch={this.props.dispatch}/>
         {isAdmin ?
           <Tabs
-            initialPage={0}
+            initialPage={selectedIndex}
             tabs={tabs}
             swipeable={false}
             onChange={(tab, index) => {
+              this.props.dispatch({
+                type: `${PrefixCls}/updateState`,
+                payload: {
+                  selectedIndex: index,
+                },
+              });
             }}
           >
             <div>
@@ -406,7 +425,7 @@ class CreateTask extends Component {
                       {...getFieldProps('title', {
                         initialValue: '',
                         rules: [{ required: true, message: '标题必须输入' },
-                          { max: 10, message: '标题最多能输入10个字' }
+                          { max: 10, message: '标题最多能输入10个字' },
                         ],
                       })}
                       clear
@@ -419,8 +438,8 @@ class CreateTask extends Component {
                   </div>
                   <div className={styles[`${PrefixCls}-outer-type`]}>
                     <Picker data={appealType}
-                      cols={1}
-                      {...getFieldProps('type')}
+                            cols={1}
+                            {...getFieldProps('type')}
                     >
                       <List.Item arrow="horizontal">反馈类型</List.Item>
                     </Picker>
@@ -441,13 +460,13 @@ class CreateTask extends Component {
                   <div style={{ borderBottom: '1px solid #ddd' }}>
                     <InputItem
                       {...getFieldProps('positions', {
-                        initialValue: currentPostions
+                        initialValue: currentPostions,
                       })}
                       clear
                       error={!!getFieldError('positions') && Toast.fail(getFieldError('positions'))}
                       placeholder="请输入您的位置"
-                      extra={currentPostions === '' ? loadPostions ? <Icon type="loading" /> :
-                      <span onClick={this.getCurrentLocation.bind(this)}><Icon
+                      extra={currentPostions === '' ? loadPostions ? <Icon type="loading"/> :
+                        <span onClick={this.getCurrentLocation.bind(this)}><Icon
                           type={getLocalIcon('/others/location.svg')}
                         /></span> : ''}
                     >
@@ -458,9 +477,9 @@ class CreateTask extends Component {
                     <div>
                       <p>添加图片</p>
                       {this.state.files.length >= 4 ? '' :
-                      <span onClick={cnTakePhoto.bind(null, this.handleCameraClick, 1)}>
-                          <Icon type={getLocalIcon('/media/camerawhite.svg')} />
-                        </span>}
+                        <span onClick={cnTakePhoto.bind(null, this.handleCameraClick, 1)}>
+                        <Icon type={getLocalIcon('/media/camerawhite.svg')}/>
+                      </span>}
                     </div>
                     <ImagePicker
                       files={this.state.files}
@@ -476,7 +495,7 @@ class CreateTask extends Component {
                     <div className={styles[`${PrefixCls}-outer-voice-container`]}>
                       <div className={styles[`${PrefixCls}-outer-voice-container-files`]}>
                         {mediaFile !== '' ?
-                          <VociePrev mediaFileUrl={mediaFileUrl} mediaFileTimer={mediaFileLength} /> : ''}
+                          <VociePrev mediaFileUrl={mediaFileUrl} mediaFileTimer={mediaFileLength}/> : ''}
                       </div>
                       <div
                         className={classNames(styles[`${PrefixCls}-outer-voice-container-button`], { [styles.active]: this.state.isVoice })}
@@ -497,13 +516,13 @@ class CreateTask extends Component {
                   </div>
                 </form>
               </div>
-            
+
             </div>
             <div>
               <div>
                 <div className={styles[`${PrefixCls}-outer`]}>
                   <form>
-                    <div className={styles[`${PrefixCls}-outer-type`]}>
+                    <div className={styles[`${PrefixCls}-outer-selectUser`]}>
                       <List.Item
                         extra={getValue(selectedUsers)}
                         arrow="horizontal"
@@ -528,22 +547,22 @@ class CreateTask extends Component {
                     </div>
                     <div className={styles[`${PrefixCls}-outer-type`]}>
                       <Picker data={appealType}
-                        cols={1}
-                        {...getFieldProps('taskType', {
-                          rules: [{ required: false, message: '请选择任务类型' }],
-                        })}
-                        error={!!getFieldError('taskType') && Toast.fail(getFieldError('taskType'))}
+                              cols={1}
+                              {...getFieldProps('taskType', {
+                                rules: [{ required: false, message: '请选择任务类型' }],
+                              })}
+                              error={!!getFieldError('taskType') && Toast.fail(getFieldError('taskType'))}
                       >
                         <List.Item arrow="horizontal">任务类型</List.Item>
                       </Picker>
                     </div>
                     <div className={styles[`${PrefixCls}-outer-type`]}>
                       <Picker data={noticeType}
-                        cols={1}
-                        {...getFieldProps('taskUrgency', {
-                          rules: [{ required: true, message: '请选择紧急程度' }],
-                        })}
-                        error={!!getFieldError('taskUrgency') && Toast.fail(getFieldError('taskUrgency'))}
+                              cols={1}
+                              {...getFieldProps('taskUrgency', {
+                                rules: [{ required: true, message: '请选择紧急程度' }],
+                              })}
+                              error={!!getFieldError('taskUrgency') && Toast.fail(getFieldError('taskUrgency'))}
                       >
                         <List.Item arrow="horizontal">任务紧急程度</List.Item>
                       </Picker>
@@ -553,7 +572,7 @@ class CreateTask extends Component {
                         {...getFieldProps('taskTitle', {
                           initialValue: '',
                           rules: [{ required: true, message: '标题必须输入' },
-                            { max: 10, message: '标题最多能输入10个字' }
+                            { max: 10, message: '标题最多能输入10个字' },
                           ],
                         })}
                         clear
@@ -579,14 +598,14 @@ class CreateTask extends Component {
                     </List.Item>
                     <div className={styles[`${PrefixCls}-outer-button`]}>
                       <Button type="ghost"
-                        inline
-                        size="small"
-                        onClick={this.onTaskSubmit.bind(this, selectedUsers)}
+                              inline
+                              size="small"
+                              onClick={this.onTaskSubmit.bind(this, selectedUsers)}
                       >提交</Button>
                     </div>
                   </form>
                 </div>
-              
+
               </div>
             </div>
           </Tabs>
@@ -599,7 +618,7 @@ class CreateTask extends Component {
                     {...getFieldProps('title', {
                       initialValue: '',
                       rules: [{ required: true, message: '标题必须输入' },
-                        { max: 10, message: '标题最多能输入10个字' }
+                        { max: 10, message: '标题最多能输入10个字' },
                       ],
                     })}
                     clear
@@ -612,8 +631,8 @@ class CreateTask extends Component {
                 </div>
                 <div className={styles[`${PrefixCls}-outer-type`]}>
                   <Picker data={appealType}
-                    cols={1}
-                    {...getFieldProps('type')}
+                          cols={1}
+                          {...getFieldProps('type')}
                   >
                     <List.Item arrow="horizontal">反馈类型</List.Item>
                   </Picker>
@@ -634,13 +653,13 @@ class CreateTask extends Component {
                 <div style={{ borderBottom: '1px solid #ddd' }}>
                   <InputItem
                     {...getFieldProps('positions', {
-                      initialValue: currentPostions
+                      initialValue: currentPostions,
                     })}
                     clear
                     error={!!getFieldError('positions') && Toast.fail(getFieldError('positions'))}
                     placeholder="请输入您的位置"
-                    extra={currentPostions === '' ? loadPostions ? <Icon type="loading" /> :
-                    <span onClick={this.getCurrentLocation.bind(this)}><Icon
+                    extra={currentPostions === '' ? loadPostions ? <Icon type="loading"/> :
+                      <span onClick={this.getCurrentLocation.bind(this)}><Icon
                         type={getLocalIcon('/others/location.svg')}
                       /></span> : ''}
                   >
@@ -651,9 +670,9 @@ class CreateTask extends Component {
                   <div>
                     <p>添加图片</p>
                     {this.state.files.length >= 4 ? '' :
-                    <span onClick={cnTakePhoto.bind(null, this.handleCameraClick, 1)}>
-                        <Icon type={getLocalIcon('/media/camerawhite.svg')} />
-                      </span>}
+                      <span onClick={cnTakePhoto.bind(null, this.handleCameraClick, 1)}>
+                      <Icon type={getLocalIcon('/media/camerawhite.svg')}/>
+                    </span>}
                   </div>
                   <ImagePicker
                     files={this.state.files}
@@ -669,7 +688,7 @@ class CreateTask extends Component {
                   <div className={styles[`${PrefixCls}-outer-voice-container`]}>
                     <div className={styles[`${PrefixCls}-outer-voice-container-files`]}>
                       {mediaFile !== '' ?
-                        <VociePrev mediaFileUrl={mediaFileUrl} mediaFileTimer={mediaFileLength} /> : ''}
+                        <VociePrev mediaFileUrl={mediaFileUrl} mediaFileTimer={mediaFileLength}/> : ''}
                     </div>
                     <div
                       className={classNames(styles[`${PrefixCls}-outer-voice-container-button`], { [styles.active]: this.state.isVoice })}
@@ -690,10 +709,10 @@ class CreateTask extends Component {
                 </div>
               </form>
             </div>
-          
+
           </div>
         }
-        
+
         {isShowSelectMenu ? <SelectMenu {...menuProps} /> : ''}
         <ActivityIndicator
           toast
@@ -707,5 +726,5 @@ class CreateTask extends Component {
 
 export default connect(({ loading, createtask }) => ({
   loading,
-  createtask
+  createtask,
 }))(createForm()(CreateTask));

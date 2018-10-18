@@ -760,6 +760,33 @@ const Routers = function ({ history, app }) {
           },
         },
         {
+          path: 'workers',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/workers'));
+              cb(null, require('routes/workers/'));
+            }, 'workers');
+          },
+        },
+        {
+          path: 'integraldetails',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/integraldetails'));
+              cb(null, require('routes/integraldetails/'));
+            }, 'integraldetails');
+          },
+        },
+        {
+          path: 'integralgoods',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/integralgoods'));
+              cb(null, require('routes/integralgoods/'));
+            }, 'integralgoods');
+          },
+        },
+        {
           path: '*',
           getComponent (nextState, cb) {
             const { location: { pathname } } = nextState;

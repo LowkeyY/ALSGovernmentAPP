@@ -1,7 +1,8 @@
-import { Component } from 'react'
-import { createForm } from 'rc-form'
-import { connect } from 'dva'
-import Nav from 'components/nav'
+import { Component } from 'react';
+import { createForm } from 'rc-form';
+import { connect } from 'dva';
+import { routerRedux } from 'dva/router';
+import Nav from 'components/nav';
 import {
   List,
   InputItem,
@@ -17,66 +18,73 @@ import {
   Tabs,
   ActivityIndicator,
   DatePicker,
-} from 'components'
-import classNames from 'classnames'
-import { getLocalIcon, postionsToString, replaceSystemEmoji, DateChange } from 'utils'
-import SelectMenu from 'components/selectMenu'
-import styles from './index.less'
+} from 'components';
+import classNames from 'classnames';
+import { getLocalIcon, postionsToString, replaceSystemEmoji, DateChange } from 'utils';
+import SelectMenu from 'components/selectMenu';
+import styles from './index.less';
 
-const PrefixCls = 'centersendtask'
+const PrefixCls = 'centersendtask';
 let nowTimeStamp = Date.now(),
-  now = new Date(nowTimeStamp)
+  now = new Date(nowTimeStamp);
 
 class CenterSendTask extends Component {
   constructor (props) {
-    super(props)
+    super(props);
     this.state = {
       date: now,
-    }
+    };
   }
 
   onCancel = () => {
-    this.props.dispatch(routerRedux.goBack())
-  }
+    this.props.dispatch(routerRedux.goBack());
+  };
   changeValue = (obj) => {
     for (let i in obj) {
       if (typeof (obj[i]) === 'string') {
-        obj[i] = replaceSystemEmoji(obj[i])
+        obj[i] = replaceSystemEmoji(obj[i]);
       }
     }
-    return obj
-  }
+    return obj;
+  };
+  getUserValue = (arr) => {
+    let userValue = [];
+    arr && arr.map((data, i) => {
+      userValue.push(data.userId);
+    });
+    return userValue.join();
+  };
   onTaskSubmit = (selectedUsers, workId) => {
     this.props.form.validateFields(
       ['taskTitle', 'taskInfo', 'taskUrgency', 'taskEndDate'],
       { force: true },
       (error) => {
         if (!error) {
-          const date = this.state.date
+          const date = this.state.date;
 
           const data = {
             ...this.props.form.getFieldsValue(['taskTitle', 'taskType', 'taskInfo', 'taskUrgency']),
-            cldw: selectedUsers.join(),
+            cldw: this.getUserValue(selectedUsers),
             taskEndDate: DateChange(date),
             workId,
-          }
+          };
           this.props.dispatch({
             type: 'centersendtask/centerSendTask',
             payload: {
               ...this.changeValue(data),
             },
-          })
+          });
           this.props.dispatch({
             type: 'centersendtask/updateState',
             payload: {
               animating: true,
             },
-          })
+          });
         } else {
-          Toast.fail('请确认信息是否正确。')
+          Toast.fail('请确认信息是否正确。');
         }
-      })
-  }
+      });
+  };
 
   handleOkClick (dispatch) {
     dispatch({
@@ -84,7 +92,7 @@ class CenterSendTask extends Component {
       payload: {
         isShowSelectMenu: false,
       },
-    })
+    });
   }
 
   handleCancel (dispatch) {
@@ -94,28 +102,28 @@ class CenterSendTask extends Component {
         isShowSelectMenu: false,
         selectedUsers: [],
       },
-    })
+    });
   }
 
   handleSelectClick (dispatch) {
-    dispatch({
-      type: 'centersendtask/updateState',
-      payload: {
-        isShowSelectMenu: true,
-        selectedUsers: [],
+    // dispatch({一个页面选人无搜索
+    //   type: 'centersendtask/updateState',
+    //   payload: {
+    //     isShowSelectMenu: true,
+    //     selectedUsers: [],
+    //   },
+    // });
+    dispatch(routerRedux.push({
+      pathname: '/workers',
+      query: {
+        currentRoute: `${PrefixCls}`,
       },
-    })
+    }));
   }
-
-  componentWillUnmount () {
-    clearInterval(int)
-    clearTimeout(stop)
-  }
-
 
   render () {
     const { name = '下发任务', title = '', workId = '' } = this.props.location.query,
-      { appealType, animating, noticeType, isShowSelectMenu, userItems, selectedUsers } = this.props.centersendtask
+      { appealType, animating, noticeType, isShowSelectMenu, userItems, selectedUsers } = this.props.centersendtask;
     const { getFieldProps, getFieldError } = this.props.form,
       addUsers = (value) => {
         this.props.dispatch({
@@ -123,16 +131,14 @@ class CenterSendTask extends Component {
           payload: {
             selectedUsers: value,
           },
-        })
+        });
       },
       getValue = (value) => {
-        let arr = []
-        userItems.map((data, i) => {
-          if (value.includes(data.value)) {
-            arr.push(data.label)
-          }
-        })
-        return arr.length ? arr.join() : '请选择用户'
+        let arr = [];
+        value.map((data, i) => {
+          arr.push(data.name);
+        });
+        return arr.length ? arr.join() : '请选择用户';
       },
       menuProps = {
         items: userItems,
@@ -140,7 +146,7 @@ class CenterSendTask extends Component {
         targetRef: this.chooseUsers,
         onCancel: this.handleCancel.bind(this, this.props.dispatch),
         addUsers,
-      }
+      };
     return (
       <div>
         <Nav title={name} dispatch={this.props.dispatch}/>
@@ -176,7 +182,7 @@ class CenterSendTask extends Component {
                     data={appealType}
                     cols={1}
                     {...getFieldProps('taskType', {
-                      rules: [{ required: false, message: '请选择任务类型' }],
+                      rules: [{ required: true, message: '请选择任务类型' }],
                     })}
                     error={!!getFieldError('taskType') && Toast.fail(getFieldError('taskType'))}
                   >
@@ -242,12 +248,11 @@ class CenterSendTask extends Component {
           animating={animating}
         />
       </div>
-    )
-
+    );
   }
 }
 
 export default connect(({ loading, centersendtask }) => ({
   loading,
   centersendtask,
-}))(createForm()(CenterSendTask))
+}))(createForm()(CenterSendTask));

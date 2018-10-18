@@ -2,8 +2,8 @@ module.exports = {
   name: 'ALS-APP',
   logo: '/logo.png',
 
-  baseURL: 'http://192.168.0.202:9200',
-  // baseURL: 'http://www.myals.gov.cn:9000',
+  // baseURL: 'http://192.168.0.202:9200',
+  baseURL: 'http://www.myals.gov.cn:9000',
   wsURL: 'ws://www.myals.gov.cn:9000/websocket/chat/',
   userTag: {
     username: 'username',
@@ -107,6 +107,10 @@ module.exports = {
     RefuseAppealApi: '/ExternalItems/policWork/backWork.jcp',
     CompleteAppealApi: '/ExternalItems/taskRelease/zhiHuiConformTask.jcp',
     CenterSendTaskApi: '/ExternalItems/taskRelease/interface/AppPoliceWorkTaskCreat.jcp',
-
+    GetGoodsListApi: '/cphsc/interface/mails/getAllGoods.jcp',
+    GetGoodsInfoApi: '/cphsc/interface/mails/getGoodsInfo.jcp',
+    GetUserIntegralApi: '/cphsc/interface/mails/getUserIntergation.jcp',
+    ChangeGoodsApi: '/cphsc/interface/mails/userExchangeOfGoods.jcp',
+    GetGoodsMyListApi: '/cphsc/interface/mails/getMyExchangeOfGoods.jcp',
   },
 };

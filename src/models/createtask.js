@@ -9,7 +9,7 @@ import {
   queryTaskurgent,
   queryAdmin,
   queryUsers,
-  createNewTask
+  createNewTask,
 } from 'services/queryappeal';
 import { routerRedux } from 'dva/router';
 
@@ -32,9 +32,9 @@ const getType = (datas = []) => {
     const arr = [];
     datas[0].data && datas[0].data.map((item, i) => {
       arr.push({
-        label: item.name,
+        label: `${item.name}${item.deptPath}`,
         value: item.userId,
-        dept: item.deptPath
+        dept: item.deptPath,
       });
     });
     return arr.length > 0 ? arr : [];
@@ -52,7 +52,8 @@ export default modelExtend(model, {
     isAdmin: false,
     isShowSelectMenu: false,
     userItems: [],
-    selectedUsers: []
+    selectedUsers: [],
+    selectedIndex: 0,
   },
   subscriptions: {
     setup ({ dispatch, history }) {
@@ -63,34 +64,34 @@ export default modelExtend(model, {
         },
       });
       history.listen(({ pathname, action, query }) => {
-        if (pathname === '/createtask') {
-          const { name = '', location = postionsToString({}), } = query;
+        if (pathname === '/createtask' && action === 'PUSH') {
+          const { name = '', location = postionsToString({}) } = query;
           dispatch({
             type: 'updateState',
             payload: {
               name,
               location,
-              selectedUsers: []
+              selectedUsers: [],
             },
           });
           dispatch({
-            type: 'query',
+            type: 'queryType',
           });
           dispatch({
-            type: 'queryTaskurgent'
+            type: 'queryTaskurgent',
           });
           dispatch({
-            type: 'queryAdmin'
+            type: 'queryAdmin',
           });
           dispatch({
-            type: 'queryUsers'
+            type: 'queryUsers',
           });
         }
       });
     },
   },
   effects: {
-    * query ({ payload }, { call, put, select }) {
+    * queryType ({ payload }, { call, put, select }) {
       const data = yield call(queryAppealType, { isFankui: '2' });
       if (data) {
         yield put({
@@ -108,7 +109,7 @@ export default modelExtend(model, {
           type: 'updateState',
           payload: {
             noticeType: getType(data.data),
-          }
+          },
         });
       }
     },
@@ -119,7 +120,7 @@ export default modelExtend(model, {
           type: 'updateState',
           payload: {
             isAdmin: data.isAdmin,
-          }
+          },
         });
       }
     },
@@ -129,8 +130,8 @@ export default modelExtend(model, {
         yield put({
           type: 'updateState',
           payload: {
-            userItems: getUser(data.data)
-          }
+            userItems: getUser(data.data),
+          },
         });
       }
     },
@@ -182,6 +183,15 @@ export default modelExtend(model, {
         Toast.offline(data.message);
       }
     },
-    
+
+  },
+  reducers: {
+    updateUser (state, { payload = {} }) {
+      const { selectedUsers = [] } = payload;
+      return {
+        ...state,
+        selectedUsers,
+      };
+    },
   },
 });
