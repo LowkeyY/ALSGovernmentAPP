@@ -1,5 +1,5 @@
 var cunovs = {
-  cnVersion: '7.0.1',
+  cnVersion: '8.0.1',
   cnGlobalIndex: 0,
   cnhtmlSize: 0,
   cnhtmlHeight: document.documentElement.clientHeight,
@@ -78,9 +78,12 @@ var cunovs = {
   },
   cnCreateBlob: function (data, name, type) {
     var arr = data.split(',')
-      , bstr = atob(arr.length > 1 ? arr[1] : data)
-      , n = bstr.length
-      , u8arr = new Uint8Array(n);
+      ,
+      bstr = atob(arr.length > 1 ? arr[1] : data)
+      ,
+      n = bstr.length
+      ,
+      u8arr = new Uint8Array(n);
     while (n--) {
       u8arr[n] = bstr.charCodeAt(n);
     }
@@ -92,13 +95,15 @@ var cunovs = {
   },
   cnStartJiluguiji: function (serverId, entityId, onSuccess, onError, others, timeout) {
     var onSuccess = onSuccess || cnPrn
-      , onErroe = onError || cnPrn
-      , others = others || {};
+      ,
+      onErroe = onError || cnPrn
+      ,
+      others = others || {};
     cbSuccess = function () {
       if (others.key && others.url) {
         cordova.BaiduLocation.startPositions(cnPrn, cbError, {
           submitUserToken: others.key,
-          submitAddr: others.url
+          submitAddr: others.url,
         });
       }
       cordova.BaiduYingyan.setInterval(2, 10, cnPrn, cnPrn);
@@ -118,7 +123,7 @@ var cunovs = {
       timeout = timeout || 1000;
     if (cnIsDevice()) {
       navigator.geolocation.getCurrentPosition(cbSuccess, cbError, {
-        timeout: timeout
+        timeout: timeout,
       });
     } else {
       onSuccess();
@@ -126,7 +131,8 @@ var cunovs = {
   },
   cnStopJiluguiji: function (onSuccess, onError) {
     var onSuccess = onSuccess || cnPrn
-      , onErroe = onError || cnPrn;
+      ,
+      onErroe = onError || cnPrn;
     if (cnIsDevice()) {
       cordova.BaiduLocation.stop(cnPrn, cnPrn);
       cordova.BaiduYingyan.stopTrace(onSuccess, onError);
@@ -139,21 +145,22 @@ var cunovs = {
       return;
     }
     var cbError = function (err) {
-      if (err.code == 3) {
-        cbSuccess();
-      } else {
-        cnShowToast('无法定位您的位置，请开启定位权限并保持网络畅通。', 3000);
+        if (err.code == 3) {
+          cbSuccess();
+        } else {
+          cnShowToast('无法定位您的位置，请开启定位权限并保持网络畅通。', 3000);
+        }
       }
-    }
-      , cbSuccess = function () {
-      cordova.BaiduLocation.startPositions(cnPrn, cbError, {
-        submitUserToken: key,
-        submitAddr: url
-      });
-    };
+      ,
+      cbSuccess = function () {
+        cordova.BaiduLocation.startPositions(cnPrn, cbError, {
+          submitUserToken: key,
+          submitAddr: url,
+        });
+      };
     if (cnIsDevice()) {
       navigator.geolocation.getCurrentPosition(cbSuccess, cbError, {
-        timeout: 5000
+        timeout: 5000,
       });
     }
   },
@@ -174,7 +181,7 @@ var cunovs = {
     timeout = timeout || 500;
     if (cnIsDevice()) {
       navigator.geolocation.getCurrentPosition(cbSuccess, cbError, {
-        timeout: timeout
+        timeout: timeout,
       });
     } else {
       onSuccess();
@@ -204,34 +211,36 @@ var cunovs = {
   },
   cnStartRecord: function (id, onSuccess, onError) {
     var recordMedia = '';
-    if (cnIsAndroid() && cnIsDefined(Media)) {
+    if (cnIsAndroid() || cnIsiOS() && cnIsDefined(Media)) {
       id = id || 'Media';
       onSuccess = onSuccess || cnPrn;
       onError = onError || cnPrn;
       var mediaName = id + '_' + cnId() + '.mp3'
-        , mediaOnSuccess = function () {
-        var media = {
-          name: mediaName,
-          timers: recordMedia.timers || 5,
-        };
-        resolveLocalFileSystemURL(cordova.file.externalRootDirectory, function (dirEntry) {
-          dirEntry.getFile(media.name, {}, function (file) {
-            file.file(function (f) {
-              cnReadFile(f, {
-                name: media.name,
-                timers: media.timers,
-                type: f.type,
-                nativeURL: file.nativeURL,
-              }, onSuccess, onError);
-              /*                media.file = f
-      cnPrn(media)
-      onSuccess(media)*/
-            }, onError);
+        ,
+        mediaOnSuccess = function () {
+          var media = {
+            name: mediaName,
+            timers: recordMedia.timers || 5,
+          };
+          resolveLocalFileSystemURL(cordova.file.externalRootDirectory, function (dirEntry) {
+            dirEntry.getFile(media.name, {}, function (file) {
+              file.file(function (f) {
+                cnReadFile(f, {
+                  name: media.name,
+                  timers: media.timers,
+                  type: f.type,
+                  nativeURL: file.nativeURL,
+                }, onSuccess, onError);
+                /*                media.file = f
+        cnPrn(media)
+        onSuccess(media)*/
+              }, onError);
 
-          });
-        }, onError);
-      }
-        , recordMedia = new Media(mediaName, mediaOnSuccess, onError);
+            });
+          }, onError);
+        }
+        ,
+        recordMedia = new Media(mediaName, mediaOnSuccess, onError);
       recordMedia.startRecord();
     }
     return recordMedia;
@@ -276,7 +285,7 @@ var cunovs = {
     } else if (typeof (window.CunovsAliasPlugin) === 'object') {
       window.CunovsAliasPlugin.setAlias({
         accessToken: accessToken,
-        alias: alias
+        alias: alias,
       });
     }
   },
@@ -290,7 +299,7 @@ var cunovs = {
     } else if (typeof (window.CunovsAliasPlugin) === 'object') {
       window.CunovsAliasPlugin.deleteAlias({
         accessToken: accessToken,
-        alias: alias
+        alias: alias,
       });
     }
   },
@@ -320,9 +329,9 @@ var cunovs = {
       }
     }
   },
-  cnOpen: function(url , target , params , callback){
+  cnOpen: function (url, target, params, callback) {
     target = target || '_blank';
-    window.open(url , target)
+    window.open(url, target);
   },
 };
 
@@ -346,33 +355,38 @@ if (typeof String.prototype.startsWith != 'function') {
 
 (function () {
   var onDeviceReady = function () {
-    try {
-      if (cnIsDefined(StatusBar) != 'undefined') {
-        StatusBar.overlaysWebView(false);
-        cnSetStatusBarStyle();
-      }
-      cnClearBadge();
-      if(cordova.InAppBrowser) {
-        cnOpen = function (url, target, params, callback) {
-          target = target || '_self'
-          params = params || 'location=yes,hideurlbar=yes,toolbarcolor=#4eaaf7,navigationbuttoncolor=#ffffff,closebuttoncolor=#ffffff'
-          callback = callback || new Function()
-          var ref = cordova.InAppBrowser.open(url, target, params, callback),
-            spinner = '<!DOCTYPE html><html><head><meta name=\'viewport\' content=\'width=device-width,height=device-height,initial-scale=1\'><style>.loader {position: absolute;    margin-left: -2em;    left: 50%;    top: 50%;    margin-top: -2em;    border: 5px solid #f3f3f3;    border-radius: 50%;    border-top: 5px solid #3498db;    width: 50px;    height: 50px;    -webkit-animation: spin 1.5s linear infinite;    animation: spin 1.5s linear infinite;}@-webkit-keyframes spin {  0% { -webkit-transform: rotate(0deg); } 100% { -webkit-transform: rotate(360deg); }}@keyframes spin {  0% { transform: rotate(0deg); }  100% { transform:rotate(360deg); }}</style></head><body><div class=\'loader\'></div></body></html>'
-          ref.executeScript({ code: '(function() {document.write("' + spinner + '");window.location.href=\'' + url + '\';})()' })
-
+      try {
+        if (cnIsDefined(StatusBar) != 'undefined') {
+          StatusBar.overlaysWebView(false);
+          cnSetStatusBarStyle();
         }
+        cnClearBadge();
+        if (cordova.InAppBrowser) {
+          cnOpen = function (url, target, params, callback) {
+            target = target || '_self';
+            params = params || 'location=yes,hideurlbar=yes,toolbarcolor=#4eaaf7,navigationbuttoncolor=#ffffff,closebuttoncolor=#ffffff';
+            callback = callback || new Function();
+            var ref = cordova.InAppBrowser.open(url, target, params, callback),
+              spinner = '<!DOCTYPE html><html><head><meta name=\'viewport\' content=\'width=device-width,height=device-height,initial-scale=1\'><style>.loader {position: absolute;    margin-left: -2em;    left: 50%;    top: 50%;    margin-top: -2em;    border: 5px solid #f3f3f3;    border-radius: 50%;    border-top: 5px solid #3498db;    width: 50px;    height: 50px;    -webkit-animation: spin 1.5s linear infinite;    animation: spin 1.5s linear infinite;}@-webkit-keyframes spin {  0% { -webkit-transform: rotate(0deg); } 100% { -webkit-transform: rotate(360deg); }}@keyframes spin {  0% { transform: rotate(0deg); }  100% { transform:rotate(360deg); }}</style></head><body><div class=\'loader\'></div></body></html>';
+            ref.executeScript({ code: '(function() {document.write("' + spinner + '");window.location.href=\'' + url + '\';})()' });
+
+          };
+        }
+      } catch (exception) {
       }
-    } catch (exception) {
     }
-  }
-    , onResume = function () {
-    cnClearBadge();
-  }
-    , cunovsWebSocket = ''
-    , cunovsWebSocketUrl = ''
-    , cunovsWebSocketUserId = ''
-    , cnnovsWebSocketStatus = '';
+    ,
+    onResume = function () {
+      cnClearBadge();
+    }
+    ,
+    cunovsWebSocket = ''
+    ,
+    cunovsWebSocketUrl = ''
+    ,
+    cunovsWebSocketUserId = ''
+    ,
+    cnnovsWebSocketStatus = '';
 
   window.cnGetWebSocket = function (url, id) {
     if (cnIsDefined(url) && url) {
@@ -439,7 +453,7 @@ if (typeof String.prototype.startsWith != 'function') {
         if (e.target && e.target.tagName === 'VIDEO' && cnIsDefined(document.webkitIsFullScreen)) {
           cnScreenChange(document.webkitIsFullScreen);
         }
-      }
+      },
     );
   }
   window.cnPrintWebSocket = function () {
@@ -451,7 +465,8 @@ if (typeof String.prototype.startsWith != 'function') {
 
   function resizeBaseFontSize () {
     var rootHtml = document.documentElement
-      , deviceWidth = rootHtml.clientWidth;
+      ,
+      deviceWidth = rootHtml.clientWidth;
     if (deviceWidth > 1024) {
       deviceWidth = 1024;
     }

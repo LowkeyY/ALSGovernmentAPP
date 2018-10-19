@@ -44,7 +44,7 @@ function PatryMap ({ location, dispatch, patrymap }) {
       }));
     };
   return (
-    <div>
+    <div className={styles[`${PrefixCls}-container`]}>
       <Nav title={getTitle(name)} dispatch={dispatch} />
       <div className={styles[`${PrefixCls}-imgbox`]}>
         <img width="100%" src={mapUrl} alt="" />

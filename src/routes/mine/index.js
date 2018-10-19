@@ -200,7 +200,7 @@ function Mine ({ location, dispatch, mine, app, login }) {
         </List>
       </div>
       <WhiteSpace size="lg" />
-      <div style={{ marginBottom: '50px' }}>
+      <div className={styles[`${PrefixCls}-buttonbox`]}>
         {
           !isLogin ?
             

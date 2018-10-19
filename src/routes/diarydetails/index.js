@@ -54,7 +54,7 @@ function DiaryDetails ({ location, dispatch, diarydetails }) {
     };
   
   return (
-    <div>
+    <div className={styles[`${PrefixCls}-container`]}>
       <Nav title={name} dispatch={dispatch} />
       <div className={styles[`${PrefixCls}-outer`]}>
         <div className={styles[`${PrefixCls}-header`]}>

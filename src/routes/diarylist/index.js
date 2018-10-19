@@ -93,7 +93,6 @@ function DiaryList ({ location, dispatch, diarylist, app }) {
   return (
     <div>
       <Nav title={name} dispatch={dispatch} />
-      <WhiteSpace size="md" />
       <div className={styles[`${PrefixCls}-message-outer`]}>
         {getCurrentView()}
       </div>

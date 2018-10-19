@@ -19,7 +19,7 @@ class Setup extends React.Component {
   constructor (props) {
     super(props);
   }
-  
+
   handleUserNameClick = (user) => {
     prompt('修改昵称', '', [
       { text: '取消' },
@@ -89,25 +89,27 @@ class Setup extends React.Component {
     );
   };
   handleUpdateClick = (urls, appVerSion, updateInfo) => {
-    if (urls !== '') {
-      Modal.alert(`版本更新(${appVerSion})`, this.getContent(updateInfo), [
-        {
-          text: '暂不升级',
-          onPress: () => this.props.dispatch({
-            type: 'app/updateState',
-            payload: {
-              showModal: false,
-            },
-          }),
-          style: 'default',
-        },
-        { text: '立刻升级', onPress: () => cnUpdate(urls) },
-      ]);
-    } else {
-      Toast.offline('已经是最新版本啦(#^.^#)');
+    if (cnIsAndroid()) {
+      if (urls !== '') {
+        Modal.alert(`版本更新(${appVerSion})`, this.getContent(updateInfo), [
+          {
+            text: '暂不升级',
+            onPress: () => this.props.dispatch({
+              type: 'app/updateState',
+              payload: {
+                showModal: false,
+              },
+            }),
+            style: 'default',
+          },
+          { text: '立刻升级', onPress: () => cnUpdate(urls) },
+        ]);
+      } else {
+        Toast.offline('已经是最新版本啦(#^.^#)');
+      }
     }
   };
-  
+
   render () {
     const { name = '' } = this.props.location.query,
       { animating } = this.props.setup,
@@ -117,8 +119,8 @@ class Setup extends React.Component {
           type: 'app/updateUsers',
           payload: {
             users: {
-              useravatar: path
-            }
+              useravatar: path,
+            },
           },
         });
       },
@@ -148,8 +150,8 @@ class Setup extends React.Component {
     const { users: { username, useravatar, usertype }, updates: { upgraded = false, urls = '', appVerSion = '', updateInfo = '' } } = this.props.app;
     return (
       <div>
-        <Nav title={name} dispatch={this.props.dispatch} />
-        <WhiteSpace size="md" />
+        <Nav title={name} dispatch={this.props.dispatch}/>
+        <WhiteSpace size="md"/>
         <div>
           <List className={`${PrefixCls}-list`}>
             <Item>
@@ -159,7 +161,7 @@ class Setup extends React.Component {
                     <span>更换头像</span>
                   </p>
                   <div className={'icon-img-box'}>
-                    <img src={getImages(useravatar, 'user')} alt="icon" onError={getErrorImg} />
+                    <img src={getImages(useravatar, 'user')} alt="icon" onError={getErrorImg}/>
                   </div>
                 </FileUpload>
               </div>
@@ -188,7 +190,7 @@ class Setup extends React.Component {
               </Badge> : '版本信息'}
             </Item>
           </List>
-          <ActivityIndicator animating={animating} toast text="上传中..." />
+          <ActivityIndicator animating={animating} toast text="上传中..."/>
         </div>
       </div>
     );

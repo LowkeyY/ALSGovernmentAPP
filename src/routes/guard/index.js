@@ -37,7 +37,7 @@ function Guard ({ location, dispatch, guard, app }) {
       }
     };
   return (
-    <div>
+    <div className={styles[`${PrefixCls}-outer`]}>
       <Nav title={name} dispatch={dispatch} />
       <TitleBox title="系统通知" />
       <div>

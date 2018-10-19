@@ -25,7 +25,7 @@ const App = ({ children, dispatch, app, loading, location }) => {
   tabBars.map(_ => {
     menusArray.push(_.route);
   });
-  
+
   cnSetStatusBarStyle(pathname);
   startWebSocket(users);
   if (lastHref !== href || loading.global) {
@@ -61,7 +61,7 @@ const App = ({ children, dispatch, app, loading, location }) => {
             {getContent(updateInfo)}
           </div>
         </Modal>);
-      } 
+      }
       if (isFirst) {
         Modal.alert(`版本更新(${appVerSion})`, getContent(updateInfo), [
           {
@@ -87,11 +87,11 @@ const App = ({ children, dispatch, app, loading, location }) => {
     };
   if (pathname !== '/' && menusArray.length && !menusArray.includes(pathname)) {
     return (<div>
-      <Loader spinning={loading.effects[`${pathname.startsWith('/') ? pathname.substr(1) : pathname}/query`]} />
+      <Loader spinning={loading.effects[`${pathname.startsWith('/') ? pathname.substr(1) : pathname}/query`]}/>
       {children}
     </div>);
   }
-  
+
   return (
     <div className="tabbarbox">
       <TabBar
@@ -109,11 +109,11 @@ const App = ({ children, dispatch, app, loading, location }) => {
             onPress: () => {
               const { appends = {}, route } = _;
               dispatch(routerRedux.push({
-                pathname: route,
-                query: {
-                  ...appends,
+                  pathname: route,
+                  query: {
+                    ...appends,
+                  },
                 },
-              },
               ));
             },
           }, _);

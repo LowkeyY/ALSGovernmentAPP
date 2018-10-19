@@ -36,10 +36,10 @@ class IntegralDetails extends React.Component {
       };
     return (
       <div>
-        <Nav title={getTitle(name)} dispatch={this.props.dispatch} color='#ff632b'/>
+        <Nav title={getTitle(name)} dispatch={this.props.dispatch} color='#ff632b '/>
         <div className={styles[`${PrefixCls}-outer`]}>
           <div className={styles[`${PrefixCls}-outer-photo`]}>
-            <img src={getImages(goodsPhoto)} alt=""/>
+            <img src={getImages(goodsPhoto)} alt="" />
           </div>
           <div className={styles[`${PrefixCls}-outer-title`]}>
             {goodsName}

@@ -401,7 +401,7 @@ class CreateTask extends Component {
         addUsers,
       };
     return (
-      <div>
+      <div className={styles[`${PrefixCls}-container`]}>
         <Nav title={name} dispatch={this.props.dispatch}/>
         {isAdmin ?
           <Tabs
@@ -457,7 +457,7 @@ class CreateTask extends Component {
                       placeholder={'在此输入发表内容，注意时间、地点、涉及人物等要素'}
                     />
                   </List.Item>
-                  <div style={{ borderBottom: '1px solid #ddd' }}>
+                  <div>
                     <InputItem
                       {...getFieldProps('positions', {
                         initialValue: currentPostions,
@@ -532,6 +532,8 @@ class CreateTask extends Component {
                       >
                         选择办理人
                       </List.Item>
+                    </div>
+                    <div className={styles[`${PrefixCls}-outer-time`]}>
                       <DatePicker
                         ref={el => this.dateValue = el}
                         mode="date"
@@ -709,7 +711,6 @@ class CreateTask extends Component {
                 </div>
               </form>
             </div>
-
           </div>
         }
 

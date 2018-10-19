@@ -55,7 +55,7 @@ export default {
         payload: {
           currentVersion: cnVersion,
           systemType: cnDeviceType(),
-          ...others
+          ...others,
         },
       });
       window.addEventListener('cnevent', (e) => {
@@ -93,7 +93,7 @@ export default {
           },
         });
         // postCurrentPosition(guiji)
-        if (urls !== '') {
+        if (urls !== '' && cnIsAndroid()) {
           yield put({
             type: 'updateState',
             payload: {
