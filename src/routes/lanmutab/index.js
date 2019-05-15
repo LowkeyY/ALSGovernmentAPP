@@ -7,7 +7,7 @@ import { layoutRow } from 'components/row';
 import ListView from 'components/listview';
 import Banner from 'components/banner';
 import styles from './index.less';
-import { handleListClick } from 'utils/commonevent';
+import { handleListClick, handleBannerClick } from 'utils/commonevent';
 
 const PrefixCls = 'lanmutab',
   Item = List.Item,
@@ -52,8 +52,8 @@ function Comp ({ location, dispatch, lanmutab }) {
         payload: {
           refreshId,
           callback,
-          isRefresh: true
-        }
+          isRefresh: true,
+        },
       });
     },
     onEndReached = (refreshId, callback) => {
@@ -61,8 +61,8 @@ function Comp ({ location, dispatch, lanmutab }) {
         type: `${PrefixCls}/queryListview`,
         payload: {
           refreshId,
-          callback
-        }
+          callback,
+        },
       });
     },
     onScrollerTop = (top) => {
@@ -70,8 +70,8 @@ function Comp ({ location, dispatch, lanmutab }) {
         dispatch({
           type: `${PrefixCls}/updateState`,
           payload: {
-            scrollerTop: top
-          }
+            scrollerTop: top,
+          },
         });
       }
     },
@@ -82,14 +82,14 @@ function Comp ({ location, dispatch, lanmutab }) {
       if (selectedIndex == 0) {
         result.push(
           <ListView layoutHeader={''}
-            dataSource={lists}
-            layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
-            onEndReached={onEndReached.bind(null, refreshId)}
-            onRefresh={onRefresh.bind(null, refreshId)}
-            hasMore={hasMore}
-            onScrollerTop={onScrollerTop.bind(null)}
-            scrollerTop={scrollerTop}
-          />
+                    dataSource={lists}
+                    layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
+                    onEndReached={onEndReached.bind(null, refreshId)}
+                    onRefresh={onRefresh.bind(null, refreshId)}
+                    hasMore={hasMore}
+                    onScrollerTop={onScrollerTop.bind(null)}
+                    scrollerTop={scrollerTop}
+          />,
         );
       } else {
         lists.map((list, i) => {
@@ -97,12 +97,12 @@ function Comp ({ location, dispatch, lanmutab }) {
           if (id !== '') {
             result.push(
               <Item key={id}
-                className={styles[`${PrefixCls}-item`]}
-                thumb={list.image || ''}
-                multipleLine
-                wrap
-                arrow="horizontal"
-                onClick={handleItemOnclick.bind(null, list)}
+                    className={styles[`${PrefixCls}-item`]}
+                    thumb={list.image || ''}
+                    multipleLine
+                    wrap
+                    arrow="horizontal"
+                    onClick={handleItemOnclick.bind(null, list)}
               >
                 <span>{list.title}</span><Brief>{list.time}</Brief>
               </Item>,
@@ -110,7 +110,7 @@ function Comp ({ location, dispatch, lanmutab }) {
           }
         });
       }
-      
+
       return result;
     },
     getTabs = () => {
@@ -126,19 +126,19 @@ function Comp ({ location, dispatch, lanmutab }) {
     getFixedItem = () => {
       const result = [];
       if (Object.keys(fixedLanmu).length > 0 && fixedLanmu.title) {
-        result.push(<WhiteSpace size="sm" style={{ backgroundColor: '#ddd' }} />);
+        result.push(<WhiteSpace size="sm" style={{ backgroundColor: '#ddd' }}/>);
         result.push(<List>
           <Item className={styles[`${PrefixCls}-fixeditem`]}
-            thumb={fixedLanmu.image || ''}
-            multipleLine
-            wrap
-            arrow="horizontal"
-            onClick={handleFiexdItemOnclick.bind(null, fixedLanmu)}
+                thumb={fixedLanmu.image || ''}
+                multipleLine
+                wrap
+                arrow="horizontal"
+                onClick={handleFiexdItemOnclick.bind(null, fixedLanmu)}
           >
             <span>{fixedLanmu.title}</span><Brief>{fixedLanmu.infos}</Brief>
           </Item>
         </List>);
-        result.push(<WhiteSpace size="sm" style={{ backgroundColor: '#ddd' }} />);
+        result.push(<WhiteSpace size="sm" style={{ backgroundColor: '#ddd' }}/>);
       }
       return result;
     },
@@ -147,9 +147,7 @@ function Comp ({ location, dispatch, lanmutab }) {
       if (selectedIndex == 0 && bannerDatas.length > 0) {
         const props = {
           datas: bannerDatas,
-          handleClick: (data) => {
-            console.log(data);
-          },
+          handleClick: (data) => handleBannerClick(data),
         };
         result.push(<Banner {...props} />);
         result.push(getFixedItem());
@@ -162,7 +160,7 @@ function Comp ({ location, dispatch, lanmutab }) {
       dispatch({
         type: 'lanmutab/updateState',
         payload: {
-          refreshId: id
+          refreshId: id,
         },
       });
       dispatch({
@@ -170,7 +168,7 @@ function Comp ({ location, dispatch, lanmutab }) {
         payload: {
           refreshId: id,
           selected: index,
-          isRefresh: true
+          isRefresh: true,
         },
       });
     },
@@ -179,13 +177,13 @@ function Comp ({ location, dispatch, lanmutab }) {
         pathname: '/search',
         query: {
           router: PrefixCls,
-          id
+          id,
         },
       }));
     };
   return (
     <div className={styles[`${PrefixCls}-outer`]}>
-      <Nav title={name} dispatch={dispatch} />
+      <Nav title={name} dispatch={dispatch}/>
       <SearchBar
         placeholder={`在${name || '此页面'}中搜索`}
         maxLength={20}
@@ -201,7 +199,7 @@ function Comp ({ location, dispatch, lanmutab }) {
         {getCurrentView()}
       </Tabs>
     </div>
-  
+
   );
 }
 

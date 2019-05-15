@@ -1,0 +1,182 @@
+import { Component } from 'react'
+import ReactDOM from 'react-dom'
+import { connect } from 'dva'
+import { Icon, WhiteSpace, Accordion, Button, Eventlisten, Toast } from 'components'
+import ChartRoom from 'components/chatroom'
+import Nav from 'components/nav'
+import { getLocalIcon, getImages } from 'utils'
+import styles from './index.less'
+
+const PrefixCls = 'taskdetails',
+  appendItems = (lists, id) => {
+    const result = []
+    lists.map(list => {
+      let isMySelf = list.hasOwnProperty('isMySelf') ? list['isMySelf'] : list['msgcUser'] == id
+      result.push({ ...list, isMySelf })
+    })
+    return result
+  }
+
+function TaskDetails ({ location, dispatch, taskdetails, app }) {
+  const { name = '' } = location.query,
+    { chartArr, val, isDisabled, taskInfo, taskTitle, localArr, imageArr, workId,flowState,flowLeve,flowId,taskId} = taskdetails,
+    { users: { userid } } = app
+  const onSubmit = ({ msgType = 0, content = '' }) => {
+      let params = { msgType, taskId: workId },
+        appendLoacl = { ...params, isMySelf: true },
+        images = [],
+        files = {},
+        errorMessages = ''
+      switch (msgType) {
+        case 0: {
+          if (content != '') {
+            params.msgInfo = content
+            appendLoacl.msgInfo = content
+          } else {
+            errorMessages = '不能发送空消息。'
+          }
+          break
+        }
+        case 1: {
+          if (content != '') {
+            images = {
+              'msgFile': content,
+            }
+            appendLoacl.msgInfo = URL.createObjectURL(content)
+          } else {
+            errorMessages = '图片无法获取。'
+          }
+          break
+        }
+        case 2: {
+          const { file = '', url = '', timers = 5 } = content
+          if (file != '' && url != '') {
+            files = {
+              'msgFile': file,
+            }
+            appendLoacl.msgInfo = url
+            appendLoacl.timers = timers
+          } else {
+            errorMessages = '文件无法获取。'
+          }
+          break
+        }
+      }
+      if (errorMessages == '') {
+        dispatch({
+          type: 'taskdetails/appendMessage',
+          payload: {
+            appends: { ...appendLoacl, isLoad: true },
+          },
+        })
+        dispatch({
+          type: 'taskdetails/sendMsgFiles',
+          payload: {
+            params,
+            images,
+            files,
+          },
+        })
+      } else {
+        Toast.offline(errorMessages)
+      }
+    },
+    onCnevent = (appendMessage) => {
+      const { taskId = '', ...others } = appendMessage
+      if (taskId != '' && taskId == workId) {
+        dispatch({
+          type: 'taskdetails/appendMessage',
+          payload: {
+            appends: others,
+          },
+        })
+      }
+    },
+    handleTaskClick = (type) => {
+
+      dispatch({
+        type:'taskdetails/taskStatus',
+        payload:{
+          pageType:type,
+          workId,
+          taskId,
+          flowId
+        }
+      })
+    },
+    handleCompleteClick = (completeTask) => {
+      dispatch({
+        type:'taskdetails/taskStatus',
+        payload:{
+          workId,
+          taskId,
+          flowId
+        }
+      })
+    },
+
+    getTaskButtons = (flowLeve,flowState ) => {
+
+      if(flowLeve=='3'&&flowState=='0'){
+        return <div>
+          <Button type="primary" inline size="small" style={{ marginRight: '4px' }}
+                  onClick={handleTaskClick.bind(null,'conform')}>接受</Button>
+          <Button type="primary" inline size="small" style={{ marginRight: '4px' }}
+                  onClick={handleCompleteClick}
+          >取消</Button>
+        </div>
+      }else if(flowLeve=='3'&&flowState=='1'){
+        return <div>
+          <Button type="primary" inline size="small" style={{ marginRight: '4px' }}>完成</Button>
+        </div>
+      }
+    }
+
+
+
+  const props = {
+    handlerSubmit: onSubmit,
+    dispatch,
+    isDisabled,
+  }
+  return (
+    <div>
+      <Nav title='任务详情' dispatch={dispatch} />
+      <div className={styles[`${PrefixCls}-outer`]}>
+        <div className={styles[`${PrefixCls}-outer-title`]}>
+          {taskTitle}
+        </div>
+        <Accordion className={styles[`${PrefixCls}-outer-taskdetails`]}>
+          <Accordion.Panel header={
+            <div className={styles[`${PrefixCls}-outer-taskdetails-title`]}>
+              <Icon type={getLocalIcon('/others/task.svg')} size="md"/>
+              <span>【任务详情】</span>
+            </div>
+          }>
+            <span className={styles[`${PrefixCls}-outer-taskdetails-content`]}>
+              {taskInfo}
+            </span>
+          </Accordion.Panel>
+        </Accordion>
+        <div className={styles[`${PrefixCls}-outer-control`]}>
+          {
+             getTaskButtons(flowLeve,flowState)
+          }
+
+        </div>
+        <div className={styles[`${PrefixCls}-outer-chat`]}>
+          <Icon type={getLocalIcon('/others/chat.svg')} size="md"/>
+          <span className={styles[`${PrefixCls}-outer-details-title`]}>【任务汇报】</span>
+        </div>
+      </div>
+      <ChartRoom {...props} localArr={appendItems(chartArr, userid)}/>
+      <Eventlisten willCallback={onCnevent}/>
+    </div>
+  )
+}
+
+export default connect(({ loading, taskdetails, app }) => ({
+  loading,
+  taskdetails,
+  app,
+}))(TaskDetails)

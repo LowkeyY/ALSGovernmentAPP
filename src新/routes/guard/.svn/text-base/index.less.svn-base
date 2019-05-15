@@ -1,0 +1,17 @@
+@PrefixCls:guard;
+
+
+
+.@{PrefixCls}-message-title{
+
+  & h3{
+    margin: 0;
+  }
+}
+.@{PrefixCls}-message-outer{
+  :global{
+    .am-list-body .am-list-extra{
+      flex-basis: 15%;
+    }
+  }
+}

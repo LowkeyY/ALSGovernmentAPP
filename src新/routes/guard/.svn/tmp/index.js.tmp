@@ -1,0 +1,222 @@
+import React from 'react'
+import { connect } from 'dva'
+import { WingBlank, WhiteSpace, Tabs, SegmentedControl, Badge, List, Eventlisten } from 'components'
+import Ifreams from 'components/ifream'
+import Nav from 'components/nav'
+import { routerRedux } from 'dva/router'
+import Banner from 'components/banner'
+import styles from 'components/row/index.less'
+import { baseURL, privateApi } from 'utils/config'
+
+const { wanggequ, guiji } = privateApi,
+  PrefixCls = 'guard',
+  tabs = [
+    { title: <Badge>网格区</Badge> },
+    { title: <Badge>轨迹位置</Badge> },
+    { title: <Badge>任务管理</Badge> },
+  ],
+  Item = List.Item,
+  Brief = Item.Brief
+
+function Guard ({ location, dispatch, guard }) {
+
+  const { name = '' } = location.query, { selectedIndex = 0, scrollerTop = 0, appentParam = '', taskList,dataList ,segmentedIndex, pageType } = guard
+  const handlerTaskClick = ({ taskId, taskInfo, taskTitle }) => {
+      dispatch(routerRedux.push(
+        {
+          pathname: 'taskdetails',
+          query: {
+            taskId,
+            taskInfo,
+            taskTitle,
+          },
+        },
+      ))
+    },
+    handleItemClick = ({id}) => {
+      dispatch(routerRedux.push({
+        pathname: '/seekdetails',
+        query: {
+          id,
+        },
+      }))
+    },
+  getStatus = (status) => {
+    switch (status) {
+      case '0' :
+        return <span style={{ color: 'green' }}>●待审核</span>
+      case '1' :
+        return <span style={{ color: '#f3db27' }}>●处理中</span>
+      case '5' :
+        return <span style={{ color: 'red' }}>●完成</span>
+    }
+  },
+    getCurrentView = (index) => {
+      switch (index) {
+        case 0 : {
+          let isNew = false
+          return (
+            <List>
+              {taskList && taskList.map(_ => {
+                return <Item
+                  arrow="horizontal"
+                  multipleLine
+                  onClick={handlerTaskClick.bind(null, _)}
+                  wrap
+                >
+                  <div className={`${styles[`${PrefixCls}-message-title`]} ${isNew ? 'news' : ''}`}>
+                    <h3>{_.taskTitle}</h3>
+                  </div>
+                  <div className={styles[`${PrefixCls}-message-content`]}>{_.content}</div>
+                  <Brief>
+                    {_.taskInfo}
+                  </Brief>
+                </Item>
+              })
+              }
+            </List>
+          )
+        }
+        case 1 : {
+          let isNew = false
+          return (
+            <List>
+              {taskList && taskList.map(_ => {
+                return <Item
+                  arrow="horizontal"
+                  multipleLine
+                  onClick={handlerTaskClick.bind(null, _)}
+                  wrap
+                >
+                  <div className={`${styles[`${PrefixCls}-message-title`]} ${isNew ? 'news' : ''}`}>
+                    <h3>{_.taskTitle}</h3>
+                  </div>
+                  <div className={styles[`${PrefixCls}-message-content`]}>{_.content}</div>
+                  <Brief>
+                    {_.taskInfo}
+                  </Brief>
+                </Item>
+              })
+              }
+            </List>
+          )
+        }
+        case 2 : {
+          return (
+            <List>
+              {
+                dataList && dataList.map((data) => {
+                  const { content, createDate, state } = data
+                  return <Item
+                    className={styles[`${PrefixCls}-item`]}
+                    multipleLine
+                    onClick={handleItemClick.bind(this,data)}
+                  >
+                    {content}
+                    <div className={styles[`${PrefixCls}-item-status`]}>
+                      <span>{createDate}</span>
+                      <span>{getStatus(state)}</span>
+                    </div>
+                  </Item>
+                })
+              }
+            </List>
+          )
+        }
+      }
+
+      return ''
+    },
+    handleChangeView = (e) => {
+    if(e.nativeEvent.selectedSegmentIndex==2){
+      dispatch({
+        type: 'guard/getAppelList',
+        payload: {
+          selected: e.nativeEvent.selectedSegmentIndex
+        },
+      })
+    }else {
+      dispatch({
+        type: 'guard/getTaskList',
+        payload: {
+          selected: e.nativeEvent.selectedSegmentIndex,
+        },
+      })
+    }
+    },
+    handleTabClick = (e, i) => {
+      dispatch({
+        type: 'guard/updateState',
+        payload: {
+          scrollerTop: e,
+          selectedIndex: i,
+          appentParam: '',
+        },
+      })
+    },
+    handleNavClick = (route = 'warning', name = '我要反馈') => {
+      dispatch(routerRedux.push({
+        pathname: `/warning`,
+        query: {
+          name,
+        },
+      }))
+    },
+    renderNav = () => {
+      return (
+        <span onClick={handleNavClick}>我要反馈</span>
+      )
+    },
+    onCnevent = (arg) => {
+      const { userId = '', targetId = 1 } = arg
+      if (userId != '') {
+        dispatch({
+          type: 'guard/updateState',
+          payload: {
+            selectedIndex: targetId,
+            appentParam: userId,
+          },
+        })
+      }
+    }
+  return (
+    <div>
+      <Nav title={name} dispatch={dispatch} renderNavRight={renderNav(guard)}/>
+      <Tabs
+        initialPage={0}
+        page={selectedIndex}
+        tabs={tabs}
+        swipeable={false}
+        onChange={(tab, index) => {
+          console.log('onChange', index, tab)
+        }}
+        onTabClick={handleTabClick}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff' }}>
+          <Ifreams src={`${baseURL + wanggequ}`} dispatch={dispatch}/>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff' }}>
+          <Ifreams src={`${baseURL + guiji + (appentParam == '' ? '' : '?userId=' + appentParam)}`}
+                   dispatch={dispatch}/>
+        </div>
+        <div>
+          <WhiteSpace size="md"/>
+          <SegmentedControl
+            selectedIndex={segmentedIndex}
+            onChange={handleChangeView}
+            values={['未完成', '已完成', '反馈']}
+          />
+          <WhiteSpace size="md"/>
+          {getCurrentView(segmentedIndex)}
+        </div>
+      </Tabs>
+      <Eventlisten willCallback={onCnevent}/>
+    </div>
+
+  )
+}
+
+export default connect(({ loading, guard }) => ({
+  loading,
+  guard,
+}))(Guard)

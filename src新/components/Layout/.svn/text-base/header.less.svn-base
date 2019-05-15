@@ -1,0 +1,40 @@
+@import '../../themes/default.less';
+@PrefixCls:header;
+.@{PrefixCls}-logo-outer {
+  height:  @primary-header-height;
+  text-align: center;
+  padding:0 20px;
+  background:-webkit-gradient(linear,0% 49%, 0% 100%, from(@primary-color), to(#AFD6F7));
+  position: relative;
+  & img {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left:0;
+    right:0;
+    margin: auto auto;
+    height:(@primary-header-height)-10;
+  }
+  & span {
+    float: right;
+    margin-top: 10px;
+  }
+
+}
+
+.@{PrefixCls}-iconbox{
+  display: flex;
+  align-items: center;
+
+  & span {
+    margin-left: 10px;
+  }
+}
+
+.@{PrefixCls}-notlogin{
+  display: flex;
+  align-items: center;
+   margin-top: 5px;
+   margin-right: 20px;
+   color:white;
+}

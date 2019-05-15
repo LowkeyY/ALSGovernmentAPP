@@ -1,0 +1,84 @@
+@import "~themes/default";
+@Aberration: 20;
+@progress: @primary-color - @Aberration - @Aberration;
+:global {
+
+  #nprogress {
+    pointer-events: none;
+
+    .bar {
+      background: @progress ;
+      position: fixed;
+      z-index: 1024;
+      top: @primary-header-height;
+      left: 0;
+      right: 0;
+      width: 100%;
+      height:4px;
+    }
+
+    .peg {
+      display: block;
+      position: absolute;
+      right: 0;
+      width: 100px;
+      height: 100%;
+      box-shadow: 0 0 10px @progress , 0 0 5px @progress;
+      opacity: 1.0;
+      transform: rotate(3deg) translate(0px, -4px);
+    }
+
+    .spinner {
+      display: block;
+      position: fixed;
+      z-index: 1031;
+      top: @primary-header-height + 30;
+      right: 30px;
+    }
+
+    .spinner-icon {
+      width: 26px;
+      height: 26px;
+      box-sizing: border-box;
+      border: solid 4px transparent;
+      border-top-color: @progress;
+      border-left-color: @progress;
+      border-radius: 50%;
+
+      :local {
+        animation: nprogress-spinner 400ms linear infinite;
+      }
+    }
+  }
+
+  .nprogress-custom-parent {
+    overflow: hidden;
+    position: relative;
+
+    #nprogress {
+      .bar,
+      .spinner {
+        position: absolute;
+      }
+    }
+  }
+  .tabbarbox {
+
+    & .am-tab-bar-bar {
+      width: 100%;
+      position: fixed;
+      bottom: 0;
+    }
+  }
+}
+
+@keyframes nprogress-spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+
+}

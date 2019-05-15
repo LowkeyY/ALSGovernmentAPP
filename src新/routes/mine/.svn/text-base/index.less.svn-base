@@ -1,0 +1,86 @@
+@PrefixCls:mine;
+.@{PrefixCls}-outer{
+  width: 100%;
+  background:center center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  &-title{
+    font-size:0.35rem;
+    color:#fff;
+    margin-bottom: 20px;
+  }
+
+  &-box{
+    width: 50%;
+
+    & img{
+      width: 150px;
+      height: 150px;
+      margin-top: 30px;
+      border-radius: 50%;
+    }
+    &-button{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    &-username{
+      color: #fff;
+      font-size: 40px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+  }
+  &-content{
+    &-title{
+      width: 100%;
+      background: #108ee9;
+      padding: 20px 30px;
+      font-size: 36px;
+      font-weight: bold;
+    }
+
+    &-items{
+      padding:0 40px;
+      background: #fff;
+      display: flex;
+      justify-content: space-around;
+
+      & span{
+        width: 50%;
+        height:100px;
+        line-height: 100px;
+      }
+
+    }
+
+  }
+
+}
+
+.@{PrefixCls}-info{
+  font-size: 38px;
+  background: #fff;
+  //overflow: scroll;
+  //max-height:50vh;
+
+  &-head{
+    display: flex;
+    justify-content: space-around;
+    padding: 20px 20px;
+
+    &-integral{
+      display: flex;
+      align-items: center;
+    }
+    &-change{
+      display: flex;
+      align-items: center;
+    }
+  }
+
+}

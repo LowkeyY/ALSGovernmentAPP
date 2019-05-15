@@ -1,3 +1,4 @@
+
 import { Component } from 'react';
 import { createForm } from 'rc-form';
 import { connect } from 'dva';
@@ -24,11 +25,12 @@ class TaskTable extends Component {
     super(props);
     this.state = {
       files: [],
+      newFiles: [],
       multiple: true,
     };
   }
-  
-  onChange = (files, type, index) => {
+
+  onChangeBeforPic = (files, type, index) => {
     let reg = /image/,
       result = [];
     files.map((data, i) => {
@@ -42,13 +44,34 @@ class TaskTable extends Component {
       files: result,
     });
   };
-  getKey = (name) => `${name && `${name}` || 'taskTableBaseIndex'}_${taskTableBaseIndex++}`;
+  onChangeAfterPic = (files, type, index) => {
+    let reg = /image/,
+      result = [];
+    files.map((data, i) => {
+      if (!reg.test(data.file.type)) {
+        Toast.fail('这不是图片哟！！！', 2);
+      } else {
+        result.push(data);
+      }
+    });
+    this.setState({
+      newFiles: result,
+    });
+  };
+  getKey = (name) => `${name && `${name}` || 'taskBeforeKey'}_${taskTableBaseIndex++}`;
   getUploadFiles = () => {
     const uploadFiles = {},
       uploadKey = [];
     this.state.files.map((file, i) => {
       if (file.file) {
-        let key = this.getKey(`file_${i}`);
+        let key = this.getKey('before');
+        uploadKey.push(key);
+        uploadFiles[key] = file.file;
+      }
+    });
+    this.state.newFiles.map((file, i) => {
+      if (file.file) {
+        let key = this.getKey('after');
         uploadKey.push(key);
         uploadFiles[key] = file.file;
       }
@@ -58,7 +81,7 @@ class TaskTable extends Component {
       uploadKey: uploadKey.join(','),
     };
   };
-  
+
   changeValue = (obj) => {
     for (let i in obj) {
       if (typeof (obj[i]) === 'string') {
@@ -76,10 +99,10 @@ class TaskTable extends Component {
             ...this.props.form.getFieldsValue(),
             workId,
             flowId,
-            taskId
+            taskId,
           },
           { uploadFiles, uploadKey } = this.getUploadFiles();
-        console.log(data);
+        console.log(uploadFiles);
         this.props.dispatch({
           type: 'tasktable/sendTaskTable',
           payload: {
@@ -99,7 +122,7 @@ class TaskTable extends Component {
       }
     });
   };
-  
+
   dataUrlToImageSrc = (dataUrl) => {
     let imageHeader = 'data:image/jpeg;base64,';
     if (dataUrl && !dataUrl.startsWith(imageHeader)) {
@@ -107,22 +130,29 @@ class TaskTable extends Component {
     }
     return dataUrl;
   };
-  
-  
+
+
   render () {
     const { name = '提交表单', workId = '', flowId = '', taskId = '' } = this.props.location.query,
       { animating } = this.props.tasktable;
     const { getFieldProps, getFieldError } = this.props.form,
-      handleCameraClick = (blob, dataUrl) => {
+      handlerBeforeCameraClick = (blob, dataUrl) => {
         const { files } = this.state;
         files.push({ file: blob, url: this.dataUrlToImageSrc(dataUrl) });
         this.setState({
           files,
         });
+      },
+      handlerAfterCameraClick = (blob, dataUrl) => {
+        const { newFiles } = this.state;
+        newFiles.push({ file: blob, url: this.dataUrlToImageSrc(dataUrl) });
+        this.setState({
+          newFiles,
+        });
       };
     return (
       <div>
-        <Nav title={name} dispatch={this.props.dispatch} />
+        <Nav title={name} dispatch={this.props.dispatch}/>
         <div className={styles[`${PrefixCls}-outer`]}>
           <form>
             <div className={styles[`${PrefixCls}-outer-type`]}>
@@ -154,16 +184,34 @@ class TaskTable extends Component {
             </List.Item>
             <div className={styles[`${PrefixCls}-outer-img`]}>
               <div>
-                <p>添加图片</p>
-                {this.state.files.length >= 4 ? '' : <span onClick={cnTakePhoto.bind(null, this.handleCameraClick, 1)}>
-                  <Icon type={getLocalIcon('/media/camerawhite.svg')} />
+                <p>添加处理前图片</p>
+                {this.state.files.length >= 1 ? '' :
+                  <span onClick={cnTakePhoto.bind(null, this.handlerBeforeCameraClick, 1)}>
+                  <Icon type={getLocalIcon('/media/camerawhite.svg')}/>
                 </span>}
               </div>
               <ImagePicker
                 files={this.state.files}
-                onChange={this.onChange}
+                onChange={this.onChangeBeforPic.bind(this)}
                 onImageClick={(index, fs) => console.log(index, fs)}
-                selectable={this.state.files.length < 4}
+                selectable={this.state.files.length < 1}
+                multiple={this.state.multiple}
+                accept="image/*"
+              />
+            </div>
+            <div className={styles[`${PrefixCls}-outer-img`]}>
+              <div>
+                <p>添加处理后图片</p>
+                {this.state.newFiles.length >= 1 ? '' :
+                  <span onClick={cnTakePhoto.bind(null, this.handlerAfterCameraClick, 1)}>
+                  <Icon type={getLocalIcon('/media/camerawhite.svg')} />
+                </span>}
+              </div>
+              <ImagePicker
+                files={this.state.newFiles}
+                onChange={this.onChangeAfterPic.bind(this)}
+                onImageClick={(index, fs) => console.log(index, fs)}
+                selectable={this.state.newFiles.length < 1}
                 multiple={this.state.multiple}
                 accept="image/*"
               />

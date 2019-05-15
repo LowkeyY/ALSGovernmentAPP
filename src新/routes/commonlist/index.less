@@ -1,0 +1,13 @@
+@PrefixCls: commonlist;
+.@{PrefixCls}-outer {
+  min-height: 100vh;
+
+}
+
+.@{PrefixCls}-grids {
+  :global {
+    .am-grid.am-grid-square .am-grid-item:before {
+      padding-bottom: 75%;
+    }
+  }
+}

@@ -1,0 +1,107 @@
+@import "../../themes/default";
+@PrefixCls: inputbox;
+
+.@{PrefixCls}-outer {
+  -webkit-user-select: none;
+  user-select: none;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  background: #fff;
+
+  &-inputbox {
+    padding-left: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    border-top: 1px solid #efefef;
+    align-items: center;
+    & input {
+      width: 75%;
+      margin: 0;
+      padding: 0 0 0 20px;
+      border: 0 none;
+      background: #fff;
+      height: 70px;
+      border-bottom:4px solid @primary-color;
+    }
+    & > div {
+      margin-right: 40px;
+    }
+  }
+  &-mediabox {
+    padding-left: 20px;
+    display: flex;
+    align-items: center;
+    & span {
+      margin-right: 60px;
+      :global {
+        .am-icon-md {
+          height: 0.5rem;
+          .am-button-small {
+            padding: 0 !important;
+          }
+        }
+      }
+    }
+    &-photo {
+      position: relative;
+      overflow: hidden;
+      & input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        opacity: 0;
+      }
+    }
+  }
+  &-recording {
+    width: 100%;
+    height: 400px;
+    background: #fff;
+
+    &-box {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 400px;
+      flex-direction: column;
+      &-timer {
+        font-size: 26px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #666;
+        letter-spacing: 5px;
+
+        & span b {
+          color: orange;
+          letter-spacing: 5px;
+          font-weight: bold;
+          font-size: 26px;
+        }
+      }
+
+      &-voice {
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        & span {
+          width: 180px;
+          height: 180px;
+          background: @primary-color;
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+        }
+      }
+
+    }
+  }
+}

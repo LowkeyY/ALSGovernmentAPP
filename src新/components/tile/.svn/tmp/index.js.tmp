@@ -1,0 +1,81 @@
+import React from 'react'
+import { Carousel } from 'antd-mobile'
+import ReactDOM from 'react-dom'
+import { getErrorImg, getImages, getLocalIcon } from 'utils'
+
+import styles from './index.less'
+<<<<<<< .mine
+
+const PrefixCls = 'tlie'
+=======
+>>>>>>> .r25
+
+const PrefixCls = 'tlie',
+  defaultImage = require('./二手车.png')
+
+class Tile extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {}
+  }
+
+  componentWillMount () {
+
+  }
+
+<<<<<<< .mine
+  getItems = (data,onClick) => {
+=======
+  layoutItem (data, color = '') {
+    const { image = defaultImage, title = '' } = data,
+      appendStyle = {}
+    if (color) {
+      appendStyle.backgroundColor = color
+    }
+    return (
+      <div className={styles[`${PrefixCls}-outer-item`]} style={appendStyle}
+           onClick={this.props.handleClick.bind(null, data)}>
+        <img src={image} alt=""/>
+        <span>{title}</span>
+      </div>
+    )
+  }
+
+
+  render () {
+>>>>>>> .r25
+    const { items = [], parents = {}, colors = '' } = this.props,
+      { id = '' } = parents
+    return (
+<<<<<<< .mine
+      <div className={styles[`${PrefixCls}-outer`]}>
+        {
+          data&&data.map(data=>{
+            const {id,image,title} =data
+            return <div className={styles[`${PrefixCls}-outer-item`]} onClick={onClick.bind(this,data)}>
+                        <img src={getImages(image)} alt=""/>
+                         <span>{title}</span>
+                       </div>
+          })
+        }
+      </div>
+=======
+      <div id={id} className={styles[`${PrefixCls}-outer`]}>
+        {items.map(item => this.layoutItem(item, colors))}
+      </div>
+>>>>>>> .r25
+    )
+  }
+
+  render () {
+    const {data,handleItemsClick} = this.props
+    return (
+      <div className={styles[`${PrefixCls}-box`]}>
+        {this.getItems(data,handleItemsClick)}
+      </div>
+    )
+  }
+
+}
+
+export default Tile

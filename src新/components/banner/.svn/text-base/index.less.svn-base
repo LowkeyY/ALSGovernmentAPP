@@ -1,0 +1,15 @@
+@PrefixCls: banner;
+
+.@{PrefixCls}-outer{
+  :global{
+
+  }
+}
+.@{PrefixCls}-image {
+  position: relative;
+  boxShadow: 4px 2px 2px rgba(0, 0, 0, 0.4);
+  //overflow: hidden;
+  & img{
+    max-height: 22vh;
+  }
+}

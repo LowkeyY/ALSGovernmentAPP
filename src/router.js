@@ -787,6 +787,42 @@ const Routers = function ({ history, app }) {
           },
         },
         {
+          path: 'editortask',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/editortask'));
+              cb(null, require('routes/editortask/'));
+            }, 'editortask');
+          },
+        },
+        {
+          path: 'integralhome',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/integralhome'));
+              cb(null, require('routes/integralhome/'));
+            }, 'integralhome');
+          },
+        },
+        {
+          path: 'integralrule',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/integralrule'));
+              cb(null, require('routes/integralrule/'));
+            }, 'integralrule');
+          },
+        },
+        {
+          path: 'service',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/service'));
+              cb(null, require('routes/service/'));
+            }, 'service');
+          },
+        },
+        {
           path: '*',
           getComponent (nextState, cb) {
             const { location: { pathname } } = nextState;

@@ -150,8 +150,8 @@ class Setup extends React.Component {
     const { users: { username, useravatar, usertype }, updates: { upgraded = false, urls = '', appVerSion = '', updateInfo = '' } } = this.props.app;
     return (
       <div>
-        <Nav title={name} dispatch={this.props.dispatch}/>
-        <WhiteSpace size="md"/>
+        <Nav title={name} dispatch={this.props.dispatch} />
+        <WhiteSpace size="md" />
         <div>
           <List className={`${PrefixCls}-list`}>
             <Item>
@@ -161,13 +161,13 @@ class Setup extends React.Component {
                     <span>更换头像</span>
                   </p>
                   <div className={'icon-img-box'}>
-                    <img src={getImages(useravatar, 'user')} alt="icon" onError={getErrorImg}/>
+                    <img src={getImages(useravatar, 'user')} alt="icon" onError={getErrorImg} />
                   </div>
                 </FileUpload>
               </div>
             </Item>
             {
-              usertype === 'isRegistUser' ?
+              usertype == 'isRegistUser' ?
                 <Item extra={username} onClick={this.handleUserNameClick.bind(null, username)}>
                   更换昵称
                 </Item>
@@ -190,7 +190,7 @@ class Setup extends React.Component {
               </Badge> : '版本信息'}
             </Item>
           </List>
-          <ActivityIndicator animating={animating} toast text="上传中..."/>
+          <ActivityIndicator animating={animating} toast text="上传中..." />
         </div>
       </div>
     );

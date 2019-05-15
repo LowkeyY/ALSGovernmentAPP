@@ -1,0 +1,19 @@
+@PrefixCls: commonlist;
+.@{PrefixCls}-outer{
+  min-height: 100vh;
+
+}
+.@{PrefixCls}-iframes {
+  & iframe {
+    width: 100px;
+    height: 100px;
+  }
+}
+.@{PrefixCls}-entrance{
+  background: #fff;
+  text-align: center;
+  padding: 20px 0;
+  & img {
+    height: 120px;
+  }
+}

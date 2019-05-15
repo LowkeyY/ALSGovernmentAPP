@@ -341,7 +341,7 @@ function Appeal ({ location, dispatch, appeal, app }) {
     { isLogin } = app;
   const emptyFunc = () => {
     },
-    
+
     handleCollectClick = (data) => {
       if (isLogin) {
         dispatch({
@@ -363,7 +363,7 @@ function Appeal ({ location, dispatch, appeal, app }) {
         ]);
       }
     },
-    
+
     handleCardClick = ({ id }) => {
       dispatch({
         type: 'seekdetails/updateState',
@@ -442,19 +442,19 @@ function Appeal ({ location, dispatch, appeal, app }) {
         { current, total, size } = paginations,
         hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total),
         layoutList = (<ListView layoutHeader={''}
-          dataSource={lists}
-          layoutRow={(rowData, sectionID, rowID) => appealList(rowData, sectionID, rowID, isLogin, handleCardClick, handleCollectClick)}
-          onEndReached={onEndReached}
-          onRefresh={onRefresh}
-          hasMore={hasMore}
-          onScrollerTop={onScrollerTop.bind(null)}
-          scrollerTop={scrollerTop}
+                                dataSource={lists}
+                                layoutRow={(rowData, sectionID, rowID) => appealList(rowData, sectionID, rowID, isLogin, handleCardClick, handleCollectClick)}
+                                onEndReached={onEndReached}
+                                onRefresh={onRefresh}
+                                hasMore={hasMore}
+                                onScrollerTop={onScrollerTop.bind(null)}
+                                scrollerTop={scrollerTop}
         />);
       for (let i = 0; i < tabs.length; i++) {
         if (i === selectedIndex) {
           result.push(<div>{layoutList}</div>);
         } else {
-          result.push(<div />);
+          result.push(<div/>);
         }
       }
       return result;
@@ -485,12 +485,12 @@ function Appeal ({ location, dispatch, appeal, app }) {
       });
       return result;
     },
-    
+
     { btnDisabled, dataList, btnTitle, name, selectedIndex, workCount } = appeal,
-    
+
     getCountList = (data = {}) => {
       const { shouli = 0, huifu = 0, huifulv = 0, banjie = 0, banjielv = 0 } = data;
-      
+
       return (
         <div className={styles[`${PrefixCls}-infobox-container`]}>
           {/* middleStart */}
@@ -532,7 +532,7 @@ function Appeal ({ location, dispatch, appeal, app }) {
         </div>
       );
     };
-  
+
   const btnVisible = (visible = true) => {
       dispatch({
         type: `${PrefixCls}/updateState`,
@@ -557,10 +557,10 @@ function Appeal ({ location, dispatch, appeal, app }) {
           dispatch({
             type: `${PrefixCls}/updateState`,
             payload: {
-              notesvisible: true
-            }
+              notesvisible: true,
+            },
           });
-          goWarring();
+          goWarring(postions);
         },
         onError = ({ message = '', code = -999 }) => {
           btnVisible(false);
@@ -573,11 +573,11 @@ function Appeal ({ location, dispatch, appeal, app }) {
       return isLogin ? (
         btnDisabled ?
           <div className={styles[`${PrefixCls}-nav`]}>
-            <Icon type="loading" />
+            <Icon type="loading"/>
             <span>{btnTitle}</span>
           </div> :
           <div className={styles[`${PrefixCls}-nav`]} onClick={handleClick}>
-            <Icon type={getLocalIcon('/others/sendup.svg')} />
+            <Icon type={getLocalIcon('/others/sendup.svg')}/>
             <span>{btnTitle}</span>
           </div>
       ) : '';
@@ -600,16 +600,16 @@ function Appeal ({ location, dispatch, appeal, app }) {
         },
       }));
     };
-  
+
   return (
     <div>
       <Nav title={name}
-        dispatch={dispatch}
-        renderNavRight={renderNavRight(handleWarningClick.bind(null, btnTitle))}
+           dispatch={dispatch}
+           renderNavRight={renderNavRight(handleWarningClick.bind(null, btnTitle))}
       />
       <SearchBar placeholder={`在${name || '此页面'}中搜索`}
-        maxLength={20}
-        onFocus={handleSearchClick}
+                 maxLength={20}
+                 onFocus={handleSearchClick}
       />
       <Accordion defaultActiveKey="0" className="my-accordion">
         <Accordion.Panel header={<span>本周数据</span>}>
@@ -618,7 +618,7 @@ function Appeal ({ location, dispatch, appeal, app }) {
           </div>
         </Accordion.Panel>
       </Accordion>
-      <WhiteSpace size="xs" />
+      <WhiteSpace size="xs"/>
       <Tabs
         initialPage={0}
         page={selectedIndex}
@@ -630,7 +630,7 @@ function Appeal ({ location, dispatch, appeal, app }) {
       >
         {currentDataList.length > 0 && getContents(currentDataList)}
       </Tabs>
-      <WhiteSpace />
+      <WhiteSpace/>
     </div>
   );
 }

@@ -39,7 +39,7 @@ const defaultGrids = [
       route: 'guard',
     },
     {
-      icon: require('themes/images/nmenus/shengtai.png'),
+      icon: require('themes/images/nmenus/quntuan.png'),
       name: '绿色阿拉善',
       route: 'ecology',
     },
@@ -105,7 +105,7 @@ const defaultGrids = [
     lanmutab: require('themes/images/nmenus/lanmutab.png'),
     lvyou: require('themes/images/nmenus/lvyou.png'),
     lanmutabshouhu: require('themes/images/nmenus/lanmutabshouhu.png'),
-    ecology: require('themes/images/nmenus/shengtai.png'),
+    ecology: require('themes/images/nmenus/quntuan.png'),
     defualt: require('themes/images/nmenus/suqiu.png'),
   };
 export default { defaultGrids, defaultGridIcon, defaultTabBars, defaultTabBarIcon };

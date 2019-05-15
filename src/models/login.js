@@ -32,7 +32,7 @@ export default modelExtend(pageModel, {
           buttonState: false,
         },
       });
-      const { from = '/', ...params } = payload, 
+      const { from = '/', ...params } = payload,
         { usrPwd = '' } = params;
       const data = yield call(login, Object.assign({}, params, { usrPwd: encrypt(usrPwd) }), true);
       yield put({
@@ -52,18 +52,17 @@ export default modelExtend(pageModel, {
               user_token: sessionId,
               user_id: userId,
               user_avatar: headPortrait,
-              user_type: userType
+              user_type: userType,
             };
           setLoginIn(users);
           yield put({
             type: 'app/updateUsers',
-            payload: {
-            },
+            payload: {},
           });
           yield put({
             type: 'app/updateGuiji',
             payload: {
-              ...guiji
+              ...guiji,
             },
           });
           yield put({
@@ -78,9 +77,11 @@ export default modelExtend(pageModel, {
     },
     * SendValidateCode ({ payload }, { call, put, select }) {
       const { phoneNum } = payload;
-      const data = yield call(SendValidateCode, { phoneNum });
-      if (data) {
-        console.log(data);
+      const { success } = yield call(SendValidateCode, { phoneNum });
+      if (success) {
+
+      } else {
+        Toast.fail('验证码请求失败');
       }
     },
     * PhoneLogin ({ payload }, { call, put, select }) {
@@ -96,13 +97,12 @@ export default modelExtend(pageModel, {
               user_token: sessionId,
               user_id: userId,
               user_avatar: headPortrait,
-              user_type: userType
+              user_type: userType,
             };
           setLoginIn(users);
           yield put({
             type: 'app/updateUsers',
-            payload: {
-            },
+            payload: {},
           });
           yield put({
             type: 'queryMessage',
@@ -118,7 +118,7 @@ export default modelExtend(pageModel, {
     * queryMessage ({ payload }, { call, put, select }) {
       const { isLogin = false } = yield select(_ => _.app);
       if (isLogin) {
-        const data = yield call(GetUnreadMessage), 
+        const data = yield call(GetUnreadMessage),
           { success, noViewCount = 0 } = data;
         if (success) {
           yield put({
@@ -129,7 +129,7 @@ export default modelExtend(pageModel, {
           });
         }
       }
-    }
+    },
   },
   reducers: {
     disabled (state) {

@@ -1,0 +1,72 @@
+import { parse } from 'qs'
+import modelExtend from 'dva-model-extend'
+import { model } from 'models/common'
+import { defaultGrids, defaultGridIcon, defaultBanners } from 'utils/defaults'
+import { queryDashboard } from 'services/dashboard'
+
+const appendIcon = (grid, i) => {
+    let { icon = '', route = 'default' } = grid
+    if (icon == '') {
+      grid = { ...grid, ...{ icon: defaultGridIcon[route] } }
+    }
+    return grid
+  },
+  appendBanners = (items, i, target) => {
+    let { image = '' } = items
+    if (image != '') {
+      target.push({ ...items , url : image})
+    }
+  },
+  appendNotices = (items, i, target) => {
+    let { name = '' } = items
+    if (name != '') {
+      target.push({ ...items , title : name})
+    }
+  }
+export default modelExtend(model, {
+  namespace: 'dashboard',
+
+  state: {
+    bannerDatas: [],
+    noticeDatas: [],
+    grids: [],
+    isScroll: false,
+  },
+
+  subscriptions: {
+    setup ({ dispatch, history }) {
+      history.listen(({ pathname }) => {
+        if (pathname === '/dashboard' || pathname === '/') {
+          dispatch({
+            type: 'query',
+          })
+        }
+      })
+    },
+  },
+  effects: {
+    * query ({ payload }, { call, put, select }) {
+      const data = yield call(queryDashboard)
+      if (data) {
+        let { grids = defaultGrids, banners = defaultBanners } = data,
+          bannerDatas = [],
+          noticeDatas = []
+        grids = grids.map((grid, i) => appendIcon(grid, i))
+        banners.map((banners, i) => {
+          appendBanners(banners, i, bannerDatas)
+        })
+        banners.map((banners, i) => {
+          appendNotices(banners, i, noticeDatas)
+        })
+        yield put({
+          type: 'updateState',
+          payload: {
+            grids,
+            bannerDatas,
+            noticeDatas,
+          },
+        })
+      }
+    },
+  },
+})

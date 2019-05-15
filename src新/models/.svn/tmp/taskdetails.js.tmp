@@ -1,0 +1,130 @@
+import { parse } from 'qs'
+import modelExtend from 'dva-model-extend'
+import { model } from 'models/common'
+import { getAllTask } from 'services/querylist'
+import { sendMsgFiles } from 'services/sendmsgfile'
+import { taskStatus ,completeTask} from 'services/taskstatus'
+import { Toast } from 'components'
+
+
+const getChartArr = (obj = {}) => {
+  let chartArr = [],
+    length = Object.keys(obj).length
+  for (let i = 0; i < length; i++) {
+    let newObj = obj['msgData' + i]
+    if (newObj) {
+      chartArr.push(newObj)
+    }
+  }
+  return chartArr
+}
+export default modelExtend(model, {
+  namespace: 'taskdetails',
+  state: {
+    chartArr: [],
+    val: '',
+    isDisabled: true,
+    taskTitle: '',
+    taskInfo: '',
+    localArr: [],
+    imageArr: [],
+    workId: '',
+    flowState:'',
+    flowLeve:'',
+    flowId:'',
+    taskId:''
+
+  },
+  subscriptions: {
+    setup ({ dispatch, history }) {
+      history.listen(({ pathname, query, action }) => {
+        const { taskId } = query
+        if (pathname === '/taskdetails') {
+          dispatch({
+            type: 'updateState',
+            payload: {
+              workId: taskId,
+            },
+          })
+          dispatch({
+            type: 'getTaskList',
+            payload: {
+              taskId,
+            },
+          })
+        }
+      })
+    },
+  },
+  effects: {
+    * getTaskList ({ payload }, { call, put, select }) {
+      const { success = false, data = {}, taskTitle = '' ,workId,taskInfo = '',flowId='',flowLeve='',flowState='',taskId='' } = yield call(getAllTask, payload)
+      if (success) {
+        yield put({
+          type: 'updateState',
+          payload: {
+            chartArr: getChartArr(data),
+            taskTitle: taskTitle,
+            taskInfo: taskInfo,
+            flowId,
+            flowLeve,
+            flowState,
+            taskId,
+            workId
+          },
+        })
+      }
+    },
+    * sendMsgFiles ({ payload }, { call, put, select }) {
+      console.log(payload)
+      const { images = [], files = {}, params = {} } = payload,
+        data = yield call(sendMsgFiles, params, images, files)
+      yield put({
+        type: 'updateState',
+        payload: {
+          animating: false,
+        },
+      })
+      if (data) {
+
+      } else {
+        yield put({
+          type: 'updateState',
+          payload: {
+            animating: false,
+          },
+        })
+        // Toast.offline(data.message)
+      }
+    },
+    * taskStatus ({ payload }, { call, put, select }) {
+      const { items } = yield select(_ => _.taskdetails)
+      const data= yield call(taskStatus, payload)
+        if(data.success){
+          yield put({
+            type: 'getTaskList',
+            payload: {
+              taskId
+            },
+          })
+          Toast.success('操作成功')
+        }
+    },
+    * completeTask ({ payload }, { call, put, select }) {
+      const data= yield call(completeTask, payload)
+      if(data.success){
+        Toast.success('操作成功')
+      }
+    },
+  },
+  reducers: {
+    appendMessage (state, { payload }) {
+      let { chartArr } = state, { appends = {} } = payload
+      chartArr = [...chartArr, { ...appends }]
+      return {
+        ...state,
+        chartArr,
+      }
+    },
+  },
+})

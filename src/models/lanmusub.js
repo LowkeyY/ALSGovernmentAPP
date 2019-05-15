@@ -87,7 +87,7 @@ export default modelExtend(model, {
       if (result) {
         let { data = [], totalCount = 0, noBanner = false } = result,
           newLists = [];
-        newLists = start == 1 ? data : [...lists, ...data];
+        newLists = start === 1 ? data : [...lists, ...data];
         yield put({
           type: 'updateState',
           payload: {

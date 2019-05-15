@@ -53,7 +53,7 @@ function Guard ({ location, dispatch, guard, app }) {
       <div className={styles[`${PrefixCls}-tabbox-count`]}>{noViewCount * 1 > 0 ?
         <Badge text={noViewCount * 1} overflowCount={99} /> : ''}</div>
     </div>
-  
+
   );
 }
 

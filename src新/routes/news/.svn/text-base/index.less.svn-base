@@ -1,0 +1,18 @@
+
+@PrefixCls:news;
+
+.@{PrefixCls}-outer{
+
+  &-content{
+
+    &-info{
+      padding: 20px 40px;
+      line-height: 1.5em;
+    }
+  }
+}
+
+.@{PrefixCls}-title{
+  font-weight: bold;
+}
+

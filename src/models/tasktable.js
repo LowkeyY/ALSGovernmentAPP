@@ -1,3 +1,4 @@
+
 import { parse } from 'qs';
 import modelExtend from 'dva-model-extend';
 import { model } from 'models/common';
@@ -25,7 +26,7 @@ export default modelExtend(model, {
   effects: {
     * sendTaskTable ({ payload }, { call, put, select }) {
       const { images = [], ...others } = payload,
-        { success } = yield call(sendTaskTable, { ...others, }, images, {});
+        { success } = yield call(sendTaskTable, { ...others }, images, {});
       if (success) {
         yield put({
           type: 'updateState',
@@ -45,6 +46,6 @@ export default modelExtend(model, {
         Toast.offline('提交失败，请稍后再试');
       }
     },
-    
+
   },
 });

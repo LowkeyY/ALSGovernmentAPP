@@ -1,0 +1,25 @@
+<% htmlWebpackPlugin.options.headScripts = htmlWebpackPlugin.options.headScripts || [] %>
+<!DOCTYPE html>
+<html lang="zh-cn" data-scale="true">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>阿拉善综治平台</title>
+  <% for (item of htmlWebpackPlugin.options.headScripts) { %>
+  <script src="<%= item %>"></script>
+  <% } %>
+  <style>
+    body {
+      padding-top: env(safe-area-inset-top) !important;
+      padding-bottom: env(safe-area-inset-bottom) !important;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+</body>
+
+
+</html>

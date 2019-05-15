@@ -1,0 +1,89 @@
+import { parse } from 'qs'
+import modelExtend from 'dva-model-extend'
+import { model } from 'models/common'
+import { queryPartyTabs, getAllLanmu } from 'services/querylist'
+
+const appendItems = (datas = []) => {
+  const result = [],
+    children = []
+  datas.map((_, index) => {
+    const { id = '', items = [], ...others } = _
+    if (id != '' > 0) {
+      result.push({
+        ...others,
+        id,
+      })
+      children.push(items)
+    }
+  })
+  return { tabs: result, items: children }
+}
+export default modelExtend(model, {
+  namespace: 'livelihood',
+  state: {
+    tabs: [],
+    items: [],
+    ptrEl: '',
+  },
+  subscriptions: {
+    setup ({ dispatch, history }) {
+      history.listen(({ pathname, query, action }) => {
+        if (pathname === '/livelihood') {
+          const { id = '', name = '' } = query
+          dispatch({
+            type: 'updateState',
+            payload: {
+              id,
+              name,
+              ptrEl: '',
+            },
+          })
+          dispatch({
+            type: 'query',
+            payload: {
+              dataId: id,
+            },
+          })
+        }
+      })
+    },
+  },
+
+  effects: {
+    * query ({ payload }, { call, put, select }) {
+      const { success, data } = yield call(getAllLanmu, payload)
+      if (success) {
+        const { tabs, items } = appendItems(data)
+        yield put({
+          type: 'updateState',
+          payload: {
+            tabs,
+            items,
+          },
+        })
+        /*        for (let i = 0; i < tabs.length; i++) {
+                  yield put({
+                    type: 'querySelect',
+                    payload: {
+                      id: tabs[i].id,
+                    },
+                  })
+                }*/
+      }
+    },
+    * querySelect ({ payload }, { call, put, select }) {
+      const { id = '' } = payload
+      const { success, data } = yield call(queryPartyTabs, { dataId: id })
+      if (success) {
+        const { items } = yield select(_ => _.livelihood)
+        items.push(data)
+        yield put({
+          type: 'updateState',
+          payload: {
+            items,
+          },
+        })
+      }
+    },
+  },
+})

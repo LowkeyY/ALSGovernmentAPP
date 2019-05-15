@@ -1,0 +1,28 @@
+@PrefixCls:tlie;
+
+.@{PrefixCls}-outer{
+  width: 100%;
+   display: flex;
+   justify-content:flex-start;
+   flex-wrap: wrap;
+  &-item{
+    text-align: center;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    background:cyan;
+    width:31%;
+    height: 232px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    & img{
+      width:50%;
+
+    }
+
+    & span {
+      font-size: 35px;
+    }
+  }
+}

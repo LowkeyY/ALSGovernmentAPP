@@ -1,0 +1,91 @@
+@PrefixCls: taskdetails;
+.tasktitle {
+  margin-left: 40px;
+  font-size: 36px;
+  font-weight: normal;
+  color: #108ee9;
+}
+
+.titlebox {
+  padding: 20px 40px;
+  font-size: 46px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+}
+
+._padding {
+  padding: 20px 40px;
+}
+
+.@{PrefixCls}-outer {
+  background: #fff;
+
+  &-title {
+    ._padding;
+    font-size: 36px;
+    font-weight: bold;
+  }
+
+  &-taskdetails {
+    &-title {
+      display: flex;
+      align-items: center;
+      & span {
+        .tasktitle;
+      }
+    }
+    :global {
+      .am-accordion-content-box {
+        padding: 0;
+        & .am-list-body {
+          border-bottom: 0;
+        }
+      }
+    }
+    &-content {
+
+      &-info {
+        display: flex;
+        flex-direction: column;
+        padding: 20px 40px 0;
+        &-type {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 20px;
+        }
+        &-date {
+          color: #888;
+          font-size: 26px;
+          & div {
+            margin-bottom: 10px;
+          }
+        }
+        &-event {
+          & div {
+            margin-top: 10px;
+          }
+        }
+      }
+
+    }
+  }
+  &-control {
+    padding: 10px 40px;
+    display: flex;
+    justify-content: start;
+  }
+  &-details {
+    padding: 40px 80px;
+    font-size: 36px;
+    line-height: 1.5em;
+    &-title {
+      .tasktitle;
+    }
+  }
+  &-chat {
+    .titlebox;
+
+  }
+}

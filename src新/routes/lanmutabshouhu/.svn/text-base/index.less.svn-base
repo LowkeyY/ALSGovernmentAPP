@@ -1,0 +1,13 @@
+@PrefixCls: lanmutabshouhu;
+.@{PrefixCls}-tabbox {
+  position: relative;
+
+  &-count{
+    position: absolute;
+    top:5px;
+    right:20px;
+    z-index: 999;
+  }
+}
+
+

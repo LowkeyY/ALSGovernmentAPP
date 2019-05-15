@@ -70,7 +70,7 @@ function Dashboard ({ dashboard, loading, dispatch, app }) {
           );
         });
       result.push(
-        <Menu handleGridClick={handleGridClick} dispatch={dispatch} datas={grids} columnNum={4} isCarousel />,
+        <Menu handleGridClick={handleGridClick} dispatch={dispatch} datas={grids} columnNum={4} isCarousel  />,
       );
       
       return result;

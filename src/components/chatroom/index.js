@@ -1,13 +1,12 @@
 import { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'dva';
-import styles from './index.less';
 import { ReceiveBubble, ReplyBubble, ReceiveImgBubble, ReplyImgBubble } from './chatbubble/index';
 import ReceiveVoiceBubble from './chatbubble/ReceiveVoiceBubble';
 import ReplyVoiceBubble from './chatbubble/ReplyVoiceBubble';
 import InputBox from 'components/inputbox';
 import WxImageViewer from 'react-wx-images-viewer';
-
+import styles from './index.less';
 const PrefixCls = 'chatroom';
 let defaultTimer = '';
 

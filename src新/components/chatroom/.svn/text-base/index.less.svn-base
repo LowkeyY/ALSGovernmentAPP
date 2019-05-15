@@ -1,0 +1,33 @@
+@import '../../themes/default.less';
+
+@PrefixCls: chatroom;
+.@{PrefixCls}-outer {
+  width: 100%;
+  background: #efefef;
+  overflow-y: scroll;
+  &-content {
+    overflow: auto;
+    padding: 30px 30px 200px;
+    &::after {
+      display: block;
+      content: "";
+      visibility: hidden;
+      height: 0
+    }
+  }
+}
+
+.@{PrefixCls}-timer {
+  clear: both;
+  text-align: center;
+  height: 1px;
+  border-top: 1px solid #e2e2e2;
+  margin: 15px 0;
+  & span {
+    position: relative;
+    top: -18px;
+    background: #fff;
+    padding: 0 20px;
+    display: inline-block;
+  }
+}

@@ -44,8 +44,8 @@ function Comp ({ location, dispatch, deren }) {
         payload: {
           ...params,
           callback,
-          isRefresh: true
-        }
+          isRefresh: true,
+        },
       });
     },
     onEndReached = (params, callback) => {
@@ -54,8 +54,8 @@ function Comp ({ location, dispatch, deren }) {
         type: `${PrefixCls}/queryListview`,
         payload: {
           ...params,
-          callback
-        }
+          callback,
+        },
       });
     },
     onScrollerTop = (top) => {
@@ -63,8 +63,8 @@ function Comp ({ location, dispatch, deren }) {
         dispatch({
           type: `${PrefixCls}/updateState`,
           payload: {
-            scrollerTop: top
-          }
+            scrollerTop: top,
+          },
         });
       }
     },
@@ -76,28 +76,28 @@ function Comp ({ location, dispatch, deren }) {
           hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total);
         result.push(
           <ListView layoutHeader={() => title}
-            dataSource={items}
-            layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
-            onEndReached={onEndReached.bind(null, { id, title })}
-            onRefresh={onRefresh.bind(null, { id, title })}
-            hasMore={hasMore}
-            onScrollerTop={onScrollerTop.bind(null)}
-            scrollerTop={scrollerTop}
-          />
+                    dataSource={items}
+                    layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
+                    onEndReached={onEndReached.bind(null, { id, title })}
+                    onRefresh={onRefresh.bind(null, { id, title })}
+                    hasMore={hasMore}
+                    onScrollerTop={onScrollerTop.bind(null)}
+                    scrollerTop={scrollerTop}
+          />,
         );
       }
       return result;
     },
     bannerProps = {
       datas: bannerDatas,
-      handleClick: handleItemOnclick
+      handleClick: handleItemOnclick,
     };
   return (
     <div>
-      <Nav title={name} dispatch={dispatch} />
+      <Nav title={name} dispatch={dispatch}/>
       {bannerDatas.length > 0 && <Banner {...bannerProps} />}
-      {grids.length > 0 && <Menu handleGridClick={handleGridClick} dispatch={dispatch} datas={grids} columnNum={4} />}
-      <WhiteSpace size="xs" />
+      {grids.length > 0 && <Menu handleGridClick={handleGridClick} dispatch={dispatch} datas={grids}/>}
+      <WhiteSpace size="xs"/>
       {lists.length > 0 && getContents(lists[0])}
     </div>
   );

@@ -26,7 +26,7 @@ function Mine ({ location, dispatch, mine, app, login }) {
     },
     handleIntegralClick = () => {
       dispatch(routerRedux.push({
-        pathname: '/integral',
+        pathname: '/integralhome',
       }));
     },
     // handlePayClick = () => {

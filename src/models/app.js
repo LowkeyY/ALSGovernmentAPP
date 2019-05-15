@@ -93,7 +93,7 @@ export default {
           },
         });
         // postCurrentPosition(guiji)
-        if (urls !== '' && cnIsAndroid()) {
+        if (urls !== ''&& cnIsAndroid() ) {
           yield put({
             type: 'updateState',
             payload: {

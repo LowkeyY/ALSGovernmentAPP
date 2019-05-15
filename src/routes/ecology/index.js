@@ -12,8 +12,7 @@ import styles from './index.less';
 import bg from '../../themes/images/others/greenbg.png';
 import { handleGridClick, handleBannerClick, handleListClick } from 'utils/commonevent';
 
-const PrefixCls = 'ecology',
-  Item = List.Item;
+const PrefixCls = 'ecology';
 
 function Ecology ({ location, dispatch, ecology }) {
   const { name = '' } = location.query,
@@ -51,8 +50,8 @@ function Ecology ({ location, dispatch, ecology }) {
         payload: {
           ...params,
           callback,
-          isRefresh: true
-        }
+          isRefresh: true,
+        },
       });
     },
     onEndReached = (params, callback) => {
@@ -61,8 +60,8 @@ function Ecology ({ location, dispatch, ecology }) {
         type: `${PrefixCls}/queryListview`,
         payload: {
           ...params,
-          callback
-        }
+          callback,
+        },
       });
     },
     onScrollerTop = (top) => {
@@ -70,8 +69,8 @@ function Ecology ({ location, dispatch, ecology }) {
         dispatch({
           type: `${PrefixCls}/updateState`,
           payload: {
-            scrollerTop: top
-          }
+            scrollerTop: top,
+          },
         });
       }
     },
@@ -83,14 +82,14 @@ function Ecology ({ location, dispatch, ecology }) {
           hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total);
         result.push(
           <ListView layoutHeader={() => title}
-            dataSource={items}
-            layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
-            onEndReached={onEndReached.bind(null, { id, title })}
-            onRefresh={onRefresh.bind(null, { id, title })}
-            hasMore={hasMore}
-            onScrollerTop={onScrollerTop.bind(null)}
-            scrollerTop={scrollerTop}
-          />
+                    dataSource={items}
+                    layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
+                    onEndReached={onEndReached.bind(null, { id, title })}
+                    onRefresh={onRefresh.bind(null, { id, title })}
+                    hasMore={hasMore}
+                    onScrollerTop={onScrollerTop.bind(null)}
+                    scrollerTop={scrollerTop}
+          />,
         );
       }
       return result;
@@ -98,24 +97,25 @@ function Ecology ({ location, dispatch, ecology }) {
     getItemBox = (data = [], onClick) => {
       return (<div>
         <div className={styles[`${PrefixCls}-itembox`]} style={{ backgroundImage: `url(${bg})` }}>
-          <div className={styles[`${PrefixCls}-itembox-left`]} onClick={onClick.bind(null, data[0])}>
-            <img src={getImages(data[0] && data[0].image)} alt="" />
+          <div className={styles[`${PrefixCls}-itembox-left`]} onClick={onClick.bind(null, data[0], dispatch)}>
+            <img src={getImages(data[0] && data[0].image)} alt=""/>
             <span>{data[0] && data[0].title}</span>
           </div>
           <div className={styles[`${PrefixCls}-itembox-right`]}>
-            <div className={styles[`${PrefixCls}-itembox-right-top`]} onClick={onClick.bind(null, data[1])}>
-              <img src={getImages(data[1] && data[1].image)} alt="" />
+            <div className={styles[`${PrefixCls}-itembox-right-top`]} onClick={onClick.bind(null, data[1], dispatch)}>
+              <img src={getImages(data[1] && data[1].image)} alt=""/>
               <p>{data[1] && data[1].title}</p>
             </div>
-            <div className={styles[`${PrefixCls}-itembox-right-bottom`]} onClick={onClick.bind(null, data[2])}>
-              <img src={getImages(data[2] && data[2].image)} alt="" />
+            <div className={styles[`${PrefixCls}-itembox-right-bottom`]}
+                 onClick={onClick.bind(null, data[2], dispatch)}>
+              <img src={getImages(data[2] && data[2].image)} alt=""/>
               <p>{data[2] && data[2].title}</p>
             </div>
           </div>
         </div>
-        <div className={styles[`${PrefixCls}-imgbox`]} onClick={onClick.bind(null, data[3])}>
-          <img src={getImages(data[3] && data[3].image)} alt="" />
-        </div>
+        {data[3] && <div className={styles[`${PrefixCls}-imgbox`]} onClick={onClick.bind(null, data[3])}>
+          <img src={getImages(data[3] && data[3].image)} alt=""/>
+        </div>}
       </div>);
     },
     handleSearchClick = ({ id = '' }) => {
@@ -123,21 +123,21 @@ function Ecology ({ location, dispatch, ecology }) {
         pathname: '/search',
         query: {
           router: PrefixCls,
-          id
+          id,
         },
       }));
     };
   return (
     <div>
-      <Nav title={name} dispatch={dispatch} />
+      <Nav title={name} dispatch={dispatch}/>
       <SearchBar
         placeholder={`在${name || '此页面'}中搜索`}
         maxLength={20}
         onFocus={handleSearchClick.bind(this, ecology)}
       />
-      <Banner datas={getBannerDatas(banners)} dispatch={dispatch} name={name} handleClick={handleBannerClick} />
-      <div>{getItemBox(data, handleItemClick)}</div>
-      <WhiteSpace size="xs" />
+      <Banner datas={getBannerDatas(banners)} dispatch={dispatch} name={name} handleClick={handleBannerClick}/>
+      <div>{getItemBox(data, handleGridClick)}</div>
+      <WhiteSpace size="xs"/>
       <div>
         {lists.length > 0 && getContents(lists[0])}
       </div>

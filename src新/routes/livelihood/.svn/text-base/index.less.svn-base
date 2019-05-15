@@ -1,0 +1,6 @@
+@PrefixCls: livelihood;
+.@{PrefixCls}-outer {
+  padding-bottom: 140px;
+
+
+}

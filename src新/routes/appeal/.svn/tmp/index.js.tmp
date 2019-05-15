@@ -1,0 +1,321 @@
+import React from 'react'
+import { connect } from 'dva'
+import Nav from 'components/nav'
+import { WhiteSpace, Icon, List, Flex, Tabs, Badge, Tag, Layout, Toast, Accordion } from 'components'
+import SearchHeader from 'components/searchheader'
+import PullToRefresh from 'components/pulltorefresh'
+import { routerRedux } from 'dva/router'
+import { getImages, getErrorImg, getLocalIcon, postionsToString, getOffsetTopByBody } from 'utils'
+import styles from './index.less'
+
+const Item = List.Item,
+  Brief = Item.Brief,
+  { BaseLine } = Layout,
+  tabs = [
+    { title: <Badge>全部求助</Badge> },
+    { title: <Badge>我的求助</Badge> },
+    { title: <Badge>收藏求助</Badge> },
+  ],
+  PrefixCls = 'appeal'
+
+
+const messageStatus = {
+    '1': '已受理',
+    '2': '处理中',
+    '3': '已办理',
+  },
+  colorStatus = {
+    '1': 'blue',
+    '2': 'green',
+    '3': 'gray',
+  },
+  getMessageStatus = (i) => messageStatus[i] || messageStatus['2'],
+  getColorStauts = (i) => colorStatus[i] || colorStatus['2'],
+  getStatusPage = (i) => {
+    return (
+      <span style={{ color: getColorStauts(i) }}>
+        {getMessageStatus(i)}
+        </span>
+    )
+  }
+
+function Appeal ({ location, dispatch, appeal, app }) {
+  const emptyFunc = () => {
+    },
+    getImagesPage = (images, cls = '') => {
+      if (cnIsArray(images) && images.length) {
+        let i = 0
+        return (
+          <div className={styles[`${cls}-attrs`]}>
+<<<<<<< .mine
+            {images.map((src, index) => {
+              if (index < 2) {
+                return <img src={src} alt=""/>
+              }
+            })}
+=======
+            {images.map((src, i) => i < 2 ? <img src={src} alt=""/> : '')}
+>>>>>>> .r22
+          </div>
+        )
+      }
+      return ''
+    },
+    handleCollectClick = () => {
+
+    },
+    stopPropagation = (e) => {
+      e.stopPropagation()
+    },
+    handleCardClick = ({ id }) => {
+      dispatch(routerRedux.push({
+        pathname: '/seekdetails',
+        query: {
+          id,
+        },
+      }))
+    },
+    getAnswersPage = (answers, cls = '') => {
+      if (cnIsArray(answers) && answers.length) {
+        return (
+          <div className={styles[`${cls}-answers`]}>
+            {answers.map(({ content = '', createDate = '', dept = '', user = '', phone = '' }) => {
+              return content != '' ? (
+                <div>
+                  <div className={styles[`${cls}-answers-content`]}>
+                    <span style={{ color: '#1ab99d' }}>回复内容 : </span>
+                    {content}
+                  </div>
+                  {createDate != '' ? <div className={styles[`${cls}-answers-date`]}><span style={{ color: '#1ab99d' }}>回复时间 : </span>{createDate}
+                  </div> : ''}
+                  {dept != '' ?
+                    <div className={styles[`${cls}-answers-dept`]}><span style={{ color: '#1ab99d' }}>单位 : </span>{dept}
+                    </div> : ''}
+                  {user != '' ?
+                    <div className={styles[`${cls}-answers-user`]}><span
+                      style={{ color: '#1ab99d' }}>执行人 : </span>{user}
+                    </div> : ''}
+                  {phone != '' ? <div className={styles[`${cls}-answers-phone`]}><span
+                    style={{ color: '#1ab99d' }}>联系电话 : </span>{phone}</div> : ''}
+                </div>
+              ) : ''
+            })}
+          </div>
+        )
+      }
+      return ''
+    },
+    getCard = ({ username, createDate, positions, title, status, content, images, answers, isCollect, id }) => {
+      const cls = `${PrefixCls}-card`
+      return (
+        <div className={styles[cls]} onClick={handleCardClick.bind(null, { id })}>
+          <div className={styles[`${cls}-info`]}>
+            <img src={getImages('', 'user')} alt=""/>
+            <div className={styles[`${cls}-info-details`]}>
+              <div className={styles[`${cls}-info-details-name`]}>{username}</div>
+              <div className={styles[`${cls}-info-details-others`]}>
+                <div className={styles[`${cls}-info-details-others-date`]}>
+                  <span>{createDate}</span>
+                </div>
+                <div className={styles[`${cls}-info-details-others-pos`]}>
+                  <span>{positions}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className={styles[`${cls}-content-status`]} onClick={stopPropagation}>
+            <span style={{ color: '#1ab99d' }}>当前状态: {getStatusPage(status)}</span>
+            <span>
+            <Tag selected={isCollect} onChange={handleCollectClick}>
+            <Icon type={getLocalIcon('/others/collection.svg')}/>
+              {isCollect ? <span className={styles[`${cls}-content-status-collection`]}>已收藏</span>
+                : <span className={styles[`${cls}-content-status-collection`]}>收藏</span>}
+                </Tag>
+          </span>
+          </div>
+          <div className={styles[`${cls}-content`]}>
+            <div className={styles[`${cls}-content-title`]}>{title}</div>
+            <div className={styles[`${cls}-content-content`]}>
+              <span style={{ color: '#1ab99d' }}>问：</span>
+              {content}
+            </div>
+          </div>
+          {getImagesPage(images, cls)}
+        </div>
+      )
+    },
+    getPositions = ({ street = '', district = '', city = '', province = '' }) => {
+      return street || district || city || province
+    },
+    getDataList = (datas = []) => {
+      const result = []
+      datas.map(data => {
+        const { username, createDate, address = {}, title, state = 1, content, images = [], shoucang = false, id = '' } = data
+        result.push({
+          username,
+          createDate,
+          positions: getPositions(address),
+          title,
+          status: isNaN(state * 1) ? 1 : state * 1 > 4 ? 3 : 2,
+          content,
+          images,
+          answers: [],
+          isCollect: shoucang,
+          id,
+        })
+      })
+      return result
+    },
+
+    { btnDisabled, dataList, btnTitle, name, workCount } = appeal,
+    { isLogin } = app,
+
+<<<<<<< .mine
+    getCountList = (data = {}) => {
+      const { shouli=0, huifu=0, huifulv=0, banjie=0, banjielv=0 } = data
+=======
+    getCountList = (resultInfo) => {
+      const { vioceappept, mediaappept, appept, reply, replyrate, handle, handlerate, satisfied } = resultInfo
+>>>>>>> .r22
+      return (
+        <div className={styles[`${PrefixCls}-infobox-container`]}>
+          {/*middleStart*/}
+          <Flex>
+            <Flex.Item>
+              <div className={styles[`${PrefixCls}-infobox-container-items`]}>
+                <span>受理件 <span>&nbsp;{`${shouli}件`}</span></span>
+              </div>
+            </Flex.Item>
+            <Flex.Item>
+              <div className={styles[`${PrefixCls}-infobox-container-items`]}>
+                <span>回复件 <span>&nbsp;{`${huifu}件`}</span></span>
+              </div>
+            </Flex.Item>
+            <Flex.Item>
+              <div className={styles[`${PrefixCls}-infobox-container-items`]}>
+                <span>回复率 <span>&nbsp;{`${huifulv}%`}</span></span>
+              </div>
+            </Flex.Item>
+          </Flex>
+          {/*bottomStart*/}
+          <Flex>
+            <Flex.Item>
+              <div className={styles[`${PrefixCls}-infobox-container-items`]}>
+                <span>办结件 <span>&nbsp;{`${banjie}件`}</span></span>
+              </div>
+            </Flex.Item>
+            <Flex.Item>
+              <div className={styles[`${PrefixCls}-infobox-container-items`]}>
+                <span>办结率 <span>&nbsp;{`${banjielv}`}</span></span>
+              </div>
+            </Flex.Item>
+            <Flex.Item>
+              <div className={styles[`${PrefixCls}-infobox-container-items`]}>
+                <span>满意率 <span>&nbsp;{`${100}%`}</span></span>
+              </div>
+            </Flex.Item>
+          </Flex>
+        </div>
+      )
+    }
+
+  const btnVisible = (visible = true) => {
+      dispatch({
+        type: 'appeal/updateState',
+        payload: {
+          btnDisabled: visible,
+        },
+      })
+    },
+    handleWarningClick = (name = '') => {
+      btnVisible()
+      const onSuccess = (postions = {}) => {
+          btnVisible(false)
+          console.log(postions)
+          dispatch(routerRedux.push({
+            pathname: '/warning',
+            query: {
+              name,
+              location: postionsToString(postions),
+            },
+          }))
+        },
+        onError = ({ message = '', code = -999 }) => {
+          btnVisible(false)
+          let msg = code == -999 ? message : '请允许系统访问您的位置。'
+          Toast.offline(msg, 2)
+        }
+      cnGetCurrentPosition(onSuccess, onError)
+    },
+    renderNavRight = (handleClick) => {
+      return isLogin ? (
+        btnDisabled ?
+          <div className={styles[`${PrefixCls}-nav`]}>
+            <Icon type='loading'/>
+            <span>{btnTitle}</span>
+          </div> :
+          <div className={styles[`${PrefixCls}-nav`]} onClick={handleClick}>
+            <Icon type={getLocalIcon('/others/sendup.svg')}/>
+            <span>{btnTitle}</span>
+          </div>
+      ) : ''
+    },
+    handleScroll = (e) => {
+      const tabs = document.getElementById('tabs')
+      const offsetTop = getOffsetTopByBody(tabs)
+      const scrollTop = document.documentElement.scrollTop
+     if(20==scrollTop){
+        alert()
+     }
+    },
+    currentDataList = getDataList(dataList)
+
+  return (
+    <div onTouchMove={handleScroll}>
+      <Nav title={name} dispatch={dispatch}
+           renderNavRight={renderNavRight(handleWarningClick.bind(null, btnTitle))}/>
+      <SearchHeader children='自助搜索'/>
+
+      <Accordion defaultActiveKey="0" className="my-accordion">
+        <Accordion.Panel header={<span>本周数据</span>} className="pad">
+          <div className={styles[`${PrefixCls}-infobox`]}>
+            {getCountList(workCount)}
+          </div>
+        </Accordion.Panel>
+      </Accordion>
+      <WhiteSpace/>
+      <div id='tabs'>
+        <Tabs
+          initialPage={0}
+          tabs={tabs}
+          swipeable={false}
+          onChange={(tab, index) => {
+          }}
+          onTabClick={(tab, index) => {
+          }}
+        >
+          <div>
+              <div>
+              {currentDataList.map(message => getCard(message, dispatch))}
+              <BaseLine/>
+              </div>
+          </div>
+          <div>
+            <p style={{ margin: '20px' }}>没有更多数据了</p>
+          </div>
+          <div>
+            <p style={{ margin: '20px' }}>没有更多数据了</p>
+          </div>
+        </Tabs>
+      </div>
+      <WhiteSpace/>
+      {/*<div style={{ height: '150px' }}></div>*/}
+    </div>
+  )
+}
+
+export default connect(({ loading, appeal, app }) => ({
+  loading,
+  appeal,
+  app,
+}))(Appeal)

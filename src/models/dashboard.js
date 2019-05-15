@@ -7,14 +7,14 @@ import { queryDashboard } from 'services/dashboard';
 
 const appendIcon = (grid, i) => {
     let { icon = '', route = 'default' } = grid;
-    if (icon == '') {
+    if (icon === '') {
       grid = { ...grid, ...{ icon: defaultGridIcon[route] } };
     }
     return grid;
   },
   appendBanners = (items, i, target) => {
     let { image = '' } = items;
-    if (image != '') {
+    if (image !== '') {
       target.push({ ...items, url: image });
     }
   },
@@ -24,19 +24,19 @@ const appendIcon = (grid, i) => {
     arr.push({
       id,
       items: data,
-      title
+      title,
     });
     return arr.length > 0 ? arr : [];
   };
 const getDefaultPaginations = () => ({
     current: 1,
     total: 0,
-    size: 10
+    size: 10,
   }),
   namespace = 'dashboard';
 export default modelExtend(model, {
   namespace: 'dashboard',
-  
+
   state: {
     bannerDatas: [],
     grids: [],
@@ -46,9 +46,9 @@ export default modelExtend(model, {
     scrollerTop: 0,
     paginations: getDefaultPaginations(),
     newsList: [],
-    newsData: {}
+    newsData: {},
   },
-  
+
   subscriptions: {
     setup ({ dispatch, history, action }) {
       history.listen(({ pathname }) => {
@@ -60,7 +60,7 @@ export default modelExtend(model, {
             type: 'updateState',
             payload: {
               scrollerTop: 0,
-              paginations: getDefaultPaginations()
+              paginations: getDefaultPaginations(),
             },
           });
         }
@@ -85,7 +85,7 @@ export default modelExtend(model, {
             bannerDatas,
             weath,
             newsList: getList(newsData),
-            newsData
+            newsData,
           },
         });
         if (newsData !== '') {
@@ -94,7 +94,7 @@ export default modelExtend(model, {
             type: 'queryListview',
             payload: {
               id,
-              title
+              title,
             },
           });
         }
@@ -117,11 +117,11 @@ export default modelExtend(model, {
             paginations: {
               ..._this.paginations,
               total: totalCount * 1,
-              current: start + 1
+              current: start + 1,
             },
             newsList: [{
               ...others,
-              items: newLists
+              items: newLists,
             }],
           },
         });

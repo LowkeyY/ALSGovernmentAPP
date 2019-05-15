@@ -39,7 +39,7 @@ const menus = [{
   route: 'guard',
 },
 {
-  icon: require('themes/images/nmenus/shengtai.png'),
+  icon: require('themes/images/nmenus/quntuan.png'),
   name: '绿色阿拉善',
   route: 'ecology',
 },

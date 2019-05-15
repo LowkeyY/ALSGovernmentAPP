@@ -22,8 +22,7 @@ const PrefixCls = 'taskdetails',
   };
 
 function TaskDetails ({ location, dispatch, taskdetails, app }) {
-  const { name = '' } = location.query,
-    { chartArr, val, isDisabled, taskInfo, taskTitle, localArr, imageArr, workId, flowState, flowLeve, flowId, taskId, isShowButton, isOpen, viewImageIndex, taskType, taskUrgency, creatDate, endDate, complete, isWork, isUpTable, qingshi } = taskdetails,
+  const { chartArr, isDisabled, taskInfo, taskTitle, workId, flowState, flowLeve, flowId, taskId, isShowButton, isOpen, viewImageIndex, taskType, taskUrgency, creatDate, endDate, complete, isWork, isUpTable, qingshi, integralLargeClassName, integralClassName, integralClass, integralLargeClass } = taskdetails,
     { isSuccess } = chartArr,
     { users: { userid, useravatar } } = app;
   const onSubmit = ({ msgType = 0, content = '' }) => {
@@ -37,7 +36,7 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
         case 0: {
           if (content !== '') {
             content = replaceSystemEmoji(content);
-            if (content == '') {
+            if (content === '') {
               errorMessages = '不能发送系统自带表情。';
               break;
             }
@@ -158,36 +157,49 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
         payload: {
           taskId,
           flowId,
-          pageType: 'back'
+          pageType: 'back',
         },
       });
     },
     handleTableClick = () => {
-      dispatch(routerRedux.push({
-        pathname: '/tasktable',
-        query: {
-          taskId,
-          flowId,
-          workId
-        }
-      }));
+      if (integralClass === '' && integralLargeClass === '') {
+        Toast.offline('请完善任务信息');
+      } else {
+        dispatch(routerRedux.push({
+          pathname: '/tasktable',
+          query: {
+            taskId,
+            flowId,
+            workId,
+          },
+        }));
+      }
+
     },
     handleReactClick = () => {
       dispatch(routerRedux.push({
         pathname: '/taskreact',
         query: {
-          workId
-        }
+          workId,
+        },
+      }));
+    },
+    handlerEditorTaskClick = () => {
+      dispatch(routerRedux.push({
+        pathname: '/editortask',
+        query: {
+          taskId,
+        },
       }));
     },
     getCompleteButtons = (complete) => {
       if (complete !== '0') {
         return (<div>
           <Button type="primary"
-            inline
-            size="small"
-            style={{ marginRight: '4px' }}
-            onClick={handleCompleteButtonClick}
+                  inline
+                  size="small"
+                  style={{ marginRight: '4px' }}
+                  onClick={handleCompleteButtonClick}
           >完成</Button>
         </div>);
       }
@@ -197,43 +209,43 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
       if (flowLeve === '3' && flowState === '0') {
         return (<div>
           <Button type="primary"
-            inline
-            size="small"
-            style={{ marginRight: '40px', background: '#35aa47', borderColor: '#35aa47' }}
-            onClick={handleTaskClick.bind(null, 'conform')}
+                  inline
+                  size="small"
+                  style={{ marginRight: '40px', background: '#35aa47', borderColor: '#35aa47' }}
+                  onClick={handleTaskClick.bind(null, 'conform')}
           >接受</Button>
           <Button type="primary"
-            inline
-            size="small"
-            style={{ marginRight: '4px', background: '#f3565d', borderColor: '#f3565d' }}
-            onClick={handleTaskClick.bind(null, 'back')}
+                  inline
+                  size="small"
+                  style={{ marginRight: '4px', background: '#f3565d', borderColor: '#f3565d' }}
+                  onClick={handleTaskClick.bind(null, 'back')}
           >退回</Button>
         </div>);
       } else if (flowLeve === '3' && flowState === '3') {
         return (<div>
           <Button type="primary"
-            inline
-            size="small"
-            style={{ marginRight: '4px' }}
-            onClick={handleCompleteClick}
+                  inline
+                  size="small"
+                  style={{ marginRight: '4px' }}
+                  onClick={handleCompleteClick}
           >完成</Button>
         </div>);
       } else if (complete !== '0') {
         return (<div>
           <Button type="primary"
-            inline
-            size="small"
-            style={{ marginRight: '4px' }}
-            onClick={handleCompleteButtonClick}
+                  inline
+                  size="small"
+                  style={{ marginRight: '4px' }}
+                  onClick={handleCompleteButtonClick}
           >完成</Button>
         </div>);
       } else if (isWork === '7') {
         return (<div>
           <Button type="primary"
-            inline
-            size="small"
-            style={{ marginRight: '4px' }}
-            onClick={handleZhihuiClick}
+                  inline
+                  size="small"
+                  style={{ marginRight: '4px' }}
+                  onClick={handleZhihuiClick}
           >完成</Button>
         </div>);
       }
@@ -277,6 +289,19 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
       }
       return '';
     },
+    getEditorTaskButtons = () => {
+      if ((flowLeve === '1' || flowLeve === '0') && (isWork === '0' || isWork === '2')) {
+        return (<div>
+          <Button
+            type="primary"
+            inline
+            size="small"
+            style={{ marginRight: '4px' }}
+            onClick={handlerEditorTaskClick}
+          >完善任务信息</Button></div>);
+      }
+      return '';
+    },
     handleListClick = ({ workId, isTask = true, taskId }) => {
       if (workId !== '') {
         dispatch(routerRedux.push({
@@ -284,7 +309,7 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
           query: {
             id: workId,
             isTask: true,
-            taskId
+            taskId,
           },
         }));
       }
@@ -317,9 +342,9 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
   return (
     <div>
       <Nav title="任务详情"
-        dispatch={dispatch}
-        navEvent={readMessage.bind(null, taskId)}
-        renderNavRight={renderNav(taskId, isWork)}
+           dispatch={dispatch}
+           navEvent={readMessage.bind(null, taskId)}
+           renderNavRight={renderNav(taskId, isWork)}
       />
       <div className={styles[`${PrefixCls}-outer`]}>
         <div className={styles[`${PrefixCls}-outer-title`]}>
@@ -328,7 +353,7 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
         <Accordion className={styles[`${PrefixCls}-outer-taskdetails`]}>
           <Accordion.Panel header={
             <div className={styles[`${PrefixCls}-outer-taskdetails-title`]}>
-              <Icon type={getLocalIcon('/others/task.svg')} size="md" />
+              <Icon type={getLocalIcon('/others/task.svg')} size="md"/>
               <span>【任务详情】</span>
             </div>
           }
@@ -342,6 +367,14 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
                 <div className={styles[`${PrefixCls}-outer-taskdetails-content-info-date`]}>
                   <div>开始时间：{creatDate}</div>
                   <div>结束时间：{endDate}</div>
+                </div>
+                <div className={styles[`${PrefixCls}-outer-taskdetails-content-info-event`]}>
+                  <div>事件类型：</div>
+                  {
+                    integralLargeClassName === '' && integralClassName === '' ?
+                      <div style={{ marginTop: '5px' }}>未知</div> :
+                      <div>{`${integralLargeClassName}-${integralClassName}`}</div>
+                  }
                 </div>
               </div>
               <List>
@@ -360,21 +393,22 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
         {
           isShowButton
             ?
-              <div className={styles[`${PrefixCls}-outer-control`]}>
+            <div className={styles[`${PrefixCls}-outer-control`]}>
               {getReactButtons()}
               {getTaskButtons(flowLeve, flowState, complete, isWork)}
               {getUpTableButtons()}
               {getBackTaskButtons(isWork)}
+              {getEditorTaskButtons(flowLeve, isWork)}
             </div> :
             ''
         }
         <div className={styles[`${PrefixCls}-outer-chat`]}>
-          <Icon type={getLocalIcon('/others/chat.svg')} size="md" />
+          <Icon type={getLocalIcon('/others/chat.svg')} size="md"/>
           <span className={styles[`${PrefixCls}-outer-details-title`]}>【任务汇报】</span>
         </div>
       </div>
-      <ChartRoom {...props} localArr={appendItems(chartArr, userid)} useravatar={useravatar} />
-      <Eventlisten willCallback={onCnevent} />
+      <ChartRoom {...props} localArr={appendItems(chartArr, userid)} useravatar={useravatar}/>
+      <Eventlisten willCallback={onCnevent}/>
     </div>
   );
 }
