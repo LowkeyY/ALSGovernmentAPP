@@ -78,70 +78,13 @@ const App = ({ children, dispatch, app, loading, location }) => {
         ]);
         isFirst = false;
       }
-    },
-    getDot = (pathname, noViewCount) => {
-      if (pathname === '/mine' && noViewCount > 0) {
-        return true;
-      }
-      return false;
     };
-  // if (pathname !== '/' && menusArray.length && !menusArray.includes(pathname)) {
-    return (<div>
-      <Loader spinning={loading.effects[`${pathname.startsWith('/') ? pathname.substr(1) : pathname}/query`]}/>
-      {children}
-    </div>);
-  // }
+  return (<div>
+    <Loader spinning={loading.effects[`${pathname.startsWith('/') ? pathname.substr(1) : pathname}/query`]}/>
+    {children}
+    {showModal ? update(urls, upgraded) : ''}
+  </div>);
 
-  // return (
-  //   <div className="tabbarbox">
-  //     <TabBar
-  //       unselectedTintColor="#949494"
-  //       tintColor="#33A3F4"
-  //       barTintColor="white"
-  //       hidden={false}
-  //     >
-  //       {tabBars.map((_, index) => {
-  //         const props = Object.assign({
-  //           key: index,
-  //           selectedIcon: _.icon,
-  //           selected: pathname === _.route,
-  //           dot: getDot(_.route, noViewCount),
-  //           onPress: () => {
-  //             const { appends = {}, route } = _;
-  //             dispatch(routerRedux.push({
-  //                 pathname: route,
-  //                 query: {
-  //                   ...appends,
-  //                 },
-  //               },
-  //             ));
-  //           },
-  //         }, _);
-  //         props.icon = (<div style={{
-  //           width: '0.44rem',
-  //           height: '0.44rem',
-  //           background: `url(${props.icon}) center center /  0.42rem 0.42rem no-repeat`,
-  //         }}
-  //         />);
-  //         { /* <Icon type={getLocalIcon(props.icon)}/> */
-  //         }
-  //         props.selectedIcon = (<div style={{
-  //           width: '0.44rem',
-  //           height: '0.44rem',
-  //           background: `url(${props.selectedIcon}) center center /  0.42rem 0.42rem no-repeat`,
-  //         }}
-  //         />);
-  //         return (
-  //           <TabBar.Item {...props}>
-  //             {/* {index!==0? <Loader spinning={spinning} />:null} */}
-  //             {pathname === _.route ? children : ''}
-  //           </TabBar.Item>
-  //         );
-  //       })}
-  //     </TabBar>
-  //     {showModal ? update(urls, upgraded) : ''}
-  //   </div>
-  // );
 };
 
 App.propTypes = {

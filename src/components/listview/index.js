@@ -1,6 +1,7 @@
 import { PullToRefresh, ListView } from 'antd-mobile';
 import ReactDOM from 'react-dom';
 import { getOffsetTopByBody } from 'utils';
+import PropTypes from 'prop-types';
 import TitleBox from 'components/titlecontainer';
 import { Layout } from 'components';
 import RefreshLoading from 'components/refreshloading';
@@ -10,7 +11,7 @@ let PrefixCls = 'cn-listview',
   globalIndex = 0,
   getId = (name = '', last = false) => {
     return `${name || PrefixCls}-${last ? globalIndex : ++globalIndex}`;
-  }, 
+  },
   { BaseLine } = Layout;
 
 class Comp extends React.Component {
@@ -19,7 +20,7 @@ class Comp extends React.Component {
     const dataSource = new ListView.DataSource({
       rowHasChanged: (row1, row2) => row1 !== row2,
     });
-    
+
     this.state = {
       dataSource,
       refreshing: true,
@@ -27,7 +28,7 @@ class Comp extends React.Component {
       height: document.documentElement.clientHeight,
     };
   }
-  
+
   componentWillReceiveProps (nextProps) {
     if (nextProps.dataSource !== this.props.dataSource) {
       this.setState({
@@ -35,7 +36,7 @@ class Comp extends React.Component {
       });
     }
   }
-  
+
   componentDidUpdate () {
     if (this.props.useBodyScroll) {
       document.body.style.overflow = 'auto';
@@ -43,9 +44,9 @@ class Comp extends React.Component {
       document.body.style.overflow = 'hidden';
     }
   }
-  
+
   componentDidMount () {
-    let hei = this.state.height, 
+    let hei = this.state.height,
       el;
     if (el = ReactDOM.findDOMNode(this.lv)) {
       hei = cnhtmlHeight - getOffsetTopByBody(el) - cnhtmlSize;
@@ -68,14 +69,14 @@ class Comp extends React.Component {
       }
     }, 200);
   }
-  
+
   componentWillUnmount () {
     let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
     if (scrollTop >= 0 && this.props.onScrollerTop) {
       this.props.onScrollerTop(scrollTop);
     }
   }
-  
+
   onRefresh = () => {
     this.setState({ refreshing: true, isLoading: true });
     if (this.props.onRefresh) {
@@ -95,7 +96,7 @@ class Comp extends React.Component {
       }, 600);
     }
   };
-  
+
   onEndReached = (event) => {
     if (this.state.isLoading || !this.props.hasMore) {
       return;
@@ -116,13 +117,13 @@ class Comp extends React.Component {
       }, 600);
     }
   };
-  
+
   layoutSeparator (sectionID, rowID) {
     if (this.props.layoutSeparator) {
       return this.props.layoutSeparator(sectionID, rowID);
     }
     return;
-      <div
+    <div
       key={`${sectionID}-${rowID}`}
       style={{
         backgroundColor: '#F5F5F9',
@@ -132,30 +133,30 @@ class Comp extends React.Component {
       }}
     />;
   }
-  
+
   layoutRow (rowData, sectionID, rowID) {
     if (this.props.layoutRow) {
       return this.props.layoutRow(rowData, sectionID, rowID);
     }
     return '';
   }
-  
+
   layoutHeader () {
     if (this.props.layoutHeader) {
-      return <TitleBox title={this.props.layoutHeader()} />;
+      return <TitleBox title={this.props.layoutHeader()} icon={this.props.titleIcon}/>;
     }
     return '';
   }
-  
+
   layoutFooter () {
     if (this.props.layoutFooter) {
       return this.props.layoutFooter(this.state.isLoading);
     }
     return (<div style={{ textAlign: 'center' }}>
-      {this.props.hasMore ? <RefreshLoading svg={'/others/refreshloading.svg'} /> : <BaseLine />}
+      {this.props.hasMore ? <RefreshLoading svg={'/others/refreshloading.svg'}/> : <BaseLine/>}
     </div>);
   }
-  
+
   render () {
     return (
       <div className={styles[`${PrefixCls}-outer`]}>
@@ -186,20 +187,24 @@ class Comp extends React.Component {
       </div>
     );
   }
-  
-  static defaultProps = {
-    dataSource: [],
-    useBodyScroll: true,
-    hasMore: false,
-    pageSize: 10,
-    onRefresh: '',
-    layoutHeader: '',
-    layoutFooter: '',
-    layoutRow: '',
-    layoutSeparator: '',
-    scrollerTop: 0,
-    onScrollerTop: ''
-  };
 }
+
+Comp.propTypes = {
+
+};
+Comp.defaultProps = {
+  dataSource: [],
+  useBodyScroll: true,
+  hasMore: false,
+  pageSize: 10,
+  onRefresh: '',
+  layoutHeader: '',
+  layoutFooter: '',
+  layoutRow: '',
+  layoutSeparator: '',
+  scrollerTop: 0,
+  onScrollerTop: '',
+  titleIcon: null,
+};
 
 export default Comp;

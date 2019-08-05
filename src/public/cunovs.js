@@ -1,5 +1,5 @@
 var cunovs = {
-  cnVersion: '8.1.0',
+  cnVersion: '9.0.0',
   cnGlobalIndex: 0,
   cnhtmlSize: 0,
   cnhtmlHeight: document.documentElement.clientHeight,

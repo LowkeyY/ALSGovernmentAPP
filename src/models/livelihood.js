@@ -1,7 +1,7 @@
 import { parse } from 'qs';
 import modelExtend from 'dva-model-extend';
 import { model } from 'models/common';
-import { queryPartyTabs, getAllLanmu, queryPartyData } from 'services/querylist';
+import { queryPartyTabs, queryRobotData, queryPartyData } from 'services/querylist';
 import { doDecode } from 'utils';
 
 const getInfo = (info) => {
@@ -9,35 +9,22 @@ const getInfo = (info) => {
       try {
         return doDecode(info);
       } catch (e) {
+
       }
     }
     return {};
-  },
-  appendItems = (datas = []) => {
-    const result = [],
-      children = [];
-    datas.map((_, index) => {
-      const { id = '', items = [], infos = '', ...others } = _;
-      let { type } = getInfo(infos);
-      if (id != '' > 0) {
-        result.push({
-          ...others,
-          id,
-        });
-        children.push(items);
-      }
-    });
-    return { tabs: result, items: children };
   },
   getTabs = (data = []) => {
     let gridDatas = [];
     data.map((item, index) => {
       const { id = '', route = '', image = '', infos = '', ...others } = item;
+      let { type = '' } = getInfo(infos);
       gridDatas.push({
         id,
         route: route || '/',
         icon: image || '',
         ...others,
+        type,
       });
     });
     return gridDatas.length > 0 ? gridDatas : [];
@@ -56,25 +43,32 @@ const getInfo = (info) => {
     });
     return result.length > 0 ? result : [];
   },
+  defaultList = [
+    {
+      header: '亲，您好，我是Lilly，人称阿拉善小灵通，有什么问题都可以咨询我哦！很高兴为您解答各种问题。',
+      answers: [],
+    },
+  ],
   getDefaultPaginations = () => ({
     current: 1,
     total: 0,
-    size: 10
+    size: 10,
   }),
   namespace = 'livelihood';
 
 export default modelExtend(model, {
-  namespace: 'livelihood',
+  namespace,
   state: {
     tabs: [],
-    tips: [],
-    ptrEl: '',
+    lists: [],
     selectIndex: 0,
+    lanmuId: '',
+    listsBianMin: defaultList,
+    listsBanShi: defaultList,
+    robotType: 'banshi',
     scrollerTop: 0,
     paginations: getDefaultPaginations(),
-    refreshId: '',
-    lists: [],
-    todolist: []
+    dataId: '',
   },
   subscriptions: {
     setup ({ dispatch, history }) {
@@ -86,10 +80,12 @@ export default modelExtend(model, {
             payload: {
               id,
               name,
-              ptrEl: '',
               selectIndex: 0,
+              listsBianMin: defaultList,
+              listsBanShi: defaultList,
               scrollerTop: 0,
               paginations: getDefaultPaginations(),
+              dataId: '',
             },
           });
           dispatch({
@@ -102,9 +98,8 @@ export default modelExtend(model, {
       });
     },
   },
-  
   effects: {
-    * query ({ payload }, { call, put, select }) {
+    * query ({ payload }, { call, put }) {
       const result = yield call(queryPartyTabs, payload);
       if (result) {
         const { data } = result;
@@ -117,16 +112,16 @@ export default modelExtend(model, {
         if (data.length > 0) {
           const { id = '' } = data[0];
           yield put({
-            type: 'queryitems',
+            type: 'updateState',
             payload: {
-              dataId: id
+              lanmuId: id,
             },
           });
         }
       }
     },
-    * queryitems ({ payload }, { call, put, select }) {
-      const { selected = -1 } = payload;
+    * queryRes ({ payload }, { call, put, select }) {
+      const { selected = -1, searchText = '', lanmuId } = payload;
       if (selected !== -1) {
         yield put({
           type: 'updateState',
@@ -135,52 +130,46 @@ export default modelExtend(model, {
           },
         });
       }
-      const result = yield call(queryPartyTabs, payload);
-      if (result) {
-        const { data, tuijian = [] } = result;
+      const { data, success } = yield call(queryRobotData, { searchText, lanmuId });
+      const { robotType } = yield select(_ => _.livelihood);
+      if (success && data.length > 0) {
         yield put({
-          type: 'updateState',
+          type: robotType === 'bianmin' ? 'updateListbianmin' : 'updateListbanshi',
           payload: {
-            tips: data,
-            lists: getList(tuijian)
+            header: `很高兴为您解答，以下为您列举了一些关于“${searchText}”的常见问题：`,
+            answers: data,
           },
         });
-        if (tuijian.length > 0) {
-          const { id = '', title = '' } = tuijian[0];
-          yield put({
-            type: 'queryListview',
-            payload: {
-              id,
-              title,
-              isRefresh: true
-            },
-          });
-        }
+      } else {
+        yield put({
+          type: robotType === 'bianmin' ? 'updateListbianmin' : 'updateListbanshi',
+          payload: {
+            header: `对不起，我已经使用了洪荒之力了，还是没有找到关于“${searchText}”的咨询结果。`,
+            answers: data,
+          },
+        });
       }
     },
+
     * queryListview ({ payload }, { call, put, select }) {
-      const { id = '', title = '', callback = '', isRefresh = false } = payload,
+      const { callback = '', isRefresh = false } = payload,
         _this = yield select(_ => _[`${namespace}`]),
-        { paginations: { current, total, size }, lists } = _this,
+        { paginations: { current, total, size }, lists, dataId } = _this,
         start = isRefresh ? 1 : current,
-        result = yield call(queryPartyData, { dataId: id, nowPage: start, showCount: size });
+        result = yield call(queryPartyData, { dataId, nowPage: start, showCount: size });
       if (result) {
-        let { data = [], totalCount = 0 } = result,
-          newLists = [],
-          { items = [], ...others } = (lists.length > 0 ? lists[0] : {});
-        newLists = start === 1 ? data : [...items, ...data];
+        let { data = [], totalCount = 0} = result,
+          newLists = [];
+        newLists = start === 1 ? data : [...lists, ...data];
         yield put({
           type: 'updateState',
           payload: {
             paginations: {
               ..._this.paginations,
               total: totalCount * 1,
-              current: start + 1
+              current: start + 1,
             },
-            lists: [{
-              ...others,
-              items: newLists
-            }],
+            lists: newLists,
           },
         });
       }
@@ -188,6 +177,19 @@ export default modelExtend(model, {
         callback();
       }
     },
-    
+  },
+  reducers: {
+    updateListbianmin (state, { payload }) {
+      return {
+        ...state,
+        listsBianMin: [...state.listsBianMin, payload],
+      };
+    },
+    updateListbanshi (state, { payload }) {
+      return {
+        ...state,
+        listsBanShi: [...state.listsBanShi, payload],
+      };
+    },
   },
 });

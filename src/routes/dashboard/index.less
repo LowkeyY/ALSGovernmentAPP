@@ -1,7 +1,29 @@
 @import "../../themes/default";
+
 @PrefixCls: dashboard;
 
 .@{PrefixCls}-outer {
-    margin-bottom:@primary-header-height+20 ;
+  margin-bottom: @primary-header-height+20;
+  padding-bottom: 20px;
+  &-content {
+    :global {
+      .am-grid.am-grid-square .am-grid-item:before {
+        padding-bottom: 80%;
+      }
+      .menu-outer___2tqV1 .am-flexbox .am-flexbox-item .am-grid-item-content .am-grid-item-inner-content .am-grid-icon {
+        width: 40% !important;
+      }
+      .menu-outer___2tqV1 .am-flexbox .am-flexbox-item .am-grid-item-content .am-grid-item-inner-content .am-grid-text {
+        font-size: 24px !important;
+        margin-top: 4px;
+      }
+      .am-grid .am-flexbox .am-flexbox-item .am-grid-item-content {
+        padding: 10px 0;
+      }
+      .am-grid.am-grid-square .am-grid-item .am-grid-item-inner-content .am-grid-icon {
+        margin-top: 0;
+      }
+    }
+  }
 }
 

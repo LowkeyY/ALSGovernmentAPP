@@ -441,20 +441,22 @@ function Appeal ({ location, dispatch, appeal, app }) {
       const result = [],
         { current, total, size } = paginations,
         hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total),
-        layoutList = (<ListView layoutHeader={''}
-          dataSource={lists}
-          layoutRow={(rowData, sectionID, rowID) => appealList(rowData, sectionID, rowID, isLogin, handleCardClick, handleCollectClick)}
-          onEndReached={onEndReached}
-          onRefresh={onRefresh}
-          hasMore={hasMore}
-          onScrollerTop={onScrollerTop.bind(null)}
-          scrollerTop={scrollerTop}
-        />);
+        layoutList = (<div className={styles[`${PrefixCls}-list`]}>
+          <ListView layoutHeader={''}
+                    dataSource={lists}
+                    layoutRow={(rowData, sectionID, rowID) => appealList(rowData, sectionID, rowID, isLogin, handleCardClick, handleCollectClick)}
+                    onEndReached={onEndReached}
+                    onRefresh={onRefresh}
+                    hasMore={hasMore}
+                    onScrollerTop={onScrollerTop.bind(null)}
+                    scrollerTop={scrollerTop}
+          />
+        </div>);
       for (let i = 0; i < tabs.length; i++) {
         if (i === selectedIndex) {
           result.push(<div>{layoutList}</div>);
         } else {
-          result.push(<div />);
+          result.push(<div/>);
         }
       }
       return result;
@@ -542,7 +544,7 @@ function Appeal ({ location, dispatch, appeal, app }) {
       });
     },
     goWarring = (postions = {}) => {
-    console.log(postions)
+      console.log(postions);
       dispatch(routerRedux.push({
         pathname: '/warning',
         query: {
@@ -558,8 +560,8 @@ function Appeal ({ location, dispatch, appeal, app }) {
           dispatch({
             type: `${PrefixCls}/updateState`,
             payload: {
-              notesvisible: true
-            }
+              notesvisible: true,
+            },
           });
           goWarring(postions);
         },
@@ -574,11 +576,11 @@ function Appeal ({ location, dispatch, appeal, app }) {
       return isLogin ? (
         btnDisabled ?
           <div className={styles[`${PrefixCls}-nav`]}>
-            <Icon type="loading" />
+            <Icon type="loading"/>
             <span>{btnTitle}</span>
           </div> :
           <div className={styles[`${PrefixCls}-nav`]} onClick={handleClick}>
-            <Icon type={getLocalIcon('/others/sendup.svg')} />
+            <Icon type={getLocalIcon('/others/sendup.svg')}/>
             <span>{btnTitle}</span>
           </div>
       ) : '';
@@ -605,12 +607,12 @@ function Appeal ({ location, dispatch, appeal, app }) {
   return (
     <div>
       <Nav title={name}
-        dispatch={dispatch}
-        renderNavRight={renderNavRight(handleWarningClick.bind(null, btnTitle))}
+           dispatch={dispatch}
+           renderNavRight={renderNavRight(handleWarningClick.bind(null, btnTitle))}
       />
       <SearchBar placeholder={`在${name || '此页面'}中搜索`}
-        maxLength={20}
-        onFocus={handleSearchClick}
+                 maxLength={20}
+                 onFocus={handleSearchClick}
       />
       <Accordion defaultActiveKey="0" className="my-accordion">
         <Accordion.Panel header={<span>本周数据</span>}>
@@ -619,7 +621,7 @@ function Appeal ({ location, dispatch, appeal, app }) {
           </div>
         </Accordion.Panel>
       </Accordion>
-      <WhiteSpace size="xs" />
+      <WhiteSpace size="xs"/>
       <Tabs
         initialPage={0}
         page={selectedIndex}
@@ -631,7 +633,7 @@ function Appeal ({ location, dispatch, appeal, app }) {
       >
         {getContents(currentDataList)}
       </Tabs>
-      <WhiteSpace />
+      <WhiteSpace/>
     </div>
   );
 }

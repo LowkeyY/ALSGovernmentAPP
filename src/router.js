@@ -823,6 +823,104 @@ const Routers = function ({ history, app }) {
           },
         },
         {
+          path: 'regiment',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/regiment'));
+              cb(null, require('routes/regiment/'));
+            }, 'regiment');
+          },
+        },
+        {
+          path: 'legalservice',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/legalservice'));
+              cb(null, require('routes/legalservice/'));
+            }, 'legalservice');
+          },
+        },
+        {
+          path: 'volunteerservice',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/volunteerservice'));
+              cb(null, require('routes/volunteerservice/'));
+            }, 'volunteerservice');
+          },
+        },
+        {
+          path: 'threeopen',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/threeopen'));
+              cb(null, require('routes/threeopen/'));
+            }, 'threeopen');
+          },
+        },
+        {
+          path: 'lawapply',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/lawapply'));
+              cb(null, require('routes/lawapply/'));
+            }, 'lawapply');
+          },
+        },
+        {
+          path: 'lawnotice',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/lawnotice'));
+              cb(null, require('routes/lawnotice/'));
+            }, 'lawnotice');
+          },
+        },
+        {
+          path: 'fairservice',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/fairservice'));
+              cb(null, require('routes/fairservice/'));
+            }, 'fairservice');
+          },
+        },
+        {
+          path: 'fairnotice',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/fairnotice'));
+              cb(null, require('routes/fairnotice/'));
+            }, 'fairnotice');
+          },
+        },
+        {
+          path: 'fairtype',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/fairtype'));
+              cb(null, require('routes/fairtype/'));
+            }, 'fairtype');
+          },
+        },
+        {
+          path: 'fairinfo',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              cb(null, require('routes/fairinfo/'));
+            }, 'fairinfo');
+          },
+        },
+        {
+          path: 'fairform',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/fairform'));
+              cb(null, require('routes/fairform/'));
+            }, 'fairform');
+          },
+        },
+        {
           path: '*',
           getComponent (nextState, cb) {
             const { location: { pathname } } = nextState;

@@ -117,7 +117,7 @@ const App = ({ children, dispatch, app, loading, location }) => {
               ));
             },
           }, _);
-          props.icon = (<div style={{
+          props.icon = (<div key={index} style={{
             width: '0.44rem',
             height: '0.44rem',
             background: `url(${props.icon}) center center /  0.42rem 0.42rem no-repeat`,
@@ -125,7 +125,7 @@ const App = ({ children, dispatch, app, loading, location }) => {
           />);
           { /* <Icon type={getLocalIcon(props.icon)}/> */
           }
-          props.selectedIcon = (<div style={{
+          props.selectedIcon = (<div key={index} style={{
             width: '0.44rem',
             height: '0.44rem',
             background: `url(${props.selectedIcon}) center center /  0.42rem 0.42rem no-repeat`,

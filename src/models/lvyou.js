@@ -2,6 +2,7 @@ import { parse } from 'qs';
 import modelExtend from 'dva-model-extend';
 import { model } from 'models/common';
 import { queryPartyTabs, queryPartyData } from 'services/querylist';
+import { defaultBlank } from 'utils/defaults';
 import { doDecode } from 'utils';
 
 const getInfo = (info) => {
@@ -13,40 +14,48 @@ const getInfo = (info) => {
     }
     return {};
   },
-  getGridbox = (data = []) => {
+  getGBox = (data = []) => {
     let gridDatas = [];
+    let bannerDatas = [];
+    let picDatas = [];
     data.map((item, index) => {
-      const { id = '', route = '', image = '', infos = '', ...others } = item;
+      const { id = '', route = '', image = '', infos = '', title, ...others } = item;
       let { type, scenery = 'false' } = getInfo(infos);
       if (type === 'grids') {
         gridDatas.push({
           id,
           scenery,
+          title,
           route: route || '/',
           icon: image || '',
           ...others,
         });
-      }
-    });
-    return gridDatas.length > 0 ? gridDatas : [];
-  },
-  getBannerDatas = (data = []) => {
-    let bannerDatas = [];
-    data.map((item, index) => {
-      const { id = '', title = '', route = '', infos = '', ...others } = item;
-      let { type } = getInfo(infos);
-      if (type === 'banner') {
+        return gridDatas.length > 0 ? gridDatas : [];
+      } else if (type === 'banner') {
         bannerDatas.push({
           url: item.image,
           id,
           title,
           ...others,
           route,
-          infos
+          infos,
         });
+      } else if (type === 'pic') {
+        picDatas.push({
+          id,
+          route: route || '/',
+          icon: image || '',
+          ...others,
+        });
+      } else {
+        return [];
       }
     });
-    return bannerDatas.length > 0 ? bannerDatas : [];
+    return {
+      gridDatas,
+      bannerDatas,
+      picDatas,
+    };
   },
   getList = (datas = []) => {
     const result = [];
@@ -60,12 +69,12 @@ const getInfo = (info) => {
         });
       }
     });
-    return result.length > 0 ? result : [];
+    return result;
   },
   getDefaultPaginations = () => ({
     current: 1,
     total: 0,
-    size: 10
+    size: 10,
   }),
   namespace = 'lvyou';
 
@@ -75,11 +84,12 @@ export default modelExtend(model, {
     bannerDatas: [],
     grids: [],
     lists: [],
+    picDatas: [],
     id: '',
     name: '',
     isScroll: false,
     scrollerTop: 0,
-    paginations: getDefaultPaginations()
+    paginations: getDefaultPaginations(),
   },
   subscriptions: {
     setup ({ dispatch, history }) {
@@ -110,12 +120,13 @@ export default modelExtend(model, {
       const { id = '' } = payload,
         result = yield call(queryPartyTabs, { dataId: id });
       if (result) {
-        let { data = [], banners = [], tuijian = [] } = result;
+        let { data = [], tuijian = [] } = result;
         yield put({
           type: 'updateState',
           payload: {
-            grids: getGridbox(data),
-            bannerDatas: getBannerDatas(data),
+            grids: getGBox(data).gridDatas,
+            bannerDatas: getGBox(data).bannerDatas,
+            picDatas: getGBox(data).picDatas,
             lists: getList(tuijian),
           },
         });
@@ -125,7 +136,7 @@ export default modelExtend(model, {
             type: 'queryListview',
             payload: {
               id,
-              title
+              title,
             },
           });
         }
@@ -148,11 +159,11 @@ export default modelExtend(model, {
             paginations: {
               ..._this.paginations,
               total: totalCount * 1,
-              current: start + 1
+              current: start + 1,
             },
             lists: [{
               ...others,
-              items: newLists
+              items: newLists,
             }],
           },
         });
@@ -160,6 +171,6 @@ export default modelExtend(model, {
       if (callback) {
         callback();
       }
-    }
+    },
   },
 });

@@ -11,7 +11,6 @@ import { _cg } from 'utils/cookie';
 import styles from './index.less';
 import user from 'themes/images/login/user.png';
 import pwd from 'themes/images/login/锁.png';
-import img from 'themes/images/login/loginicon.png';
 import bg from 'themes/images/login/loginbg.png';
 import phone from 'themes/images/login/phone.png';
 import code from 'themes/images/login/code.png';

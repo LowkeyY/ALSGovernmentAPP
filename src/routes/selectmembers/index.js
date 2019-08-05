@@ -80,7 +80,6 @@ function Selectmembers ({ location, dispatch, selectmembers }) {
       dispatch({
         type: 'selectmembers/queryMembers',
       });
-      console.log(currentSelect);
     },
     handleSelectClick = (key) => {
       let newSelect = [], 

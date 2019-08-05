@@ -4,23 +4,23 @@ import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { Layout, WhiteSpace, Icon, List } from 'components';
 import Menu from 'components/menu/index';
-import styles from './index.less';
 import { getLocalIcon } from 'utils';
 import { layoutRow } from 'components/row';
 import ListView from 'components/listview';
 import TitleBox from 'components/titlecontainer';
 import HeadLine from 'components/headline';
 import { handleGridClick, handleTopLineClick, handleListClick } from 'utils/commonevent';
+import styles from './index.less';
 
 const PrefixCls = 'dashboard',
   Item = List.Item;
 
 function Dashboard ({ dashboard, loading, dispatch, app }) {
   const { Header } = Layout,
-    { bannerDatas, isScroll, grids, selectedIndex = 0, weath, newsList, scrollerTop, newsData } = dashboard, 
-    { isLogin } = app, 
+    { bannerDatas, isScroll, grids, selectedIndex = 0, weath, dataList, scrollerTop, newsData } = dashboard,
+    { isLogin, users: { useravatar } } = app,
     { headTitle = '动态新闻' } = newsData;
-  
+  const { users: { usertype } } = app;
   const getWeather = (weath) => {
       const { date = '', type = '', notice = '', fl = '', fx = '', high = '', low = '' } = weath;
       const info = `${date} ${type} ${notice}`,
@@ -58,31 +58,23 @@ function Dashboard ({ dashboard, loading, dispatch, app }) {
         }
       }
     },
-    getContent = () => {
-      const childrens = [],
-        result = [];
-      Array.from(new Array(20))
-        .map((val, i) => {
-          childrens.push(
-            <Item key={i} arrow="horizontal" multipleLine>
-              {`Title${i}`}
-            </Item>,
-          );
-        });
-      result.push(
-        <Menu handleGridClick={handleGridClick} dispatch={dispatch} datas={grids} columnNum={4} isCarousel  />,
-      );
-      
-      return result;
-    },
-    
+    getContent = () => (
+      <Menu
+        handleGridClick={handleGridClick}
+        dispatch={dispatch}
+        datas={grids}
+        columnNum={4}
+        isLogin={isLogin}
+        usertype={usertype}
+      />
+    ),
+
     onRefresh = (params, callback) => {
       dispatch({
         type: `${PrefixCls}/queryListview`,
         payload: {
           ...params,
           callback,
-          isRefresh: true,
         },
       });
     },
@@ -102,6 +94,7 @@ function Dashboard ({ dashboard, loading, dispatch, app }) {
       if (title !== '' && items.length > 0) {
         result.push(
           <ListView
+            key={id}
             dataSource={items}
             layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, title)}
             onRefresh={onRefresh.bind(null, { id, title })}
@@ -116,14 +109,14 @@ function Dashboard ({ dashboard, loading, dispatch, app }) {
   return (
     <div className={styles[`${PrefixCls}-outer`]} onTouchStart={handleScroll} onTouchEnd={handleScroll}>
       <div className={styles[`${PrefixCls}-top`]}>
-        <Header dispatch={dispatch} isLogin={isLogin} />
-        <HeadLine {...headLineProps} dispatch={dispatch} selectedIndex={selectedIndex} datas={getWeather(weath)} />
+        <Header dispatch={dispatch} isLogin={isLogin} useravatar={useravatar}/>
+        <HeadLine {...headLineProps} dispatch={dispatch} selectedIndex={selectedIndex} datas={getWeather(weath)}/>
       </div>
       <div className={styles[`${PrefixCls}-outer-content`]}>{getContent()}</div>
-      <WhiteSpace size="xs" />
-      <TitleBox title={headTitle} more handleClick={handleMoreCilck.bind(null, newsData)} />
+      <WhiteSpace size="xs"/>
+      <TitleBox title={headTitle} more handleClick={handleMoreCilck.bind(null, newsData)}/>
       <div className={styles[`${PrefixCls}-container`]}>
-        {newsList.length > 0 && getContents(newsList[0], dispatch)}
+        {dataList.length > 0 && getContents(dataList[0], dispatch)}
       </div>
     </div>
   );

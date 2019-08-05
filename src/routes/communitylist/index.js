@@ -5,7 +5,7 @@ import { getLocalIcon } from 'utils';
 import Nav from 'components/nav';
 import { routerRedux } from 'dva/router';
 import NoMessage from 'components/nomessage';
-import defaultImg from './bg.png'
+import defaultImg from './bg.png';
 import styles from './index.less';
 
 const PrefixCls = 'communitylist',
@@ -24,11 +24,12 @@ function CommunityList ({ location, dispatch, communitylist }) {
       lists && lists.map((list, i) => {
         result.push(
           <div className={styles[`${PrefixCls}-listbox`]}>
-            <Item className={styles[`${PrefixCls}-box`]}
-                  thumb={list.img || defaultImg}
-                  multipleLine
-                  wrap
-                  onClick={handleItemOnclick.bind(null, list)}
+            <List.Item
+              className={styles[`${PrefixCls}-box`]}
+              thumb={list.img || defaultImg}
+              multipleLine
+              wrap
+              onClick={handleItemOnclick.bind(null, list)}
             >
               <span>{list.title}</span>
               <Brief>
@@ -40,7 +41,7 @@ function CommunityList ({ location, dispatch, communitylist }) {
                   {list.hdsj}
                 </p>
               </Brief>
-            </Item>
+            </List.Item>
             <div className={styles[`${PrefixCls}-list-state`]}>{`报名人数${list.bmrs}`}</div>
           </div>,
         );
@@ -88,12 +89,13 @@ function CommunityList ({ location, dispatch, communitylist }) {
   return (
     <div className={styles[`${PrefixCls}-outer`]}>
       <Nav title={name} dispatch={dispatch}/>
-      <Tabs tabs={tabs}
-            initialPage={selectedIndex}
-            swipeable={false}
-            onChange={(tab, index) => {
-              handleTabClick(tab, index);
-            }}
+      <Tabs
+        tabs={tabs}
+        initialPage={selectedIndex}
+        swipeable={false}
+        onChange={(tab, index) => {
+          handleTabClick(tab, index);
+        }}
 
       >
         <div>

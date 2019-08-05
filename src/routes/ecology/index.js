@@ -9,7 +9,6 @@ import { layoutRow } from 'components/row';
 import ListView from 'components/listview';
 import Banner from 'components/banner';
 import styles from './index.less';
-import bg from '../../themes/images/others/greenbg.png';
 import { handleGridClick, handleBannerClick, handleListClick } from 'utils/commonevent';
 
 const PrefixCls = 'ecology';
@@ -77,7 +76,7 @@ function Ecology ({ location, dispatch, ecology }) {
     getContents = (lists = []) => {
       const result = [],
         { title = '', id = '', items = [] } = lists;
-      if (title != '' && items.length > 0) {
+      if (title !== '' && items.length > 0) {
         const { current, total, size } = paginations,
           hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total);
         result.push(
@@ -96,7 +95,7 @@ function Ecology ({ location, dispatch, ecology }) {
     },
     getItemBox = (data = [], onClick) => {
       return (<div>
-        <div className={styles[`${PrefixCls}-itembox`]} style={{ backgroundImage: `url(${bg})` }}>
+        <div className={styles[`${PrefixCls}-itembox`]} >
           <div className={styles[`${PrefixCls}-itembox-left`]} onClick={onClick.bind(null, data[0], dispatch)}>
             <img src={getImages(data[0] && data[0].image)} alt=""/>
             <span>{data[0] && data[0].title}</span>

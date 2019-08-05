@@ -1,4 +1,4 @@
-// import styles from './index.less'
+
 // import React from 'react'
 // import { List, Badge, Icon, Tag, Card } from 'antd-mobile'
 // import { getErrorImg, getImages, getLocalIcon } from 'utils'
@@ -596,7 +596,7 @@ module.exports = {
         <div className={styles[`${cls}-content`]}>
           <div className={styles[`${cls}-content-title`]}>{title}</div>
           <div className={styles[`${cls}-content-content`]}>
-            <span style={{ color: '#1ab99d' }}>问：</span>
+            <span style={{ color: '#1ab99d', fontSize: '20px' }}>问：</span>
             {content}
           </div>
         </div>
@@ -924,13 +924,7 @@ module.exports = {
       result;
   },
   centerAppealRow: (rowData, sectionID, rowID, onClick) => {
-    const getShstate = (shtate, state) => {
-        if (shtate === '2') {
-          return <span style={{ color: '#d45b5b' }}>●已拒绝</span>;
-        }
-        return getStatus(state);
-      },
-      getStatus = (status) => {
+    const getStatus = (status) => {
         switch (status) {
           case '0' :
             return <span style={{ color: '#b3b4b3' }}>●未办理</span>;
@@ -947,6 +941,12 @@ module.exports = {
           case '7' :
             return <span style={{ color: '#d48689' }}>●待确认</span>;
         }
+      },
+      getShstate = (shtate, state) => {
+        if (shtate === '2') {
+          return <span style={{ color: '#d45b5b' }}>●已拒绝</span>;
+        }
+        return getStatus(state);
       };
     const { title, cdate, shState, state, id, situatton } = rowData;
     return (

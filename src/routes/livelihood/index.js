@@ -1,82 +1,94 @@
 import React from 'react';
 import { connect } from 'dva';
 import Nav from 'components/nav';
-import styles from './index.less';
 import { routerRedux } from 'dva/router';
-import { liveRow, eventRow } from 'components/row';
-import ListView from 'components/listview';
-import { Tabs, WhiteSpace, Grid, Icon, SearchBar } from 'components';
-import Tile from 'components/tile';
-import { doDecode } from 'utils';
-import { getLocalIcon } from 'utils';
+import { Tabs, WhiteSpace, Icon } from 'components';
+import NoContent from 'components/nocontent';
+import { layoutRow } from 'components/row';
+import { doDecode, getLocalIcon } from 'utils';
 import { handleGridClick, handleListClick } from 'utils/commonevent';
+import Robot from 'components/robot';
+import ListView from 'components/listview';
+import styles from './index.less';
 
-
-const Colors = ['greenyellow', 'lightskyblue', '#e8e862', '#f178d7'],
-  getCurrentColor = (i) => (i > Colors.length ? Colors[i % Colors.length] : Colors[i]),
-  PrefixCls = 'livelihood';
+const PrefixCls = 'livelihood';
 
 function Livelihood ({ location, dispatch, livelihood }) {
   const { name = '' } = location.query,
-    { tabs, tips, selectIndex, paginations, scrollerTop, refreshId, lists } = livelihood,
+    { tabs, lanmuId, selectIndex, listsBanShi, robotType = 'banshi', lists, paginations, scrollerTop, dataId } = livelihood,
     handleTabClick = (data, index) => {
-      const { externalUrl = '', title } = data;
-      if (externalUrl !== '' && externalUrl.startsWith('http')) {
-        dispatch(routerRedux.push({
-          pathname: 'iframe',
-          query: {
-            name: title,
-            externalUrl,
-          },
-        }));
-      } else {
-        const { route = '', title = '', id } = data;
+      const { externalUrl = '', title, type = 'banshi', id } = data;
+      if (type === 'bianmin') {
         dispatch({
           type: 'livelihood/updateState',
           payload: {
-            refreshId: id,
-            selectIndex: index
+            dataId: id,
           },
         });
         dispatch({
-          type: 'livelihood/queryitems',
+          type: 'livelihood/queryListview',
           payload: {
             dataId: id,
-            selected: index,
             isRefresh: true,
           },
         });
       }
+      if (externalUrl !== '' && externalUrl.startsWith('http')) {
+        if (cnOpen) {
+          cnOpen(externalUrl);
+        } else {
+          dispatch(routerRedux.push({
+            pathname: 'iframe',
+            query: {
+              name: title,
+              externalUrl,
+            },
+          }));
+        }
+      } else {
+        dispatch({
+          type: 'livelihood/updateState',
+          payload: {
+            selectIndex: index,
+            robotType: type,
+            lanmuId: id,
+          },
+        });
+      }
     },
-    renderContent = (tips) => {
-      return tips && tips.map((item, i) => {
-        return (
-          <Tile
-            items={item}
-            colors={getCurrentColor(i)}
-            handleClick={handleGridClick}
-            dispatch={dispatch}
-          />
-        );
+
+    handlerSubmit = (val) => {
+      dispatch({
+        type: 'livelihood/queryRes',
+        payload: {
+          ...val,
+          lanmuId,
+        },
+      });
+      dispatch({
+        type: `livelihood/updateList${robotType}`,
+        payload: {
+          header: val.searchText,
+          answers: [],
+          isMySelf: true,
+        },
       });
     },
-    onRefresh = (params, callback) => {
+    onRefresh = (callback) => {
       dispatch({
         type: `${PrefixCls}/queryListview`,
         payload: {
-          ...params,
           callback,
-          isRefresh: true
-        }
+          isRefresh: true,
+        },
       });
     },
-    onEndReached = (params, callback) => {
+    onEndReached = (callback) => {
       dispatch({
         type: `${PrefixCls}/queryListview`,
         payload: {
-          ...params,
-          callback
-        }
+          callback,
+        },
       });
     },
     onScrollerTop = (top) => {
@@ -84,65 +96,33 @@ function Livelihood ({ location, dispatch, livelihood }) {
         dispatch({
           type: `${PrefixCls}/updateState`,
           payload: {
-            scrollerTop: top
-          }
+            scrollerTop: top,
+          },
         });
       }
     },
-    getContents = (lists, selectIndex) => {
-      if (selectIndex === 1) {
-        const result = [],
-          { id = '', items = [] } = lists;
-        if (items.length > 0) {
-          const { current, total, size } = paginations,
-            hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total);
-          
-          result.push(
-            <ListView
-              dataSource={items}
-              layoutRow={(rowData, sectionID, rowID) => eventRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
-              onEndReached={onEndReached.bind(null, { id })}
-              onRefresh={onRefresh.bind(null, { id })}
-              hasMore={hasMore}
-              onScrollerTop={onScrollerTop.bind(null)}
-              scrollerTop={scrollerTop}
-            />
-          );
-        }
-        return result;
-      } 
-      const result = [],
-        { title = '', id = '', items = [] } = lists;
-      if (title !== '' && items.length > 0) {
-        const { current, total, size } = paginations,
-          hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total);
-          
-        result.push(
-          <ListView layoutHeader={() => title}
-            dataSource={items}
-            layoutRow={(rowData, sectionID, rowID) => liveRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
-            onEndReached={onEndReached.bind(null, { id, title })}
-            onRefresh={onRefresh.bind(null, { id, title })}
-            hasMore={hasMore}
-            onScrollerTop={onScrollerTop.bind(null)}
-            scrollerTop={scrollerTop}
-          />
-        );
-      }
+    getContents = (list) => {
+      const { current, total, size } = paginations,
+        hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total),
+        result = [];
+      result.push(
+        <ListView
+          layoutHeader={''}
+          dataSource={list}
+          layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
+          onEndReached={onEndReached}
+          onRefresh={onRefresh}
+          hasMore={hasMore}
+          onScrollerTop={onScrollerTop.bind(null)}
+          scrollerTop={scrollerTop}
+        />,
+      );
+
       return result;
-    },
-    handleSearchClick = ({ id = '' }) => {
-      dispatch(routerRedux.push({
-        pathname: '/search',
-        query: {
-          router: PrefixCls,
-          id
-        },
-      }));
     };
   return (
     <div>
-      <Nav title={name} dispatch={dispatch} />
+      <Nav title={name} dispatch={dispatch}/>
       <div className={styles[`${PrefixCls}-outer`]}>
         <div>
           <Tabs
@@ -152,14 +132,13 @@ function Livelihood ({ location, dispatch, livelihood }) {
             onTabClick={handleTabClick}
           >
             <div>
-              {selectIndex === 1 ? <div>{lists.length > 0 && getContents(lists[0], selectIndex)}</div> :
-              <div className={styles[`${PrefixCls}-outer-container`]}>
-                  {renderContent(tips)}
-                </div>}
-              {selectIndex === 0 ? <div> {lists.length > 0 && getContents(lists[0], selectIndex)}</div> : ''}
+              <Robot handlerSubmit={handlerSubmit} lists={listsBanShi} dispatch={dispatch}/>
+            </div>
+            <div><NoContent/></div>
+            <div>
+              {lists.length > 0 ? getContents(lists) : <NoContent/>}
             </div>
           </Tabs>
-          <WhiteSpace />
         </div>
       </div>
     </div>

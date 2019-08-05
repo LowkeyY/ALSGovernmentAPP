@@ -1,11 +1,10 @@
-import styles from './index.less';
 import React from 'react';
 import { List, Badge, Icon, Tag, Card } from 'antd-mobile';
-import { getErrorImg, getImages, getLocalIcon } from 'utils';
+import { getErrorImg, getImages, getLocalIcon, doDecode } from 'utils';
 import StatusBox from 'components/statusbox';
 import Rate from 'rc-rate';
-import { doDecode } from 'utils';
 import '../../../node_modules/rc-rate/assets/index.css';
+import styles from './index.less';
 
 const PrefixCls = 'row',
   Item = List.Item,
@@ -38,7 +37,7 @@ module.exports = {
       </Item>
     );
     return isNew ?
-      <div className={styles[`${PrefixCls}-newbox`]}><Badge key={`badge - ${sectionID} - ${rowID}`} text={'新'} corner>
+      <div key={`badge - ${sectionID} - ${rowID}`} className={styles[`${PrefixCls}-newbox`]}><Badge text={'新'} corner>
         {result}
       </Badge></div>
       :
@@ -270,7 +269,7 @@ module.exports = {
         <div className={styles[`${cls}-content`]}>
           <div className={styles[`${cls}-content-title`]}>{title}</div>
           <div className={styles[`${cls}-content-content`]}>
-            <span style={{ color: '#1ab99d' }}>问：</span>
+            <span style={{ color: '#1ab99d', fontSize: '20px' }}>问：</span>
             {content}
           </div>
         </div>
@@ -645,12 +644,84 @@ module.exports = {
       <Item key={id}
             onClick={onClick.bind(this, rowData)}
             multipleLine
-            extra={<span style={{ color: '#ffb044', fontSize: '26px' }}
-            >
-        {Number(integral) > 0 ? `+${integral}` : integral}</span>}>
+            extra={<span style={{ color: '#ffb044', fontSize: '26px' }}>
+          {Number(integral) > 0 ? `+${integral}` : integral}</span>}
+      >
         {typeName}
         <Brief>{date}</Brief>
       </Item>
     );
+  },
+  multipleRow: (rowData, sectionID, rowID, onClick, dispatch, headName, hasDate = 'true') => {
+    const { title = '', image = '', time = '', isNew = false, infos = '', contextImg = [] } = rowData;
+    let result = [];
+    const rows = {
+      0: (
+        <Item
+          className={styles[`${PrefixCls}-item`]}
+          key={`${PrefixCls}-${sectionID}-${rowID}`}
+          thumb={image || ''}
+          multipleLine
+          wrap
+          arrow="horizontal"
+          onClick={onClick.bind(null, rowData, dispatch, headName)}
+        >
+          <span>{title}</span>
+          {hasDate === 'true' ? <Brief>{time}</Brief> : ''}
+        </Item>
+      ),
+      1: (
+        <Item
+          className={styles[`${PrefixCls}-item`]}
+          key={`${PrefixCls}-${sectionID}-${rowID}`}
+          thumb={image || ''}
+          multipleLine
+          wrap
+          arrow="horizontal"
+          onClick={onClick.bind(null, rowData, dispatch, headName)}
+        >
+          <span>{title}</span>
+          {hasDate === 'true' ? <Brief>{time}</Brief> : ''}
+        </Item>
+      ),
+      2: (
+        <Item
+          className={styles[`${PrefixCls}-item`]}
+          key={`${PrefixCls}-${sectionID}-${rowID}`}
+          thumb={image || ''}
+          multipleLine
+          wrap
+          arrow="horizontal"
+          onClick={onClick.bind(null, rowData, dispatch, headName)}
+        >
+          <span>{title}</span>
+          {hasDate === 'true' ? <Brief>{time}</Brief> : ''}
+        </Item>
+      ),
+      3: (
+        <Item
+          className={styles[`${PrefixCls}-item`]}
+          key={`${PrefixCls}-${sectionID}-${rowID}`}
+          thumb={image || ''}
+          multipleLine
+          wrap
+          arrow="horizontal"
+          onClick={onClick.bind(null, rowData, dispatch, headName)}
+        >
+          <span>{title}</span>
+          {hasDate === 'true' ? <Brief>{time}</Brief> : ''}
+        </Item>
+      ),
+    };
+
+    return (
+      rows[parseInt(rowID) % 3]
+    );
+    return isNew ?
+      <div className={styles[`${PrefixCls}-newbox`]}><Badge key={`badge - ${sectionID} - ${rowID}`} text={'新'} corner>
+        {result}
+      </Badge></div>
+      :
+      result;
   },
 };

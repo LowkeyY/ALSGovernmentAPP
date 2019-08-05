@@ -1,4 +1,4 @@
-
+import React from 'react';
 import { Modal, Button } from 'antd-mobile';
 import PropTypes from 'prop-types';
 import styles from './index.less';
@@ -15,7 +15,7 @@ const NotesModal = (props) => {
       return null;
     },
     onWrapTouchStart = (e) => {
-    // fix touch to scroll background page on iOS
+      // fix touch to scroll background page on iOS
       if (!/iPhone|iPod|iPad/i.test(navigator.userAgent)) {
         return;
       }
@@ -41,24 +41,23 @@ const NotesModal = (props) => {
         transparent
         maskClosable={false}
         onClose={onClose}
-        title="诉求须知"
-        footer={[{ text: '确定', onPress: () => { props.handleClick(); } }]}
+
+        footer={[{
+          text: '确定', onPress: () => {
+            props.handleClick();
+          },
+        }]}
         wrapProps={{ onTouchStart: onWrapTouchStart }}
       >
         <div style={{ height: 400, overflow: 'scroll' }}>
-          <div dangerouslySetInnerHTML={getContents()} />
+          <div dangerouslySetInnerHTML={getContents()}/>
         </div>
       </Modal>
     </div>
   );
-  Static.propTypes = {
-
-
-  };
-  Static.defaultProps = {
-    visible: false,
-    content: ''
-
-  };
+};
+NotesModal.defaultProps = {
+  visible: false,
+  content: '',
 };
 export default NotesModal;

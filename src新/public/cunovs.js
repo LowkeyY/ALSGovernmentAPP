@@ -1,5 +1,5 @@
 var cunovs = {
-  cnVersion: '8.1.0',
+  cnVersion: '2.0.0',
   cnGlobalIndex: 0,
   cnhtmlSize: 0,
   cnhtmlHeight: document.documentElement.clientHeight,
@@ -441,10 +441,10 @@ if (typeof String.prototype.startsWith != 'function') {
     screenChangeEvents = ['webkitfullscreenchange', 'mozfullscreenchange', 'fullscreenchange', 'MSFullscreenChange'];
   for (var i = 0; i < screenChangeEvents.length; i++) {
     document.addEventListener(screenChangeEvents[i], function (e) {
-        if (e.target && e.target.tagName === 'VIDEO' && cnIsDefined(document.webkitIsFullScreen)) {
-          cnScreenChange(document.webkitIsFullScreen);
-        }
-      });
+      if (e.target && e.target.tagName === 'VIDEO' && cnIsDefined(document.webkitIsFullScreen)) {
+        cnScreenChange(document.webkitIsFullScreen);
+      }
+    });
   }
   window.cnPrintWebSocket = function () {
     console.log(cunovsWebSocket);

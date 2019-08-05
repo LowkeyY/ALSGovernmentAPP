@@ -233,5 +233,10 @@ module.exports = {
     sendEventTpyeApi: '/ExternalItems/taskRelease/interface/updateTaskInfo.jcp',
     getIntegralListApi: '/ExternalItems/integral/getUserIntegralDetails.jcp',
     getIntegralRuleApi: '/cphsc/interface/getIntegralRule.jcp',
+    GetRobotDataApi: '/cphsc/interface/smartSearch.jcp',
+    SearchLanmuApi: '/cphsc/interface/lanmuSearch.jcp',
+    SendApplyApi: '/cphsc/interface/fazhi/submitfalvyuanzhu.jcp',
+    GetFairTypesApi: '/cphsc/interface/fazhi/getyuyueshixiang.jcp',
+    SendFairService: '/cphsc/interface/fazhi/submitgongzhengyuyue.jcp',
   },
 };

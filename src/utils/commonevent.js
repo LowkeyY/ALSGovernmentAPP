@@ -1,5 +1,5 @@
 import { routerRedux } from 'dva/router';
-import { Modal } from 'components';
+import { Modal, Toast } from 'components';
 import { doDecode } from 'utils';
 
 const getInfo = (info) => {
@@ -11,7 +11,7 @@ const getInfo = (info) => {
   }
   return {};
 };
-const handleGridClick = ({ route = '', title, externalUrl = '', infos = '', ...others }, dispatch, isLogin = false) => {
+const handleGridClick = ({ route = '', title, externalUrl = '', infos = '', ...others }, dispatch, isLogin = false, userType = '') => {
     if (externalUrl !== '' && externalUrl.startsWith('http')) {
       if (cnOpen) {
         cnOpen(externalUrl);
@@ -28,6 +28,9 @@ const handleGridClick = ({ route = '', title, externalUrl = '', infos = '', ...o
       const { name = '' } = getInfo(infos);
       if (name === 'logined') {
         if (isLogin) {
+          if (route === 'guard' && userType === 'isRegistUser') {
+            Toast.fa('对不起你没有权限访问该模块');
+          }
           dispatch(routerRedux.push({
             pathname: `/${route}`,
             query: {
@@ -36,7 +39,7 @@ const handleGridClick = ({ route = '', title, externalUrl = '', infos = '', ...o
             },
           }));
         } else {
-          Modal.alert('您还没登陆', '请登陆后继续收藏', [
+          Modal.alert('您还没登陆', '请登陆后继续', [
             { text: '稍后再说', onPress: () => console.log('cancel') },
             {
               text: '立刻登陆',
@@ -75,7 +78,7 @@ const handleGridClick = ({ route = '', title, externalUrl = '', infos = '', ...o
       dispatch(routerRedux.push({
         pathname: `/${route}`,
         query: {
-          name,
+          name: title,
           dataId: id,
         },
       }));
@@ -151,5 +154,5 @@ module.exports = {
   handleGridClick,
   handleBannerClick,
   handleTopLineClick,
-  handleListClick
+  handleListClick,
 };

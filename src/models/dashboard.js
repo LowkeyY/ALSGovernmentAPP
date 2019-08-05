@@ -46,6 +46,7 @@ export default modelExtend(model, {
     scrollerTop: 0,
     paginations: getDefaultPaginations(),
     newsList: [],
+    dataList: [],
     newsData: {},
   },
 
@@ -69,14 +70,13 @@ export default modelExtend(model, {
   },
   effects: {
     * query ({ payload }, { call, put, select }) {
-      const data = yield call(queryDashboard),
-        { newsList } = yield select(_ => _.dashboard);
+      const data = yield call(queryDashboard);
       if (data) {
         let { grids = defaultGrids, banners = defaultBanners, weath, newsData } = data,
           bannerDatas = [];
         grids = grids.map((grid, i) => appendIcon(grid, i));
-        banners.map((banners, i) => {
-          appendBanners(banners, i, bannerDatas);
+        banners.map((item, i) => {
+          appendBanners(item, i, bannerDatas);
         });
         yield put({
           type: 'updateState',
@@ -100,28 +100,17 @@ export default modelExtend(model, {
         }
       }
     },
-    * queryListview ({ payload }, { call, put, select }) {
-      const { id = '', title = '', callback = '', isRefresh = false } = payload,
-        _this = yield select(_ => _[`${namespace}`]),
-        { paginations: { current, total, size }, newsList } = _this,
-        start = isRefresh ? 1 : current,
-        result = yield call(queryPartyData, { dataId: id, nowPage: start, showCount: size });
+    * queryListview ({ payload }, { call, put }) {
+      const { id = '', callback = '', } = payload,
+        result = yield call(queryPartyData, { dataId: id, nowPage: 1, showCount: 10 });
       if (result) {
-        let { data = [], totalCount = 0 } = result,
-          newLists = [],
-          { items = [], ...others } = (newsList.length > 0 ? newsList[0] : {});
-        newLists = start === 1 ? data : [...items, ...data];
+        let { data = [] } = result
         yield put({
           type: 'updateState',
           payload: {
-            paginations: {
-              ..._this.paginations,
-              total: totalCount * 1,
-              current: start + 1,
-            },
-            newsList: [{
-              ...others,
-              items: newLists,
+            dataList: [{
+              ...payload,
+              items: data,
             }],
           },
         });

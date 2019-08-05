@@ -1,0 +1,100 @@
+@import "../../themes/default";
+
+@titleSize: 30px;
+@dateSize: 26px;
+
+.title {
+  font-size: @titleSize;
+  margin-bottom: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.date {
+  font-size: @dateSize;
+  color: #666;
+  margin-top: 10px;
+}
+
+.outer {
+  border-bottom: @hd solid #ddd;
+}
+
+.single {
+  padding: 28px 30px;
+  .title {
+    .title();
+  }
+  .img {
+    width: 100%;
+    height: 22vh;
+    background-size: 100%;
+    background-position: center center;
+  }
+  .date {
+    .date();
+  }
+}
+
+.left {
+  display: flex;
+  padding: 0.25rem 0.3rem;
+  .title {
+    .title()
+  }
+  .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .date {
+    .date()
+  }
+  &  img {
+    width: 200px;
+    height: 160px;
+    margin-right: 20px;
+  }
+}
+
+.right {
+  display: flex;
+  padding: 0.25rem 0.3rem;
+  .title {
+    .title()
+  }
+  .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .date {
+    .date()
+  }
+  & img {
+    width: 240px;
+    height: 160px;
+    margin-left: 20px;
+  }
+}
+
+.multiple {
+  padding: 0.25rem 0.3rem;
+  .title {
+    .title()
+  }
+  .imgBox {
+    display: flex;
+    justify-content: space-around;
+    & > img {
+      width: 32%;
+      height: 160px;
+    }
+  }
+  .date {
+    .date()
+  }
+}

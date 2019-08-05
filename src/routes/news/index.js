@@ -11,17 +11,17 @@ import { handleListClick } from 'utils/commonevent';
 function News ({ location, dispatch, news }) {
   const { name = '' } = location.query,
     { banners, lists, paginations, scrollerTop, refreshId } = news,
-    
+
     getvideo = (data) => {
       return data && data.map(data => {
         return (
           <video key={data.id}
-            width="100%"
-            preload="none"
-            poster={data.videoView}
-            src={data.videoSrc}
-            controlsList="nodownload"
-            controls="controls"
+                 width="100%"
+                 preload="none"
+                 poster={data.videoView}
+                 src={data.videoSrc}
+                 controlsList="nodownload"
+                 controls="controls"
           />
         );
       });
@@ -34,8 +34,8 @@ function News ({ location, dispatch, news }) {
         payload: {
           refreshId,
           callback,
-          isRefresh: true
-        }
+          isRefresh: true,
+        },
       });
     },
     onEndReached = (refreshId, callback) => {
@@ -43,8 +43,8 @@ function News ({ location, dispatch, news }) {
         type: `${PrefixCls}/queryListview`,
         payload: {
           refreshId,
-          callback
-        }
+          callback,
+        },
       });
     },
     onScrollerTop = (top) => {
@@ -52,8 +52,8 @@ function News ({ location, dispatch, news }) {
         dispatch({
           type: `${PrefixCls}/updateState`,
           payload: {
-            scrollerTop: top
-          }
+            scrollerTop: top,
+          },
         });
       }
     },
@@ -63,15 +63,15 @@ function News ({ location, dispatch, news }) {
       const { current, total, size } = paginations,
         hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total);
       result.push(
-        <ListView layoutHeader={title}
-          dataSource={lists}
-          layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name, false)}
-          onEndReached={onEndReached.bind(null, refreshId)}
-          onRefresh={onRefresh.bind(null, refreshId)}
-          hasMore={hasMore}
-          onScrollerTop={onScrollerTop.bind(null)}
-          scrollerTop={scrollerTop}
-        />
+        <ListView key={id} layoutHeader={title}
+                  dataSource={lists}
+                  layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name, false)}
+                  onEndReached={onEndReached.bind(null, refreshId)}
+                  onRefresh={onRefresh.bind(null, refreshId)}
+                  hasMore={hasMore}
+                  onScrollerTop={onScrollerTop.bind(null)}
+                  scrollerTop={scrollerTop}
+        />,
       );
       return result;
     },
@@ -80,23 +80,23 @@ function News ({ location, dispatch, news }) {
         pathname: '/search',
         query: {
           router: PrefixCls,
-          id
+          id,
         },
       }));
     };
   return (
     <div>
-      <Nav title={name} dispatch={dispatch} />
+      <Nav title={name} dispatch={dispatch}/>
       <SearchBar
         placeholder={`在${name || '此页面'}中搜索`}
         maxLength={20}
         onFocus={handleSearchClick.bind(this, news)}
       />
-      <TitleBox title="最新新闻" />
+      <TitleBox title="最新新闻"/>
       <div>
         {getvideo(banners)}
       </div>
-      <TitleBox title="往期新闻" />
+      <TitleBox title="往期新闻"/>
       <div>
         <div>{lists.length > 0 && getContents(lists, refreshId)}</div>
       </div>

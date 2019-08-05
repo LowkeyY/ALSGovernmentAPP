@@ -1,0 +1,32 @@
+@PrefixCls: inputbox;
+
+.@{PrefixCls}-outer {
+  -webkit-user-select: none;
+  user-select: none;
+  width: 100%;
+  position: fixed;
+  bottom: @primary-header-height+10;
+  background: #fff;
+
+  &-inputbox {
+    padding-left: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    border-top: 1px solid #efefef;
+    align-items: center;
+    & input {
+      width: 75%;
+      margin: 0;
+      padding: 0 0 0 20px;
+      border: 0 none;
+      background: #fff;
+      height: 70px;
+      border-bottom: 4px solid @primary-color;
+    }
+    & > div {
+      margin-right: 40px;
+    }
+  }
+}

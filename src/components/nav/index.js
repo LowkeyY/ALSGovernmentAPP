@@ -1,5 +1,6 @@
 import React from 'react';
-import { NavBar, Icon, Button, List } from 'antd-mobile';
+import { NavBar, Icon } from 'antd-mobile';
+import PropTypes from 'prop-types';
 import { routerRedux } from 'dva/router';
 import styles from './index.less';
 
@@ -21,22 +22,23 @@ function Nav (props) {
             leftContent="返回"
             onLeftClick={goBack}
             mode="dark"
-            icon={<Icon type="left" />}
+            icon={<Icon type="left"/>}
             rightContent={props.renderNavRight}
           >{props.title}</NavBar>
         </div>
       </div>
     </div>
   );
-  Static.propTypes = {
-    dispatch: PropTypes.func.isRequired,
-    renderNavRight: PropTypes.func.isRequired
-  };
-  Static.defaultProps = {
-    renderNavRight: null,
-    title: '',
-    color: '#4eaaf7',
-    navEvent: null
-  };
 }
+
+Nav.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+};
+Nav.defaultProps = {
+  renderNavRight: null,
+  title: '',
+  color: '#4eaaf7',
+  navEvent: null,
+};
+
 export default Nav;

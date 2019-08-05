@@ -3,17 +3,45 @@ import modelExtend from 'dva-model-extend';
 import { model } from 'models/common';
 import { queryPartyTabs, queryPartyData } from 'services/querylist';
 import defaultIcon from 'themes/images/nmenus/lvyou.png';
+import { doDecode } from 'utils';
 
-const namespace = 'deren', 
+const getInfo = (info) => {
+  if (info) {
+    try {
+      return doDecode(info);
+    } catch (e) {
+
+    }
+  }
+};
+const namespace = 'deren',
   getGrid = (datas = []) => {
     const result = [];
     datas.map((data, index) => {
-      const { id = '', route = '', image = '', ...others } = data;
-      if (id != '') {
+      const { id = '', route = '', image = '', infos = '', ...others } = data;
+      let { type = '' } = getInfo(infos);
+      if (id != '' && type !== 'prettify') {
         result.push({
           id,
           route: route || '/',
           icon: image || defaultIcon,
+          ...others,
+        });
+      }
+    });
+    return result.length > 0 ? result : [];
+  },
+
+  getFixBanner = (datas = []) => {
+    const result = [];
+    datas.map((data, index) => {
+      const { id = '', route = '', image = '', infos = '', ...others } = data;
+      let { type = '' } = getInfo(infos);
+      if (id != '' && type === 'prettify') {
+        result.push({
+          id,
+          route: route || '/',
+          image: image || defaultIcon,
           ...others,
         });
       }
@@ -51,8 +79,9 @@ const namespace = 'deren',
   getDefaultPaginations = () => ({
     current: 1,
     total: 0,
-    size: 10
+    size: 10,
   });
+
 
 export default modelExtend(model, {
   namespace: 'deren',
@@ -63,7 +92,8 @@ export default modelExtend(model, {
     id: '',
     name: '',
     scrollerTop: 0,
-    paginations: getDefaultPaginations()
+    paginations: getDefaultPaginations(),
+    fixBanner: [],
   },
   subscriptions: {
     setup ({ dispatch, history }) {
@@ -76,7 +106,7 @@ export default modelExtend(model, {
               id,
               name,
               scrollerTop: 0,
-              paginations: getDefaultPaginations()
+              paginations: getDefaultPaginations(),
             },
           });
           dispatch({
@@ -100,6 +130,7 @@ export default modelExtend(model, {
           payload: {
             grids: getGrid(data),
             bannerDatas: getBanners(banners),
+            fixBanner: getFixBanner(data),
             lists: getList(tuijian),
           },
         });
@@ -109,7 +140,7 @@ export default modelExtend(model, {
             type: 'queryListview',
             payload: {
               id,
-              title
+              title,
             },
           });
         }
@@ -123,7 +154,7 @@ export default modelExtend(model, {
         result = yield call(queryPartyData, { dataId: id, nowPage: start, showCount: size });
       if (result) {
         let { data = [], totalCount = 0 } = result,
-          newLists = [], 
+          newLists = [],
           { items = [], ...others } = (lists.length > 0 ? lists[0] : {});
         newLists = start == 1 ? data : [...items, ...data];
         yield put({
@@ -132,16 +163,18 @@ export default modelExtend(model, {
             paginations: {
               ..._this.paginations,
               total: totalCount * 1,
-              current: start + 1
+              current: start + 1,
             },
             lists: [{
               ...others,
-              items: newLists
+              items: newLists,
             }],
           },
         });
       }
-      if (callback) { callback(); }
-    }
+      if (callback) {
+        callback();
+      }
+    },
   },
 });

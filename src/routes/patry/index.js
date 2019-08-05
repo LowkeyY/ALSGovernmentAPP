@@ -42,7 +42,7 @@ function Patry ({ location, dispatch, patry }) {
             title,
             ...others,
             route,
-            infos
+            infos,
           });
         }
       });
@@ -56,7 +56,7 @@ function Patry ({ location, dispatch, patry }) {
         if (type === 'grids') {
           gridDatas.push({
             id,
-            route: route || '/',
+            route: route || '',
             icon: image || '',
             ...others,
           });
@@ -64,7 +64,7 @@ function Patry ({ location, dispatch, patry }) {
       });
       return gridDatas.length > 0 ? gridDatas : [];
     },
-    
+
     handleFixBannerClick = ({ id, title, route = '' }) => {
       dispatch(routerRedux.push({
         pathname: `/${route}`,
@@ -80,22 +80,31 @@ function Patry ({ location, dispatch, patry }) {
         let { type } = getInfo(infos);
         if (type === 'fixPic') {
           return (
-            <div className={styles[`${PrefixCls}-fixbanner`]} onClick={handleFixBannerClick.bind(this, item)}>
-              <img src={getImages(item.image)} alt="" />
-            </div>);
+            <div>
+              <TitleBox title="专题栏目"/>
+              <div className={styles[`${PrefixCls}-fixbanner`]} onClick={handleFixBannerClick.bind(this, item)}>
+                <img src={getImages(item.image)} alt=""/>
+              </div>
+            </div>
+          );
         }
       });
     },
-    
+
     handleGridbox = ({ pathname, title, externalUrl = '', infos = '', ...others }) => {
+      console.log(pathname);
       if (externalUrl !== '' && externalUrl.startsWith('http') && pathname === '') {
-        dispatch(routerRedux.push({
-          pathname: 'iframe',
-          query: {
-            name: title,
-            externalUrl,
-          },
-        }));
+        if (cnOpen) {
+          cnOpen(externalUrl);
+        } else {
+          dispatch(routerRedux.push({
+            pathname: 'iframe',
+            query: {
+              name: title,
+              externalUrl,
+            },
+          }));
+        };
       } else {
         dispatch(routerRedux.push({
           pathname: `/${pathname}`,
@@ -129,8 +138,8 @@ function Patry ({ location, dispatch, patry }) {
         payload: {
           ...params,
           callback,
-          isRefresh: true
-        }
+          isRefresh: true,
+        },
       });
     },
     onScrollerTop = (top) => {
@@ -138,8 +147,8 @@ function Patry ({ location, dispatch, patry }) {
         dispatch({
           type: `${PrefixCls}/updateState`,
           payload: {
-            scrollerTop: top
-          }
+            scrollerTop: top,
+          },
         });
       }
     },
@@ -158,7 +167,7 @@ function Patry ({ location, dispatch, patry }) {
       if (title !== '' && items.length > 0) {
         result.push(
           <div>
-            <TitleBox title={title} more handleClick={handleMoreCilck.bind(null, id, title)} />
+            <TitleBox title={title} more handleClick={handleMoreCilck.bind(null, id, title)}/>
             <ListView
               dataSource={items}
               layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
@@ -167,22 +176,22 @@ function Patry ({ location, dispatch, patry }) {
               onScrollerTop={onScrollerTop.bind(null)}
               scrollerTop={scrollerTop}
             />
-          </div>
+          </div>,
         );
       }
       return result;
     };
-  
+
   return (
     <div onTouchStart={handleScroll} onTouchEnd={handleScroll}>
-      <Nav title={name} dispatch={dispatch} />
+      <Nav title={name} dispatch={dispatch}/>
       {getBannerDatas(patryDate).length > 0 &&
-      <Banner datas={getBannerDatas(patryDate)} dispatch={dispatch} handleClick={handleBannerClick} />}
+      <Banner datas={getBannerDatas(patryDate)} dispatch={dispatch} handleClick={handleBannerClick}/>}
       <div>
         {getGridbox(patryDate).length > 0 &&
-        <Menu handleGridClick={handleGridbox} columnNum={4} datas={getGridbox(patryDate)} isCarousel />}
+        <Menu handleGridClick={handleGridbox} columnNum={4} datas={getGridbox(patryDate)} isCarousel
+              dispatch={dispatch}/>}
       </div>
-      <TitleBox title="专题活动" />
       <div>{getFixBanner(patryDate)}</div>
       <div className={styles[`${PrefixCls}-container`]}>
         {patryList.length > 0 && getContents(patryList[0])}

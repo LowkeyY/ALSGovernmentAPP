@@ -2,26 +2,34 @@ import React from 'react';
 import { connect } from 'dva';
 import { WhiteSpace } from 'components';
 import Nav from 'components/nav';
-import styles from './index.less';
 import TitleBox from 'components/titlecontainer';
 import Menu from 'components/menu/index';
 import MpaDiv from 'components/mapdiv';
 import { routerRedux } from 'dva/router';
 import { getTitle } from 'utils';
+import styles from './index.less';
 
 
 const PrefixCls = 'patrymap';
 
 function PatryMap ({ location, dispatch, patrymap }) {
-  const { name = '' } = location.query, 
+  const { name = '' } = location.query,
     { mapUrl, maskDiv, menu, head } = patrymap,
     handleMenuClick = ({ externalUrl = '', id, route = 'details', title, menuType }) => {
-      if (menuType.type === 'statics') {
+      if (menuType === 'statics') {
         dispatch(routerRedux.push({
           pathname: 'iframe',
           query: {
             name: title,
-            externalUrl: `http://www.myals.gov.cn:9000/cphsc/interface/dangjian/mapStatics.htm?dataId=${id}`,
+            externalUrl: `${externalUrl}?dataId=${id}`,
+          },
+        }));
+      } else if (menuType === 'lanmu') {
+        dispatch(routerRedux.push({
+          pathname: `/${route}`,
+          query: {
+            name: title,
+            id,
           },
         }));
       } else {
@@ -45,20 +53,20 @@ function PatryMap ({ location, dispatch, patrymap }) {
     };
   return (
     <div className={styles[`${PrefixCls}-container`]}>
-      <Nav title={getTitle(name)} dispatch={dispatch} />
+      <Nav title={getTitle(name)} dispatch={dispatch}/>
       <div className={styles[`${PrefixCls}-imgbox`]}>
-        <img width="100%" src={mapUrl} alt="" />
+        <img width="100%" src={mapUrl} alt=""/>
         {maskDiv && maskDiv.map((data, i) => {
-          return <MpaDiv datas={data} handleClick={handleDivClick} />;
+          return <MpaDiv datas={data} handleClick={handleDivClick}/>;
         })}
       </div>
-      <TitleBox title={head} />
-      <div>
+      <TitleBox title={head}/>
+      <div className={styles[`${PrefixCls}-menu`]}>
         {menu.length > 0 &&
         <Menu handleGridClick={handleMenuClick}
-          columnNum={name === '扶贫地图' || name === '左旗扶贫概况' || name === '巴彦诺日公苏木扶贫概况' ? 4 : 3}
-          dispatch={dispatch}
-          datas={menu}
+              columnNum={2}
+              dispatch={dispatch}
+              datas={menu}
         />}
       </div>
     </div>

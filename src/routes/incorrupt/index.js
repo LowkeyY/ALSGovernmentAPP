@@ -12,8 +12,8 @@ const PrefixCls = 'incorrupt';
 
 function Incorrupt ({ location, dispatch, incorrupt }) {
   const { name = '', index = 0 } = location.query,
-    { gridList, selectedIndex, dataList, paginations, scrollerTop, refreshId } = incorrupt;
-  
+    { gridList = [], selectedIndex, dataList, paginations, scrollerTop, refreshId } = incorrupt;
+
   const onRefresh = (refreshId, callback) => {
       dispatch({
         type: `${PrefixCls}/queryListview`,
@@ -49,13 +49,13 @@ function Incorrupt ({ location, dispatch, incorrupt }) {
         result = [];
       result.push(
         <ListView layoutHeader={''}
-          dataSource={lists}
-          layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
-          onEndReached={onEndReached.bind(null, refreshId)}
-          onRefresh={onRefresh.bind(null, refreshId)}
-          hasMore={hasMore}
-          onScrollerTop={onScrollerTop.bind(null)}
-          scrollerTop={scrollerTop}
+                  dataSource={lists}
+                  layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
+                  onEndReached={onEndReached.bind(null, refreshId)}
+                  onRefresh={onRefresh.bind(null, refreshId)}
+                  hasMore={hasMore}
+                  onScrollerTop={onScrollerTop.bind(null)}
+                  scrollerTop={scrollerTop}
         />,
       );
       return result;
@@ -95,21 +95,27 @@ function Incorrupt ({ location, dispatch, incorrupt }) {
     };
   return (
     <div>
-      <Nav title={name} dispatch={dispatch} />
+      <Nav title={name} dispatch={dispatch}/>
       <div className={styles[`${PrefixCls}-outer`]}>
-        
+
         <div className={styles[`${PrefixCls}-fiximg`]}>
-          <img src={require('./jiandu.jpg')} alt="" />
+          <img src={require('./jiandu.jpg')} alt=""/>
         </div>
-        <Tabs
-          initialPage={0}
-          page={selectedIndex}
-          tabs={gridList}
-          swipeable={false}
-          onTabClick={handleTabClick}
-        >
-          {getCurrentView()}
-        </Tabs>
+        {
+          gridList.length > 1 ?
+            <Tabs
+              initialPage={0}
+              page={selectedIndex}
+              tabs={gridList}
+              swipeable={false}
+              onTabClick={handleTabClick}
+            >
+              {getCurrentView()}
+            </Tabs>
+            :
+            null
+        }
+        {gridList.length === 1 && getCurrentView()}
       </div>
     </div>
   );

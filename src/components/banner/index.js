@@ -91,7 +91,6 @@ class Banner extends React.Component {
 
 Banner.propTypes = {
   handleClick: PropTypes.func.isRequired,
-  dispatch: PropTypes.func.isRequired
 };
 Banner.defaultProps = {
   bannerDatas: [],

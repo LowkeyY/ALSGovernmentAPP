@@ -2,13 +2,50 @@ import { parse } from 'qs';
 import modelExtend from 'dva-model-extend';
 import { model } from 'models/common';
 import { queryPartyTabs, queryPartyData } from 'services/querylist';
+import { doDecode } from 'utils';
 
-const getDefaultPaginations = () => ({
+const getInfo = (info) => {
+    if (info) {
+      try {
+        return doDecode(info);
+      } catch (e) {
+      }
+    }
+    return {};
+  },
+  getDefaultPaginations = () => ({
     current: 1,
     total: 0,
-    size: 10
+    size: 10,
   }),
-  namespace = 'derenitems';
+  namespace = 'derenitems',
+
+  getLanmu = (data = []) => {
+    let tabs = [];
+    let grids = [];
+    data.map((item) => {
+      const { id = '', route = '', image = '', infos = '', title, ...others } = item;
+      let { type } = getInfo(infos);
+      if (type === 'party') {
+        grids.push({
+          id,
+          title,
+          route: route || '/',
+          icon: image || '',
+          ...others,
+        });
+      } else {
+        tabs.push({
+          ...item,
+        });
+      }
+    });
+    return {
+      tabs,
+      grids,
+    };
+  }
+;
 
 
 export default modelExtend(model, {
@@ -18,17 +55,17 @@ export default modelExtend(model, {
     name: '',
     selectedIndex: 0,
     tabs: [],
+    grids: [],
     itemData: [],
     bannersData: [],
     scrollerTop: 0,
     paginations: getDefaultPaginations(),
-    refreshId: ''
+    refreshId: '',
   },
   subscriptions: {
     setup ({ dispatch, history }) {
       history.listen(({ pathname, query, action }) => {
         if (pathname === '/derenitems') {
-          if (action === 'PUSH') {
             const { id = '', name = '' } = query;
             dispatch({
               type: 'updateState',
@@ -47,7 +84,7 @@ export default modelExtend(model, {
                 ...query,
               },
             });
-          }
+
         }
       });
     },
@@ -61,8 +98,9 @@ export default modelExtend(model, {
         yield put({
           type: 'updateState',
           payload: {
-            tabs: data,
-            bannersData: banners
+            tabs: getLanmu(data).tabs,
+            grids: getLanmu(data).grids,
+            bannersData: banners,
           },
         });
         if (data.length > 0) {
@@ -82,12 +120,12 @@ export default modelExtend(model, {
         }
       }
     },
-    
+
     * queryListview ({ payload }, { call, put, select }) {
       const { callback = '', isRefresh = false, selected = -1 } = payload,
         _this = yield select(_ => _[`${namespace}`]),
         { paginations: { current, total, size }, itemData, selectedIndex, refreshId } = _this;
-      if (selected != -1) {
+      if (selected !== -1) {
         yield put({
           type: 'updateState',
           payload: {
@@ -107,13 +145,15 @@ export default modelExtend(model, {
             paginations: {
               ..._this.paginations,
               total: totalCount * 1,
-              current: start + 1
+              current: start + 1,
             },
-            itemData: newLists
+            itemData: newLists,
           },
         });
       }
-      if (callback) { callback(); }
-    }
-  }
+      if (callback) {
+        callback();
+      }
+    },
+  },
 });

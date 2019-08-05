@@ -1,15 +1,14 @@
-
 @import "../../themes/default";
 
 @PrefixCls: row;
 @ColorCard: white;
 @ColorInfo: white;
-@FontSizeLg: 30px;
+@FontSizeLg: 34px;
 @FontSizeNm: 30px;
-@FontSizeSm: 25px;
+@FontSizeSm: 28px;
 .imgs {
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   margin: 10px 15px 0 15px;
 }
@@ -227,21 +226,22 @@
 
 .@{PrefixCls}-card {
   background: @ColorCard;
-  padding: 20px 20px 0;
+  padding: 30px 20px 0;
   min-height: 100px;
   padding-bottom: 40px;
-  box-shadow: 0 0.02rem 0.05rem #555;
-  margin-bottom: 20px;
-
+  box-shadow: 0 8px 10px #dcdcdc;
+  margin-bottom: 26px;
+  border-radius: 20px;
   &-info {
     display: flex;
     background: @ColorInfo;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    padding-top: 10px;
     &-details {
       width: 80%;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: space-around;
       &-name {
         display: flex;
         justify-content: space-between;
@@ -267,9 +267,8 @@
   }
   &-content {
     padding: 10px;
-    background-color: #d8e1e2;
     border-radius: 20px;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
     &-title {
       font-size: @FontSizeLg;
       font-weight: bold;
@@ -278,7 +277,7 @@
     &-status {
       padding: 20px 0;
       font-size: @FontSizeNm;
-      line-height: @FontSizeNm + 10;
+      line-height: 1.5em;
       display: flex;
       justify-content: space-between;
       position: relative;
@@ -293,8 +292,8 @@
     }
     &-content {
       margin-top: 20px;
-      font-size: @FontSizeSm;
-      line-height: @FontSizeSm + 10;
+      font-size: @FontSizeNm;
+      line-height: 1.5em;
       max-height: 180px;
       display: -webkit-box;
       -webkit-line-clamp: 3;
@@ -656,15 +655,17 @@
     margin: 0;
   }
 }
-.@{PrefixCls}-task-content{
+
+.@{PrefixCls}-task-content {
   font-size: 30px;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-.@{PrefixCls}-task-info{
+
+.@{PrefixCls}-task-info {
   display: flex;
   justify-content: space-between;
   font-size: 28px;
-  color:#666;
+  color: #666;
 }

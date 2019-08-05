@@ -5,14 +5,14 @@ import Nav from 'components/nav';
 import FileUpload from 'react-fileupload';
 import { routerRedux } from 'dva/router';
 import { getErrorImg, getImages, getLocalIcon, config, cookie } from 'utils';
-import styles from './index.less';
 import doUserAvatarUpload from 'utils/formsubmit';
+import styles from './index.less';
 
 const PrefixCls = 'setup',
   Item = List.Item,
   prompt = Modal.prompt,
   { baseURL, api: { SetUpAPi }, userTag } = config,
-  { _cs, _cr, _cg } = cookie;
+  { _cs } = cookie;
 
 
 class Setup extends React.Component {
@@ -150,8 +150,8 @@ class Setup extends React.Component {
     const { users: { username, useravatar, usertype }, updates: { upgraded = false, urls = '', appVerSion = '', updateInfo = '' } } = this.props.app;
     return (
       <div>
-        <Nav title={name} dispatch={this.props.dispatch} />
-        <WhiteSpace size="md" />
+        <Nav title={name} dispatch={this.props.dispatch}/>
+        <WhiteSpace size="md"/>
         <div>
           <List className={`${PrefixCls}-list`}>
             <Item>
@@ -161,7 +161,7 @@ class Setup extends React.Component {
                     <span>更换头像</span>
                   </p>
                   <div className={'icon-img-box'}>
-                    <img src={getImages(useravatar, 'user')} alt="icon" onError={getErrorImg} />
+                    <img src={getImages(useravatar, 'user')} alt="icon" onError={getErrorImg}/>
                   </div>
                 </FileUpload>
               </div>
@@ -190,7 +190,7 @@ class Setup extends React.Component {
               </Badge> : '版本信息'}
             </Item>
           </List>
-          <ActivityIndicator animating={animating} toast text="上传中..." />
+          <ActivityIndicator animating={animating} toast text="上传中..."/>
         </div>
       </div>
     );
@@ -200,5 +200,5 @@ class Setup extends React.Component {
 export default connect(({ loading, setup, app }) => ({
   loading,
   setup,
-  app,
+  app
 }))(Setup);

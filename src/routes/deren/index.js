@@ -4,16 +4,17 @@ import Nav from 'components/nav';
 import { routerRedux } from 'dva/router';
 import { SegmentedControl, WingBlank, WhiteSpace, List, SearchBar } from 'components';
 import Banner from 'components/banner/index';
-import { layoutRow } from 'components/row';
+import { multipleRow } from 'components/multipleRow';
 import ListView from 'components/listview';
-import Menu from 'components/menu/index';
 import { handleGridClick, handleBannerClick, handleListClick } from 'utils/commonevent';
+import FixBanner from 'components/fixBanner';
+import { getDefaultBg } from 'utils';
+import styles from './index.less';
 
-const PrefixCls = 'deren',
-  Item = List.Item;
+const PrefixCls = 'deren';
 
 function Comp ({ location, dispatch, deren }) {
-  const { bannerDatas, lists, grids, name = '', paginations, scrollerTop } = deren,
+  const { bannerDatas, lists, grids, name = '', paginations, scrollerTop, fixBanner } = deren,
     handleItemOnclick = ({ externalUrl = '', id = '', route = 'details' }) => {
       if (externalUrl != '' && externalUrl.startsWith('http')) {
         if (cnOpen) {
@@ -75,29 +76,61 @@ function Comp ({ location, dispatch, deren }) {
         const { current, total, size } = paginations,
           hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total);
         result.push(
-          <ListView layoutHeader={() => title}
-                    dataSource={items}
-                    layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
-                    onEndReached={onEndReached.bind(null, { id, title })}
-                    onRefresh={onRefresh.bind(null, { id, title })}
-                    hasMore={hasMore}
-                    onScrollerTop={onScrollerTop.bind(null)}
-                    scrollerTop={scrollerTop}
+          <ListView
+            layoutHeader={() => title}
+            dataSource={items}
+            layoutRow={(rowData, sectionID, rowID) => multipleRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
+            onEndReached={onEndReached.bind(null, { id, title })}
+            onRefresh={onRefresh.bind(null, { id, title })}
+            hasMore={hasMore}
+            onScrollerTop={onScrollerTop.bind(null)}
+            scrollerTop={scrollerTop}
           />,
         );
       }
       return result;
     },
+    getFixedItem = () => {
+      return grids && grids.map(item => (
+        <div
+          key={item.id}
+          className={styles.twinsOuter}
+          onClick={handleGridClick.bind(null, item, dispatch)}
+        >
+          <div className={styles.img}>
+            <div className={styles.image}
+                 style={{ backgroundImage: `url(${getDefaultBg(item.icon)})` }}>
+            </div>
+          </div>
+          <div className={styles.twinsTitle}>
+            {item.title}
+          </div>
+        </div>
+      ));
+    },
+
     bannerProps = {
       datas: bannerDatas,
       handleClick: handleItemOnclick,
     };
   return (
     <div>
-      <Nav title={name} dispatch={dispatch}/>
+      <Nav title={name} dispatch={dispatch} />
       {bannerDatas.length > 0 && <Banner {...bannerProps} />}
-      {grids.length > 0 && <Menu handleGridClick={handleGridClick} dispatch={dispatch} datas={grids}/>}
-      <WhiteSpace size="xs"/>
+      <div className={styles.grid}>{grids.length > 0 &&
+      getFixedItem()
+      }</div>
+      <div>
+        {fixBanner.length > 0 && fixBanner.map((item, i) =>
+          <FixBanner
+            key={i}
+            datas={item}
+            dispatch={dispatch}
+            handleClick={handleGridClick}
+          />)
+        }
+      </div>
+      <WhiteSpace size='xs'/>
       {lists.length > 0 && getContents(lists[0])}
     </div>
   );

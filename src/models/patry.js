@@ -71,9 +71,9 @@ export default modelExtend(model, {
       }
     },
     * queryListview ({ payload }, { call, put, select }) {
-      const { id = '', title = '', callback = '', isRefresh = false } = payload,
+      const { id = '', callback = '', isRefresh = false } = payload,
         _this = yield select(_ => _[`${namespace}`]),
-        { paginations: { current, total, size }, patryList } = _this,
+        { paginations: { current, size }, patryList } = _this,
         start = isRefresh ? 1 : current,
         result = yield call(queryPartyData, { dataId: id, nowPage: start, showCount: size });
       if (result) {

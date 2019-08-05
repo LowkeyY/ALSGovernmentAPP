@@ -1,0 +1,68 @@
+@PrefixCls: volunteerservice;
+.@{PrefixCls}-outer {
+
+}
+
+.@{PrefixCls}-fixeditem {
+  & img {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+.@{PrefixCls}-gridbox {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding: 0 10px;
+}
+
+.@{PrefixCls}-twins-outer {
+  position: relative;
+  background: #fff;
+  margin-bottom: 20px;
+  width: 48%;
+  box-shadow: #d6d0d0 0 10px 10px 4px; //边框阴影
+
+  &-img {
+    overflow: hidden;
+    :after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      padding: 20px;
+      background-color: rgba(0, 0, 0, .3);
+      color: #fff;
+      text-align: center;
+    }
+    &-image {
+      height: 200px;
+      background-size: cover;
+      background-position: center;
+      transform: scale(1.1);
+      -webkit-filter: blur(2px);
+      -moz-filter: blur(2px);
+      -o-filter: blur(2px);
+      -ms-filter: blur(2px);
+      filter: blur(2px);
+    }
+  }
+
+}
+
+.@{PrefixCls}-twins-title {
+  position: absolute;
+  top: 50%;
+  margin-top: -0.5em;
+  font-weight: bold;
+  letter-spacing: 0.2em;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 40px;
+  color: #fff;
+}

@@ -1,7 +1,7 @@
 import { request, config } from 'utils';
 
 const { api } = config;
-const { QueryManuscriptApi, QueryColumnTypeApi, JicengshengyinApi, LanmuAllApi, GetTaskListApi, GetAllTaskApi, GetTowStupidApi, GetPatryWorkListApi, GetTowStupidListApi, GetVolunteerOrderApi, GettongjibumenApi, GetUnreadMessageApi, QueryMembersApi, SendTaskApi, Get110TaskApi, Get110TaskDetailApi, Reply110TaskApi, GetTaskStatisticsApi } = api;
+const { QueryManuscriptApi, QueryColumnTypeApi, JicengshengyinApi, LanmuAllApi, GetTaskListApi, GetAllTaskApi, GetTowStupidApi, GetPatryWorkListApi, GetTowStupidListApi, GetVolunteerOrderApi, GettongjibumenApi, GetUnreadMessageApi, QueryMembersApi, SendTaskApi, Get110TaskApi, Get110TaskDetailApi, Reply110TaskApi, GetTaskStatisticsApi, GetRobotDataApi, SearchLanmuApi } = api;
 
 export async function queryPartyData (payload) {
   return request({
@@ -88,21 +88,21 @@ export async function GetPatryWorkList (payload) {
 export async function GetVolunteerOrder () {
   return request({
     url: GetVolunteerOrderApi,
-    method: 'get'
+    method: 'get',
   });
 }
 
 export async function Gettongjibumen () {
   return request({
     url: GettongjibumenApi,
-    method: 'get'
+    method: 'get',
   });
 }
 
 export async function GetUnreadMessage () {
   return request({
     url: GetUnreadMessageApi,
-    method: 'get'
+    method: 'get',
   });
 }
 
@@ -110,7 +110,7 @@ export async function QueryMembers (payload) {
   return request({
     url: QueryMembersApi,
     method: 'get',
-    data: payload
+    data: payload,
   });
 }
 
@@ -118,7 +118,7 @@ export async function SendTask (payload) {
   return request({
     url: SendTaskApi,
     method: 'post',
-    data: payload
+    data: payload,
   });
 }
 
@@ -149,6 +149,22 @@ export async function Reply110Task (payload) {
 export async function queryTaskStatistics (payload) {
   return request({
     url: GetTaskStatisticsApi,
+    method: 'post',
+    data: payload,
+  });
+}
+
+export async function queryRobotData (payload) {
+  return request({
+    url: GetRobotDataApi,
+    method: 'post',
+    data: payload,
+  });
+}
+
+export async function searchLanmu (payload) {
+  return request({
+    url: SearchLanmuApi,
     method: 'post',
     data: payload,
   });

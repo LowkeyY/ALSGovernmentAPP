@@ -5,11 +5,11 @@ import Menu from 'components/menu/index';
 import Nav from 'components/nav';
 import { taskRow, reactRow } from 'components/row';
 import { routerRedux } from 'dva/router';
-import styles from './index.less';
 import Banner from 'components/banner/index';
 import TitleBox from 'components/titlecontainer';
 import { config, cookie } from 'utils';
 import { handleBannerClick } from 'utils/commonevent';
+import styles from './index.less';
 
 const PrefixCls = 'guard';
 

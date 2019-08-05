@@ -1,18 +1,13 @@
 import React from 'react';
-import styles from './header.less';
 import { Icon, Popover } from 'antd-mobile';
-import { getLocalIcon } from 'utils';
+import { getImages, getLocalIcon } from 'utils';
 import { routerRedux } from 'dva/router';
+import styles from './header.less';
 
-const PrefixCls = 'header',
-  Item = Popover.Item;
-
+const PrefixCls = 'header';
 
 class Header extends React.Component {
-  state = {
-
-  }
-
+  state = {};
 
   handlerLogin () { // 登录
     this.props.dispatch(
@@ -33,7 +28,7 @@ class Header extends React.Component {
   renderLoginView (onClick) {
     return (
       <div onClick={onClick}>
-        <Icon type={getLocalIcon('/dashboard/logined.svg')} size="lg" />
+        <img src={getImages(this.props.useravatar, 'user')} alt=""/>
       </div>
     );
   }
@@ -41,7 +36,7 @@ class Header extends React.Component {
   renderNotLoginView (onClick) {
     return (
       <div className={styles[`${PrefixCls}-notlogin`]} onClick={onClick}>
-        <Icon type={getLocalIcon('/dashboard/login.svg')} size="lg" />
+        <Icon type={getLocalIcon('/dashboard/login.svg')} size="lg"/>
         登录
       </div>
     );
@@ -49,17 +44,13 @@ class Header extends React.Component {
 
   render () {
     const isLogin = this.props.isLogin;
-
     return (
       <div className={styles[`${PrefixCls}-logo-outer`]}>
-        <div className={styles['logo-box']}>
-          <img src={require('themes/images/logo.png')} alt="" />
-          <span>
-            {
-              isLogin ? this.renderLoginView(this.handlerGoMine.bind(this)) : this.renderNotLoginView(this.handlerLogin.bind(this))
-            }
-
-          </span>
+        <img src={require('themes/images/logo.png')} alt=""/>
+        <div className={styles[`${PrefixCls}-logo-user`]}>
+          {
+            isLogin ? this.renderLoginView(this.handlerGoMine.bind(this)) : this.renderNotLoginView(this.handlerLogin.bind(this))
+          }
         </div>
       </div>
     );

@@ -23,8 +23,8 @@ export default modelExtend(model, {
     },
   },
   effects: {
-    * query ({ payload }, { call, put, select }) {
-      const data = yield call(GetAboutInfo),
+    * query ({ payload }, { call, put }) {
+      const data = yield call(GetAboutInfo, { type: 'new' }),
         { content = '' } = data;
       yield put({
         type: 'updateState',

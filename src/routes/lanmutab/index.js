@@ -156,21 +156,38 @@ function Comp ({ location, dispatch, lanmutab }) {
       return <div>{result}</div>;
     },
     handleTabClick = (data, index) => {
-      const { route = '', title = '', id } = data;
-      dispatch({
-        type: 'lanmutab/updateState',
-        payload: {
-          refreshId: id,
-        },
-      });
-      dispatch({
-        type: 'lanmutab/queryListview',
-        payload: {
-          refreshId: id,
-          selected: index,
-          isRefresh: true,
-        },
-      });
+      const { externalUrl = '', title } = data;
+      if (externalUrl !== '' && externalUrl.startsWith('http')) {
+        if (cnOpen) {
+          cnOpen(externalUrl);
+        } else {
+          dispatch(routerRedux.push({
+            pathname: 'iframe',
+            query: {
+              name: title,
+              externalUrl,
+            },
+          }));
+        }
+      } else {
+        const { route = '', title = '', id } = data;
+        if (route === '') {
+          dispatch({
+            type: 'lanmutab/updateState',
+            payload: {
+              refreshId: id
+            },
+          });
+          dispatch({
+            type: 'lanmutab/queryListview',
+            payload: {
+              refreshId: id,
+              selected: index,
+              isRefresh: true
+            },
+          });
+        }
+      }
     },
     handleSearchClick = ({ id = '' }) => {
       dispatch(routerRedux.push({

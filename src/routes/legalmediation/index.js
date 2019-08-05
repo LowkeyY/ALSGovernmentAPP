@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import { createForm } from 'rc-form';
 import { connect } from 'dva';
 import Nav from 'components/nav';
@@ -15,8 +15,9 @@ import {
   Switch,
   Icon,
   ActivityIndicator,
+  WingBlank,
 } from 'components';
-import { getLocalIcon, replaceSystemEmoji, DateChange } from 'utils';
+import { getLocalIcon, replaceSystemEmoji, DateChange, pattern } from 'utils';
 import styles from './index.less';
 
 
@@ -27,11 +28,11 @@ const PrefixCls = 'legalmediation',
 const sex = [
   {
     label: '男',
-    value: '0'
+    value: '男',
   },
   {
     label: '女',
-    value: '1'
+    value: '女',
   },
 ];
 
@@ -42,10 +43,10 @@ class Legalmediation extends Component {
     this.state = {
       files: [],
       multiple: true,
-      date: now
+      date: now,
     };
   }
-  
+
   onChange = (files, type, index) => {
     let reg = /image/,
       result = [];
@@ -76,7 +77,7 @@ class Legalmediation extends Component {
       uploadKey: uploadKey.join(','),
     };
   };
-  
+
   changeValue = (obj) => {
     for (let i in obj) {
       if (typeof (obj[i]) === 'string') {
@@ -93,11 +94,10 @@ class Legalmediation extends Component {
         const date = this.state.date;
         const data = {
             ...this.props.form.getFieldsValue(),
-            DISPUTE_DATE: DateChange(date)
+            DISPUTE_DATE: DateChange(date),
           },
           { uploadFiles, uploadKey } = this.getUploadFiles(),
           { mediaUploadFile } = this.state;
-        console.log(uploadKey);
         this.props.dispatch({
           type: 'legalmediation/sendLegalMediation',
           payload: {
@@ -118,7 +118,7 @@ class Legalmediation extends Component {
       }
     });
   };
-  
+
   dataUrlToImageSrc = (dataUrl) => {
     let imageHeader = 'data:image/jpeg;base64,';
     if (dataUrl && !dataUrl.startsWith(imageHeader)) {
@@ -135,24 +135,24 @@ class Legalmediation extends Component {
   };
   getTitle = (title) => {
     return (<div className={styles[`${PrefixCls}-title`]}>
-      <span><Icon type={getLocalIcon('/others/information.svg')} /></span>
+      <span><Icon type={getLocalIcon('/others/information.svg')}/></span>
       <div>{title}</div>
     </div>);
   };
-  
+
   componentWillUnmount () {
-  
+
   }
-  
+
   render () {
     const { name = '' } = this.props.location.query,
       { disputeType, animating, educationType } = this.props.legalmediation;
-    
+
     const { getFieldProps, getFieldError } = this.props.form;
-    
+
     return (
       <div>
-        <Nav title={name} dispatch={this.props.dispatch} />
+        <Nav title={name} dispatch={this.props.dispatch}/>
         <div className={styles[`${PrefixCls}-outer`]}>
           <form>
             <div className={styles[`${PrefixCls}-applicant`]}>
@@ -160,7 +160,7 @@ class Legalmediation extends Component {
               <InputItem
                 {...getFieldProps('SQ_NAME', {
                   initialValue: '',
-                  rules: [{ required: true, message: '姓名必须输入' }
+                  rules: [{ required: true, message: '姓名必须输入' },
                   ],
                 })}
                 clear
@@ -171,11 +171,11 @@ class Legalmediation extends Component {
               </InputItem>
               <List>
                 <Picker data={sex}
-                  cols={1}
-                  {...getFieldProps('SQ_SEX', {
-                    rules: [{ required: true, message: '请选择性别' }],
-                  })}
-                  error={!!getFieldError('SQ_SEX') && Toast.fail(getFieldError('SQ_SEX'))}
+                        cols={1}
+                        {...getFieldProps('SQ_SEX', {
+                          rules: [{ required: true, message: '请选择性别' }],
+                        })}
+                        error={!!getFieldError('SQ_SEX') && Toast.fail(getFieldError('SQ_SEX'))}
                 >
                   <List.Item arrow="horizontal">性别</List.Item>
                 </Picker>
@@ -183,7 +183,9 @@ class Legalmediation extends Component {
               <InputItem
                 {...getFieldProps('SQ_AGE', {
                   initialValue: '',
-                  rules: [{ required: true, message: '年龄必须输入' }
+                  rules: [
+                    { required: true, message: '年龄必须输入' },
+                    { pattern: pattern.number.pattern, message: pattern.number.message },
                   ],
                 })}
                 clear
@@ -194,22 +196,28 @@ class Legalmediation extends Component {
                 年龄
               </InputItem>
               <List>
-                <Picker data={educationType}
-                  cols={1}
+                <InputItem
                   {...getFieldProps('SQ_EDUCATION', {
-                    rules: [{ required: true, message: '请选择文化程度' }],
+                    rules: [
+                      { required: true, message: '请输入身份证号' },
+                      { pattern: pattern.idCard.pattern, message: pattern.idCard.message },
+                    ],
                   })}
-                  error={!!getFieldError('SQ_EDUCATION') && Toast.fail(getFieldError('SQ_EDUCATION'))}
+                  // error={!!getFieldError('SQ_EDUCATION') && Toast.fail(getFieldError('SQ_EDUCATION'))}
                 >
-                  <List.Item arrow="horizontal">文化程度</List.Item>
-                </Picker>
+                  身份证号
+                </InputItem>
               </List>
               <InputItem
                 type="number"
                 {...getFieldProps('SQ_PHONE', {
-                  initialValue: ''
+                  initialValue: '',
+                  rules: [
+                    { required: true, message: '请输入联系方式' },
+                    { pattern: pattern.phone.pattern, message: pattern.phone.message },
+                  ],
                 })}
-                
+
                 placeholder="请输入联系方式"
               >
                 联系电话
@@ -218,22 +226,25 @@ class Legalmediation extends Component {
                 <InputItem
                   type="text"
                   {...getFieldProps('SQ_ADDRESS', {
-                    initialValue: ''
+                    initialValue: '',
+                    rules: [
+                      { required: true, message: '请输入家庭住址' },
+                    ],
                   })}
-                  
+
                   placeholder="请输入家庭住址"
                 >
                   家庭住址
                 </InputItem>
               </List>
             </div>
-            <WhiteSpace />
+            <WhiteSpace/>
             <div className={styles[`${PrefixCls}-applicant`]}>
               {this.getTitle('被申请人信息')}
               <InputItem
                 {...getFieldProps('BSQ_NAME', {
                   initialValue: '',
-                  rules: [{ required: true, message: '姓名必须输入' }
+                  rules: [{ required: true, message: '姓名必须输入' },
                   ],
                 })}
                 clear
@@ -243,46 +254,32 @@ class Legalmediation extends Component {
                 姓名
               </InputItem>
               <List>
-                <Picker data={sex}
+                <Picker
+                  data={sex}
                   cols={1}
-                  {...getFieldProps('BSQ_SEX', {
-                    rules: [{ required: true, message: '请选择性别' }],
-                  })}
-                  error={!!getFieldError('BSQ_SEX') && Toast.fail(getFieldError('BSQ_SEX'))}
+                  {...getFieldProps('BSQ_SEX')}
                 >
                   <List.Item arrow="horizontal">性别</List.Item>
                 </Picker>
               </List>
               <InputItem
-                {...getFieldProps('BSQ_AGE', {
-                  initialValue: '',
-                  rules: [{ required: true, message: '年龄必须输入' }
-                  ],
-                })}
+                {...getFieldProps('BSQ_AGE')}
                 clear
-                error={!!getFieldError('BSQ_AGE') && Toast.fail(getFieldError('BSQ_AGE'))}
                 ref={el => this.autoFocusInst = el}
                 placeholder="请输入年龄"
               >
                 年龄
               </InputItem>
               <List>
-                <Picker data={educationType}
-                  cols={1}
-                  {...getFieldProps('BSQ_EDUCATION', {
-                    rules: [{ required: true, message: '请选择文化程度' }],
-                  })}
-                  error={!!getFieldError('BSQ_EDUCATION') && Toast.fail(getFieldError('BSQ_EDUCATION'))}
+                <InputItem
+                  {...getFieldProps('BSQ_EDUCATION')}
                 >
-                  <List.Item arrow="horizontal">文化程度</List.Item>
-                </Picker>
+                  身份证号
+                </InputItem>
               </List>
               <InputItem
                 type="number"
-                {...getFieldProps('BSQ_PHONE', {
-                  initialValue: ''
-                })}
-                
+                {...getFieldProps('BSQ_PHONE')}
                 placeholder="请输入联系方式"
               >
                 联系电话
@@ -290,18 +287,16 @@ class Legalmediation extends Component {
               <List>
                 <InputItem
                   type="text"
-                  {...getFieldProps('BSQ_ADDRESS', {
-                    initialValue: ''
-                  })}
-                  
+                  {...getFieldProps('BSQ_ADDRESS')}
                   placeholder="请输入家庭住址"
                 >
                   家庭住址
                 </InputItem>
               </List>
             </div>
-            <WhiteSpace />
-            <Picker data={disputeType}
+            <WhiteSpace/>
+            <Picker
+              data={disputeType}
               cols={1}
               {...getFieldProps('DISPUTE_TYPE', {
                 rules: [{ required: true, message: '请选择类别' }],
@@ -314,9 +309,9 @@ class Legalmediation extends Component {
               <InputItem
                 type="text"
                 {...getFieldProps('DISPUTE_ADDDRESS', {
-                  initialValue: ''
+                  rules: [{ required: true, message: '请输入地址' }],
                 })}
-                
+
                 placeholder="请输入地址"
               >
                 纠纷地点
@@ -331,7 +326,7 @@ class Legalmediation extends Component {
             >
               <List.Item arrow="horizontal">纠纷时间</List.Item>
             </DatePicker>
-            <List>0
+            <List>
               <TextareaItem
                 {...getFieldProps('DISPUTE_DESCRIBE', {
                   initialValue: '',
@@ -344,12 +339,12 @@ class Legalmediation extends Component {
                 placeholder={'请在此描述纠纷'}
               />
             </List>
-            <WhiteSpace />
+            <WhiteSpace/>
             <div className={styles[`${PrefixCls}-outer-img`]}>
               <div>
                 <p>添加图片</p>
                 {this.state.files.length >= 4 ? '' : <span onClick={cnTakePhoto.bind(null, this.handleCameraClick, 1)}>
-                  <Icon type={getLocalIcon('/media/camerawhite.svg')} />
+                  <Icon type={getLocalIcon('/media/camerawhite.svg')}/>
                 </span>}
               </div>
               <ImagePicker
@@ -361,11 +356,12 @@ class Legalmediation extends Component {
                 accept="image/*"
               />
             </div>
-            <WhiteSpace />
-            <div className={styles[`${PrefixCls}-outer-button`]}>
+            <WhiteSpace/>
+            <WingBlank>
               <Button type="primary" onClick={this.onSubmit}>提交</Button>
-            </div>
+            </WingBlank>
           </form>
+          <WhiteSpace size="lg"/>
         </div>
         <ActivityIndicator
           toast

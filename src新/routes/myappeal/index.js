@@ -47,28 +47,30 @@ function Myappeal ({ location, dispatch, myappeal }) {
     };
   return (
     <div>
-      <Nav title={name} dispatch={dispatch} />
-      <List>
-        {
-          dataList.length > 0 ?
-            dataList.map((data) => {
-              const { content, createDate, state, shState } = data;
-              return (<Item
-                className={styles[`${PrefixCls}-item`]}
-                multipleLine
-                onClick={handleItemClick.bind(this, data)}
-              >
-                {content}
-                <div className={styles[`${PrefixCls}-item-status`]}>
-                  <span>{createDate}</span>
-                  <span>{getShstate(shState, state)}</span>
-                </div>
-              </Item>);
-            })
-            :
-            <NoMessage />
-        }
-      </List>
+      <Nav title={name} dispatch={dispatch}/>
+      <div className={styles[`${PrefixCls}-outer`]}>
+        <List>
+          {
+            dataList.length > 0 ?
+              dataList.map((data) => {
+                const { content, createDate, state, shState } = data;
+                return (<Item
+                  className={styles[`${PrefixCls}-item`]}
+                  multipleLine
+                  onClick={handleItemClick.bind(this, data)}
+                >
+                  {content}
+                  <div className={styles[`${PrefixCls}-item-status`]}>
+                    <span>{createDate}</span>
+                    <span>{getShstate(shState, state)}</span>
+                  </div>
+                </Item>);
+              })
+              :
+              <NoMessage/>
+          }
+        </List>
+      </div>
     </div>
   );
 }

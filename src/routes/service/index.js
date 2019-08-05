@@ -6,8 +6,6 @@ import Nav from 'components/nav'
 import { taskRow, reactRow } from 'components/row'
 import { routerRedux } from 'dva/router'
 import styles from './index.less'
-import Banner from 'components/banner/index'
-import TitleBox from 'components/titlecontainer'
 import { config, cookie } from 'utils'
 import { handleBannerClick } from 'utils/commonevent'
 
@@ -15,8 +13,7 @@ const PrefixCls = 'service'
 
 function Service ({ location, dispatch, service, app }) {
   const { name = '' } = location.query
-  const { grids } = service
-  const { noViewCount = 0 } = app,
+  const { grids } = service,
     handleGridClick = ({ route = '', title, externalUrl = '', ...others }) => {
       if (externalUrl !== '' && externalUrl.startsWith('http')) {
         dispatch(routerRedux.push({

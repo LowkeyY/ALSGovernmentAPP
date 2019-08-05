@@ -161,13 +161,13 @@ export default modelExtend(model, {
           },
         });
       }
-      if (selected == -1 ? selectedIndex == 0 : selected == 0) {
+      if (selected === -1 ? selectedIndex === 0 : selected === 0) {
         const start = isRefresh ? 1 : current,
           result = yield call(queryPartyData, { dataId: refreshId, nowPage: start, showCount: size });
         if (result) {
           let { data = [], totalCount = 0 } = result,
             newLists = [];
-          newLists = start == 1 ? data : [...lists, ...data];
+          newLists = start === 1 ? data : [...lists, ...data];
           
           yield put({
             type: 'updateState',

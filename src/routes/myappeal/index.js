@@ -3,8 +3,8 @@ import { connect } from 'dva';
 import { WhiteSpace, List } from 'components';
 import { routerRedux } from 'dva/router';
 import Nav from 'components/nav';
-import styles from './index.less';
 import NoMessage from 'components/nomessage';
+import styles from './index.less';
 
 const PrefixCls = 'myappeal',
   Item = List.Item,
@@ -36,7 +36,7 @@ const getShstate = (shtate, state) => {
 
 function Myappeal ({ location, dispatch, myappeal }) {
   const { name = '我的诉求' } = location.query,
-    { dataList = [] } = myappeal,
+    { dataList } = myappeal,
     handleItemClick = ({ id }) => {
       dispatch(routerRedux.push({
         pathname: '/seekdetails',
@@ -47,28 +47,30 @@ function Myappeal ({ location, dispatch, myappeal }) {
     };
   return (
     <div>
-      <Nav title={name} dispatch={dispatch} />
-      <List>
-        {
-          dataList.length > 0 ?
-            dataList.map((data) => {
-              const { content, createDate, state, shState } = data;
-              return (<Item
-                className={styles[`${PrefixCls}-item`]}
-                multipleLine
-                onClick={handleItemClick.bind(this, data)}
-              >
-                {content}
-                <div className={styles[`${PrefixCls}-item-status`]}>
-                  <span>{createDate}</span>
-                  <span>{getShstate(shState, state)}</span>
-                </div>
-              </Item>);
-            })
-            :
-            <NoMessage />
-        }
-      </List>
+      <Nav title={name} dispatch={dispatch}/>
+      <div className={styles[`${PrefixCls}-outer`]}>
+        <List>
+          {
+            dataList.length > 0 ?
+              dataList.map((data) => {
+                const { content, createDate, state, shState } = data;
+                return (<Item
+                  className={styles[`${PrefixCls}-item`]}
+                  multipleLine
+                  onClick={handleItemClick.bind(this, data)}
+                >
+                  {content}
+                  <div className={styles[`${PrefixCls}-item-status`]}>
+                    <span>{createDate}</span>
+                    <span>{getShstate(shState, state)}</span>
+                  </div>
+                </Item>);
+              })
+              :
+              <NoMessage/>
+          }
+        </List>
+      </div>
     </div>
   );
 }
