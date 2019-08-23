@@ -29,23 +29,19 @@ function Integral ({ location, dispatch, integral }) {
     };
   return (
     <div>
-      <Nav title={name} dispatch={dispatch}/>
+      <Nav title={name} dispatch={dispatch} />
       <div className={styles[`${PrefixCls}-outer`]}>
         <div className={styles[`${PrefixCls}-outer-head`]}>
           <div className={styles[`${PrefixCls}-outer-head-item`]}>
-            <span><Icon type={getLocalIcon('/others/coin.svg')}/></span>
+            <span><Icon type={getLocalIcon('/others/coin.svg')} /></span>
             <span>{`积分(${intergation || 0})`}</span>
           </div>
           <div className={styles[`${PrefixCls}-outer-head-item`]} onClick={handleChangedClick}>
-            <span><Icon type={getLocalIcon('/others/exchange.svg')}/></span>
+            <span><Icon type={getLocalIcon('/others/exchange.svg')} /></span>
             <span>兑换记录</span>
           </div>
-          <div className={styles[`${PrefixCls}-outer-head-item`]}>
-            <span><Icon type={getLocalIcon('/others/rule.svg')}/></span>
-            <span>积分规则</span>
-          </div>
         </div>
-        <WhiteSpace/>
+        <WhiteSpace />
         <div className={styles[`${PrefixCls}-outer-title`]}>
           <span>积分兑换</span>
         </div>
@@ -59,7 +55,7 @@ function Integral ({ location, dispatch, integral }) {
                 goodsName,
                 goodsPhoto: `${goodsPhoto}`,
               };
-            return <IntegralCard {...props} onClick={handleItmeClick}/>;
+            return <IntegralCard {...props} onClick={handleItmeClick} />;
           })}
         </div>
       </div>

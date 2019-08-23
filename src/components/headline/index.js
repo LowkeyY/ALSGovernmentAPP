@@ -1,5 +1,5 @@
 import React from 'react';
-import { Carousel, Icon } from 'antd-mobile';
+import { Carousel } from 'antd-mobile';
 import PropTypes from 'prop-types';
 import { routerRedux } from 'dva/router';
 import { getLocalIcon } from 'utils';
@@ -11,12 +11,12 @@ class HeadLine extends React.Component {
   constructor (props) {
     super();
   }
-  
+
   state = {
     data: [],
-    isLoad: false
+    isLoad: false,
   };
-  
+
   componentWillMount () {
     setTimeout(() => {
       this.setState({
@@ -24,13 +24,13 @@ class HeadLine extends React.Component {
       });
     }, 300);
   }
-  
+
   onHandleChange = (num) => {
     this.props.dispatch({
       type: 'dashboard/updateState',
       payload: {
-        selectedIndex: num
-      }
+        selectedIndex: num,
+      },
     });
   };
   handleClick = ({ pathname = 'lanmusub' }) => {
@@ -41,11 +41,10 @@ class HeadLine extends React.Component {
       },
     }));
   };
-  
-  
+
+
   render () {
-    const selectedIndex = this.props.selectedIndex, 
-      currentData = this.props.datas || [];
+    const selectedIndex = this.props.selectedIndex;
     return (
       <div>
         <div className={styles[`${PrefixCls}-outer`]} style={{ clear: 'both' }}>
@@ -60,13 +59,13 @@ class HeadLine extends React.Component {
               opacity: '0.5',
               width: '12px',
               height: '2px',
-              borderRadius: '0'
+              borderRadius: '0',
             }}
             dotActiveStyle={{
               background: '#fff',
               width: '12px',
               height: '2px',
-              borderRadius: '0'
+              borderRadius: '0',
             }}
             afterChange={this.onHandleChange}
           >
@@ -80,11 +79,11 @@ class HeadLine extends React.Component {
                   ref={el => this.banner = el}
                   src={`${data.url}`}
                   alt=""
-                  style={{ width: '100%', verticalAlign: 'top' }}
+                  style={{ width: '100%', verticalAlign: 'top', height: cnhtmlWidth / 2.25 }}
                   onLoad={() => {
                     if (!this.state.isLoad) {
                       this.setState({
-                        isLoad: true
+                        isLoad: true,
                       });
                       window.dispatchEvent(new Event('resize'));
                     }
@@ -96,36 +95,37 @@ class HeadLine extends React.Component {
           </Carousel>
         </div>
         {/*<div className={styles[`${PrefixCls}-noticeouter`]}>*/}
-          {/*<div className={styles[`${PrefixCls}-noticeouter-title`]}><Icon*/}
-            {/*type={getLocalIcon('/dashboard/weather.svg')}*/}
-          {/*/></div>*/}
-          {/*<span style={{ color: '#ddd' }}>|</span>*/}
-          {/*<Carousel className="my-carousel"*/}
-            {/*vertical*/}
-            {/*autoplayInterval={4000}*/}
-            {/*autoplay*/}
-            {/*dots={false}*/}
-            {/*dragging={false}*/}
-            {/*swiping={false}*/}
-            {/*infinite*/}
-          {/*>*/}
-            {/*{*/}
-              {/*currentData.length > 0 && currentData.map((data, index) =>*/}
-                {/*(<div className={styles[`${PrefixCls}-noticeouter-container`]}*/}
-                  {/*key={index}*/}
-                {/*><span style={{ paddingRight: '5px', color: '#888' }} />{data.text}</div>))*/}
-            {/*}*/}
-          {/*</Carousel>*/}
+        {/*<div className={styles[`${PrefixCls}-noticeouter-title`]}><Icon*/}
+        {/*type={getLocalIcon('/dashboard/weather.svg')}*/}
+        {/*/></div>*/}
+        {/*<span style={{ color: '#ddd' }}>|</span>*/}
+        {/*<Carousel className="my-carousel"*/}
+        {/*vertical*/}
+        {/*autoplayInterval={4000}*/}
+        {/*autoplay*/}
+        {/*dots={false}*/}
+        {/*dragging={false}*/}
+        {/*swiping={false}*/}
+        {/*infinite*/}
+        {/*>*/}
+        {/*{*/}
+        {/*currentData.length > 0 && currentData.map((data, index) =>*/}
+        {/*(<div className={styles[`${PrefixCls}-noticeouter-container`]}*/}
+        {/*key={index}*/}
+        {/*><span style={{ paddingRight: '5px', color: '#888' }} />{data.text}</div>))*/}
+        {/*}*/}
+        {/*</Carousel>*/}
         {/*</div>*/}
       </div>
     );
   }
 }
+
 HeadLine.propTypes = {
   handleClick: PropTypes.func.isRequired,
-  dispatch: PropTypes.func.isRequired
+  dispatch: PropTypes.func.isRequired,
 };
 HeadLine.defaultProps = {
-  bannerDatas: []
+  bannerDatas: [],
 };
 export default HeadLine;

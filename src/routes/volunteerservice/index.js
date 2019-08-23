@@ -1,17 +1,17 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { connect } from 'dva';
 import { WingBlank, WhiteSpace, Tabs, Badge, List, SearchBar } from 'components';
 import Nav from 'components/nav';
 import { routerRedux } from 'dva/router';
-import { layoutRow } from 'components/row';
+import { multipleRow } from 'components/multipleRow';
 import ListView from 'components/listview';
 import Banner from 'components/banner';
 import { handleListClick, handleBannerClick } from 'utils/commonevent';
 import { getDefaultBg, getLocalIcon } from 'utils';
 import styles from './index.less';
 
-const PrefixCls = 'volunteerservice',
-  Item = List.Item
+const PrefixCls = 'volunteerservice';
 
 function Comp ({ location, dispatch, volunteerservice }) {
   const { name = '', lists, bannerDatas, grids, paginations, scrollerTop, refreshId } = volunteerservice,
@@ -56,17 +56,18 @@ function Comp ({ location, dispatch, volunteerservice }) {
         });
       }
     },
-    getContents = (lists) => {
+    getContents = (data) => {
       const { current, total, size } = paginations,
         hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total),
-        result = [];
-      if (lists[0] && lists[0].title) {
+        result = [],
+        { title = '', items } = data;
+      if (items.length > 0) {
         result.push(
           <ListView
-            layoutHeader={() => lists[0].title}
+            layoutHeader={() => title}
             titleIcon={getLocalIcon('/others/voluteer.svg')}
-            dataSource={lists}
-            layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
+            dataSource={items}
+            layoutRow={(rowData, sectionID, rowID) => multipleRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
             onEndReached={onEndReached.bind(null, refreshId)}
             onRefresh={onRefresh.bind(null, refreshId)}
             hasMore={hasMore}
@@ -85,9 +86,10 @@ function Comp ({ location, dispatch, volunteerservice }) {
           onClick={handleFiexdItemOnclick.bind(null, item)}
         >
           <div className={styles[`${PrefixCls}-twins-outer-img`]}>
-            <div className={styles[`${PrefixCls}-twins-outer-img-image`]}
-                 style={{ backgroundImage: `url(${getDefaultBg(item.icon)})` }}>
-            </div>
+            <div
+              className={styles[`${PrefixCls}-twins-outer-img-image`]}
+              style={{ backgroundImage: `url(${getDefaultBg(item.icon)})` }}
+            />
           </div>
           <div className={styles[`${PrefixCls}-twins-title`]}>
             {item.title}
@@ -105,7 +107,7 @@ function Comp ({ location, dispatch, volunteerservice }) {
         result.push(<Banner {...props} />);
       }
       result.push(<div className={styles[`${PrefixCls}-gridbox`]}>{getFixedItem()}</div>);
-      result.push(getContents(lists));
+      if (lists.length > 0) result.push(getContents(lists[0]));
       return <div>{result}</div>;
     },
     handleSearchClick = ({ id = '' }) => {
@@ -119,7 +121,7 @@ function Comp ({ location, dispatch, volunteerservice }) {
     };
   return (
     <div className={styles[`${PrefixCls}-outer`]}>
-      <Nav title={name} dispatch={dispatch}/>
+      <Nav title={name} dispatch={dispatch} />
       <SearchBar
         placeholder={`在${lists && lists[0] && lists[0].title || '此页面'}中搜索`}
         maxLength={20}

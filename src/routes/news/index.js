@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
@@ -13,21 +14,21 @@ function News ({ location, dispatch, news }) {
     { banners, lists, paginations, scrollerTop, refreshId } = news,
 
     getvideo = (data) => {
-      return data && data.map(data => {
+      return data && data.map(item => {
         return (
-          <video key={data.id}
-                 width="100%"
-                 preload="none"
-                 poster={data.videoView}
-                 src={data.videoSrc}
-                 controlsList="nodownload"
-                 controls="controls"
+          <video
+            key={item.id}
+            width="100%"
+            preload="none"
+            poster={item.videoView}
+            src={item.videoSrc}
+            controlsList="nodownload"
+            controls="controls"
           />
         );
       });
     };
   const PrefixCls = 'news',
-    Item = List.Item,
     onRefresh = (refreshId, callback) => {
       dispatch({
         type: `${PrefixCls}/queryListview`,
@@ -63,14 +64,15 @@ function News ({ location, dispatch, news }) {
       const { current, total, size } = paginations,
         hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total);
       result.push(
-        <ListView key={id} layoutHeader={title}
-                  dataSource={lists}
-                  layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name, false)}
-                  onEndReached={onEndReached.bind(null, refreshId)}
-                  onRefresh={onRefresh.bind(null, refreshId)}
-                  hasMore={hasMore}
-                  onScrollerTop={onScrollerTop.bind(null)}
-                  scrollerTop={scrollerTop}
+        <ListView key={id}
+          layoutHeader={title}
+          dataSource={lists}
+          layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name, false)}
+          onEndReached={onEndReached.bind(null, refreshId)}
+          onRefresh={onRefresh.bind(null, refreshId)}
+          hasMore={hasMore}
+          onScrollerTop={onScrollerTop.bind(null)}
+          scrollerTop={scrollerTop}
         />,
       );
       return result;
@@ -85,22 +87,22 @@ function News ({ location, dispatch, news }) {
       }));
     };
   return (
-    <div>
-      <Nav title={name} dispatch={dispatch}/>
+    <div >
+      <Nav title={name} dispatch={dispatch} />
       <SearchBar
         placeholder={`在${name || '此页面'}中搜索`}
         maxLength={20}
         onFocus={handleSearchClick.bind(this, news)}
       />
-      <TitleBox title="最新新闻"/>
-      <div>
+      <TitleBox title="最新新闻" />
+      <div >
         {getvideo(banners)}
-      </div>
-      <TitleBox title="往期新闻"/>
-      <div>
-        <div>{lists.length > 0 && getContents(lists, refreshId)}</div>
-      </div>
-    </div>
+      </div >
+      <TitleBox title="往期新闻" />
+      <div >
+        <div >{lists.length > 0 && getContents(lists, refreshId)}</div >
+      </div >
+    </div >
   );
 }
 

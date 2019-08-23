@@ -1,4 +1,5 @@
-import { Component } from 'react';
+/* eslint-disable react/prop-types */
+import React, { Component } from 'react';
 import { createForm } from 'rc-form';
 import { connect } from 'dva';
 import Nav from 'components/nav';
@@ -9,8 +10,8 @@ import {
 import { integralRow } from 'components/row';
 import ListView from 'components/listview';
 import { routerRedux } from 'dva/router';
-import styles from './index.less';
 import bg from 'themes/images/others/integralBg.png';
+import styles from './index.less';
 
 const PrefixCls = 'integralhome';
 
@@ -85,31 +86,31 @@ class IntegralHome extends Component {
       },
 
       rightContent = () => {
-        return <div onClick={handlerRightClick}>积分规则</div>;
-      }
+        return <div onClick={handlerRightClick} >积分规则</div >;
+      };
 
     return (
-      <div className={styles[`${PrefixCls}-outer`]} style={{ backgroundImage: `url(${bg})` }}>
-        <Nav title={name} color='transparent' dispatch={this.props.dispatch} renderNavRight={rightContent()}/>
-        <div className={styles[`${PrefixCls}-outer-container`]} onClick={handlerShopClick}>
-          <div className={styles[`${PrefixCls}-outer-container-integral`]}>
-            <div className={styles[`${PrefixCls}-outer-container-integral-text`]}>我的积分</div>
-            <div className={styles[`${PrefixCls}-outer-container-integral-num`]}>{intergation}</div>
-          </div>
-        </div>
-        <div className={styles[`${PrefixCls}-outer-list`]}>
-          <div className={styles[`${PrefixCls}-outer-list-container`]}>
-            <div className={styles[`${PrefixCls}-outer-list-container-title`]}>
+      <div className={styles[`${PrefixCls}-outer`]} style={{ backgroundImage: `url(${bg})` }} >
+        <Nav title={name} color='transparent' dispatch={this.props.dispatch} renderNavRight={rightContent()} />
+        <div className={styles[`${PrefixCls}-outer-container`]} onClick={handlerShopClick} >
+          <div className={styles[`${PrefixCls}-outer-container-integral`]} >
+            <div className={styles[`${PrefixCls}-outer-container-integral-text`]} >我的积分</div >
+            <div className={styles[`${PrefixCls}-outer-container-integral-num`]} >{intergation}</div >
+          </div >
+        </div >
+        <div className={styles[`${PrefixCls}-outer-list`]} >
+          <div className={styles[`${PrefixCls}-outer-list-container`]} >
+            <div className={styles[`${PrefixCls}-outer-list-container-title`]} >
               积分记录
-            </div>
+            </div >
             {
               lists.length > 0 ? getCurrentView() :
                 <div
-                  style={{ fontSize: '18px', color: '#fd7514', textAlign: 'center', marginTop: '110px' }}>您还没有积分</div>
+                  style={{ fontSize: '18px', color: '#fd7514', textAlign: 'center', marginTop: '110px' }} >您还没有积分</div >
             }
-          </div>
-        </div>
-      </div>
+          </div >
+        </div >
+      </div >
     );
   }
 }

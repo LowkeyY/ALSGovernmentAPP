@@ -9,9 +9,7 @@ import ListView from 'components/listview';
 import Banner from 'components/banner';
 import styles from './index.less';
 
-const PrefixCls = 'threebig',
-  Item = List.Item,
-  Brief = Item.Brief;
+const PrefixCls = 'threebig'
 
 function Threebig ({ location, dispatch, threebig }) {
   const { name = '', selectedIndex = 0, tabs, itemData, bannersData, fixData, paginations, scrollerTop, refreshId } = threebig,

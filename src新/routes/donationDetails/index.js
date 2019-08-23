@@ -12,8 +12,7 @@ const PrefixCls = 'donationDetails',
 
 function DonationDetails ({ location, dispatch, donationDetails }) {
   const { name = '' } = location.query,
-    { dataList = [] } = donationDetails;
-  console.log(dataList);
+    { dataList } = donationDetails;
   return (
     <div>
       <Nav title={name} dispatch={dispatch} />

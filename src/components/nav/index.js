@@ -2,6 +2,7 @@ import React from 'react';
 import { NavBar, Icon } from 'antd-mobile';
 import PropTypes from 'prop-types';
 import { routerRedux } from 'dva/router';
+import headBg from '../../themes/images/others/headBg.jpg';
 import styles from './index.less';
 
 const PrefixCls = 'nav';
@@ -18,11 +19,12 @@ function Nav (props) {
       <div className={styles[`${PrefixCls}-header-box`]}>
         <div className={styles[`${PrefixCls}-header`]}>
           <NavBar
-            style={{ background: props.color }}
+            // style={{ background: props.color }}
+            style={!props.color ? { backgroundImage: `url(${headBg})` } : { background: props.color }}
             leftContent="返回"
             onLeftClick={goBack}
             mode="dark"
-            icon={<Icon type="left"/>}
+            icon={<Icon type="left" />}
             rightContent={props.renderNavRight}
           >{props.title}</NavBar>
         </div>
@@ -37,7 +39,7 @@ Nav.propTypes = {
 Nav.defaultProps = {
   renderNavRight: null,
   title: '',
-  color: '#4eaaf7',
+  color: null,
   navEvent: null,
 };
 

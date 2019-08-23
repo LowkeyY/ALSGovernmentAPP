@@ -133,7 +133,7 @@ class Login extends React.Component {
     return (
       <div className={styles[`${PrefixCls}-container`]} style={{ backgroundImage: `url(${bg})` }}>
         <div className={styles[`${PrefixCls}-container-goback`]} onClick={this.handleBack}>
-          <Icon type={getLocalIcon('/login/goback.svg')}/>
+          <Icon type={getLocalIcon('/login/goback.svg')} />
         </div>
         {
           this.state.loginType
@@ -160,18 +160,18 @@ class Login extends React.Component {
                         Toast.fail(getFieldError(phoneKey));
                       }}
                     >
-                      <div style={{
-                        backgroundImage: `url(${phone})`,
-                        backgroundSize: 'cover',
-                        height: '22px',
-                        width: '22px',
-                      }}
+                      <div
+                        className={styles[`${PrefixCls}-icon`]}
+                        style={{
+                          backgroundImage: `url(${phone})`,
+                          backgroundSize: 'cover',
+                        }}
                       />
                     </InputItem>
                   </div>
                 </WingBlank>
                 <WingBlank size="md">
-                  <WhiteSpace size="sm"/>
+                  <WhiteSpace size="sm" />
                   <div className={styles[`${PrefixCls}-phoneform-codebox`]}>
                     <InputItem
                       type="text"
@@ -186,21 +186,22 @@ class Login extends React.Component {
                         }],
                       })}
                     >
-                      <div style={{
-                        backgroundImage: `url(${code})`,
-                        backgroundSize: 'cover',
-                        height: '22px',
-                        width: '22px',
-                      }}
+                      <div
+                        className={styles[`${PrefixCls}-icon`]}
+                        style={{
+                          backgroundImage: `url(${code})`,
+                          backgroundSize: 'cover',
+                        }}
                       />
                     </InputItem>
                     <div className={styles[`${PrefixCls}-codebox-button`]}>
-                      <Button type="ghost"
-                              inline
-                              size="small"
-                              style={{ marginRight: '4px', color: '#4eaaf7' }}
-                              onClick={this.onValidateCodeClick}
-                              disabled={this.state.isDisabled}
+                      <Button
+                        type="ghost"
+                        inline
+                        size="small"
+                        style={{ marginRight: '4px', color: '#4eaaf7' }}
+                        onClick={this.onValidateCodeClick}
+                        disabled={this.state.isDisabled}
                       >
                         {
                           this.state.isCodeSending ?
@@ -211,14 +212,15 @@ class Login extends React.Component {
                       </Button>
                     </div>
                   </div>
-                  <WhiteSpace size="lg"/>
+                  <WhiteSpace size="lg" />
                 </WingBlank>
                 <WingBlank size="md">
                   {
                     this.props.login.buttonState ? (
-                      <Button type="primary"
-                              className="am-button-borderfix"
-                              onClick={this.onPhoneSubmit.bind(this)}
+                      <Button
+                        type="primary"
+                        className="am-button-borderfix"
+                        onClick={this.onPhoneSubmit.bind(this)}
                       >
                         登录
                       </Button>
@@ -227,12 +229,12 @@ class Login extends React.Component {
                     </Button>
                   }
                 </WingBlank>
-                <WhiteSpace size="lg"/>
-                <WhiteSpace size="lg"/>
-                <WhiteSpace size="lg"/>
-                <WingBlank size="md"/>
+                <WhiteSpace size="lg" />
+                <WhiteSpace size="lg" />
+                <WhiteSpace size="lg" />
+                <WingBlank size="md" />
                 <div ref="button" className={styles[`${PrefixCls}-phonelogin`]} onClick={this.handleLogin}>
-                  <Icon type={getLocalIcon('/login/user.svg')} size="md"/>
+                  <Icon type={getLocalIcon('/login/user.svg')} size="md" />
                   <span>用户名密码登录</span>
                 </div>
               </form>
@@ -241,34 +243,35 @@ class Login extends React.Component {
             <div className={styles[`${PrefixCls}-form`]}>
               <form>
                 <WingBlank size="md">
-                  <InputItem placeholder="用户名"
-                             name="phoneNum"
-                             onFocus={this.moveInput.bind(this)}
-                             {...getFieldProps(userKey, {
-                               initialValue: _cg(userKey),
-                               rules: [{ required: true, message: '用户名必须输入' }, {
-                                 min: 2,
-                                 message:
-                                   '用户名小于2个字符',
-                               }],
-                             })}
-                             clear
-                             error={!!getFieldError(userKey)}
-                             onErrorClick={() => {
-                               Toast.fail(getFieldError(userKey));
-                             }}
-                  >
-                    <div style={{
-                      backgroundImage: `url(${user})`,
-                      backgroundSize: 'cover',
-                      height: '22px',
-                      width: '22px',
+                  <InputItem
+                    placeholder="用户名"
+                    name="phoneNum"
+                    onFocus={this.moveInput.bind(this)}
+                    {...getFieldProps(userKey, {
+                      initialValue: _cg(userKey),
+                      rules: [{ required: true, message: '用户名必须输入' }, {
+                        min: 2,
+                        message:
+                          '用户名小于2个字符',
+                      }],
+                    })}
+                    clear
+                    error={!!getFieldError(userKey)}
+                    onErrorClick={() => {
+                      Toast.fail(getFieldError(userKey));
                     }}
+                  >
+                    <div
+                      className={styles[`${PrefixCls}-icon`]}
+                      style={{
+                        backgroundImage: `url(${user})`,
+                        backgroundSize: 'cover',
+                      }}
                     />
                   </InputItem>
                 </WingBlank>
                 <WingBlank size="md">
-                  <WhiteSpace size="sm"/>
+                  <WhiteSpace size="sm" />
                   <InputItem
                     type="password"
                     placeholder="密码"
@@ -287,22 +290,23 @@ class Login extends React.Component {
                       Toast.fail(getFieldError(powerKey));
                     }}
                   >
-                    <div style={{
-                      backgroundImage: `url(${pwd})`,
-                      backgroundSize: 'cover',
-                      height: '22px',
-                      width: '22px',
-                    }}
+                    <div
+                      className={styles[`${PrefixCls}-icon`]}
+                      style={{
+                        backgroundImage: `url(${pwd})`,
+                        backgroundSize: 'cover',
+                      }}
                     />
                   </InputItem>
-                  <WhiteSpace size="lg"/>
+                  <WhiteSpace size="lg" />
                 </WingBlank>
                 <WingBlank size="md">
                   {
                     this.props.login.buttonState ? (
-                      <Button type="primary"
-                              className="am-button-borderfix"
-                              onClick={this.onSubmit.bind(this)}
+                      <Button
+                        type="primary"
+                        className="am-button-borderfix"
+                        onClick={this.onSubmit.bind(this)}
                       >
                         登录
                       </Button>
@@ -311,15 +315,15 @@ class Login extends React.Component {
                     </Button>
                   }
                 </WingBlank>
-                <WhiteSpace size="lg"/>
-                <WhiteSpace size="lg"/>
-                <WhiteSpace size="lg"/>
-                <WingBlank size="md"/>
+                <WhiteSpace size="lg" />
+                <WhiteSpace size="lg" />
+                <WhiteSpace size="lg" />
+                <WingBlank size="md" />
                 <div ref="button" className={styles[`${PrefixCls}-phonelogin`]} onClick={this.handlePhoneLogin}>
-                  <Icon type={getLocalIcon('/login/phone.svg')} size="md"/>
-                  <WhiteSpace size="lg"/>
-                  <WhiteSpace size="lg"/>
-                  <WhiteSpace size="lg"/>
+                  <Icon type={getLocalIcon('/login/phone.svg')} size="md" />
+                  <WhiteSpace size="lg" />
+                  <WhiteSpace size="lg" />
+                  <WhiteSpace size="lg" />
                   <span>手机验证码登录</span>
                 </div>
               </form>

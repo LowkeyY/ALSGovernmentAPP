@@ -79,7 +79,7 @@ const getGrids = (datas) => {
     const result = [];
     datas.map(data => {
       const { id = '', title = '' } = data;
-      if (id != '' && title != '') {
+      if (id !== '' && title !== '') {
         result.push({
           id, title,
         });

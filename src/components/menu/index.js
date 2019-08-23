@@ -32,7 +32,7 @@ const Menu = (props) => {
               pathname: data.route,
               ...data,
             };
-            props.handleGridClick(param, props.dispatch, props.isLogin);
+            props.handleGridClick(param, props.dispatch, props.isLogin, props.usertype);
           }
         }
       />

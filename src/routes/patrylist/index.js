@@ -8,20 +8,20 @@ import ListView from 'components/listview';
 import { handleBannerClick, handleListClick } from 'utils/commonevent';
 import styles from './index.less';
 
-const PrefixCls = 'patrylist',
-  Item = List.Item;
+const PrefixCls = 'patrylist';
 
 function Patrylist ({ location, dispatch, patrylist }) {
   const { name = '' } = location.query,
     { lists, paginations, scrollerTop } = patrylist,
     getBannerDatas = () => {
       let banners = [];
-      
+
       for (let i = 0; i < lists.length; i++) {
         let obj = {};
         if (lists[i].image !== '') {
           obj.url = lists[i].image;
           obj.id = lists[i].id;
+          obj.title = lists[i].title;
           banners.push(obj);
         }
       }
@@ -32,16 +32,16 @@ function Patrylist ({ location, dispatch, patrylist }) {
         type: `${PrefixCls}/queryListview`,
         payload: {
           callback,
-          isRefresh: true
-        }
+          isRefresh: true,
+        },
       });
     },
     onEndReached = (callback) => {
       dispatch({
         type: `${PrefixCls}/queryListview`,
         payload: {
-          callback
-        }
+          callback,
+        },
       });
     },
     onScrollerTop = (top) => {
@@ -49,8 +49,8 @@ function Patrylist ({ location, dispatch, patrylist }) {
         dispatch({
           type: `${PrefixCls}/updateState`,
           payload: {
-            scrollerTop: top
-          }
+            scrollerTop: top,
+          },
         });
       }
     },
@@ -70,12 +70,11 @@ function Patrylist ({ location, dispatch, patrylist }) {
           hasMore={hasMore}
           onScrollerTop={onScrollerTop.bind(null)}
           scrollerTop={scrollerTop}
-        />
+        />,
       );
-      
+
       return result;
     };
-  
   return (
     <div>
       <Nav title={name} dispatch={dispatch} />

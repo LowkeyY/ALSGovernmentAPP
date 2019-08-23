@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { connect } from 'dva';
 import Nav from 'components/nav';
@@ -17,16 +18,16 @@ function SpecialList ({ location, dispatch, speciallist }) {
         type: `${PrefixCls}/queryListview`,
         payload: {
           callback,
-          isRefresh: true
-        }
+          isRefresh: true,
+        },
       });
     },
     onEndReached = (callback) => {
       dispatch({
         type: `${PrefixCls}/queryListview`,
         payload: {
-          callback
-        }
+          callback,
+        },
       });
     },
     onScrollerTop = (top) => {
@@ -34,19 +35,18 @@ function SpecialList ({ location, dispatch, speciallist }) {
         dispatch({
           type: `${PrefixCls}/updateState`,
           payload: {
-            scrollerTop: top
-          }
+            scrollerTop: top,
+          },
         });
       }
     },
-    getContents = (lists) => {
+    getContents = (data) => {
       const { current, total, size } = paginations,
-        hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total),
-        result = [];
-      result.push(
+        hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total);
+      return (
         <ListView
           layoutHeader={''}
-          dataSource={lists}
+          dataSource={data}
           layoutRow={(rowData, sectionID, rowID) => {
             if (scenery === 'true') {
               return sceneryRow(rowData, sectionID, rowID, handleListClick, dispatch, name);
@@ -60,17 +60,16 @@ function SpecialList ({ location, dispatch, speciallist }) {
           scrollerTop={scrollerTop}
         />
       );
-      
-      return result;
     };
+
   return (
-    <div>
+    <div >
       <Nav title={name} dispatch={dispatch} />
       <WhiteSpace />
-      <div className={styles[`${PrefixCls}-outer`]}>
+      <div className={styles[`${PrefixCls}-outer`]} >
         {lists.length > 0 && getContents(lists)}
-      </div>
-    </div>
+      </div >
+    </div >
   );
 }
 

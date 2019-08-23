@@ -109,7 +109,6 @@ export default modelExtend(model, {
     },
     * centerSendTask ({ payload }, { call, put }) {
       const data = yield call(centerSendTask, { ...payload });
-      console.log(data);
       if (data.success) {
         yield put({
           type: 'updateState',

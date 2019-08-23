@@ -3,9 +3,7 @@
 @PrefixCls: row;
 @ColorCard: white;
 @ColorInfo: white;
-@FontSizeLg: 34px;
-@FontSizeNm: 30px;
-@FontSizeSm: 28px;
+
 .imgs {
   width: 100px;
   height: 100px;
@@ -55,14 +53,14 @@
   justify-content: space-between;
   align-items: center;
   //border-bottom: 2px solid #ddd;
-  margin-bottom: 5px;
+  margin-bottom: 14px;
   &-left {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     & img {
-      width: 150px;
-      height: 150px;
+      width: 140px;
+      height: 180px;
       margin-right: 10px;
     }
   }
@@ -77,9 +75,8 @@
     &-title {
       .flex;
       &-name {
-        font-size: 34px;
+        font-size: @FontSizeNm;
         color: #000;
-        font-weight: bold;
         margin-right: 40px;
       }
 
@@ -94,6 +91,7 @@
     }
 
     &-adress {
+      font-size: @FontSizeSm;
       .flex;
 
     }
@@ -138,6 +136,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      font-size: @FontSizeNm;
       & p {
         margin: 0;
       }
@@ -170,7 +169,6 @@
       &-right {
         padding: 0 40px;
         background: #e29a15;
-        height: 80px;
         & a {
           font-size: 32px;
           color: #fff;
@@ -226,7 +224,7 @@
 
 .@{PrefixCls}-card {
   background: @ColorCard;
-  padding: 30px 20px 0;
+  padding: 30px;
   min-height: 100px;
   padding-bottom: 40px;
   box-shadow: 0 8px 10px #dcdcdc;
@@ -238,41 +236,46 @@
     margin-bottom: 10px;
     padding-top: 10px;
     &-details {
-      width: 80%;
+      width: 100%;
       display: flex;
       flex-direction: column;
       justify-content: space-around;
       &-name {
         display: flex;
         justify-content: space-between;
-        font-size: 30px;
-        font-weight: bold;
+        font-size: @FontSizeNm;
         &-type {
           font-weight: normal;
+          color: @text-content-color;
         }
       }
       &-others {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        &-date {
+        &-date, &-pos {
+          color: @text-content-color;
+          font-size: @FontSizeSm;
         }
-        &-pos {
-        }
+
       }
     }
     & img {
-      .imgs;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin: 0 15px 0 0;
     }
   }
   &-content {
     padding: 10px;
     border-radius: 20px;
     margin-bottom: 20px;
+
     &-title {
       font-size: @FontSizeLg;
-      font-weight: bold;
       margin-bottom: 20px;
+      color: @text-base-color;
     }
     &-status {
       padding: 20px 0;
@@ -300,18 +303,24 @@
       -webkit-box-orient: vertical;
       overflow: hidden;
       text-overflow: ellipsis;
+      color: @text-content-color;
+
+      &-ask {
+        font-size: 34px;
+        color: #1ab99d;
+      }
     }
   }
   &-attrs {
     margin: 5px 0;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    background: #eee;
     &-img {
-      width: 49%;
-      height: 240px;
-      margin-right: 0.5%;
+      width: 48%;
+      height: 220px;
       background-size: cover;
+      border-radius: 10px;
     }
   }
   &-answers {
@@ -323,20 +332,6 @@
       font-size: @FontSizeSm;
       line-height: @FontSizeSm + 10;
     }
-  }
-}
-
-.@{PrefixCls}-item {
-  & span {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-  }
-  & img {
-    width: 180px;
-    height: 120px;
   }
 }
 
@@ -504,19 +499,28 @@
 }
 
 .@{PrefixCls}-item {
+  :global {
+    .am-list-body div:not(:last-child) .am-list-line {
+      border-bottom: 0;
+    }
+    .am-list-item .am-list-thumb:first-child {
+      padding: 10px 0 !important;
+    }
+  }
   & span {
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+    font-size: @FontSizeNm;
   }
   & img {
-    width: 180px;
-    min-height: 160px;
-    padding: 14px 0;
+    width: 220px;
+    height: 160px;
+    margin: 10px 10px 10px 0;
+    border-radius: 10px;
   }
-
   &-status {
     display: flex;
     justify-content: space-between;
@@ -668,4 +672,41 @@
   justify-content: space-between;
   font-size: 28px;
   color: #666;
+}
+
+.@{PrefixCls}-hall {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-bottom: @hd solid #f1f1f1;
+  padding: 30px;
+  &-left {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 30%;
+    text-align: center;
+    & img {
+      width: 140px;
+      height: 140px;
+      margin-bottom: 20px;
+      align-self: center;
+    }
+    & span {
+      font-size: @FontSizeNm;
+    }
+  }
+  &-right {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-self: flex-start;
+    span {
+      margin-right: 36px;
+      margin-bottom: 20px;
+      font-size: @FontSizeNm;
+      color: @text-content-color;
+      //white-space: nowrap;
+    }
+  }
 }

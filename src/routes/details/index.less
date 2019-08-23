@@ -1,39 +1,31 @@
+@import "../../themes/default";
+
 @PrefixCls: details;
 .@{PrefixCls}-outer {
   width: 100%;
   overflow-y: scroll;
   &-title {
-    padding: 40px 40px;
-    font-weight: 600;
-    line-height: 1.4em;
-    font-size: 40px;
+    padding: 30px 40px;
+    line-height: 1.5em;
+    font-size: @FontSizeLg;
     background: #fff;
     border-bottom: 2px solid #ddd;
   }
   &-info {
     background: #fff;
-    padding:30px 60px;
+    padding: 30px 20px;
     display: flex;
     justify-content: space-between;
-    font-size: 30px;
+    align-items: center;
+    font-size: @FontSizeNm;
     &-date {
       color: #aaa;
     }
-    &-praise{
-
-      &>span{
-        display: flex;
-        align-items: center;
-       & span{
-         margin-right: 10px;
-       }
-      }
-    }
   }
   &-content {
-    padding: 20px 20px 40px 20px;
+    padding: 30px 40px 80px 40px;
     background: #fff;
-    font-size: 40px;
+    font-size: @FontSizeNm;
     line-height: 1.7;
     & img {
       max-width: 100% !important;

@@ -14,6 +14,7 @@ const getInfo = (info) => {
     try {
       return doDecode(info);
     } catch (e) {
+      console.log(e);
     }
   }
   return {};
@@ -65,9 +66,11 @@ module.exports = {
     );
 
     return !isNew ? result :
-      <Badge key={`badge - ${sectionID} - ${rowID}`} text={'新'} corner>
-        {result}
-      </Badge>;
+      (
+        <Badge key={`badge - ${sectionID} - ${rowID}`} text={'新'} corner>
+          {result}
+        </Badge>
+      );
   },
 
   lawyerList: (rowData, handleOnclick = () => {
@@ -78,22 +81,22 @@ module.exports = {
       return (
         <div key={i} className={styles[`${PrefixCls}-lawyer-outer`]} onClick={handleOnclick.bind(null, data)}>
           <div className={styles[`${PrefixCls}-lawyer-outer-left`]}>
-            <img src={getImages(image, 'user')} alt=""/>
+            <img src={getImages(image, 'user')} alt="" />
             <div className={styles[`${PrefixCls}-lawyer-outer-right`]}>
               <div className={styles[`${PrefixCls}-lawyer-outer-right-title`]}>
                 <span className={styles[`${PrefixCls}-lawyer-outer-right-title-name`]}>{title}</span>
-                <Rate style={{ fontSize: '16px' }} defaultValue={irate}/>
+                <Rate style={{ fontSize: '16px' }} defaultValue={irate} />
                 {/* <span><Icon type={getLocalIcon('/others/king.svg')}/></span> */}
               </div>
               <div className={styles[`${PrefixCls}-lawyer-outer-right-adress`]}>
-                <span><Icon type={getLocalIcon('/login/phone.svg')} size="xxs"/></span>
+                <span><Icon type={getLocalIcon('/login/phone.svg')} size="xxs" /></span>
                 <div className={styles[`${PrefixCls}-lawyer-outer-right-adress-info`]}>{tel}</div>
               </div>
               <div className={styles[`${PrefixCls}-lawyer-outer-right-adress-info`]}>{office}</div>
               <div className={styles[`${PrefixCls}-lawyer-outer-right-tag`]}>
                 {
-                  info && info.map((data, i) => (
-                    <Tag style={{ marginRight: '5px', color: '#108ee9', borderColor: '#108ee9' }} small>{data}</Tag>
+                  info && info.map((datas) => (
+                    <Tag style={{ marginRight: '5px', color: '#108ee9', borderColor: '#108ee9' }} small>{datas}</Tag>
                   ))
                 }
               </div>
@@ -101,7 +104,7 @@ module.exports = {
           </div>
           <div className={styles[`${PrefixCls}-lawyer-outer-phone`]} onClick={(e) => e.stopPropagation()}><a
             href={`tel:${tel}`}
-          ><Icon type={getLocalIcon('/others/call.svg')} size="lg"/></a></div>
+          ><Icon type={getLocalIcon('/others/call.svg')} size="lg" /></a></div>
         </div>
       );
     });
@@ -115,7 +118,7 @@ module.exports = {
       return (
         <div key={i} className={styles[`${PrefixCls}-office-outer`]} onClick={handleOnclick.bind(null, data)}>
           <div className={styles[`${PrefixCls}-office-outer-left`]}>
-            {image && <img src={getImages(image)} alt=""/>}
+            {image && <img src={getImages(image)} alt="" />}
           </div>
           <div className={styles[`${PrefixCls}-office-outer-right`]}>
             <div className={styles[`${PrefixCls}-office-outer-right-title`]}>
@@ -123,8 +126,8 @@ module.exports = {
                 <p className={styles[`${PrefixCls}-office-outer-right-title-box-name`]}>{title}</p>
                 <p className={styles[`${PrefixCls}-office-outer-right-title-box-type`]}>
                   {
-                    type && type.map((data, i) => (
-                      <span>{data}</span>
+                    type && type.map((datas) => (
+                      <span>{datas}</span>
                     ))
                   }
                 </p>
@@ -134,7 +137,7 @@ module.exports = {
             <div className={styles[`${PrefixCls}-office-outer-right-info`]}>
               <div className={styles[`${PrefixCls}-office-outer-right-info-left`]}>
                 <div>{tel}</div>
-                <Rate style={{ fontSize: '20px' }} defaultValue={rates}/>
+                <Rate style={{ fontSize: '20px' }} defaultValue={rates} />
               </div>
               <div className={styles[`${PrefixCls}-office-outer-right-info-right`]}
                    onClick={(e) => e.stopPropagation()}
@@ -152,7 +155,7 @@ module.exports = {
       <div className={styles[`${PrefixCls}-integral-outer`]}>
         <div className={styles[`${PrefixCls}-integral-outer-left`]}>
           <div className={styles[`${PrefixCls}-integral-outer-left-img`]}>
-            <img src={getImages(userPhoto, 'user')} alt=""/>
+            <img src={getImages(userPhoto, 'user')} alt="" />
           </div>
           <span>{bfr}</span>
         </div>
@@ -170,7 +173,7 @@ module.exports = {
         <div className={styles[`${PrefixCls}-integral-outer-left`]}>
           <span>{index}</span>
           <div className={styles[`${PrefixCls}-integral-outer-left-img`]}>
-            <img src={getImages('', 'user')} alt=""/>
+            <img src={getImages('', 'user')} alt="" />
           </div>
           <span>{title}</span>
         </div>
@@ -182,7 +185,7 @@ module.exports = {
           {
             isCount > 0 ? <div className={styles[`${PrefixCls}-integral-outer-right-star`]}>
                 <span>{isCount}</span>
-                <span><Icon type={getLocalIcon('/others/star.svg')}/></span>
+                <span><Icon type={getLocalIcon('/others/star.svg')} /></span>
               </div>
               :
               ''
@@ -197,21 +200,23 @@ module.exports = {
         e.stopPropagation();
       },
       getShtate = () => {
-        return <StatusBox bg="#9c9595" status="不在办理范围"/>;
+        return <StatusBox bg="#9c9595" status="不在办理范围" />;
       },
       getStatus = (status) => {
         switch (status) {
           case '0' :
-            return <StatusBox bg="#f5b90c" status="待审核"/>;
+            return <StatusBox bg="#f5b90c" status="待审核" />;
           case '1' :
           case '2' :
           case '3' :
           case '4' :
           case '6' :
           case '7' :
-            return <StatusBox bg="#29ad2e" status="处理中"/>;
+            return <StatusBox bg="#29ad2e" status="处理中" />;
           case '5' :
-            return <StatusBox bg="#d45b5b" status="已完成"/>;
+            return <StatusBox bg="#d45b5b" status="已完成" />;
+          default:
+            return '';
         }
       },
       getImagesPage = (images, cls = '') => {
@@ -233,7 +238,7 @@ module.exports = {
     return (
       <div key={id} className={styles[cls]} onClick={handleCardClick.bind(null, rowData)}>
         <div className={styles[`${cls}-info`]}>
-          <img src={getImages(userPhoto, 'user')} alt=""/>
+          <img src={getImages(userPhoto, 'user')} alt="" />
           <div className={styles[`${cls}-info-details`]}>
             <div className={styles[`${cls}-info-details-name`]}>
               <span>{username}</span>
@@ -260,7 +265,7 @@ module.exports = {
                  selected={shoucang}
                  onChange={handleCollectClick.bind(null, rowData)}
             >
-              <Icon type={getLocalIcon('/others/collectionblack.svg')}/>
+              <Icon type={getLocalIcon('/others/collectionblack.svg')} />
               {shoucang ? <span className={styles[`${cls}-content-status-collection`]}>已收藏</span>
                 : <span className={styles[`${cls}-content-status-collection`]}>收藏</span>}
             </Tag>
@@ -269,7 +274,7 @@ module.exports = {
         <div className={styles[`${cls}-content`]}>
           <div className={styles[`${cls}-content-title`]}>{title}</div>
           <div className={styles[`${cls}-content-content`]}>
-            <span style={{ color: '#1ab99d', fontSize: '20px' }}>问：</span>
+            <span className={styles[`${cls}-content-content-ask`]} >问：</span>
             {content}
           </div>
         </div>
@@ -296,18 +301,18 @@ module.exports = {
       layoutInputItem = (others) => {
         const { bumen, zeren, dingban, shixian, fangshi, xiaohao, sumu } = others;
         return (<div className={styles[`${PrefixCls}-basevoice-items`]}>
-          <span>交办部门：</span>{bumen}<br/>
-          <span>责任人：</span>{zeren}<br/>
-          <span>盯办人:</span>{dingban}<br/>
-          <span>完成时限：</span>{shixian}<br/>
-          <span>解决方式：</span>{fangshi}<br/>
-          <span>销号情况：</span>{xiaohao}<br/>
+          <span>交办部门：</span>{bumen}<br />
+          <span>责任人：</span>{zeren}<br />
+          <span>盯办人:</span>{dingban}<br />
+          <span>完成时限：</span>{shixian}<br />
+          <span>解决方式：</span>{fangshi}<br />
+          <span>销号情况：</span>{xiaohao}<br />
         </div>);
       };
-    if (yijian != '') {
+    if (yijian !== '') {
       return (<div key={rowID} className={styles[`${PrefixCls}-basevoice`]}>
         <Card full>
-          <Card.Header title={<span className={styles[`${PrefixCls}-basevoice-title`]}>{yijian}</span>}/>
+          <Card.Header title={<span className={styles[`${PrefixCls}-basevoice-title`]}>{yijian}</span>} />
           <Card.Body>
             {layoutInputItem(others)}
           </Card.Body>
@@ -338,7 +343,7 @@ module.exports = {
     return (
       <div className={styles[`${PrefixCls}-legalcards`]}>
         <div className={styles[`${PrefixCls}-legalinfo`]}>
-          <img src={getImages(uavatar, 'user')} alt=""/>
+          <img src={getImages(uavatar, 'user')} alt="" />
           <div className={styles[`${PrefixCls}-legalinfo-details`]}>
             <div className={styles[`${PrefixCls}-legalinfo-details-name`]}><span>{uname}</span>
               <div className={styles[`${PrefixCls}-legalask-info`]}>
@@ -360,7 +365,7 @@ module.exports = {
             {questions}
           </span>
         </div>
-        {replys != '' ?
+        {replys !== '' ?
           <div className={styles[`${PrefixCls}-legalreply`]}>
             <div className={styles[`${PrefixCls}-legalreply-title`]}><span>回复：</span></div>
             <div>{replys}</div>
@@ -378,17 +383,17 @@ module.exports = {
     return (
       <div key={rowID} className={styles[`${PrefixCls}-notary-outer`]}>
         <div className={styles[`${PrefixCls}-notary-outer-left`]}>
-          <img src={getImages(image, 'user')} alt=""/>
+          <img src={getImages(image, 'user')} alt="" />
           <div className={styles[`${PrefixCls}-notary-outer-right`]}>
             <div className={styles[`${PrefixCls}-notary-outer-right-title`]}>
               <span className={styles[`${PrefixCls}-notary-outer-right-title-name`]}>{title}</span>
             </div>
             <div className={styles[`${PrefixCls}-notary-outer-right-adress`]}>
-              <span><Icon type={getLocalIcon('/login/phone.svg')} size="xxs"/></span>
+              <span><Icon type={getLocalIcon('/login/phone.svg')} size="xxs" /></span>
               <div className={styles[`${PrefixCls}-notary-outer-right-adress-info`]}>{tel}</div>
             </div>
             <div className={styles[`${PrefixCls}-notary-outer-right-adress`]}>
-              <span><Icon type={getLocalIcon('/others/NO.svg')} size="xxs"/></span>
+              <span><Icon type={getLocalIcon('/others/NO.svg')} size="xxs" /></span>
               <div className={styles[`${PrefixCls}-notary-outer-right-adress-info`]}>{number}</div>
             </div>
             <div className={styles[`${PrefixCls}-notary-outer-right-adress-info`]}>{office}</div>
@@ -396,7 +401,7 @@ module.exports = {
         </div>
         <div className={styles[`${PrefixCls}-lawyer-outer-phone`]} onClick={(e) => e.stopPropagation()}><a
           href={`tel:${tel}`}
-        ><Icon type={getLocalIcon('/others/call.svg')} size="lg"/></a></div>
+        ><Icon type={getLocalIcon('/others/call.svg')} size="lg" /></a></div>
       </div>
     );
   },
@@ -409,7 +414,7 @@ module.exports = {
           multipleLine
           onClick={onClick.bind(null, rowData)}
           wrap
-          extra={<Badge text={noViewCount > 0 ? noViewCount : ''} overflowCount={99}/>}
+          extra={<Badge text={noViewCount > 0 ? noViewCount : ''} overflowCount={99} />}
           align="top"
         >
           <div className={`${styles[`${PrefixCls}-task-title`]}`}>
@@ -469,17 +474,14 @@ module.exports = {
   specialRow: (rowData, sectionID, rowID, onClick, dispatch, headName) => {
     const { image = '' } = rowData;
     return (
-      <div key={rowID}
-           className={styles[`${PrefixCls}-special-outer`]}
-           onClick={onClick.bind(null, rowData, dispatch, headName)}
+      <div
+        key={`${sectionID}-${rowID}`}
+        className={styles[`${PrefixCls}-special-outer`]}
+        onClick={onClick.bind(null, rowData, dispatch, headName)}
       >
         <div className={styles[`${PrefixCls}-special-outer-img`]}>
-          <div className={styles[`${PrefixCls}-special-outer-img-image`]} style={{ backgroundImage: `url(${image})` }}>
-            {/* <div className={styles[`${PrefixCls}-special-mask`]}> */}
-            {/* <h3>{title}</h3> */}
-            {/* <span>{time}</span> */}
-            {/* </div> */}
-          </div>
+          <div className={styles[`${PrefixCls}-special-outer-img-image`]}
+               style={{ backgroundImage: `url(${image})` }} />
         </div>
       </div>
     );
@@ -560,7 +562,7 @@ module.exports = {
           <div className={styles[`${PrefixCls}-live-phone`]}>
             <span>{tel}</span>
             <a href={`tel:${tel}`} onClick={(e) => e.stopPropagation()}>
-              <Icon type={getLocalIcon('/others/call.svg')}/>
+              <Icon type={getLocalIcon('/others/call.svg')} />
             </a>
           </div>
         </div>
@@ -723,5 +725,26 @@ module.exports = {
       </Badge></div>
       :
       result;
+  },
+  hallRow: (rowData, onClick, dispatch) => {
+    return (
+      <div>
+        {
+          rowData.map(item => (
+            <div key={item.id} className={styles[`${PrefixCls}-hall`]}>
+              <div className={styles[`${PrefixCls}-hall-left`]}>
+                <img src={getImages(item.image)} alt="" />
+                <span>{item.title}</span>
+              </div>
+              <div className={styles[`${PrefixCls}-hall-right`]}>
+                {item.children.map(datas => (
+                  <span key={datas.id} onClick={onClick.bind(null, datas, dispatch)}>{datas.title}</span>
+                ))}
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    );
   },
 };

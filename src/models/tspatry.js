@@ -15,8 +15,7 @@ const getInfo = (info) => {
   },
   getBannerDatas = (data = []) => {
     let bannerDatas = [];
-    data.map((item, index) => {
-      console.log(item);
+    data.map((item) => {
       const { id = '', title = '', route = '', infos = '', ...others } = item;
       let { type } = getInfo(infos);
       if (type === 'banner') {
@@ -33,7 +32,7 @@ const getInfo = (info) => {
   },
   getGridbox = (data = []) => {
     let gridDatas = [];
-    data.map((item, index) => {
+    data.map((item) => {
       const { id = '', route = '', image = '', infos = '', ...others } = item;
       let { type } = getInfo(infos);
       if (type === 'grids') {

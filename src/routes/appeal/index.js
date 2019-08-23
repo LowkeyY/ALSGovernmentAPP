@@ -5,22 +5,20 @@ import { WhiteSpace, Icon, List, Flex, Tabs, Badge, Tag, Layout, Toast, Accordio
 import ListView from 'components/listview';
 import { routerRedux } from 'dva/router';
 import { appealList } from 'components/row';
+import NoContent from 'components/nocontent';
 import { getImages, getErrorImg, getLocalIcon, postionsToString } from 'utils';
 import styles from './index.less';
 
-const Item = List.Item,
-  tabs = [
+const tabs = [
     { title: <Badge>全部求助</Badge> },
     { title: <Badge>我的求助</Badge> },
     { title: <Badge>收藏求助</Badge> },
   ],
   PrefixCls = 'appeal';
 
-function Appeal ({ location, dispatch, appeal, app }) {
-  const { paginations, scrollerTop, notesvisible = false } = appeal,
-    { isLogin } = app;
-  const emptyFunc = () => {
-    },
+function Appeal ({ location, dispatch, appeal, app, loading }) {
+  const { paginations, scrollerTop } = appeal,
+    { isLogin } = app,
 
     handleCollectClick = (data) => {
       if (isLogin) {
@@ -58,38 +56,7 @@ function Appeal ({ location, dispatch, appeal, app }) {
         },
       }));
     },
-    getAnswersPage = (answers, cls = '') => {
-      if (cnIsArray(answers) && answers.length) {
-        return (
-          <div className={styles[`${cls}-answers`]}>
-            {answers.map(({ content = '', createDate = '', dept = '', user = '', phone = '', id }) => {
-              return content != '' ? (
-                <div key={id}>
-                  <div className={styles[`${cls}-answers-content`]}>
-                    <span style={{ color: '#1ab99d' }}>回复内容 : </span>
-                    {content}
-                  </div>
-                  {createDate != '' ? <div className={styles[`${cls}-answers-date`]}><span style={{ color: '#1ab99d' }}>回复时间 : </span>{createDate}
-                  </div> : ''}
-                  {dept != '' ?
-                    <div className={styles[`${cls}-answers-dept`]}><span style={{ color: '#1ab99d' }}>单位 : </span>{dept}
-                    </div> : ''}
-                  {user != '' ?
-                    <div className={styles[`${cls}-answers-user`]}><span
-                      style={{ color: '#1ab99d' }}
-                    >执行人 : </span>{user}
-                    </div> : ''}
-                  {phone != '' ? <div className={styles[`${cls}-answers-phone`]}><span
-                    style={{ color: '#1ab99d' }}
-                  >联系电话 : </span>{phone}</div> : ''}
-                </div>
-              ) : '';
-            })}
-          </div>
-        );
-      }
-      return '';
-    },
+
     onRefresh = (callback) => {
       dispatch({
         type: `${PrefixCls}/queryListview`,
@@ -99,6 +66,7 @@ function Appeal ({ location, dispatch, appeal, app }) {
         },
       });
     },
+
     onEndReached = (callback) => {
       dispatch({
         type: `${PrefixCls}/queryListview`,
@@ -107,6 +75,7 @@ function Appeal ({ location, dispatch, appeal, app }) {
         },
       });
     },
+
     onScrollerTop = (top) => {
       if (typeof top !== 'undefined' && !isNaN(top * 1)) {
         dispatch({
@@ -117,33 +86,39 @@ function Appeal ({ location, dispatch, appeal, app }) {
         });
       }
     },
+
     getContents = (lists) => {
       const result = [],
         { current, total, size } = paginations,
         hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total),
         layoutList = (
           <div className={styles[`${PrefixCls}-list`]}>
-            <ListView layoutHeader={''}
-                      dataSource={lists}
-                      layoutRow={(rowData, sectionID, rowID) => appealList(rowData, sectionID, rowID, isLogin, handleCardClick, handleCollectClick)}
-                      onEndReached={onEndReached}
-                      onRefresh={onRefresh}
-                      hasMore={hasMore}
-                      onScrollerTop={onScrollerTop.bind(null)}
-                      scrollerTop={scrollerTop}
-            /></div>);
+            <ListView
+              layoutHeader={''}
+              dataSource={lists}
+              layoutRow={(rowData, sectionID, rowID) => appealList(rowData, sectionID, rowID, isLogin, handleCardClick, handleCollectClick)}
+              onEndReached={onEndReached}
+              onRefresh={onRefresh}
+              hasMore={hasMore}
+              onScrollerTop={onScrollerTop.bind(null)}
+              scrollerTop={scrollerTop}
+            />
+          </div>
+        );
       for (let i = 0; i < tabs.length; i++) {
         if (i === selectedIndex) {
           result.push(<div>{layoutList}</div>);
         } else {
-          result.push(<div/>);
+          result.push(<div />);
         }
       }
       return result;
     },
+
     getPositions = ({ street = '', district = '', city = '', province = '' }) => {
       return street || district || city || province;
     },
+
     getDataList = (datas = []) => {
       const result = [];
       datas.map(data => {
@@ -213,9 +188,9 @@ function Appeal ({ location, dispatch, appeal, app }) {
           </Flex>
         </div>
       );
-    };
+    },
 
-  const btnVisible = (visible = true) => {
+    btnVisible = (visible = true) => {
       dispatch({
         type: `${PrefixCls}/updateState`,
         payload: {
@@ -223,6 +198,7 @@ function Appeal ({ location, dispatch, appeal, app }) {
         },
       });
     },
+
     goWarring = (postions = {}) => {
       dispatch(routerRedux.push({
         pathname: '/warning',
@@ -232,7 +208,8 @@ function Appeal ({ location, dispatch, appeal, app }) {
         },
       }));
     },
-    handleWarningClick = (name = '') => {
+
+    handleWarningClick = () => {
       btnVisible();
       const onSuccess = (postions = {}) => {
           btnVisible(false);
@@ -251,29 +228,46 @@ function Appeal ({ location, dispatch, appeal, app }) {
         };
       cnGetCurrentPosition(onSuccess, onError);
     },
+
     renderNavRight = (handleClick) => {
       return isLogin ? (
         btnDisabled ?
           <div className={styles[`${PrefixCls}-nav`]}>
-            <Icon type="loading"/>
+            <Icon type="loading" size="xs" />
             <span>{btnTitle}</span>
           </div> :
           <div className={styles[`${PrefixCls}-nav`]} onClick={handleClick}>
-            <Icon type={getLocalIcon('/others/sendup.svg')}/>
+            <Icon type={getLocalIcon('/others/sendup.svg')} size="xs" />
             <span>{btnTitle}</span>
           </div>
       ) : '';
     },
+
     currentDataList = getDataList(dataList),
+
     handleTabClick = (tab, index) => {
-      dispatch({
-        type: `${PrefixCls}/queryListview`,
-        payload: {
-          selected: index,
-          isRefresh: true,
-        },
-      });
+      if (isLogin) {
+        dispatch({
+          type: `${PrefixCls}/queryListview`,
+          payload: {
+            selected: index,
+            isRefresh: true,
+          },
+        });
+      } else {
+        Modal.alert('您还没登陆', '请登陆后浏览', [
+          { text: '稍后再说', onPress: () => console.log('cancel') },
+          {
+            text: '立刻登陆',
+            onPress: () =>
+              dispatch(routerRedux.push({
+                pathname: '/login',
+              })),
+          },
+        ]);
+      }
     },
+
     handleSearchClick = () => {
       dispatch(routerRedux.push({
         pathname: '/search',
@@ -285,13 +279,15 @@ function Appeal ({ location, dispatch, appeal, app }) {
 
   return (
     <div>
-      <Nav title={name}
-           dispatch={dispatch}
-           renderNavRight={renderNavRight(handleWarningClick.bind(null, btnTitle))}
+      <Nav
+        title={name}
+        dispatch={dispatch}
+        renderNavRight={renderNavRight(handleWarningClick.bind(null, btnTitle))}
       />
-      <SearchBar placeholder={`在${name || '此页面'}中搜索`}
-                 maxLength={20}
-                 onFocus={handleSearchClick}
+      <SearchBar
+        placeholder={`在${name || '此页面'}中搜索`}
+        maxLength={20}
+        onFocus={handleSearchClick}
       />
       <Accordion defaultActiveKey="0" className="my-accordion">
         <Accordion.Panel header={<span>本周数据</span>}>
@@ -300,7 +296,7 @@ function Appeal ({ location, dispatch, appeal, app }) {
           </div>
         </Accordion.Panel>
       </Accordion>
-      <WhiteSpace size="xs"/>
+      <WhiteSpace size="xs" />
       <Tabs
         initialPage={0}
         page={selectedIndex}
@@ -310,15 +306,14 @@ function Appeal ({ location, dispatch, appeal, app }) {
         }}
         onTabClick={handleTabClick}
       >
-        {currentDataList.length > 0 && getContents(currentDataList)}
+        {loading ? <NoContent isLoading={loading} /> : getContents(currentDataList)}
       </Tabs>
-      <WhiteSpace/>
     </div>
   );
 }
 
 export default connect(({ loading, appeal, app }) => ({
-  loading,
+  loading: loading.effects[`${PrefixCls}/queryListview`],
   appeal,
   app,
 }))(Appeal);

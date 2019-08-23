@@ -85,14 +85,15 @@ function Comp ({ location, dispatch, legalservice }) {
         { current, total, size } = paginations,
         hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total);
       result.push(
-        <ListView layoutHeader={''}
-                  dataSource={item}
-                  layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
-                  onEndReached={onEndReached.bind(null, refreshId)}
-                  onRefresh={onRefresh.bind(null, refreshId)}
-                  hasMore={hasMore}
-                  onScrollerTop={onScrollerTop.bind(null)}
-                  scrollerTop={scrollerTop}
+        <ListView
+          layoutHeader={''}
+          dataSource={item}
+          layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
+          onEndReached={onEndReached.bind(null, refreshId)}
+          onRefresh={onRefresh.bind(null, refreshId)}
+          hasMore={hasMore}
+          onScrollerTop={onScrollerTop.bind(null)}
+          scrollerTop={scrollerTop}
         />,
       );
 
@@ -103,15 +104,15 @@ function Comp ({ location, dispatch, legalservice }) {
       handleClick: handleItemOnclick,
     };
   return (
-    <div className={styles[`${PrefixCls}-outer`]}>
-      <Nav title={name} dispatch={dispatch}/>
+    <div className={styles[`${PrefixCls}-outer`]} >
+      <Nav title={name} dispatch={dispatch} />
       {bannerDatas.length > 0 && <Banner {...bannerProps} />}
       {gridsItem.length > 0 &&
-      <Menu handleGridClick={handleGridClick} columnNum={4} dispatch={dispatch} datas={gridsItem}/>}
-      <WhiteSpace size="xs"/>
+      <Menu handleGridClick={handleGridClick} columnNum={4} dispatch={dispatch} datas={gridsItem} />}
+      <WhiteSpace size="xs" />
       {
         fixedLanmu !== {} ?
-          <List>
+          <List >
             <Item className={styles[`${PrefixCls}-fixeditem`]}
                   thumb={fixedLanmu.image || ''}
                   multipleLine
@@ -119,14 +120,14 @@ function Comp ({ location, dispatch, legalservice }) {
                   arrow="horizontal"
                   onClick={handleFiexdItemOnclick.bind(null, fixedLanmu)}
             >
-              <span>{fixedLanmu.title}</span><Brief>{fixedLanmu.infos}</Brief>
-            </Item>
-          </List>
+              <span >{fixedLanmu.title}</span ><Brief >{fixedLanmu.infos}</Brief >
+            </Item >
+          </List >
           :
           null
       }
       {lists.length > 0 && getContents(lists)}
-    </div>
+    </div >
   );
 }
 

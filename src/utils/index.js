@@ -181,6 +181,15 @@ const getDefaultBg = (path = '') => {
     : (config.baseURL + (path.startsWith('/') ? '' : '/') + path);
 };
 
+const isUsefulPic = (src) => {
+  if (src !== '') {
+    const ImgObj = new Image();
+    ImgObj.src = src;
+    console.log(ImgObj.width)
+    return ImgObj.fileSize > 0 || (ImgObj.width > 0 && ImgObj.height > 0);
+  }
+};
+
 const pattern = {
   number: {
     pattern: /^[0-9]*$/,
@@ -222,4 +231,5 @@ module.exports = {
   getTitle,
   getDefaultBg,
   pattern,
+  isUsefulPic,
 };

@@ -92,9 +92,12 @@ class Legalmediation extends Component {
     }, (error) => {
       if (!error) {
         const date = this.state.date;
+        const { QI = '', SUMU = '', GACHA = '', DIZHI = '', SQ_QI = '', SQ_SUMU = '', SQ_GACHA = '', SQ_DIZHI = '' } = this.props.form.getFieldsValue();
         const data = {
             ...this.props.form.getFieldsValue(),
             DISPUTE_DATE: DateChange(date),
+            SQ_ADDRESS: `${SQ_QI}${SQ_SUMU}${SQ_GACHA}${SQ_DIZHI}`,
+            DISPUTE_ADDDRESS: `${QI}${SUMU}${GACHA}${DIZHI}`,
           },
           { uploadFiles, uploadKey } = this.getUploadFiles(),
           { mediaUploadFile } = this.state;
@@ -134,15 +137,14 @@ class Legalmediation extends Component {
     });
   };
   getTitle = (title) => {
-    return (<div className={styles[`${PrefixCls}-title`]}>
-      <span><Icon type={getLocalIcon('/others/information.svg')}/></span>
-      <div>{title}</div>
-    </div>);
+    return (
+      <div className={styles[`${PrefixCls}-title`]} >
+        <span ><Icon type={getLocalIcon('/others/information.svg')} /></span >
+        <div >{title}</div >
+      </div >
+    );
   };
 
-  componentWillUnmount () {
-
-  }
 
   render () {
     const { name = '' } = this.props.location.query,
@@ -151,11 +153,11 @@ class Legalmediation extends Component {
     const { getFieldProps, getFieldError } = this.props.form;
 
     return (
-      <div>
-        <Nav title={name} dispatch={this.props.dispatch}/>
-        <div className={styles[`${PrefixCls}-outer`]}>
-          <form>
-            <div className={styles[`${PrefixCls}-applicant`]}>
+      <div >
+        <Nav title={name} dispatch={this.props.dispatch} />
+        <div className={styles[`${PrefixCls}-outer`]} >
+          <form >
+            <div className={styles[`${PrefixCls}-applicant`]} >
               {this.getTitle('申请人信息')}
               <InputItem
                 {...getFieldProps('SQ_NAME', {
@@ -165,21 +167,33 @@ class Legalmediation extends Component {
                 })}
                 clear
                 placeholder="请输入姓名"
-                error={!!getFieldError('SQ_NAME') && Toast.fail(getFieldError('SQ_NAME'))}
+                // error={!!getFieldError('SQ_NAME') && Toast.fail(getFieldError('SQ_NAME'))}
+                error={!!getFieldError('SQ_NAME')}
+                onErrorClick={() => {
+                  Toast.fail(getFieldError('SQ_NAME'));
+                }}
               >
+                <Icon type={getLocalIcon('/others/require.svg')} size="xxs" color="#ff5f5f" />
                 姓名
-              </InputItem>
-              <List>
+              </InputItem >
+              <List >
                 <Picker data={sex}
                         cols={1}
                         {...getFieldProps('SQ_SEX', {
                           rules: [{ required: true, message: '请选择性别' }],
                         })}
-                        error={!!getFieldError('SQ_SEX') && Toast.fail(getFieldError('SQ_SEX'))}
+                  // error={!!getFieldError('SQ_SEX') && Toast.fail(getFieldError('SQ_SEX'))}
+                        error={!!getFieldError('SQ_SEX')}
+                        onErrorClick={() => {
+                          Toast.fail(getFieldError('SQ_SEX'));
+                        }}
                 >
-                  <List.Item arrow="horizontal">性别</List.Item>
-                </Picker>
-              </List>
+                  <List.Item arrow="horizontal" >
+                    <Icon type={getLocalIcon('/others/require.svg')} size="xxs" color="#ff5f5f" />
+                    性别
+                  </List.Item >
+                </Picker >
+              </List >
               <InputItem
                 {...getFieldProps('SQ_AGE', {
                   initialValue: '',
@@ -193,9 +207,10 @@ class Legalmediation extends Component {
                 ref={el => this.autoFocusInst = el}
                 placeholder="请输入年龄"
               >
+                <Icon type={getLocalIcon('/others/require.svg')} size="xxs" color="#ff5f5f" />
                 年龄
-              </InputItem>
-              <List>
+              </InputItem >
+              <List >
                 <InputItem
                   {...getFieldProps('SQ_EDUCATION', {
                     rules: [
@@ -204,10 +219,15 @@ class Legalmediation extends Component {
                     ],
                   })}
                   // error={!!getFieldError('SQ_EDUCATION') && Toast.fail(getFieldError('SQ_EDUCATION'))}
+                  error={!!getFieldError('SQ_EDUCATION')}
+                  onErrorClick={() => {
+                    Toast.fail(getFieldError('SQ_EDUCATION'));
+                  }}
                 >
+                  <Icon type={getLocalIcon('/others/require.svg')} size="xxs" color="#ff5f5f" />
                   身份证号
-                </InputItem>
-              </List>
+                </InputItem >
+              </List >
               <InputItem
                 type="number"
                 {...getFieldProps('SQ_PHONE', {
@@ -217,29 +237,73 @@ class Legalmediation extends Component {
                     { pattern: pattern.phone.pattern, message: pattern.phone.message },
                   ],
                 })}
-
+                error={!!getFieldError('SQ_PHONE')}
+                onErrorClick={() => {
+                  Toast.fail(getFieldError('SQ_PHONE'));
+                }}
                 placeholder="请输入联系方式"
               >
+                <Icon type={getLocalIcon('/others/require.svg')} size="xxs" color="#ff5f5f" />
                 联系电话
-              </InputItem>
-              <List>
+              </InputItem >
+              {/*SQ_ADDRESS*/}
+              <List renderHeader={() => '家庭住址(必填)'} >
                 <InputItem
                   type="text"
-                  {...getFieldProps('SQ_ADDRESS', {
-                    initialValue: '',
-                    rules: [
-                      { required: true, message: '请输入家庭住址' },
-                    ],
+                  {...getFieldProps('SQ_QI', {
+                    rules: [{ required: true, message: '请输入地址' }],
                   })}
-
-                  placeholder="请输入家庭住址"
+                  error={!!getFieldError('SQ_QI')}
+                  onErrorClick={() => {
+                    Toast.fail(getFieldError('SQ_QI'));
+                  }}
                 >
-                  家庭住址
-                </InputItem>
-              </List>
-            </div>
-            <WhiteSpace/>
-            <div className={styles[`${PrefixCls}-applicant`]}>
+                  <Icon type={getLocalIcon('/others/require.svg')} size="xxs" color="#ff5f5f" />
+                  旗
+                </InputItem >
+                <InputItem
+                  type="text"
+                  {...getFieldProps('SQ_SUMU', {
+                    rules: [{ required: true, message: '请输入地址' }],
+                  })}
+                  error={!!getFieldError('SQ_SUMU')}
+                  onErrorClick={() => {
+                    Toast.fail(getFieldError('SQ_SUMU'));
+                  }}
+                >
+                  <Icon type={getLocalIcon('/others/require.svg')} size="xxs" color="#ff5f5f" />
+                  苏木（街道）
+                </InputItem >
+                <InputItem
+                  type="text"
+                  {...getFieldProps('SQ_GACHA', {
+                    rules: [{ required: true, message: '请输入地址' }],
+                  })}
+                  error={!!getFieldError('SQ_GACHA')}
+                  onErrorClick={() => {
+                    Toast.fail(getFieldError('SQ_GACHA'));
+                  }}
+                >
+                  <Icon type={getLocalIcon('/others/require.svg')} size="xxs" color="#ff5f5f" />
+                  嘎查（社区）
+                </InputItem >
+                <InputItem
+                  type="text"
+                  {...getFieldProps('SQ_DIZHI', {
+                    rules: [{ required: true, message: '请输入地址' }],
+                  })}
+                  error={!!getFieldError('SQ_DIZHI')}
+                  onErrorClick={() => {
+                    Toast.fail(getFieldError('SQ_DIZHI'));
+                  }}
+                >
+                  <Icon type={getLocalIcon('/others/require.svg')} size="xxs" color="#ff5f5f" />
+                  详细地址
+                </InputItem >
+              </List >
+            </div >
+            <WhiteSpace />
+            <div className={styles[`${PrefixCls}-applicant`]} >
               {this.getTitle('被申请人信息')}
               <InputItem
                 {...getFieldProps('BSQ_NAME', {
@@ -249,19 +313,24 @@ class Legalmediation extends Component {
                 })}
                 clear
                 placeholder="请输入姓名"
-                error={!!getFieldError('BSQ_NAME') && Toast.fail(getFieldError('BSQ_NAME'))}
+                // error={!!getFieldError('BSQ_NAME') && Toast.fail(getFieldError('BSQ_NAME'))}
+                error={!!getFieldError('BSQ_NAME')}
+                onErrorClick={() => {
+                  Toast.fail(getFieldError('BSQ_NAME'));
+                }}
               >
+                <Icon type={getLocalIcon('/others/require.svg')} size="xxs" color="#ff5f5f" />
                 姓名
-              </InputItem>
-              <List>
+              </InputItem >
+              <List >
                 <Picker
                   data={sex}
                   cols={1}
                   {...getFieldProps('BSQ_SEX')}
                 >
-                  <List.Item arrow="horizontal">性别</List.Item>
-                </Picker>
-              </List>
+                  <List.Item arrow="horizontal" >性别</List.Item >
+                </Picker >
+              </List >
               <InputItem
                 {...getFieldProps('BSQ_AGE')}
                 clear
@@ -269,32 +338,38 @@ class Legalmediation extends Component {
                 placeholder="请输入年龄"
               >
                 年龄
-              </InputItem>
-              <List>
+              </InputItem >
+              <List >
                 <InputItem
                   {...getFieldProps('BSQ_EDUCATION')}
                 >
                   身份证号
-                </InputItem>
-              </List>
+                </InputItem >
+              </List >
               <InputItem
                 type="number"
                 {...getFieldProps('BSQ_PHONE')}
                 placeholder="请输入联系方式"
               >
                 联系电话
-              </InputItem>
-              <List>
+              </InputItem >
+              {/*BSQ_ADDRESS*/}
+              <List >
                 <InputItem
                   type="text"
-                  {...getFieldProps('BSQ_ADDRESS')}
-                  placeholder="请输入家庭住址"
+                  {...getFieldProps('BSQ_ADDRESS', {
+                    initialValue: '',
+                  })}
+                  error={!!getFieldError('BSQ_ADDRESS')}
+                  onErrorClick={() => {
+                    Toast.fail(getFieldError('BSQ_ADDRESS'));
+                  }}
                 >
                   家庭住址
-                </InputItem>
-              </List>
-            </div>
-            <WhiteSpace/>
+                </InputItem >
+              </List >
+            </div >
+            <WhiteSpace />
             <Picker
               data={disputeType}
               cols={1}
@@ -303,20 +378,66 @@ class Legalmediation extends Component {
               })}
               error={!!getFieldError('disputeType') && Toast.fail(getFieldError('disputeType'))}
             >
-              <List.Item arrow="horizontal">纠纷类型</List.Item>
-            </Picker>
-            <List>
+              <List.Item arrow="horizontal" >
+                <Icon type={getLocalIcon('/others/require.svg')} size="xxs" color="#ff5f5f" />
+                纠纷类型
+              </List.Item >
+            </Picker >
+            {/*DISPUTE_ADDDRESS*/}
+            <List renderHeader={() => '纠纷地点(必填)'} >
               <InputItem
                 type="text"
-                {...getFieldProps('DISPUTE_ADDDRESS', {
+                {...getFieldProps('QI', {
                   rules: [{ required: true, message: '请输入地址' }],
                 })}
-
-                placeholder="请输入地址"
+                error={!!getFieldError('QI')}
+                onErrorClick={() => {
+                  Toast.fail(getFieldError('QI'));
+                }}
               >
-                纠纷地点
-              </InputItem>
-            </List>
+                <Icon type={getLocalIcon('/others/require.svg')} size="xxs" color="#ff5f5f" />
+                旗
+              </InputItem >
+              <InputItem
+                type="text"
+                {...getFieldProps('SUMU', {
+                  rules: [{ required: true, message: '请输入地址' }],
+                })}
+                error={!!getFieldError('SUMU')}
+                onErrorClick={() => {
+                  Toast.fail(getFieldError('SUMU'));
+                }}
+              >
+                <Icon type={getLocalIcon('/others/require.svg')} size="xxs" color="#ff5f5f" />
+                苏木（街道）
+              </InputItem >
+              <InputItem
+                type="text"
+                {...getFieldProps('GACHA', {
+                  rules: [{ required: true, message: '请输入地址' }],
+                })}
+                error={!!getFieldError('GACHA')}
+                onErrorClick={() => {
+                  Toast.fail(getFieldError('GACHA'));
+                }}
+              >
+                <Icon type={getLocalIcon('/others/require.svg')} size="xxs" color="#ff5f5f" />
+                嘎查（社区）
+              </InputItem >
+              <InputItem
+                type="text"
+                {...getFieldProps('DIZHI', {
+                  rules: [{ required: true, message: '请输入地址' }],
+                })}
+                error={!!getFieldError('DIZHI')}
+                onErrorClick={() => {
+                  Toast.fail(getFieldError('DIZHI'));
+                }}
+              >
+                <Icon type={getLocalIcon('/others/require.svg')} size="xxs" color="#ff5f5f" />
+                详细地址
+              </InputItem >
+            </List >
             <DatePicker
               mode="date"
               title="选择日期"
@@ -324,29 +445,36 @@ class Legalmediation extends Component {
               value={this.state.date}
               onChange={date => this.setState({ date })}
             >
-              <List.Item arrow="horizontal">纠纷时间</List.Item>
-            </DatePicker>
-            <List>
+              <List.Item arrow="horizontal" >
+                <Icon type={getLocalIcon('/others/require.svg')} size="xxs" color="#ff5f5f" />
+                纠纷时间
+              </List.Item >
+            </DatePicker >
+            <List >
               <TextareaItem
                 {...getFieldProps('DISPUTE_DESCRIBE', {
                   initialValue: '',
                   rules: [{ required: true, message: '请输入纠纷描述' }],
                 })}
                 clear
-                rows={4}
-                error={!!getFieldError('DISPUTE_DESCRIBE') && Toast.fail(getFieldError('DISPUTE_DESCRIBE'))}
+                rows={6}
+                // error={!!getFieldError('DISPUTE_DESCRIBE') && Toast.fail(getFieldError('DISPUTE_DESCRIBE'))}
+                error={!!getFieldError('DISPUTE_DESCRIBE')}
+                onErrorClick={() => {
+                  Toast.fail(getFieldError('DISPUTE_DESCRIBE'));
+                }}
                 count={500}
-                placeholder={'请在此描述纠纷'}
+                placeholder={'请在此描述纠纷(必填)'}
               />
-            </List>
-            <WhiteSpace/>
-            <div className={styles[`${PrefixCls}-outer-img`]}>
-              <div>
-                <p>添加图片</p>
-                {this.state.files.length >= 4 ? '' : <span onClick={cnTakePhoto.bind(null, this.handleCameraClick, 1)}>
-                  <Icon type={getLocalIcon('/media/camerawhite.svg')}/>
-                </span>}
-              </div>
+            </List >
+            <WhiteSpace />
+            <div className={styles[`${PrefixCls}-outer-img`]} >
+              <div >
+                <p >添加图片</p >
+                {this.state.files.length >= 4 ? '' : <span onClick={cnTakePhoto.bind(null, this.handleCameraClick, 1)} >
+                  <Icon type={getLocalIcon('/media/camerawhite.svg')} />
+                </span >}
+              </div >
               <ImagePicker
                 files={this.state.files}
                 onChange={this.onChange}
@@ -355,26 +483,27 @@ class Legalmediation extends Component {
                 multiple={this.state.multiple}
                 accept="image/*"
               />
-            </div>
-            <WhiteSpace/>
-            <WingBlank>
-              <Button type="primary" onClick={this.onSubmit}>提交</Button>
-            </WingBlank>
-          </form>
-          <WhiteSpace size="lg"/>
-        </div>
+            </div >
+            <WhiteSpace />
+            <WingBlank >
+              <Button type="primary" onClick={this.onSubmit} >提交</Button >
+            </WingBlank >
+          </form >
+          <WhiteSpace size="lg" />
+          <WhiteSpace size="lg" />
+        </div >
         <ActivityIndicator
           toast
-          text="正在上传..."
+          text='正在上传...'
           animating={animating}
         />
-      </div>
-    );
+      </div >
+    )
   }
 }
 
 export default connect(({ loading, legalmediation }) => ({
   loading,
   legalmediation,
-}))(createForm()(Legalmediation));
+}))(createForm()(Legalmediation))
 

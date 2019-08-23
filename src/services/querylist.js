@@ -1,7 +1,7 @@
 import { request, config } from 'utils';
 
 const { api } = config;
-const { QueryManuscriptApi, QueryColumnTypeApi, JicengshengyinApi, LanmuAllApi, GetTaskListApi, GetAllTaskApi, GetTowStupidApi, GetPatryWorkListApi, GetTowStupidListApi, GetVolunteerOrderApi, GettongjibumenApi, GetUnreadMessageApi, QueryMembersApi, SendTaskApi, Get110TaskApi, Get110TaskDetailApi, Reply110TaskApi, GetTaskStatisticsApi, GetRobotDataApi, SearchLanmuApi } = api;
+const { QueryManuscriptApi, QueryColumnTypeApi, JicengshengyinApi, LanmuAllApi, GetTaskListApi, GetAllTaskApi, GetTowStupidApi, GetPatryWorkListApi, GetTowStupidListApi, GetVolunteerOrderApi, GettongjibumenApi, GetUnreadMessageApi, QueryMembersApi, SendTaskApi, Get110TaskApi, Get110TaskDetailApi, Reply110TaskApi, GetTaskStatisticsApi, GetRobotDataApi, SearchLanmuApi, GetFairListApi, GetMyLawyerApi, GetMediateApi, GetZwfwApi, GetOfficeApi, GetRankApi,GetThreeApi } = api;
 
 export async function queryPartyData (payload) {
   return request({
@@ -9,12 +9,19 @@ export async function queryPartyData (payload) {
     method: 'post',
     data: payload,
   });
-  return {};
 }
 
 export async function queryPartyTabs (payload) {
   return request({
     url: QueryColumnTypeApi,
+    method: 'get',
+    data: payload,
+  });
+}
+
+export async function queryThree (payload) {
+  return request({
+    url: GetThreeApi,
     method: 'get',
     data: payload,
   });
@@ -64,6 +71,14 @@ export async function getAllTask (payload) {
 export async function GetTowStupid (payload) {
   return request({
     url: GetTowStupidApi,
+    method: 'get',
+    data: payload,
+  });
+}
+
+export async function getOffice (payload) {
+  return request({
+    url: GetOfficeApi,
     method: 'get',
     data: payload,
   });
@@ -130,9 +145,25 @@ export async function queryTask110List (payload) {
   });
 }
 
+export async function queryZwfwList (payload) {
+  return request({
+    url: GetZwfwApi,
+    method: 'get',
+    data: payload,
+  });
+}
+
 export async function queryTask110Details (payload) {
   return request({
     url: Get110TaskDetailApi,
+    method: 'get',
+    data: payload,
+  });
+}
+
+export async function queryRank (payload) {
+  return request({
+    url: GetRankApi,
     method: 'get',
     data: payload,
   });
@@ -166,6 +197,28 @@ export async function searchLanmu (payload) {
   return request({
     url: SearchLanmuApi,
     method: 'post',
+    data: payload,
+  });
+}
+
+export async function queryFairList (payload) {
+  return request({
+    url: GetFairListApi,
+    data: payload,
+  });
+}
+
+
+export async function queryAssistanceList (payload) {
+  return request({
+    url: GetMyLawyerApi,
+    data: payload,
+  });
+}
+
+export async function queryMediateList (payload) {
+  return request({
+    url: GetMediateApi,
     data: payload,
   });
 }

@@ -1,0 +1,40 @@
+@PrefixCls: mediatelist;
+.@{PrefixCls}-outer {
+  padding: 20px;
+  :global {
+    .am-list-body {
+      border: 0;
+      background: none;
+    }
+    .am-list-body div:not(:last-child) .am-list-line{
+      border: 0;
+    }
+  }
+}
+
+.@{PrefixCls}-item {
+  margin-bottom: 20px;
+  border-radius: 20px;
+  & span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  & img {
+    width: 180px;
+    height: 140px;
+    padding: 20px 0;
+  }
+
+  &-status {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-size: 28px;
+    & :nth-child(1) {
+      color: #666;
+    }
+  }
+}

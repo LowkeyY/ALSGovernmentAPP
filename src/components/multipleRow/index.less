@@ -1,3 +1,109 @@
+//@import "../../themes/default";
+//
+//@titleSize: 30px;
+//@dateSize: 26px;
+//
+//.title {
+//  font-size: @titleSize;
+//  margin-bottom: 20px;
+//  .textOverflow;
+//  :global {
+//    .am-badge-text {
+//      font-family: "Microsoft YaHei", sans-serif;
+//    }
+//  }
+//}
+//
+//.date {
+//  font-size: @dateSize;
+//  color: @text-content-color;
+//  margin-top: 20px;
+//}
+//
+//.outer {
+//  border-bottom: @hd solid #ddd;
+//}
+//
+//.single {
+//  padding: 28px 30px;
+//  .title {
+//    .title();
+//  }
+//  .img {
+//    width: 100%;
+//    height: 22vh;
+//    background-size: 100%;
+//    background-position: center center;
+//    border-radius: 10px;
+//  }
+//  .date {
+//    .date();
+//  }
+//}
+//
+//.left {
+//  display: flex;
+//  padding: 0.25rem 0.3rem;
+//  .title {
+//    .title()
+//  }
+//  .content {
+//    display: flex;
+//    flex-direction: column;
+//    justify-content: space-between;
+//  }
+//  .date {
+//    .date()
+//  }
+//  & img {
+//    width: 240px;
+//    height: 160px;
+//    margin-right: 20px;
+//    border-radius: 10px;
+//  }
+//}
+//
+//.right {
+//  display: flex;
+//  padding: 0.25rem 0.3rem;
+//  .title {
+//    .title()
+//  }
+//  .content {
+//    display: flex;
+//    flex-direction: column;
+//    justify-content: space-between;
+//    flex: 1;
+//  }
+//  .date {
+//    .date()
+//  }
+//  & img {
+//    width: 240px;
+//    height: 160px;
+//    margin-left: 20px;
+//    border-radius: 10px;
+//  }
+//}
+//
+//.multiple {
+//  padding: 0.25rem 0.3rem;
+//  .title {
+//    .title()
+//  }
+//  .imgBox {
+//    display: flex;
+//    justify-content: space-around;
+//    & > img {
+//      width: 30%;
+//      height: 140px;
+//      border-radius: 10px;
+//    }
+//  }
+//  .date {
+//    .date()
+//  }
+//}
 @import "../../themes/default";
 
 @titleSize: 30px;
@@ -5,69 +111,57 @@
 
 .title {
   font-size: @titleSize;
-  margin-bottom: 20px;
+  //margin-bottom: 20px;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  line-height: 1.5em;
 }
 
 .date {
   font-size: @dateSize;
-  color: #666;
-  margin-top: 10px;
+  color: @text-content-color;
+  margin-top: 22px;
 }
 
 .outer {
   border-bottom: @hd solid #ddd;
 }
 
+.images {
+  border-radius: 10px;
+}
+
 .single {
-  padding: 28px 30px;
+  padding: 15px 30px;
   .title {
     .title();
+    margin-bottom: 15px;
   }
   .img {
     width: 100%;
-    height: 22vh;
+    height: 320px;
+    background: #ffa86a;
     background-size: 100%;
     background-position: center center;
+    border-radius: 12px;
   }
   .date {
     .date();
+    margin-top: 10px;
   }
 }
 
 .left {
   display: flex;
-  padding: 0.25rem 0.3rem;
+  padding: 15px 30px;
   .title {
     .title()
   }
   .content {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  .date {
-    .date()
-  }
-  &  img {
-    width: 200px;
-    height: 160px;
-    margin-right: 20px;
-  }
-}
-
-.right {
-  display: flex;
-  padding: 0.25rem 0.3rem;
-  .title {
-    .title()
-  }
-  .content {
-    display: flex;
+    flex: 1;
     flex-direction: column;
     justify-content: space-between;
   }
@@ -75,26 +169,55 @@
     .date()
   }
   & img {
-    width: 240px;
-    height: 160px;
+    .images();
+    width: 234px;
+    height: 146px;
+    margin-right: 20px;
+    display: block;
+  }
+}
+
+.right {
+  display: flex;
+  padding: 15px 30px;
+  .title {
+    .title()
+  }
+  .content {
+    //display: flex;
+    //flex: 2 2 auto;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .date {
+    .date()
+  }
+  & img {
+    .images();
+    width: 234px;
+    height: 146px;
+    display: block;
     margin-left: 20px;
   }
 }
 
 .multiple {
-  padding: 0.25rem 0.3rem;
+  padding: 15px 30px;
   .title {
-    .title()
+    .title();
+    margin-bottom: 15px;
   }
   .imgBox {
     display: flex;
     justify-content: space-around;
     & > img {
+      .images();
       width: 32%;
-      height: 160px;
+      height: 146px;
     }
   }
   .date {
-    .date()
+    .date();
+    margin-top: 15px;
   }
 }

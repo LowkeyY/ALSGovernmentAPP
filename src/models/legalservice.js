@@ -2,20 +2,33 @@ import { parse } from 'qs';
 import modelExtend from 'dva-model-extend';
 import { model } from 'models/common';
 import { queryPartyTabs, queryPartyData } from 'services/querylist';
+import { doDecode } from 'utils';
 import defaultIcon from 'themes/images/nmenus/lvyou.png';
 
-const namespace = 'legalservice',
+const getInfo = (info) => {
+    if (info) {
+      try {
+        return doDecode(info);
+      } catch (e) {
+
+      }
+    }
+    return {};
+  },
+  namespace = 'legalservice',
   getGrid = (datas = []) => {
     let result = [],
       counts = 0,
       fixedLanmu = {};
-    datas.map((data, index) => {
-      const { id = '', route = '', image = '', ...others } = data;
+    datas.map((data) => {
+      const { id = '', route = '', image = '', infos = '', ...others } = data;
+      let { pageType = '' } = getInfo(infos);
       if (id !== '' && counts++ < 4) {
         result.push({
           id,
           route,
           icon: image || defaultIcon,
+          pageType,
           ...others,
         });
       }
@@ -147,7 +160,7 @@ export default modelExtend(model, {
         result = yield call(queryPartyData, { dataId: refreshId, nowPage: start, showCount: size });
       if (result) {
         let { data = [], totalCount = 0 } = result,
-          newLists = []
+          newLists = [];
         newLists = start === 1 ? data : [...lists, ...data];
         yield put({
           type: 'updateState',
@@ -157,7 +170,7 @@ export default modelExtend(model, {
               total: totalCount * 1,
               current: start + 1,
             },
-            lists: newLists
+            lists: newLists,
           },
         });
       }

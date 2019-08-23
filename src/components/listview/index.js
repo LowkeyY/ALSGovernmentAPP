@@ -1,9 +1,11 @@
+/* eslint-disable react/prop-types */
+import React from 'react';
 import { PullToRefresh, ListView } from 'antd-mobile';
 import ReactDOM from 'react-dom';
 import { getOffsetTopByBody } from 'utils';
-import PropTypes from 'prop-types';
 import TitleBox from 'components/titlecontainer';
 import { Layout } from 'components';
+import NoContent from 'components/nocontent';
 import RefreshLoading from 'components/refreshloading';
 import styles from './index.less';
 
@@ -29,22 +31,6 @@ class Comp extends React.Component {
     };
   }
 
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.dataSource !== this.props.dataSource) {
-      this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(nextProps.dataSource),
-      });
-    }
-  }
-
-  componentDidUpdate () {
-    if (this.props.useBodyScroll) {
-      document.body.style.overflow = 'auto';
-    } else {
-      document.body.style.overflow = 'hidden';
-    }
-  }
-
   componentDidMount () {
     let hei = this.state.height,
       el;
@@ -67,7 +53,23 @@ class Comp extends React.Component {
       if (this.lv && this.props.scrollerTop > 0) {
         this.lv.scrollTo(0, this.props.scrollerTop);
       }
-    }, 200);
+    }, 100);
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.dataSource !== this.props.dataSource) {
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(nextProps.dataSource),
+      });
+    }
+  }
+
+  componentDidUpdate () {
+    if (this.props.useBodyScroll) {
+      document.body.style.overflow = 'auto';
+    } else {
+      document.body.style.overflow = 'hidden';
+    }
   }
 
   componentWillUnmount () {
@@ -143,7 +145,7 @@ class Comp extends React.Component {
 
   layoutHeader () {
     if (this.props.layoutHeader) {
-      return <TitleBox title={this.props.layoutHeader()} icon={this.props.titleIcon}/>;
+      return <TitleBox title={this.props.layoutHeader()} icon={this.props.titleIcon} />;
     }
     return '';
   }
@@ -152,46 +154,57 @@ class Comp extends React.Component {
     if (this.props.layoutFooter) {
       return this.props.layoutFooter(this.state.isLoading);
     }
-    return (<div style={{ textAlign: 'center' }}>
-      {this.props.hasMore ? <RefreshLoading svg={'/others/refreshloading.svg'}/> : <BaseLine/>}
-    </div>);
+    return (
+      <div style={{ textAlign: 'center' }}>
+        {
+          this.props.hasMore
+            ?
+            <RefreshLoading svg={'/others/refreshloading.svg'} />
+            :
+            <BaseLine />
+        }
+      </div>
+    );
   }
 
   render () {
+    const { dataSource = [] } = this.props;
     return (
-      <div className={styles[`${PrefixCls}-outer`]}>
-        <ListView
-          ref={el => this.lv = el}
-          initialListSize={this.props.dataSource.length || 10}
-          dataSource={this.state.dataSource}
-          renderHeader={this.layoutHeader.bind(this)}
-          renderFooter={this.layoutFooter.bind(this)}
-          renderRow={this.layoutRow.bind(this)}
-          renderSeparator={this.layoutSeparator.bind(this)}
-          useBodyScroll={this.props.useBodyScroll}
-          style={this.props.useBodyScroll ? {} : {
-            height: this.state.height,
-            border: '1px solid #ddd',
-            margin: '5px 0',
-          }}
-          pullToRefresh={<PullToRefresh
-            distanceToRefresh={60}
-            damping={200}
-            refreshing={this.state.refreshing}
-            onRefresh={this.onRefresh}
-          />}
-          onEndReached={this.onEndReached.bind(this)}
-          onEndReachedThreshold={100}
-          pageSize={this.props.pageSize}
-        />
-      </div>
+      dataSource.length > 0 ?
+        <div className={styles[`${PrefixCls}-outer`]}>
+          <ListView
+            ref={el => this.lv = el}
+            initialListSize={this.props.dataSource.length || 10}
+            dataSource={this.state.dataSource}
+            renderHeader={this.layoutHeader.bind(this)}
+            renderFooter={this.layoutFooter.bind(this)}
+            renderRow={this.layoutRow.bind(this)}
+            renderSeparator={this.layoutSeparator.bind(this)}
+            useBodyScroll={this.props.useBodyScroll}
+            style={this.props.useBodyScroll ? {} : {
+              height: this.state.height,
+              border: '1px solid #ddd',
+              margin: '5px 0',
+            }}
+            pullToRefresh={
+              <PullToRefresh
+                distanceToRefresh={60}
+                damping={200}
+                refreshing={this.state.refreshing}
+                onRefresh={this.onRefresh}
+              />}
+            onEndReached={this.onEndReached.bind(this)}
+            onEndReachedThreshold={100}
+            pageSize={this.props.pageSize}
+          />
+        </div>
+        :
+        <NoContent />
     );
   }
 }
 
-Comp.propTypes = {
-
-};
+Comp.propTypes = {};
 Comp.defaultProps = {
   dataSource: [],
   useBodyScroll: true,

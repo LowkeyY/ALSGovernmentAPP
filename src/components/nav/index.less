@@ -1,3 +1,4 @@
+
 @import '../../themes/default.less';
 @PrefixCls: nav;
 .@{PrefixCls}-header-box {
@@ -5,17 +6,17 @@
 }
 .@{PrefixCls}-header {
   position: fixed;
-  z-index: 100;
+  z-index: 3;
   top: 0;
   width : 100%;
-  //box-shadow: 0 5px 10px #ddd;
   height: @primary-header-height;
   :global{
     .am-navbar{
-      background-color : @primary-color;
+      background-size: cover;
+      background-position: center;
+      height: @primary-header-height;
     }
     .am-navbar-title{
-      font-size: 45px;
       color: #fff;
     }
   }

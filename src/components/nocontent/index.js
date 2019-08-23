@@ -8,6 +8,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { getOffsetTopByBody } from 'utils';
+import loading from './loading.gif';
+import styles from './index.less';
 
 class NoContent extends React.Component {
   constructor (props) {
@@ -20,17 +22,17 @@ class NoContent extends React.Component {
   componentDidMount () {
     const element = ReactDOM.findDOMNode(this.lv);
     const currentHeight = getOffsetTopByBody(element);
-    this.setState({
-      height: cnhtmlHeight - currentHeight,
-    });
+    this.setState((state) => ({
+      height: state.height - currentHeight,
+    }));
   }
 
   render () {
     return (
-      <div ref={el => this.lv = el} style={{ textAlign: 'center', paddingTop: '50px', height: this.state.height }}>
-        <img style={{ width: '60px' }} src={this.props.images} alt="" />
-        <p>{this.props.context}</p>
-      </div>
+      <div ref={el => this.lv = el} className={styles.outer} style={{ height: this.state.height }} >
+        <img style={{ width: '60px' }} src={this.props.isLoading ? loading : this.props.images} alt="" />
+        <p className={styles.content} >{this.props.isLoading ? '加载中...' : this.props.context}</p >
+      </div >
     );
   }
 }
@@ -39,6 +41,7 @@ class NoContent extends React.Component {
 NoContent.defaultProps = {
   images: require('./img.png'),
   context: '暂无内容',
+  isLoading: false
 };
 NoContent.propTypes = {
   images: PropTypes.string,

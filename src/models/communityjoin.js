@@ -35,12 +35,12 @@ export default modelExtend(model, {
     setup ({ dispatch, history }) {
       history.listen(({ pathname, action, query }) => {
         if (pathname === '/communityjoin') {
-          const { name = '', bmid = '' } = query;
+          const { name = '', id = '' } = query;
           dispatch({
             type: 'query',
             payload: {
               name,
-              bmid,
+              bmid: id,
             },
           });
         }

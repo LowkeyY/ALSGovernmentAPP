@@ -85,7 +85,6 @@ export default modelExtend(model, {
             num: isClick ? --num : ++num
           },
         });
-        Toast.success('操作成功');
       } else {
         Toast.fail(message);
       }

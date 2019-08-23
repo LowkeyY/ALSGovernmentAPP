@@ -122,6 +122,23 @@ const defaultGrids = [
     regiment: require('themes/images/nmenus/quntuan.png'),
     volunteerservice: require('themes/images/nmenus/zhiyuan.png'),
     defualt: require('themes/images/nmenus/suqiu.png'),
-  };
+  },
+  defaultThreeIcon = [
+    require('themes/images/three/app_01.jpg'),
+    require('themes/images/three/app_02.jpg'),
+    require('themes/images/three/app_03.jpg'),
+    require('themes/images/three/app_04.jpg'),
+    require('themes/images/three/app_05.jpg'),
+    require('themes/images/three/app_06.jpg'),
+    require('themes/images/three/app_07.jpg'),
+    require('themes/images/three/app_08.jpg'),
+    require('themes/images/three/app_09.jpg'),
+    require('themes/images/three/app_10.jpg'),
+    require('themes/images/three/app_11.jpg'),
+    require('themes/images/three/app_12.jpg'),
+    require('themes/images/three/app_13.jpg'),
+    require('themes/images/three/app_14.jpg'),
+    require('themes/images/three/app_15.jpg'),
+  ];
 
-export default { defaultGrids, defaultGridIcon, defaultTabBars, defaultTabBarIcon };
+export default { defaultGrids, defaultGridIcon, defaultTabBars, defaultTabBarIcon, defaultThreeIcon };

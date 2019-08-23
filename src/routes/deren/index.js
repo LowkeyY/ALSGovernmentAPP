@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { connect } from 'dva';
 import Nav from 'components/nav';
@@ -14,9 +15,9 @@ import styles from './index.less';
 const PrefixCls = 'deren';
 
 function Comp ({ location, dispatch, deren }) {
-  const { bannerDatas, lists, grids, name = '', paginations, scrollerTop, fixBanner } = deren,
+  const { bannerDatas, lists, grids, name = '', paginations, scrollerTop, fixBanner, title = '' } = deren,
     handleItemOnclick = ({ externalUrl = '', id = '', route = 'details' }) => {
-      if (externalUrl != '' && externalUrl.startsWith('http')) {
+      if (externalUrl !== '' && externalUrl.startsWith('http')) {
         if (cnOpen) {
           cnOpen(externalUrl);
         } else {
@@ -39,7 +40,6 @@ function Comp ({ location, dispatch, deren }) {
       }
     },
     onRefresh = (params, callback) => {
-      console.log(`${PrefixCls}-onRefresh`);
       dispatch({
         type: `${PrefixCls}/queryListview`,
         payload: {
@@ -50,7 +50,6 @@ function Comp ({ location, dispatch, deren }) {
       });
     },
     onEndReached = (params, callback) => {
-      console.log(`${PrefixCls}-onEndReached`);
       dispatch({
         type: `${PrefixCls}/queryListview`,
         payload: {
@@ -69,9 +68,9 @@ function Comp ({ location, dispatch, deren }) {
         });
       }
     },
-    getContents = (lists) => {
+    getContents = (data) => {
       const result = [],
-        { title = '', id = '', items = [] } = lists;
+        { title = '', id = '', items = [] } = data;
       if (title !== '' && items.length > 0) {
         const { current, total, size } = paginations,
           hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total);
@@ -98,9 +97,10 @@ function Comp ({ location, dispatch, deren }) {
           onClick={handleGridClick.bind(null, item, dispatch)}
         >
           <div className={styles.img}>
-            <div className={styles.image}
-                 style={{ backgroundImage: `url(${getDefaultBg(item.icon)})` }}>
-            </div>
+            <div
+              className={styles.image}
+              style={{ backgroundImage: `url(${getDefaultBg(item.icon)})` }}
+            />
           </div>
           <div className={styles.twinsTitle}>
             {item.title}
@@ -122,15 +122,15 @@ function Comp ({ location, dispatch, deren }) {
       }</div>
       <div>
         {fixBanner.length > 0 && fixBanner.map((item, i) =>
-          <FixBanner
+          (<FixBanner
             key={i}
             datas={item}
             dispatch={dispatch}
             handleClick={handleGridClick}
-          />)
+          />))
         }
       </div>
-      <WhiteSpace size='xs'/>
+      <WhiteSpace size="xs" />
       {lists.length > 0 && getContents(lists[0])}
     </div>
   );

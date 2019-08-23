@@ -56,9 +56,7 @@
     "roadhog": "^1.2.1",
     "style-loader": "^0.23.0"
   },
-  "pre-commit": [
-    "lint"
-  ],
+  "pre-commit": ["lint"],
   "scripts": {
     "dev": "set BROWSER=none&&set HOST=0.0.0.0&&set PORT=8088&&roadhog server",
     "lint": "eslint --fix --ext .js src",

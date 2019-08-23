@@ -29,6 +29,7 @@ const getInfo = (info) => {
           id,
           scenery,
           title,
+          infos,
           route: route || '/',
           icon: image || '',
           ...others,

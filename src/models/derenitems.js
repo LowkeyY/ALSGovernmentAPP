@@ -66,7 +66,8 @@ export default modelExtend(model, {
     setup ({ dispatch, history }) {
       history.listen(({ pathname, query, action }) => {
         if (pathname === '/derenitems') {
-            const { id = '', name = '' } = query;
+          const { id = '', name = '', refreshSelf = false } = query;
+          if (action === 'PUSH') {
             dispatch({
               type: 'updateState',
               payload: {
@@ -84,7 +85,15 @@ export default modelExtend(model, {
                 ...query,
               },
             });
-
+          }
+          if (refreshSelf) {
+            dispatch({
+              type: 'query',
+              payload: {
+                ...query,
+              },
+            });
+          }
         }
       });
     },

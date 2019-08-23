@@ -1,10 +1,24 @@
 @PrefixCls: livelihood;
 .@{PrefixCls}-outer {
- &-container{
-   width: 100%;
-   display: flex;
-   justify-content:flex-start;
-   flex-wrap: wrap;
- }
+  &-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
 
+}
+
+.@{PrefixCls}-accordion {
+  margin-bottom: @primary-header-height*2;
+
+  &-title {
+    & img {
+      width: 40px;
+      height: 40px;
+      margin-right: 20px;
+    }
+    display: flex;
+    align-items: center;
+  }
 }

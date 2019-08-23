@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'dva';
@@ -5,31 +6,28 @@ import { routerRedux } from 'dva/router';
 import { Layout, WhiteSpace, Icon, List } from 'components';
 import Menu from 'components/menu/index';
 import { getLocalIcon } from 'utils';
-import { layoutRow } from 'components/row';
+import { multipleRow } from 'components/multipleRow';
 import ListView from 'components/listview';
-import TitleBox from 'components/titlecontainer';
 import HeadLine from 'components/headline';
 import { handleGridClick, handleTopLineClick, handleListClick } from 'utils/commonevent';
 import styles from './index.less';
 
-const PrefixCls = 'dashboard',
-  Item = List.Item;
+const PrefixCls = 'dashboard';
 
 function Dashboard ({ dashboard, loading, dispatch, app }) {
   const { Header } = Layout,
     { bannerDatas, isScroll, grids, selectedIndex = 0, weath, dataList, scrollerTop, newsData } = dashboard,
-    { isLogin, users: { useravatar } } = app,
-    { headTitle = '动态新闻' } = newsData;
+    { isLogin, users: { useravatar } } = app;
   const { users: { usertype } } = app;
-  const getWeather = (weath) => {
-      const { date = '', type = '', notice = '', fl = '', fx = '', high = '', low = '' } = weath;
+  const getWeather = (weaths) => {
+      const { date = '', type = '', notice = '', fl = '', fx = '', high = '', low = '' } = weaths;
       const info = `${date} ${type} ${notice}`,
         temperature = `${high}~${low} ${fl} ${fx}`;
       const arr = [{ text: info }, { text: temperature }];
       return arr;
     },
     handleMoreCilck = (newsData = {}) => {
-      const { id = '', headTitle = '' } = newsData;
+      const { id = '' } = newsData;
       dispatch(routerRedux.push({
         pathname: '/lanmusub',
         query: {
@@ -63,7 +61,7 @@ function Dashboard ({ dashboard, loading, dispatch, app }) {
         handleGridClick={handleGridClick}
         dispatch={dispatch}
         datas={grids}
-        columnNum={4}
+        columnNum={5}
         isLogin={isLogin}
         usertype={usertype}
       />
@@ -88,6 +86,14 @@ function Dashboard ({ dashboard, loading, dispatch, app }) {
         });
       }
     },
+    renderFooter = () => (
+      <div
+        className={styles[`${PrefixCls}-outer-footer`]}
+        onClick={handleMoreCilck.bind(null, newsData)}
+      >
+        >>点击查看更多
+      </div>
+    ),
     getContents = (patryList, dispatch) => {
       const result = [],
         { title = '', id = '', items = [] } = patryList;
@@ -96,25 +102,27 @@ function Dashboard ({ dashboard, loading, dispatch, app }) {
           <ListView
             key={id}
             dataSource={items}
-            layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, title)}
+            layoutRow={(rowData, sectionID, rowID) => multipleRow(rowData, sectionID, rowID, handleListClick, dispatch, title)}
             onRefresh={onRefresh.bind(null, { id, title })}
             hasMore={false}
+            hasFooter={false}
             onScrollerTop={onScrollerTop.bind(null)}
             scrollerTop={scrollerTop}
+            layoutFooter={renderFooter}
           />,
         );
       }
       return result;
     };
+
   return (
     <div className={styles[`${PrefixCls}-outer`]} onTouchStart={handleScroll} onTouchEnd={handleScroll}>
       <div className={styles[`${PrefixCls}-top`]}>
-        <Header dispatch={dispatch} isLogin={isLogin} useravatar={useravatar}/>
-        <HeadLine {...headLineProps} dispatch={dispatch} selectedIndex={selectedIndex} datas={getWeather(weath)}/>
+        <Header dispatch={dispatch} isLogin={isLogin} useravatar={useravatar} />
+        <HeadLine {...headLineProps} dispatch={dispatch} selectedIndex={selectedIndex} datas={getWeather(weath)} />
       </div>
       <div className={styles[`${PrefixCls}-outer-content`]}>{getContent()}</div>
-      <WhiteSpace size="xs"/>
-      <TitleBox title={headTitle} more handleClick={handleMoreCilck.bind(null, newsData)}/>
+      <WhiteSpace size="xs" />
       <div className={styles[`${PrefixCls}-container`]}>
         {dataList.length > 0 && getContents(dataList[0], dispatch)}
       </div>

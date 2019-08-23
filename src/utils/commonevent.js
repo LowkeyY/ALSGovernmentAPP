@@ -11,9 +11,13 @@ const getInfo = (info) => {
   }
   return {};
 };
-const handleGridClick = ({ route = '', title, externalUrl = '', infos = '', ...others }, dispatch, isLogin = false, userType = '') => {
+const handleGridClick = ({ route = '', title, externalUrl = '', infos = '', ...others }, dispatch, isLogin = false, userType = '', e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     if (externalUrl !== '' && externalUrl.startsWith('http')) {
-      if (cnOpen) {
+      if (cnOpen && !/myals/.test(externalUrl)) {
         cnOpen(externalUrl);
       } else {
         dispatch(routerRedux.push({
@@ -29,7 +33,8 @@ const handleGridClick = ({ route = '', title, externalUrl = '', infos = '', ...o
       if (name === 'logined') {
         if (isLogin) {
           if (route === 'guard' && userType === 'isRegistUser') {
-            Toast.fa('对不起你没有权限访问该模块');
+            Toast.fail('对不起你没有权限访问该模块');
+            return;
           }
           dispatch(routerRedux.push({
             pathname: `/${route}`,
@@ -61,7 +66,7 @@ const handleGridClick = ({ route = '', title, externalUrl = '', infos = '', ...o
       }
     }
   },
-  handleBannerClick = ({ externalUrl = '', id, route = 'details', title = '' }, dispatch, name = '') => {
+  handleBannerClick = ({ externalUrl = '', id, title = '', infos = '', extendData = '' }, dispatch) => {
     if (externalUrl !== '' && externalUrl.startsWith('http')) {
       if (cnOpen) {
         cnOpen(externalUrl);
@@ -74,20 +79,22 @@ const handleGridClick = ({ route = '', title, externalUrl = '', infos = '', ...o
           },
         }));
       }
-    } else if (route === 'details') {
+    } else if (extendData !== '') {
+      const { pathname = '', showinfo = false } = getInfo(extendData);
       dispatch(routerRedux.push({
-        pathname: `/${route}`,
+        pathname: `/${showinfo ? pathname : 'survey'}`,
         query: {
           name: title,
           dataId: id,
+          ...getInfo(extendData),
         },
       }));
     } else {
       dispatch(routerRedux.push({
-        pathname: `/${route}`,
+        pathname: '/details',
         query: {
           name: title,
-          id,
+          dataId: id,
         },
       }));
     }
@@ -113,7 +120,11 @@ const handleGridClick = ({ route = '', title, externalUrl = '', infos = '', ...o
       }));
     }
   },
-  handleListClick = ({ externalUrl = '', id, infos = '' }, dispatch, title = '') => {
+  handleListClick = ({ externalUrl = '', id, infos = '' }, dispatch, title = '', e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     if (externalUrl !== '' && externalUrl.startsWith('http')) {
       if (cnOpen) {
         cnOpen(externalUrl);

@@ -16,7 +16,6 @@ const getInfo = (info) => {
   getBannerDatas = (data = []) => {
     let bannerDatas = [];
     data.map((item, index) => {
-      console.log(item);
       const { id = '', title = '', route = '', infos = '', ...others } = item;
       let { type } = getInfo(infos);
       if (type === 'banner') {

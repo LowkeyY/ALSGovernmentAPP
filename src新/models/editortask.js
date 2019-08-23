@@ -138,7 +138,6 @@ export default modelExtend(model, {
     },
     * sendEventType ({ payload }, { call, put }) {
       const data = yield call(sendEventType, { ...payload })
-      console.log(data)
       if (data.success) {
         yield put({
           type: 'updateState',

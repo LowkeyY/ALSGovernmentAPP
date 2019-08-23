@@ -11,7 +11,7 @@ import { handleGridClick, handleListClick } from 'utils/commonevent';
 
 const PrefixCls = 'tspatry';
 const TsPatry = ({ loading, location, dispatch, tspatry }) => {
-  const { name = '' } = location.query, 
+  const { name = '' } = location.query,
     { bannerDatas, grids, gridsitem, selectedIndex, selectedItemIndex, paginations, scrollerTop, refreshId, itemData } = tspatry;
   const handleItemTabClick = (data, index) => {
       const { externalUrl = '', title } = data;
@@ -29,11 +29,11 @@ const TsPatry = ({ loading, location, dispatch, tspatry }) => {
         }
       } else {
         const { route = '', title = '', id } = data;
-        
+
         dispatch({
           type: 'tspatry/updateState',
           payload: {
-            refreshId: id
+            refreshId: id,
           },
         });
         dispatch({
@@ -41,7 +41,7 @@ const TsPatry = ({ loading, location, dispatch, tspatry }) => {
           payload: {
             refreshId: id,
             itemSelected: index,
-            isRefresh: true
+            isRefresh: true,
           },
         });
       }
@@ -54,10 +54,10 @@ const TsPatry = ({ loading, location, dispatch, tspatry }) => {
           payload: {
             id,
             selected: index,
-            isRefresh: true
+            isRefresh: true,
           },
         });
-        
+
         return;
       }
       const { externalUrl = '', title } = data;
@@ -74,12 +74,13 @@ const TsPatry = ({ loading, location, dispatch, tspatry }) => {
           }));
         }
       } else {
-        const { route = '', title = '', id } = data;
-        
+        const {id } = data;
+
         dispatch({
           type: 'tspatry/updateState',
           payload: {
-            refreshId: id
+            refreshId: id,
+            scrollerTop: 0,
           },
         });
         dispatch({
@@ -87,7 +88,7 @@ const TsPatry = ({ loading, location, dispatch, tspatry }) => {
           payload: {
             refreshId: id,
             selected: index,
-            isRefresh: true
+            isRefresh: true,
           },
         });
       }
@@ -98,8 +99,8 @@ const TsPatry = ({ loading, location, dispatch, tspatry }) => {
         payload: {
           refreshId,
           callback,
-          isRefresh: true
-        }
+          isRefresh: true,
+        },
       });
     },
     onEndReached = (refreshId, callback) => {
@@ -107,8 +108,8 @@ const TsPatry = ({ loading, location, dispatch, tspatry }) => {
         type: `${PrefixCls}/queryListview`,
         payload: {
           refreshId,
-          callback
-        }
+          callback,
+        },
       });
     },
     onScrollerTop = (top) => {
@@ -116,8 +117,8 @@ const TsPatry = ({ loading, location, dispatch, tspatry }) => {
         dispatch({
           type: `${PrefixCls}/updateState`,
           payload: {
-            scrollerTop: top
-          }
+            scrollerTop: top,
+          },
         });
       }
     },
@@ -135,7 +136,7 @@ const TsPatry = ({ loading, location, dispatch, tspatry }) => {
           hasMore={hasMore}
           onScrollerTop={onScrollerTop.bind(null)}
           scrollerTop={scrollerTop}
-        />
+        />,
       );
       return result;
     },
@@ -143,11 +144,11 @@ const TsPatry = ({ loading, location, dispatch, tspatry }) => {
       if (selectedIndex === grids.length - 1) {
         return (
           <Tabs tabs={gridsitem}
-            initialPage={selectedItemIndex}
-            swipeable={false}
-            onTabClick={(tab, index) => {
-              handleItemTabClick(tab, index);
-            }}
+                initialPage={selectedItemIndex}
+                swipeable={false}
+                onTabClick={(tab, index) => {
+                  handleItemTabClick(tab, index);
+                }}
           >
             <div>{itemData.length > 0 && getItemContents(lists, refreshId)}</div>
           </Tabs>
@@ -166,7 +167,7 @@ const TsPatry = ({ loading, location, dispatch, tspatry }) => {
           hasMore={hasMore}
           onScrollerTop={onScrollerTop.bind(null)}
           scrollerTop={scrollerTop}
-        />
+        />,
       );
       return result;
     };

@@ -350,7 +350,6 @@ export default modelExtend(model, {
     },
     * createNewTask ({ payload }, { call, put }) {
       const data = yield call(createNewTask, { ...payload })
-      console.log(data)
       if (data.success) {
         yield put({
           type: 'updateState',

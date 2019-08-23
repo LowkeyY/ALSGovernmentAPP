@@ -1,19 +1,55 @@
-@PrefixCls:guard;
+@import "../../themes/default";
 
-.@{PrefixCls}-outer{
+@PrefixCls: guard;
+
+.@{PrefixCls}-outer {
   min-height: 100vh;
-  background: #fff;
+  background-size: cover;
+  :global {
+    .am-grid .am-flexbox {
+      background: transparent;
+    }
+  }
 }
 
-.@{PrefixCls}-notice{
+.@{PrefixCls}-notice {
+  display: flex;
   background: #fff;
-  padding: 30px 20px;
+  padding: 20px;
   font-size: 32px;
-  text-align: center;
   color: #888;
+  border-top: 20px solid #f1f1f1;
+  border-bottom: 20px solid #f1f1f1;
+
+  &-title {
+    font-size: 24px;
+    color: #178df1;
+    background: #ecf7fc;
+    width: 100px;
+    height: 100px;
+    padding: 18px;
+    margin-right: 20px;
+    box-sizing: border-box;
+    text-align: center;
+    border: @hd solid #178df1;
+    border-radius: 12px;
+  }
+  &-content {
+    flex: 1;
+    color: @text-base-color;
+    padding-right: 20px;
+    .textOverflow;
+  }
+
+  &-more {
+    font-size: 24px;
+    color: #178df1;
+    align-self: flex-end;
+  }
 }
-.@{PrefixCls}-tabbox-count{
+
+.@{PrefixCls}-tabbox-count {
   position: absolute;
-  top:410px;
+  top: 410px;
   right: 50px;
 }

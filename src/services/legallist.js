@@ -1,7 +1,7 @@
-import { request, config,formsubmit} from 'utils';
+import { request, config, formsubmit } from 'utils';
 
 const { api } = config;
-const { GetLegallistTypeApi, GetLegallistApi, sendLigallistApi, GetFairTypesApi, SendFairService } = api;
+const { GetLegallistTypeApi, GetLegallistApi, sendLigallistApi, GetFairTypesApi, SendFairService, UpdateFairApi, UpdateMediateApi } = api;
 
 export async function GetLegallistType (payload) {
   return request({
@@ -37,4 +37,12 @@ export async function getFairTypes (payload) {
 
 export async function sendFairService (params = {}, images, files) {
   return formsubmit(SendFairService, params, images, files, true);
+}
+
+export async function updateFair (params = {}, images, files) {
+  return formsubmit(UpdateFairApi, params, images, files, true);
+}
+
+export async function updateMediate (params = {}, images, files) {
+  return formsubmit(UpdateMediateApi, params, images, files, true);
 }

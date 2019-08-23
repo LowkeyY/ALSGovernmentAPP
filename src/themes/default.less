@@ -4,7 +4,39 @@
 // 注意：只需写出要覆盖的变量即可（不需要覆盖的变量不要写）
 @import '~antd-mobile/lib/style/themes/default.less';
 
-@primary-color: #4eaaf7;
-@primary-header-height: 90px;
+@primary-color: #258eee;
+@primary-header-height: 80px;
 @hd: 2px;
 @opacity: rgba(0, 0, 0, .3);
+@text-base-color: #171717;
+@text-content-color: #717171;
+@FontSizeLg: 34px;
+@FontSizeNm: 30px;
+@FontSizeSm: 26px;
+
+* {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+[contenteditable = "true"], input, textarea {
+  -webkit-user-select: auto !important;
+  -khtml-user-select: auto !important;
+  -moz-user-select: auto !important;
+  -ms-user-select: auto !important;
+  -o-user-select: auto !important;
+  user-select: auto !important;
+}
+
+.textOverflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 1.5em;
+}

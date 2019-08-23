@@ -52,20 +52,22 @@ class FairType extends Component {
     const { data } = this.props.fairtype;
     const { value } = this.state;
     return (
-      <div>
-        <Nav title="公正预约事项" dispatch={this.props.dispatch}/>
-        <List>
+      <div >
+        <Nav title="公正预约事项" dispatch={this.props.dispatch} />
+        <List >
           {data.map(i => (
-            <RadioItem key={i.id} checked={value === i.id} onChange={() => this.onChange(i)}>
+            <RadioItem key={i.id} checked={value === i.id} onChange={() => this.onChange(i)} >
               {i.mingcheng}
-            </RadioItem>
+            </RadioItem >
           ))}
-        </List>
-        <WhiteSpace size="lg"/>
-        <WingBlank>
-          <Button disabled={value === ''} type="primary" onClick={this.onSubmit}>确定</Button>
-        </WingBlank>
-      </div>
+        </List >
+        <WhiteSpace size="lg" />
+        <WingBlank >
+          <Button disabled={value === ''} type="primary" onClick={this.onSubmit} >确定</Button >
+        </WingBlank >
+        <WhiteSpace size="lg" />
+        <WhiteSpace size="lg" />
+      </div >
     );
   }
 }

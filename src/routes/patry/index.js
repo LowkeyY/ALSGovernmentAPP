@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow,react/prop-types,no-undef */
 /* global document */
 import React from 'react';
 import { connect } from 'dva';
@@ -5,34 +6,32 @@ import Nav from 'components/nav';
 import { routerRedux } from 'dva/router';
 import { WingBlank, WhiteSpace, List, Grid } from 'components';
 import Menu from 'components/menu/index';
-import { getImages } from 'utils';
-import { layoutRow } from 'components/row';
+import { multipleRow } from 'components/multipleRow';
 import ListView from 'components/listview';
 import Banner from 'components/banner/index';
 import TitleBox from 'components/titlecontainer';
-import { doDecode } from 'utils';
+import { doDecode, getImages } from 'utils';
+import { handleGridClick, handleListClick } from 'utils/commonevent';
 import styles from './index.less';
-import { handleBannerClick, handleListClick } from 'utils/commonevent';
 
-const Item = List.Item,
-  PrefixCls = 'patry';
-
+const PrefixCls = 'patry';
 
 function Patry ({ location, dispatch, patry }) {
-  const { name = '', id } = location.query,
+  const { name = '' } = location.query,
     { patryDate, patryList, isScroll, scrollerTop } = patry;
   const getInfo = (info) => {
       if (info) {
         try {
           return doDecode(info);
         } catch (e) {
+
         }
       }
       return {};
     },
     getBannerDatas = (data = []) => {
       let bannerDatas = [];
-      data.map((item, index) => {
+      data.map((item) => {
         const { id = '', title = '', route = '', infos = '', ...others } = item;
         let { type } = getInfo(infos);
         if (type === 'banner') {
@@ -50,7 +49,7 @@ function Patry ({ location, dispatch, patry }) {
     },
     getGridbox = (data = []) => {
       let gridDatas = [];
-      data.map((item, index) => {
+      data.map((item) => {
         const { id = '', route = '', image = '', infos = '', ...others } = item;
         let { type } = getInfo(infos);
         if (type === 'grids') {
@@ -81,9 +80,9 @@ function Patry ({ location, dispatch, patry }) {
         if (type === 'fixPic') {
           return (
             <div>
-              <TitleBox title="专题栏目"/>
+              <TitleBox title="专题栏目" />
               <div className={styles[`${PrefixCls}-fixbanner`]} onClick={handleFixBannerClick.bind(this, item)}>
-                <img src={getImages(item.image)} alt=""/>
+                <img src={getImages(item.image)} alt="" />
               </div>
             </div>
           );
@@ -92,7 +91,6 @@ function Patry ({ location, dispatch, patry }) {
     },
 
     handleGridbox = ({ pathname, title, externalUrl = '', infos = '', ...others }) => {
-      console.log(pathname);
       if (externalUrl !== '' && externalUrl.startsWith('http') && pathname === '') {
         if (cnOpen) {
           cnOpen(externalUrl);
@@ -104,7 +102,7 @@ function Patry ({ location, dispatch, patry }) {
               externalUrl,
             },
           }));
-        };
+        }
       } else {
         dispatch(routerRedux.push({
           pathname: `/${pathname}`,
@@ -167,10 +165,10 @@ function Patry ({ location, dispatch, patry }) {
       if (title !== '' && items.length > 0) {
         result.push(
           <div>
-            <TitleBox title={title} more handleClick={handleMoreCilck.bind(null, id, title)}/>
+            <TitleBox title={title} more handleClick={handleMoreCilck.bind(null, id, title)} />
             <ListView
               dataSource={items}
-              layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
+              layoutRow={(rowData, sectionID, rowID) => multipleRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
               onRefresh={onRefresh.bind(null, { id, title })}
               hasMore={false}
               onScrollerTop={onScrollerTop.bind(null)}
@@ -184,13 +182,20 @@ function Patry ({ location, dispatch, patry }) {
 
   return (
     <div onTouchStart={handleScroll} onTouchEnd={handleScroll}>
-      <Nav title={name} dispatch={dispatch}/>
+      <Nav title={name} dispatch={dispatch} />
       {getBannerDatas(patryDate).length > 0 &&
-      <Banner datas={getBannerDatas(patryDate)} dispatch={dispatch} handleClick={handleBannerClick}/>}
+      <Banner datas={getBannerDatas(patryDate)} dispatch={dispatch} handleClick={handleGridClick} />}
       <div>
-        {getGridbox(patryDate).length > 0 &&
-        <Menu handleGridClick={handleGridbox} columnNum={4} datas={getGridbox(patryDate)} isCarousel
-              dispatch={dispatch}/>}
+        {
+          getGridbox(patryDate).length > 0 &&
+          <Menu
+            handleGridClick={handleGridbox}
+            columnNum={4}
+            datas={getGridbox(patryDate)}
+            isCarousel
+            dispatch={dispatch}
+          />
+        }
       </div>
       <div>{getFixBanner(patryDate)}</div>
       <div className={styles[`${PrefixCls}-container`]}>

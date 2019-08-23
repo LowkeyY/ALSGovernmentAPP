@@ -2,10 +2,11 @@
 
 @PrefixCls: header;
 .@{PrefixCls}-logo-outer {
-  height: (@primary-header-height)-20;
+  height: (@primary-header-height);
   text-align: center;
   padding: 0 20px;
-  background: -webkit-gradient(linear, 0% 49%, 0% 100%, from(@primary-color), to(#AFD6F7));
+  background-size: cover;
+  background-position: center;
   position: relative;
   & > img {
     position: absolute;
@@ -14,7 +15,7 @@
     left: 0;
     right: 0;
     margin: auto auto;
-    height: (@primary-header-height)-30;
+    height: (@primary-header-height)-10;
   }
 }
 
@@ -23,16 +24,18 @@
   align-items: center;
   margin-right: 20px;
   color: white;
+  font-style: @FontSizeLg;
 }
 
-.@{PrefixCls}-logo-user{
+.@{PrefixCls}-logo-user {
   position: absolute;
-  bottom: 0;
-  right: 10px;
+  top: 52%;
+  right:16px;
+  transform: translateY(-50%);
 
-  img{
-    width: 54px;
-    height: 54px;
+  img {
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
   }
 }

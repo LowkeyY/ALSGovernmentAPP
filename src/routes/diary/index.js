@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import { createForm } from 'rc-form';
 import { connect } from 'dva';
 import Nav from 'components/nav';
@@ -42,7 +42,7 @@ class Diary extends Component {
       mediaUploadFile: {},
     };
   }
-  
+
   getVoiceText = (unit, bits, minutes) => {
     return (
       <div>
@@ -55,7 +55,7 @@ class Diary extends Component {
       </div>
     );
   };
-  
+
   addSeconds () { // 计时器
     const { unit, bits, minutes } = this.state;
     this.setState({
@@ -74,14 +74,14 @@ class Diary extends Component {
       });
     }
   }
-  
+
   startTimer () { // 启动计时器
     const that = this;
     int = setInterval(() => {
       that.addSeconds();
     }, 1000);
   }
-  
+
   onChange = (files, type, index) => {
     let reg = /image/,
       result = [];
@@ -164,7 +164,7 @@ class Diary extends Component {
       const { isVoice, onRecording } = this.state;
       if (isVoice === true && onRecording === true) {
         let mediaFile = cnStartRecord('', this.mediaFileOnSuccess.bind(this), this.mediaFileOnError.bind(this));
-        
+
         this.setState({
           mediaFile,
         });
@@ -177,7 +177,7 @@ class Diary extends Component {
       .removeAllRanges() : document.selection.empty();
     let { unit, bits, minutes, mediaFile, mediaFileLength } = this.state,
       updates = {};
-    
+
     if (mediaFile) {
       mediaFile.timers = mediaFileLength = (minutes * 60 + bits * 10 + unit);
       mediaFile = cnStopRecord(this.state.mediaFile);
@@ -210,7 +210,7 @@ class Diary extends Component {
       files,
     });
   };
-  
+
   mediaFileOnSuccess (blob, params) {
     const { name = '', nativeURL = '' } = params;
     let pos = name.lastIndexOf('.'),
@@ -222,11 +222,11 @@ class Diary extends Component {
       mediaFileUrl: nativeURL,
     });
   }
-  
+
   mediaFileOnError (error) {
     handleVoiceRecordingEnd();
   }
-  
+
   handleDivClick () {
     let { isVoice, onRecording, unit, bits, minutes, mediaFile, mediaFileLength } = this.state,
       updates = {};
@@ -250,19 +250,19 @@ class Diary extends Component {
       clearTimeout(stop);
     }
   }
-  
+
   componentWillUnmount () {
     clearInterval(int);
     clearTimeout(stop);
   }
-  
+
   render () {
     const { name = '' } = this.props.location.query,
       { diaryType, animating } = this.props.diary;
     const { getFieldProps, getFieldError } = this.props.form,
       { unit, bits, minutes, mediaFileUrl, mediaFile, mediaFileLength } = this.state;
-    
-    
+
+
     return (
       <div onClick={this.handleDivClick.bind(this)}>
         <Nav title={name} dispatch={this.props.dispatch} />
@@ -273,23 +273,23 @@ class Diary extends Component {
                 {...getFieldProps('title', {
                   initialValue: '',
                   rules: [{ required: true, message: '标题必须输入' },
-                    { max: 10, message: '标题最多能输入10个字' }
+                    { max: 10, message: '标题最多能输入10个字' },
                   ],
                 })}
                 clear
                 error={!!getFieldError('title') && Toast.fail(getFieldError('title'))}
                 placeholder="输入标题、最多输入10个字符"
               >
-               标题
+                标题
               </InputItem>
             </div>
             <div className={styles[`${PrefixCls}-outer-type`]}>
               <Picker data={diaryType}
-                cols={1}
-                {...getFieldProps('bflx', {
-                  rules: [{ required: true, message: '请选择帮扶类型' }],
-                })}
-                error={!!getFieldError('bflx') && Toast.fail(getFieldError('bflx'))}
+                      cols={1}
+                      {...getFieldProps('bflx', {
+                        rules: [{ required: true, message: '请选择帮扶类型' }],
+                      })}
+                      error={!!getFieldError('bflx') && Toast.fail(getFieldError('bflx'))}
               >
                 <List.Item arrow="horizontal">帮扶类型</List.Item>
               </Picker>
@@ -345,6 +345,7 @@ class Diary extends Component {
             </div>
             <Button type="primary" onClick={this.onSubmit}>提交日志</Button>
           </form>
+          <WhiteSpace size="lg" />
         </div>
         <ActivityIndicator
           toast

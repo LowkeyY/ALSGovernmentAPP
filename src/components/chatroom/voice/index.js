@@ -6,7 +6,6 @@ import classnames from 'classnames';
 function Voice (props) {
   const getTimer = () => {
     const { timer = 0 } = props;
-    console.log(timer);
     return timer > 0 ? <span>`${timer}s`</span> : '';
   };
   return (

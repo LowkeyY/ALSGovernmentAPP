@@ -3,6 +3,7 @@ var cunovs = {
   cnGlobalIndex: 0,
   cnhtmlSize: 0,
   cnhtmlHeight: document.documentElement.clientHeight,
+  cnhtmlWidth: document.documentElement.clientWidth,
   cnId: function () {
     return cnGlobalIndex++;
   },
@@ -37,14 +38,14 @@ var cunovs = {
     if (typeof (StatusBar) != 'undefined') {
       if (cnIsAndroid()) {
         StatusBar.styleDefault();
-        StatusBar.backgroundColorByHexString('#4eaaf7');
+        StatusBar.backgroundColorByHexString('#258eee');
       } else {
         router = router || '/';
         switch (router) {
           case '/':
           case '/dashboard': {
             StatusBar.styleDefault();
-            StatusBar.backgroundColorByHexString('#4eaaf7');
+            StatusBar.backgroundColorByHexString('#258eee');
             break;
           }
           default: {
@@ -441,10 +442,10 @@ if (typeof String.prototype.startsWith != 'function') {
     screenChangeEvents = ['webkitfullscreenchange', 'mozfullscreenchange', 'fullscreenchange', 'MSFullscreenChange'];
   for (var i = 0; i < screenChangeEvents.length; i++) {
     document.addEventListener(screenChangeEvents[i], function (e) {
-        if (e.target && e.target.tagName === 'VIDEO' && cnIsDefined(document.webkitIsFullScreen)) {
-          cnScreenChange(document.webkitIsFullScreen);
-        }
-      });
+      if (e.target && e.target.tagName === 'VIDEO' && cnIsDefined(document.webkitIsFullScreen)) {
+        cnScreenChange(document.webkitIsFullScreen);
+      }
+    });
   }
   window.cnPrintWebSocket = function () {
     console.log(cunovsWebSocket);

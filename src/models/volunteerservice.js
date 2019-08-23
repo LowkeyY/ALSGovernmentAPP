@@ -117,6 +117,7 @@ export default modelExtend(model, {
           payload: {
             grids: getGrid(data),
             bannerDatas: getBanners(banners),
+            lists: getList(tuijian),
           },
         });
         if (tuijian.length > 0) {
@@ -152,8 +153,9 @@ export default modelExtend(model, {
         result = yield call(queryPartyData, { dataId: refreshId, nowPage: start, showCount: size });
       if (result) {
         let { data = [], totalCount = 0 } = result,
-          newLists = [];
-        newLists = start === 1 ? data : [...lists, ...data];
+          newLists = [],
+          { items = [], ...others } = (lists.length > 0 ? lists[0] : {});
+        newLists = start === 1 ? data : [...items, ...data];
 
         yield put({
           type: 'updateState',
@@ -163,7 +165,10 @@ export default modelExtend(model, {
               total: totalCount * 1,
               current: start + 1,
             },
-            lists: newLists,
+            lists: [{
+              ...others,
+              items: newLists,
+            }],
           },
         });
       }

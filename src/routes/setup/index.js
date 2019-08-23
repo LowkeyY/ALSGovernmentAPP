@@ -1,6 +1,7 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { connect } from 'dva';
-import { WhiteSpace, List, Icon, ActivityIndicator, Toast, Modal, Badge } from 'components';
+import { WhiteSpace, List, Icon, WingBlank, ActivityIndicator, Toast, Modal, Badge, Button } from 'components';
 import Nav from 'components/nav';
 import FileUpload from 'react-fileupload';
 import { routerRedux } from 'dva/router';
@@ -110,9 +111,26 @@ class Setup extends React.Component {
     }
   };
 
+  handleLoginout = () => {
+    this.props.dispatch({
+      type: 'app/logout',
+    });
+  };
+  showAlert = () => {
+    Modal.alert('退出', '离开我的阿拉善', [
+      {
+        text: ' 确定退出',
+        onPress: this.handleLoginout,
+      },
+      { text: '再看看', onPress: () => console.log('cancel') },
+
+    ]);
+  };
+
   render () {
     const { name = '' } = this.props.location.query,
       { animating } = this.props.setup,
+      { isLogin = false } = this.props.app,
       uploadSuccess = (path) => {
         _cs(userTag.useravatar, path);
         this.props.dispatch({
@@ -150,8 +168,7 @@ class Setup extends React.Component {
     const { users: { username, useravatar, usertype }, updates: { upgraded = false, urls = '', appVerSion = '', updateInfo = '' } } = this.props.app;
     return (
       <div>
-        <Nav title={name} dispatch={this.props.dispatch}/>
-        <WhiteSpace size="md"/>
+        <Nav title={name} dispatch={this.props.dispatch} />
         <div>
           <List className={`${PrefixCls}-list`}>
             <Item>
@@ -161,13 +178,13 @@ class Setup extends React.Component {
                     <span>更换头像</span>
                   </p>
                   <div className={'icon-img-box'}>
-                    <img src={getImages(useravatar, 'user')} alt="icon" onError={getErrorImg}/>
+                    <img src={getImages(useravatar, 'user')} alt="icon" onError={getErrorImg} />
                   </div>
                 </FileUpload>
               </div>
             </Item>
             {
-              usertype == 'isRegistUser' ?
+              usertype === 'isRegistUser' ?
                 <Item extra={username} onClick={this.handleUserNameClick.bind(null, username)}>
                   更换昵称
                 </Item>
@@ -190,7 +207,22 @@ class Setup extends React.Component {
               </Badge> : '版本信息'}
             </Item>
           </List>
-          <ActivityIndicator animating={animating} toast text="上传中..."/>
+          <WhiteSpace size="lg" />
+          <WingBlank size="lg">
+            {
+              !isLogin ?
+
+                null
+                :
+                <Button
+                  style={{ border: '1px solid #fff', color: '#fff', background: '#ff5353' }}
+                  type="primary"
+                  onClick={this.showAlert}
+                >退出
+                </Button>
+            }
+          </WingBlank>
+          <ActivityIndicator animating={animating} toast text="上传中..." />
         </div>
       </div>
     );
@@ -200,5 +232,5 @@ class Setup extends React.Component {
 export default connect(({ loading, setup, app }) => ({
   loading,
   setup,
-  app
+  app,
 }))(Setup);

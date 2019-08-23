@@ -29,14 +29,12 @@ const appendIcon = (grid, i) => {
     return arr.length > 0 ? arr : [];
   };
 const getDefaultPaginations = () => ({
-    current: 1,
-    total: 0,
-    size: 10,
-  }),
-  namespace = 'dashboard';
+  current: 1,
+  total: 0,
+  size: 10,
+});
 export default modelExtend(model, {
   namespace: 'dashboard',
-
   state: {
     bannerDatas: [],
     grids: [],
@@ -51,8 +49,8 @@ export default modelExtend(model, {
   },
 
   subscriptions: {
-    setup ({ dispatch, history, action }) {
-      history.listen(({ pathname }) => {
+    setup ({ dispatch, history }) {
+      history.listen(({ pathname, action }) => {
         if (pathname === '/dashboard' || pathname === '/') {
           dispatch({
             type: 'query',
@@ -69,7 +67,7 @@ export default modelExtend(model, {
     },
   },
   effects: {
-    * query ({ payload }, { call, put, select }) {
+    * query ({ payload }, { call, put }) {
       const data = yield call(queryDashboard);
       if (data) {
         let { grids = defaultGrids, banners = defaultBanners, weath, newsData } = data,
@@ -101,10 +99,10 @@ export default modelExtend(model, {
       }
     },
     * queryListview ({ payload }, { call, put }) {
-      const { id = '', callback = '', } = payload,
+      const { id = '', callback = '' } = payload,
         result = yield call(queryPartyData, { dataId: id, nowPage: 1, showCount: 10 });
       if (result) {
-        let { data = [] } = result
+        let { data = [] } = result;
         yield put({
           type: 'updateState',
           payload: {

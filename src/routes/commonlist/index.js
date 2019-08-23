@@ -13,7 +13,7 @@ import styles from './index.less';
 const PrefixCls = 'commonlist';
 const CommonList = ({ loading, location, dispatch, commonlist, app }) => {
   const { isLogin } = app;
-  const { name = '' } = location.query, 
+  const { name = '' } = location.query,
     { grids, paginations, scrollerTop, refreshId, banners, lists } = commonlist;
   const onRefresh = (params, callback) => {
       dispatch({
@@ -21,8 +21,8 @@ const CommonList = ({ loading, location, dispatch, commonlist, app }) => {
         payload: {
           ...params,
           callback,
-          isRefresh: true
-        }
+          isRefresh: true,
+        },
       });
     },
     onEndReached = (params, callback) => {
@@ -30,8 +30,8 @@ const CommonList = ({ loading, location, dispatch, commonlist, app }) => {
         type: `${PrefixCls}/queryListview`,
         payload: {
           ...params,
-          callback
-        }
+          callback,
+        },
       });
     },
     onScrollerTop = (top) => {
@@ -39,8 +39,8 @@ const CommonList = ({ loading, location, dispatch, commonlist, app }) => {
         dispatch({
           type: `${PrefixCls}/updateState`,
           payload: {
-            scrollerTop: top
-          }
+            scrollerTop: top,
+          },
         });
       }
     },
@@ -49,7 +49,7 @@ const CommonList = ({ loading, location, dispatch, commonlist, app }) => {
         pathname: '/search',
         query: {
           router: PrefixCls,
-          id
+          id,
         },
       }));
     },
@@ -59,27 +59,27 @@ const CommonList = ({ loading, location, dispatch, commonlist, app }) => {
       if (title !== '' && items.length > 0) {
         const { current, total, size } = paginations,
           hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total);
-        
+
         result.push(
           <ListView layoutHeader={() => title}
-            dataSource={items}
-            layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
-            onEndReached={onEndReached.bind(null, { id, title })}
-            onRefresh={onRefresh.bind(null, { id, title })}
-            hasMore={hasMore}
-            onScrollerTop={onScrollerTop.bind(null)}
-            scrollerTop={scrollerTop}
-          />
+                    dataSource={items}
+                    layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
+                    onEndReached={onEndReached.bind(null, { id, title })}
+                    onRefresh={onRefresh.bind(null, { id, title })}
+                    hasMore={hasMore}
+                    onScrollerTop={onScrollerTop.bind(null)}
+                    scrollerTop={scrollerTop}
+          />,
         );
       }
       return result;
     };
   return (
-    <div>
+    <div className={styles[`${PrefixCls}-outer`]}>
       <Nav title={name} dispatch={dispatch} />
       <SearchBar placeholder={`在${name || '此页面'}中搜索`}
-        maxLength={20}
-        onFocus={handleSearchClick.bind(this, commonlist)}
+                 maxLength={20}
+                 onFocus={handleSearchClick.bind(this, commonlist)}
       />
       {banners.length > 0 && <Banner datas={banners} dispatch={dispatch} name={name} handleClick={handleBannerClick} />
       }
@@ -95,5 +95,5 @@ const CommonList = ({ loading, location, dispatch, commonlist, app }) => {
 export default connect(({ loading, commonlist, app }) => ({
   loading,
   commonlist,
-  app
+  app,
 }))(CommonList);

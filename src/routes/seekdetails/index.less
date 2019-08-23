@@ -1,116 +1,119 @@
-@PrefixCls:seekdetails;
-._flex(@align,@direction){
-  display:flex;
+@import "../../themes/default";
+
+@PrefixCls: seekdetails;
+._flex(@align,@direction) {
+  display: flex;
   justify-content: @align;
   flex-direction: @direction;
 }
 
-.@{PrefixCls}-outer{
+.@{PrefixCls}-outer {
   width: 100%;
   overflow: hidden;
 
 }
-.@{PrefixCls}-header{
-  padding:10px 20px;
-  ._flex(space-between,row);
+
+.@{PrefixCls}-header {
+  padding: 30px;
+  ._flex(space-between, row);
   align-items: center;
   background: #fff;
   border-bottom: 1px solid #ddd;
 
-  & span{
+  & span {
     font-weight: bold;
     font-size: 36px;
   }
-  &-info{
-
-     display: flex;
-     justify-content: center;
+  &-info {
+    display: flex;
+    justify-content: center;
     align-items: center;
 
-
-    &-box{
-        ._flex(flex-end,column);
+    &-box {
+      ._flex(flex-end, column);
       margin-left: 20px;
-     &-name{
-       font-size: 32px;
-       font-weight:bold;
-
-     }
+      &-name {
+        font-size: @FontSizeNm;
+      }
       &-date {
         display: flex;
         justify-content: space-between;
         margin-top: 10px;
-        & span{
+        & span {
           font-size: 26px;
-          color: #000;
+          color: @text-content-color;
           font-weight: normal;
         }
       }
     }
 
-    & img{
-      width: 100px;
-      height:100px;
+    & img {
+      width: 80px;
+      height: 80px;
+      border-radius: 16px;
     }
   }
 
 }
-.@{PrefixCls}-outer-type{
+
+.@{PrefixCls}-outer-type {
   background: #fff;
   display: flex;
   font-size: 30px;
   justify-content: space-between;
   border-bottom: 2px dashed #ddd;
   padding: 20px;
+  color: @text-content-color;
 
 }
-.@{PrefixCls}-content{
-  background: #fff;
-  padding:20px;
 
-  &-title{
-    font-size: 36px;
-    font-weight: bold;
+.@{PrefixCls}-content {
+  background: #fff;
+  padding: 30px;
+
+  &-title {
+    font-size: @FontSizeLg;
     margin-bottom: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
-  &-status{
+  &-status {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    & div{
+    & div {
       display: flex;
       align-items: center;
     }
-    :global{
-      .am-tag-disabled{
+    :global {
+      .am-tag-disabled {
         color: #108ee9;
         background: #FFF;
         border-color: #108ee9;
       }
     }
   }
-  &-details{
+  &-details {
     line-height: 1.5em;
-    font-size: 30px;
+    font-size: @FontSizeNm;
+    color: @text-content-color;
   }
 
-  &-images{
+  &-images {
     width: 100%;
-    margin:20px 0;
+    margin: 20px 0;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
-    flex-wrap:wrap;
+    flex-wrap: wrap;
     & div {
       width: 49%;
-      height:250px;
-      margin-right:1%;
+      height: 250px;
       background-size: cover;
-      margin-bottom:1%;
+      margin-bottom: 2%;
+      border-radius: 10px;
     }
   }
 }

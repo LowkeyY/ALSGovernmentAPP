@@ -1,6 +1,15 @@
 @PrefixCls: survey;
 .@{PrefixCls}-outer {
-  background: #fff;
+  padding: 30px 0;
+
+  :global {
+    .am-list-item .am-list-line .am-list-content {
+      font-size: @FontSizeNm;
+    }
+    .am-card-body {
+      padding-top: 0;
+    }
+  }
 }
 
 .@{PrefixCls}-item {
@@ -25,12 +34,16 @@
 }
 
 .@{PrefixCls}-list-title {
-  font-size: 35px;
-  color: black;
-  font-weight: bolder;
+  font-size: @FontSizeNm;
+  font-weight: bold;
+  color: @text-base-color;
 }
 
 .@{PrefixCls}-card-title {
-  font-size: 40px;
-  font-weight: bolder;
+  font-size: @FontSizeLg;
+  font-weight: bold;
+}
+
+.container {
+  width: 88%;
 }

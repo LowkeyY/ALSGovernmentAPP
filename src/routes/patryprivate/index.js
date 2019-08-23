@@ -6,8 +6,8 @@ import { routerRedux } from 'dva/router';
 import Banner from 'components/banner';
 import { layoutRow } from 'components/row';
 import ListView from 'components/listview';
-import styles from './index.less';
 import { handleBannerClick, handleListClick } from 'utils/commonevent';
+import styles from './index.less';
 
 const PrefixCls = 'patryprivate';
 
@@ -19,8 +19,8 @@ function Patryprivate ({ location, dispatch, patryprivate }) {
         payload: {
           refreshId,
           callback,
-          isRefresh: true
-        }
+          isRefresh: true,
+        },
       });
     },
     onEndReached = (refreshId, callback) => {
@@ -28,8 +28,8 @@ function Patryprivate ({ location, dispatch, patryprivate }) {
         type: `${PrefixCls}/queryListview`,
         payload: {
           refreshId,
-          callback
-        }
+          callback,
+        },
       });
     },
     onScrollerTop = (top) => {
@@ -37,8 +37,8 @@ function Patryprivate ({ location, dispatch, patryprivate }) {
         dispatch({
           type: `${PrefixCls}/updateState`,
           payload: {
-            scrollerTop: top
-          }
+            scrollerTop: top,
+          },
         });
       }
     },
@@ -48,14 +48,14 @@ function Patryprivate ({ location, dispatch, patryprivate }) {
         result = [];
       result.push(
         <ListView layoutHeader={''}
-          dataSource={lists}
-          layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
-          onEndReached={onEndReached.bind(null, refreshId)}
-          onRefresh={onRefresh.bind(null, refreshId)}
-          hasMore={hasMore}
-          onScrollerTop={onScrollerTop.bind(null)}
-          scrollerTop={scrollerTop}
-        />
+                  dataSource={lists}
+                  layoutRow={(rowData, sectionID, rowID) => layoutRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
+                  onEndReached={onEndReached.bind(null, refreshId)}
+                  onRefresh={onRefresh.bind(null, refreshId)}
+                  hasMore={hasMore}
+                  onScrollerTop={onScrollerTop.bind(null)}
+                  scrollerTop={scrollerTop}
+        />,
       );
       return result;
     },
@@ -81,7 +81,8 @@ function Patryprivate ({ location, dispatch, patryprivate }) {
           dispatch({
             type: 'patryprivate/updateState',
             payload: {
-              refreshId: id
+              refreshId: id,
+              scrollerTop: 0,
             },
           });
           dispatch({
@@ -89,7 +90,7 @@ function Patryprivate ({ location, dispatch, patryprivate }) {
             payload: {
               refreshId: id,
               selected: index,
-              isRefresh: true
+              isRefresh: true,
             },
           });
         }
@@ -100,14 +101,14 @@ function Patryprivate ({ location, dispatch, patryprivate }) {
         pathname: '/opinion',
         query: {
           name: '意见反馈',
-          isPatry: true
-        }
+          isPatry: true,
+        },
       }));
     },
     renderNav = () => {
       return (<div onClick={handleDonationClick}>意见反馈</div>);
     };
-  
+
   return (
     <div className={styles[`${PrefixCls}-outer`]}>
       <Nav title={name} dispatch={dispatch} renderNavRight={renderNav()} />

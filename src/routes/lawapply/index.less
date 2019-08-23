@@ -1,6 +1,5 @@
 @PrefixCls: lawapply;
 
-
 .@{PrefixCls}-outer {
   width: 100%;
   box-sizing: border-box;
@@ -10,9 +9,13 @@
     .am-list-item.am-list-item-middle .am-list-line {
       height: 100% !important;
     }
-    //.am-activity-indicator.am-activity-indicator-toast .am-activity-indicator-spinner{
-    //  display: none;
-    //}
+    .am-list-item .am-input-label.am-input-label-5 {
+      width: auto;
+    }
+  }
+
+  & form {
+    padding:0 20px;
   }
 
   &-content {
@@ -53,19 +56,26 @@
   }
 
 }
-.@{PrefixCls}-title{
+
+.@{PrefixCls}-title {
   display: flex;
   justify-content: center;
-  margin: 10px 0;
+  margin: 20px 0 0;
   font-size: 36px;
   color: #4eaaf7;
-  padding: 10px 0;
+  padding: 40px 0 20px;
+  background: #fff;
   & span {
     margin-right: 10px;
   }
 }
 
-.listTitle{
+.listTitle {
   padding: 20px 30px;
   font-size: 30px;
+  background: #fff;
+}
+
+.@{PrefixCls}-applicant{
+  background: #fff;
 }

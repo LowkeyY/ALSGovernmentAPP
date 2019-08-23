@@ -921,6 +921,77 @@ const Routers = function ({ history, app }) {
           },
         },
         {
+          path: 'fairlist',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/fairlist'));
+              cb(null, require('routes/fairlist/'));
+            }, 'fairlist');
+          },
+        },
+        {
+          path: 'fairdetails',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/fairdetails'));
+              cb(null, require('routes/fairdetails/'));
+            }, 'fairdetails');
+          },
+        },
+        {
+          path: 'lawyerassistance',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/lawyerassistance'));
+              cb(null, require('routes/lawyerassistance/'));
+            }, 'lawyerassistance');
+          },
+        },
+        {
+          path: 'lawyerdetails',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              cb(null, require('routes/lawyerdetails/'));
+            }, 'lawyerdetails');
+          },
+        },
+        {
+          path: 'mediatelist',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/mediatelist'));
+              cb(null, require('routes/mediatelist/'));
+            }, 'mediatelist');
+          },
+        },
+        {
+          path: 'mediatedetails',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/mediatedetails'));
+              cb(null, require('routes/mediatedetails/'));
+            }, 'mediatedetails');
+          },
+        },
+        {
+          path: 'questionnaire',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/questionnaire'));
+              cb(null, require('routes/questionnaire/'));
+            }, 'questionnaire');
+          },
+        },
+        {
+          path: 'rank',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/rank'));
+              cb(null, require('routes/rank/'));
+            }, 'rank');
+          },
+        },
+        {
           path: '*',
           getComponent (nextState, cb) {
             const { location: { pathname } } = nextState;

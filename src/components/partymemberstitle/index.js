@@ -7,10 +7,6 @@ function PartyMembersTitle (props) {
   return (
     <div className={styles[`${PrefixCls}-title`]}>{props.title}</div>
   );
-
-  Static.defaultProps = {
-    title: '',
-  };
 }
 
 export default PartyMembersTitle;

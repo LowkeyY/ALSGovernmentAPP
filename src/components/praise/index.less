@@ -1,0 +1,56 @@
+
+.outer{
+  position: relative;
+}
+
+.container {
+  padding: 10px 36px;
+  background: #e5f7ff;
+  color: #009aff;
+  border-radius: 40px;
+  font-size: @FontSizeNm;
+  letter-spacing: 0.1em;
+  font-weight: bold;
+}
+
+.animation{
+  position: absolute;
+  top: 40px;
+  left:-50px;
+  opacity: 0;
+}
+
+.praise{
+  background: #009aff;
+  color: #fff;
+}
+
+@keyframes pulse {
+  0% {
+    transform:translateY(0);
+    opacity:0;
+  }
+  1%{
+    opacity:1;
+  }
+  25%{
+    transform:translateY(-20px);
+    opacity: .8;
+  }
+  50% {
+    transform:translateY(-40px);
+    opacity: .5;
+  }
+  75%{
+    transform:translateY(-60px);
+    opacity: .3;
+  }
+  100% {
+    transform:translateY(-80px);
+    opacity: 0;
+  }
+}
+.praiseActive{
+  animation: pulse 1s ease-out;
+  opacity: 0;
+}

@@ -97,7 +97,6 @@ class Legalmediation extends Component {
           },
           { uploadFiles, uploadKey } = this.getUploadFiles(),
           { mediaUploadFile } = this.state;
-        console.log(uploadKey);
         this.props.dispatch({
           type: 'legalmediation/sendLegalMediation',
           payload: {

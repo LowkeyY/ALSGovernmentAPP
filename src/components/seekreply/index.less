@@ -1,21 +1,27 @@
-@PrefixCls:seekreply;
-.@{PrefixCls}-outer{
-
-  background: #ededef;
+@import "../../themes/default";
+@PrefixCls: seekreply;
+.@{PrefixCls}-outer {
   padding: 20px;
-  & p{
+  margin-bottom: 30px;
+  background: #fff;
+  & p {
     word-break: break-all;
     word-wrap: break-word;
     overflow: hidden;
+    line-height: 1.5em;
   }
-  &-title{
-    font-size: 36px;
-    font-weight: bold;
+  &-title {
+    font-size: @FontSizeLg;
   }
-  &-date{
-    font-size: 26px;
+  &-date {
+    font-size: @FontSizeSm;
+    color: @text-content-color;
+    text-align: right;
   }
-  p{
-    font-size: 30px;
+  p {
+    text-indent: 2em;
+    margin-top: 20px;
+    font-size: @FontSizeNm;
+    color: @text-content-color;
   }
 }

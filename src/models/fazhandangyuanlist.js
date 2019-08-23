@@ -103,9 +103,6 @@ export default modelExtend(model, {
           });
         }
       });
-      
-      
-      console.log(result);
       return {
         ...state,
         items: result

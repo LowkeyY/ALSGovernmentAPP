@@ -80,7 +80,6 @@ class InputBox extends Component {
       onRecording: true,
     });
     stop = setTimeout(() => { // 延迟1s执行
-      console.log(this.state);
       const { onRecording } = this.state;
       if (onRecording === true) {
         let mediaFile = cnStartRecord('', this.mediaFileOnSuccess.bind(this), this.mediaFileOnError.bind(this));

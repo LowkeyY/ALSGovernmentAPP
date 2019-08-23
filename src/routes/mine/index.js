@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Button, Flex, WingBlank, WhiteSpace, List, Icon, Modal, Badge } from 'components';
+import { Button, Flex, WhiteSpace, List, Icon, Modal, Badge } from 'components';
 import { getImages, getErrorImg, getLocalIcon, getDefaultBg } from 'utils';
 import { routerRedux } from 'dva/router';
 import { Grid, Layout } from 'components';
@@ -11,28 +11,16 @@ const PrefixCls = 'mine',
   { helpApi } = api,
   Item = List.Item;
 
-function Mine ({ location, dispatch, mine, app, login }) {
-  const { users: { username, useravatar }, isLogin, noViewCount = 0 } = app;
-  const handleLogin = () => {
-      dispatch(routerRedux.push({
-        pathname: '/login',
-      }));
-    },
-    handleLoginout = () => {
-      dispatch({
-        type: 'app/logout',
-      });
-    },
+function Mine ({ location, dispatch, mine, app }) {
+  const { users: { username, useravatar }, isLogin, noViewCount = 0 } = app,
+
+
     handleIntegralClick = () => {
       dispatch(routerRedux.push({
         pathname: '/integralhome',
       }));
     },
-    // handlePayClick = () => {
-    //   dispatch(routerRedux.push({
-    //     pathname: '/payment',
-    //   }));
-    // },
+
     handleAppealClick = ({ showType = '2', name = '我的诉求' }) => {
       dispatch(routerRedux.push({
         pathname: '/myappeal',
@@ -84,16 +72,7 @@ function Mine ({ location, dispatch, mine, app, login }) {
         },
       }));
     },
-    showAlert = () => {
-      Modal.alert('退出', '离开我的阿拉善', [
-        {
-          text: ' 确定退出',
-          onPress: handleLoginout,
-        },
-        { text: '再看看', onPress: () => console.log('cancel') },
 
-      ]);
-    },
     handleAboutUsClick = ({ name = '关于我们' }) => {
       dispatch(routerRedux.push({
         pathname: '/aboutus',
@@ -101,58 +80,68 @@ function Mine ({ location, dispatch, mine, app, login }) {
           name,
         },
       }));
+    },
+    handleLogin = () => {
+      dispatch(routerRedux.push({
+        pathname: '/login',
+      }));
     };
   return (
     <div>
       <div className={styles[`${PrefixCls}-top`]}>
         <div style={{ overflow: 'hidden' }}>
-          <div className={styles[`${PrefixCls}-top-bg`]}
-               style={{ backgroundImage: `url(${getDefaultBg(useravatar)})` }}
+          <div
+            className={styles[`${PrefixCls}-top-bg`]}
+            style={useravatar ? { backgroundImage: `url(${getDefaultBg(useravatar)})` } : null}
           />
         </div>
         <div className={styles[`${PrefixCls}-top-avatar`]}>
-          <img src={getImages(useravatar, 'user')} alt=""/>
+          <img src={getImages(useravatar, 'user')} alt="" />
           <div className={styles[`${PrefixCls}-top-avatar-username`]}>
-            <div>{isLogin ? username : '未登录'}</div>
-            {isLogin ? <div
-              className={styles[`${PrefixCls}-top-avatar-username-collection`]}
-              onClick={handleCollectionClick}
-            >
-              我的收藏
-            </div> : null}
+            <div>
+              {isLogin ?
+                <span>{username}</span>
+                :
+                <span onClick={handleLogin}>点击登录</span>
+              }
+            </div>
           </div>
         </div>
+
         {isLogin ? <div className={styles[`${PrefixCls}-top-set`]} onClick={handleSetupClick}>
-          <Icon type={getLocalIcon('/mine/set.svg')} color="#fff"/>
+          <Icon type={getLocalIcon('/mine/setup.svg')} color="#fff" />
         </div> : null}
       </div>
       <div className={styles[`${PrefixCls}-info`]}>
-        {isLogin ? <div className={styles[`${PrefixCls}-info-head`]} onClick={handleIntegralClick}>
-          <span className={styles[`${PrefixCls}-info-head-integral`]}><Icon
-            type={getLocalIcon('/mine/integral.svg')}
-          /><span>我的积分</span></span>
-          <span className={styles[`${PrefixCls}-info-head-change`]}><Icon
-            type={getLocalIcon('/mine/store.svg')}
-          /><span>积分兑换</span></span>
+        {isLogin ? <div className={styles[`${PrefixCls}-info-head`]}>
+          <span className={styles[`${PrefixCls}-info-head-integral`]} onClick={handleCollectionClick}>
+            <Icon type={getLocalIcon('/mine/collection.svg')} />
+            <span>我的收藏</span>
+          </span>
+          <span className={styles[`${PrefixCls}-info-head-change`]} onClick={handleIntegralClick}>
+            <Icon type={getLocalIcon('/mine/integral.svg')} />
+            <span>我的积分</span>
+          </span>
         </div> : ''}
+        <WhiteSpace size="lg" />
         <List>
           {
             isLogin ?
               <div>
                 <Item
-                  thumb={<Icon type={getLocalIcon('/mine/appeal.svg')}/>}
+                  thumb={<Icon type={getLocalIcon('/mine/appeal.svg')} />}
                   arrow="horizontal"
                   onClick={handleAppealClick}
                 >
                   我的诉求
                 </Item>
                 <Item
-                  thumb={<Icon type={getLocalIcon('/mine/mytask.svg')}/>}
+                  thumb={<Icon type={getLocalIcon('/mine/mytask.svg')} />}
                   arrow="horizontal"
                   onClick={handleTaskClick}
                 >
                   我的任务
-                  {noViewCount > 0 ? <Badge text={'new'} style={{ marginLeft: 12 }}/> : ''}
+                  {noViewCount > 0 ? <Badge text={'new'} style={{ marginLeft: 12 }} /> : ''}
                 </Item>
                 {/* <Item */}
                 {/* thumb={<Icon type={getLocalIcon('/mine/collection.svg')}/>} */}
@@ -169,7 +158,7 @@ function Mine ({ location, dispatch, mine, app, login }) {
                 {/*个人设置*/}
                 {/*</Item>*/}
                 <Item
-                  thumb={<Icon type={getLocalIcon('/mine/aboutus.svg')}/>}
+                  thumb={<Icon type={getLocalIcon('/mine/aboutus.svg')} />}
                   arrow="horizontal"
                   onClick={handleAboutUsClick}
                 >
@@ -180,14 +169,14 @@ function Mine ({ location, dispatch, mine, app, login }) {
               ''
           }
           <Item
-            thumb={<Icon type={getLocalIcon('/mine/opinion.svg')}/>}
+            thumb={<Icon type={getLocalIcon('/mine/opinion.svg')} />}
             arrow="horizontal"
             onClick={handleopinionClick}
           >
             意见反馈
           </Item>
           <Item
-            thumb={<Icon type={getLocalIcon('/mine/help.svg')}/>}
+            thumb={<Icon type={getLocalIcon('/mine/help.svg')} />}
             arrow="horizontal"
             onClick={handleHelpClick}
           >
@@ -196,7 +185,7 @@ function Mine ({ location, dispatch, mine, app, login }) {
           {
             !isLogin ?
               <Item
-                thumb={<Icon type={getLocalIcon('/mine/aboutus.svg')}/>}
+                thumb={<Icon type={getLocalIcon('/mine/aboutus.svg')} />}
                 arrow="horizontal"
                 onClick={handleAboutUsClick}
               >
@@ -207,22 +196,7 @@ function Mine ({ location, dispatch, mine, app, login }) {
           }
         </List>
       </div>
-      <WhiteSpace size="lg"/>
-      <WingBlank style={{ marginBottom: '60px' }}>
-        {
-          !isLogin ?
-
-            <Button style={{ backgroundColor: '#108ee9' }}
-                    type="primary"
-                    onClick={handleLogin}
-            >登录</Button>
-            :
-            <Button style={{ border: '1px solid #fff', color: '#fff', background: '#ff5353' }}
-                    type="primary"
-                    onClick={showAlert}
-            >退出</Button>
-        }
-      </WingBlank>
+      <WhiteSpace size="lg" />
     </div>
   );
 }

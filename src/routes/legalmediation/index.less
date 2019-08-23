@@ -1,8 +1,8 @@
 @PrefixCls: legalmediation;
 
-
 .@{PrefixCls}-outer {
   width: 100%;
+  padding: 0 20px;
   box-sizing: border-box;
   -webkit-user-select: none;
   user-select: none;
@@ -10,9 +10,13 @@
     .am-list-item.am-list-item-middle .am-list-line {
       height: 100% !important;
     }
-    //.am-activity-indicator.am-activity-indicator-toast .am-activity-indicator-spinner{
-    //  display: none;
-    //}
+    .am-list-header {
+      background: #fff;
+      font-size: 34px;
+    }
+    .am-list-item .am-input-label.am-input-label-5 {
+      width: auto;
+    }
   }
 
   &-content {
@@ -53,7 +57,8 @@
   }
 
 }
-.@{PrefixCls}-title{
+
+.@{PrefixCls}-title {
   display: flex;
   justify-content: center;
   margin: 10px 0;
@@ -63,7 +68,8 @@
     margin-right: 10px;
   }
 }
-.@{PrefixCls}-applicant{
-  padding-top:20px ;
+
+.@{PrefixCls}-applicant {
+  padding-top: 20px;
   background: #fff;
 }

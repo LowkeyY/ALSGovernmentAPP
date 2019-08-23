@@ -46,6 +46,7 @@ export default modelExtend(model, {
                 name,
                 scrollerTop: 0,
                 paginations: getDefaultPaginations(),
+                selectedIndex: 0,
               },
             });
             dispatch({
@@ -65,8 +66,8 @@ export default modelExtend(model, {
     * queryListview ({ payload }, { call, put, select }) {
       const { callback = '', isRefresh = false, selected = -1 } = payload,
         _this = yield select(_ => _[`${namespace}`]),
-        { paginations: { current, total, size }, selectedIndex, dataList } = _this,
-        currentSelectedIndex = selected != -1 ? selected : selectedIndex;
+        { paginations: { current, size }, selectedIndex, dataList } = _this,
+        currentSelectedIndex = selected !== -1 ? selected : selectedIndex;
       yield put({
         type: 'updateState',
         payload: {
@@ -78,7 +79,7 @@ export default modelExtend(model, {
       if (result) {
         let { data = [], totalCount = 0 } = result,
           newLists = [];
-        newLists = start == 1 ? data : [...dataList, ...data];
+        newLists = start === 1 ? data : [...dataList, ...data];
         yield put({
           type: 'updateState',
           payload: {
@@ -96,7 +97,7 @@ export default modelExtend(model, {
       }
     },
 
-    * queryCount ({ payload }, { call, put, select }) {
+    * queryCount ({ payload }, { call, put }) {
       const data = yield call(queryWorkCount);
       if (data.success) {
         yield put({
@@ -108,7 +109,6 @@ export default modelExtend(model, {
       }
     },
     * collent ({ payload }, { call, put, select }) {
-      console.log(payload);
       const { id, shoucang } = payload, 
         { success } = yield call(collectAppeal, { ...payload, workId: id });
       if (success) {

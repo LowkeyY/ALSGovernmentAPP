@@ -1,7 +1,4 @@
 @PrefixCls: threeopen;
-.@{PrefixCls}-outer {
-  padding: 0 20px;
-}
 
 .@{PrefixCls}-container {
   width: 100%;
@@ -21,15 +18,6 @@
     z-index: 99;
   }
 
-  &-mask {
-    position: absolute;
-    width: 100%;
-    height: 240px;
-    left: 0;
-    top: 0;
-    background: rgba(0, 0, 0, 0.2);
-    z-index: 2;
-  }
   &::after {
     content: "";
     width: 100%;
@@ -40,5 +28,22 @@
     background: inherit;
     filter: blur(1px);
     z-index: 1;
+  }
+}
+
+.@{PrefixCls}-list {
+  :global {
+    .am-list-body div:not(:last-child) .am-list-line {
+      border-bottom: 0;
+    }
+    .am-list-item .am-list-thumb:first-child {
+      padding: 10px 0 !important;
+    }
+  }
+  & img {
+    width: 220px;
+    height: 160px;
+    margin: 10px 10px 10px 0;
+    border-radius: 10px;
   }
 }

@@ -9,13 +9,13 @@ class Banner extends React.Component {
   constructor (props) {
     super();
   }
-  
+
   state = {
     data: [],
     slideIndex: 0,
-    isLoad: false
+    isLoad: false,
   };
-  
+
   componentWillMount () {
     setTimeout(() => {
       this.setState({
@@ -23,18 +23,18 @@ class Banner extends React.Component {
       });
     }, 300);
   }
-  
+
   onHandleChange = (num) => {
     if (this.props && this.props.dispatch) {
       this.props.dispatch({
         type: 'dashboard/updateState',
         payload: {
-          selectedIndex: num
-        }
+          selectedIndex: num,
+        },
       });
     }
   };
-  
+
   render () {
     const selectedIndex = this.props.selectedIndex;
     return (
@@ -50,13 +50,13 @@ class Banner extends React.Component {
             opacity: '0.5',
             width: '12px',
             height: '2px',
-            borderRadius: '0'
+            borderRadius: '0',
           }}
           dotActiveStyle={{
             background: '#fff',
             width: '12px',
             height: '2px',
-            borderRadius: '0'
+            borderRadius: '0',
           }}
           afterChange={this.onHandleChange.bind(this)}
         >
@@ -70,11 +70,11 @@ class Banner extends React.Component {
                 ref={el => this.banner = el}
                 src={`${data.url}`}
                 alt=""
-                style={{ width: '100%', verticalAlign: 'top' }}
+                style={{ width: '100%', verticalAlign: 'top', height: this.props.height }}
                 onLoad={() => {
                   if (!this.state.isLoad) {
                     this.setState({
-                      isLoad: true
+                      isLoad: true,
                     });
                     window.dispatchEvent(new Event('resize'));
                   }
@@ -95,6 +95,7 @@ Banner.propTypes = {
 Banner.defaultProps = {
   bannerDatas: [],
   hasTitle: false,
-  name: ''
+  name: '',
+  height: cnhtmlWidth / 3,
 };
 export default Banner;

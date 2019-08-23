@@ -17,7 +17,7 @@ let lastHref,
   progessStart = false;
 const App = ({ children, dispatch, app, loading, location }) => {
   let { pathname } = location;
-  const { spinning = false, tabBars, users, updates: { upgraded = false, urls = '', appVerSion = '', updateInfo = '' }, showModal, noViewCount = 0 } = app;
+  const { tabBars, users, updates: { upgraded = false, urls = '', appVerSion = '', updateInfo = '' }, showModal, noViewCount = 0 } = app;
   pathname = pathname.startsWith('/') ? pathname : `/${pathname}`;
   pathname = pathname.endsWith('/index.html') ? '/' : pathname; // Android配置首页自启动
   const href = window.location.href,
@@ -29,10 +29,12 @@ const App = ({ children, dispatch, app, loading, location }) => {
   cnSetStatusBarStyle(pathname);
   startWebSocket(users);
   if (lastHref !== href || loading.global) {
-    NProgress.start();
-    progessStart = true;
-    if (!loading.global) {
-      lastHref = href;
+    if (pathname !== '/mine') {
+      NProgress.start();
+      progessStart = true;
+      if (!loading.global) {
+        lastHref = href;
+      }
     }
   }
   if (!loading.global && progessStart) {
@@ -86,10 +88,12 @@ const App = ({ children, dispatch, app, loading, location }) => {
       return false;
     };
   if (pathname !== '/' && menusArray.length && !menusArray.includes(pathname)) {
-    return (<div>
-      <Loader spinning={loading.effects[`${pathname.startsWith('/') ? pathname.substr(1) : pathname}/query`]}/>
-      {children}
-    </div>);
+    return (
+      <div>
+        <Loader spinning={loading.effects[`${pathname.startsWith('/') ? pathname.substr(1) : pathname}/query`]} />
+        {children}
+      </div>
+    );
   }
 
   return (
@@ -99,6 +103,7 @@ const App = ({ children, dispatch, app, loading, location }) => {
         tintColor="#33A3F4"
         barTintColor="white"
         hidden={false}
+        prerenderingSiblingsNumber={0}
       >
         {tabBars.map((_, index) => {
           const props = Object.assign({
@@ -109,31 +114,37 @@ const App = ({ children, dispatch, app, loading, location }) => {
             onPress: () => {
               const { appends = {}, route } = _;
               dispatch(routerRedux.push({
-                  pathname: route,
-                  query: {
-                    ...appends,
-                  },
+                pathname: route,
+                query: {
+                  ...appends,
                 },
+              },
               ));
             },
           }, _);
-          props.icon = (<div key={index} style={{
-            width: '0.44rem',
-            height: '0.44rem',
-            background: `url(${props.icon}) center center /  0.42rem 0.42rem no-repeat`,
-          }}
-          />);
-          { /* <Icon type={getLocalIcon(props.icon)}/> */
-          }
-          props.selectedIcon = (<div key={index} style={{
-            width: '0.44rem',
-            height: '0.44rem',
-            background: `url(${props.selectedIcon}) center center /  0.42rem 0.42rem no-repeat`,
-          }}
-          />);
+          props.icon = (
+            <div
+              key={index}
+              style={{
+                width: '0.44rem',
+                height: '0.44rem',
+                background: `url(${props.icon}) center center /  0.42rem 0.42rem no-repeat`,
+              }}
+            />
+          );
+          { /* <Icon type={getLocalIcon(props.icon)}/> */ }
+          props.selectedIcon = (
+            <div
+              key={index}
+              style={{
+                width: '0.44rem',
+                height: '0.44rem',
+                background: `url(${props.selectedIcon}) center center /  0.42rem 0.42rem no-repeat`,
+              }}
+            />
+          );
           return (
             <TabBar.Item {...props}>
-              {/* {index!==0? <Loader spinning={spinning} />:null} */}
               {pathname === _.route ? children : ''}
             </TabBar.Item>
           );

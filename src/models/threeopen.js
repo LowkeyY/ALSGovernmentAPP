@@ -1,7 +1,7 @@
 import { parse } from 'qs';
 import modelExtend from 'dva-model-extend';
 import { model } from 'models/common';
-import { queryPartyTabs, searchLanmu } from 'services/querylist';
+import { queryThree, searchLanmu } from 'services/querylist';
 import { Toast } from 'components';
 import { doDecode } from 'utils';
 
@@ -39,18 +39,18 @@ export default modelExtend(model, {
         history.listen(({ pathname, query, action }) => {
           const { id = '' } = query;
           if (pathname === '/threeopen') {
-              dispatch({
-                type: 'updateState',
-                payload: {
-                  lists: [],
-                },
-              });
-              dispatch({
-                type: 'query',
-                payload: {
-                  id,
-                },
-              });
+            dispatch({
+              type: 'updateState',
+              payload: {
+                lists: [],
+              },
+            });
+            dispatch({
+              type: 'query',
+              payload: {
+                id,
+              },
+            });
           }
         });
       },
@@ -58,7 +58,7 @@ export default modelExtend(model, {
     effects: {
       * query ({ payload }, { call, put, select }) {
         const { id = '' } = payload,
-          result = yield call(queryPartyTabs, { dataId: id });
+          result = yield call(queryThree, { dataId: id });
         if (result) {
           let { data = [] } = result;
           yield put({

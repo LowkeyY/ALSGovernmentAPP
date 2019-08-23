@@ -1,53 +1,43 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { connect } from 'dva';
 import { WhiteSpace, Icon, List, Tag } from 'components';
 import Nav from 'components/nav';
 import { getImages, getErrorImg, getLocalIcon } from 'utils';
-import NoMessage from 'components/nomessage';
 import { baseURL, api } from 'utils/config';
 import { routerRedux } from 'dva/router';
-import styles from './index.less';
 import TitleBox from 'components/titlecontainer';
 import SeekReply from 'components/seekreply';
 import StatusBox from 'components/statusbox';
 import VociePrev from 'components/voicePrev';
 import WxImageViewer from 'react-wx-images-viewer';
+import styles from './index.less';
 
-const Item = List.Item,
-  { positionApi } = api,
+const { positionApi } = api,
   PrefixCls = 'seekdetails';
 
 function SeekDetails ({ location, dispatch, seekdetails }) {
   const { name, currentData, isOpen, viewImageIndex, isTask } = seekdetails,
     { id, taskId } = location.query,
     { username, situatton, createDate, positions, title, content, images, answers, voicePath, userPhoto, status, shState, isCollect } = currentData;
-  const getImagesPage = (images) => {
-      if (cnIsArray(images) && images.length) {
+  const getImagesPage = (image) => {
+      if (cnIsArray(image) && image.length) {
         return (
-          <div className={styles[`${PrefixCls}-content-images`]}>
-            {images.map((src, i) => (<div key={i}
-              data-src={src}
-              className="imgbox"
-              style={{ backgroundImage: `url(${src})` }}
-            />))}
-          </div>
+          <div className={styles[`${PrefixCls}-content-images`]} >
+            {image.map((src, i) => (
+              <div
+                key={i}
+                data-src={src}
+                className="imgbox"
+                style={{ backgroundImage: `url(${src})` }}
+              />
+            ))}
+          </div >
         );
       }
       return '';
     },
-    replacSrc = (src = '') => {
-      return src.replaceAll('\\', '/')
-        .replace(':80/', '');
-    },
-    has = (images = [], src = '') => {
-      let result = -1;
-      images.map((image, index) => {
-        if (replacSrc(image) === replacSrc(src)) {
-          result = index;
-        }
-      });
-      return result;
-    },
+
     getShtate = () => {
       return <StatusBox bg="#9c9595" status="不在办理范围" />;
     },
@@ -101,58 +91,58 @@ function SeekDetails ({ location, dispatch, seekdetails }) {
         }));
       }
     };
-  
+
   return (
-    <div>
+    <div >
       <Nav title={name} dispatch={dispatch} />
-      <div className={styles[`${PrefixCls}-outer`]}>
-        <div className={styles[`${PrefixCls}-header`]}>
-          <div className={styles[`${PrefixCls}-header-info`]}>
+      <div className={styles[`${PrefixCls}-outer`]} >
+        <div className={styles[`${PrefixCls}-header`]} >
+          <div className={styles[`${PrefixCls}-header-info`]} >
             <img src={getImages(userPhoto, 'user')} alt="" />
-            <div className={styles[`${PrefixCls}-header-info-box`]}>
-              <div className={styles[`${PrefixCls}-header-info-box-name`]}>{username}</div>
-              <div className={styles[`${PrefixCls}-header-info-box-date`]}>
-                <span>{createDate}</span></div>
-            </div>
-          </div>
-        </div>
-        <div className={styles[`${PrefixCls}-outer-type`]}>
-          {situatton !== 'undefined' ? <span>诉求类型：{situatton}</span> : ''}
-          <span>{positions}</span>
-        </div>
-        <div className={styles[`${PrefixCls}-content`]} onClick={handleDivClick}>
-          <div className={styles[`${PrefixCls}-content-title`]}>
-            <span>{title}</span>
-            {isTask ? <span onClick={handlePositionClick}>
+            <div className={styles[`${PrefixCls}-header-info-box`]} >
+              <div className={styles[`${PrefixCls}-header-info-box-name`]} >{username}</div >
+              <div className={styles[`${PrefixCls}-header-info-box-date`]} >
+                <span >{createDate}</span ></div >
+            </div >
+          </div >
+        </div >
+        <div className={styles[`${PrefixCls}-outer-type`]} >
+          {situatton !== 'undefined' ? <span >诉求类型：{situatton}</span > : ''}
+          <span >{positions}</span >
+        </div >
+        <div className={styles[`${PrefixCls}-content`]} onClick={handleDivClick} >
+          <div className={styles[`${PrefixCls}-content-title`]} >
+            <span >{title}</span >
+            {isTask ? <span onClick={handlePositionClick} >
               <Icon type={getLocalIcon('/others/location.svg')} size="lg" />
-            </span> : ''}
-          </div>
-          <div className={styles[`${PrefixCls}-content-status`]}>
+            </span > : ''}
+          </div >
+          <div className={styles[`${PrefixCls}-content-status`]} >
             <span
               style={{ color: '#1ab99d' }}
-            >当前状态:<span>{shState == '2' ? getShtate() : getStatus(status)}</span></span>
+            >当前状态:<span >{shState == '2' ? getShtate() : getStatus(status)}</span ></span >
             {isCollect ?
-              <div><Tag disabled><Icon type={getLocalIcon('/others/collectionblack.svg')} />已收藏</Tag></div> : ''}
-          </div>
-          <div>
+              <div ><Tag disabled ><Icon type={getLocalIcon('/others/collectionblack.svg')} />已收藏</Tag ></div > : ''}
+          </div >
+          <div >
             {voicePath !== '' ? <VociePrev mediaFileUrl={voicePath} mediaFileTimer={0} /> : ''}
-          </div>
-          <div className={styles[`${PrefixCls}-content-details`]}><span>问题详情：{content}</span></div>
+          </div >
+          <div className={styles[`${PrefixCls}-content-details`]} ><span >{content}</span ></div >
           {getImagesPage(images)}
-        </div>
+        </div >
         <WhiteSpace />
-        <TitleBox title={'回复'} />
+        {answers && answers.length > 0 ? <TitleBox title={'回复'} /> : null}
         {
-          answers && answers.map((data, i) => {
-            return <SeekReply key={i} {...data} />;
-          })
+          answers && answers.map((data, i) => (
+            <SeekReply key={i} {...data} />
+          ))
         }
-      </div>
+      </div >
       {
         isOpen && viewImageIndex !== -1 ?
           <WxImageViewer onClose={onViemImageClose} urls={images} index={viewImageIndex} /> : ''
       }
-    </div>
+    </div >
   );
 }
 

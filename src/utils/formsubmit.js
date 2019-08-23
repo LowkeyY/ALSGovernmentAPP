@@ -229,8 +229,6 @@ const submit = (url, param, isCNDefined) => axios.post(checkUrl(url), param, {
 
 
 export default function formsubmit (url, params, images, files = {}, isCNDefined = false) {
-  console.log('formsubmit!!', images, files);
-
   let param = new FormData();
   const { isOriginal = false, ...fields } = params;
   param.append('__device', 'mobile');

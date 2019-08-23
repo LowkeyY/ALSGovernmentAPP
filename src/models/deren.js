@@ -17,10 +17,10 @@ const getInfo = (info) => {
 const namespace = 'deren',
   getGrid = (datas = []) => {
     const result = [];
-    datas.map((data, index) => {
+    datas.map((data) => {
       const { id = '', route = '', image = '', infos = '', ...others } = data;
       let { type = '' } = getInfo(infos);
-      if (id != '' && type !== 'prettify') {
+      if (id !== '' && type !== 'prettify') {
         result.push({
           id,
           route: route || '/',
@@ -37,7 +37,7 @@ const namespace = 'deren',
     datas.map((data, index) => {
       const { id = '', route = '', image = '', infos = '', ...others } = data;
       let { type = '' } = getInfo(infos);
-      if (id != '' && type === 'prettify') {
+      if (id !== '' && type === 'prettify') {
         result.push({
           id,
           route: route || '/',
@@ -51,9 +51,9 @@ const namespace = 'deren',
   getBanners = (datas = []) => {
     let result = [],
       counts = 0;
-    datas.map((data, index) => {
+    datas.map((data) => {
       const { image = '', id = '' } = data;
-      if (image != '' && id != '' && counts++ < 4) {
+      if (image !== '' && id !== '' && counts++ < 4) {
         result.push({
           url: image,
           ...data,
@@ -66,7 +66,7 @@ const namespace = 'deren',
     const result = [];
     datas.map((_, index) => {
       const { id = '', route = 'details', items = [] } = _;
-      if (id != '' && items.length > 0) {
+      if (id !== '' && items.length > 0) {
         result.push({
           ..._,
           id,
@@ -98,7 +98,7 @@ export default modelExtend(model, {
   subscriptions: {
     setup ({ dispatch, history }) {
       history.listen(({ pathname, query, action }) => {
-        if (pathname === '/deren' && action == 'PUSH') {
+        if (pathname === '/deren' && action === 'PUSH') {
           const { id = '', name = '' } = query;
           dispatch({
             type: 'updateState',

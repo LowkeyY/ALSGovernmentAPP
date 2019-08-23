@@ -60,7 +60,6 @@ export default modelExtend(model, {
           },
         });
       }
-      console.log(dataList);
       if (callback) { callback(); }
     },
     

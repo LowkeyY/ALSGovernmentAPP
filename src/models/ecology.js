@@ -17,26 +17,39 @@ const getList = (datas = []) => {
     });
     return result.length > 0 ? result : [];
   },
+  getGrid = (datas = []) => {
+    const result = [];
+    datas.map((data) => {
+      const { id = '', route = '', image = '', infos = '', ...others } = data;
+      result.push({
+        id,
+        route: route || '/',
+        icon: image,
+        ...others,
+      });
+    });
+    return result.length > 0 ? result : [];
+  },
   getDefaultPaginations = () => ({
     current: 1,
     total: 0,
-    size: 10
+    size: 10,
   }),
   namespace = 'ecology';
 export default modelExtend(model, {
   namespace: 'ecology',
   state: {
-    data: [],
+    grids: [],
     banners: [],
     lists: [],
     scrollerTop: 0,
-    paginations: getDefaultPaginations()
+    paginations: getDefaultPaginations(),
   },
   subscriptions: {
     setup ({ dispatch, history }) {
       history.listen(({ pathname, query, action }) => {
         if (pathname === '/ecology') {
-          if (action == 'PUSH') {
+          if (action === 'PUSH') {
             const { id = '', name = '' } = query;
             dispatch({
               type: 'updateState',
@@ -44,7 +57,7 @@ export default modelExtend(model, {
                 id,
                 name,
                 scrollerTop: 0,
-                paginations: getDefaultPaginations()
+                paginations: getDefaultPaginations(),
               },
             });
             dispatch({
@@ -58,7 +71,7 @@ export default modelExtend(model, {
       });
     },
   },
-  
+
   effects: {
     * query ({ payload }, { call, put, select }) {
       const result = yield call(queryPartyTabs, payload);
@@ -68,8 +81,8 @@ export default modelExtend(model, {
           type: 'updateState',
           payload: {
             banners,
-            data,
-            lists: getList(tuijian)
+            grids: getGrid(data),
+            lists: getList(tuijian),
           },
         });
         if (tuijian.length > 0) {
@@ -78,7 +91,7 @@ export default modelExtend(model, {
             type: 'queryListview',
             payload: {
               id,
-              title
+              title,
             },
           });
         }
@@ -101,17 +114,19 @@ export default modelExtend(model, {
             paginations: {
               ..._this.paginations,
               total: totalCount * 1,
-              current: start + 1
+              current: start + 1,
             },
             lists: [{
               ...others,
-              items: newLists
+              items: newLists,
             }],
           },
         });
       }
-      if (callback) { callback(); }
-    }
+      if (callback) {
+        callback();
+      }
+    },
   },
-  
+
 });

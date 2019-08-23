@@ -7,8 +7,7 @@ import NoMessage from 'components/nomessage';
 import styles from './index.less';
 
 const PrefixCls = 'myappeal',
-  Item = List.Item,
-  Brief = Item.Brief;
+  Item = List.Item
 const getShstate = (shtate, state) => {
     if (shtate === '0') {
       return <span style={{ color: '#ccb820' }}>●正在审核</span>;
@@ -52,9 +51,10 @@ function Myappeal ({ location, dispatch, myappeal }) {
         <List>
           {
             dataList.length > 0 ?
-              dataList.map((data) => {
+              dataList.map((data,i) => {
                 const { content, createDate, state, shState } = data;
                 return (<Item
+                  key={i}
                   className={styles[`${PrefixCls}-item`]}
                   multipleLine
                   onClick={handleItemClick.bind(this, data)}

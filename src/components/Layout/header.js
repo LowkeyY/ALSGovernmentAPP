@@ -2,6 +2,7 @@ import React from 'react';
 import { Icon, Popover } from 'antd-mobile';
 import { getImages, getLocalIcon } from 'utils';
 import { routerRedux } from 'dva/router';
+import headBg from '../../themes/images/others/headBg.jpg';
 import styles from './header.less';
 
 const PrefixCls = 'header';
@@ -28,7 +29,7 @@ class Header extends React.Component {
   renderLoginView (onClick) {
     return (
       <div onClick={onClick}>
-        <img src={getImages(this.props.useravatar, 'user')} alt=""/>
+        <img src={getImages(this.props.useravatar, 'user')} alt="" />
       </div>
     );
   }
@@ -36,7 +37,7 @@ class Header extends React.Component {
   renderNotLoginView (onClick) {
     return (
       <div className={styles[`${PrefixCls}-notlogin`]} onClick={onClick}>
-        <Icon type={getLocalIcon('/dashboard/login.svg')} size="lg"/>
+        <Icon type={getLocalIcon('/dashboard/login.svg')} size="sm" />
         登录
       </div>
     );
@@ -45,8 +46,8 @@ class Header extends React.Component {
   render () {
     const isLogin = this.props.isLogin;
     return (
-      <div className={styles[`${PrefixCls}-logo-outer`]}>
-        <img src={require('themes/images/logo.png')} alt=""/>
+      <div className={styles[`${PrefixCls}-logo-outer`]} style={{ backgroundImage: `url(${headBg})` }}>
+        <img src={require('themes/images/logo.png')} alt="" />
         <div className={styles[`${PrefixCls}-logo-user`]}>
           {
             isLogin ? this.renderLoginView(this.handlerGoMine.bind(this)) : this.renderNotLoginView(this.handlerLogin.bind(this))

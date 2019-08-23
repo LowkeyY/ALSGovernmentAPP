@@ -1,0 +1,39 @@
+@PrefixCls: lawyerdetails;
+
+.@{PrefixCls}-outer {
+  margin-bottom: 40px;
+  :global {
+    .am-list-body {
+      border: 0;
+    }
+    .am-list-item {
+      padding-left: 0;
+    }
+    .am-list-item .am-list-line .am-list-extra {
+      flex-basis: 70%;
+    }
+  }
+}
+
+.list {
+  .address {
+    padding: 20px 30px 20px 0;
+    font-size: 0.34rem;
+
+    div {
+      font-size: @FontSizeNm;
+      color: @text-content-color;
+      margin-top: 20px;
+    }
+  }
+}
+
+.receiveType {
+  font-size: 34px;
+  padding-top: 0.14rem;
+  padding-bottom: 0.14rem;
+  color: #000;
+  & > div {
+    margin-top: 20px;
+  }
+}

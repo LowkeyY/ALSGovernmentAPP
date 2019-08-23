@@ -1,5 +1,5 @@
-
-import { Component } from 'react';
+/* eslint-disable no-undef,react/prop-types */
+import React, { Component } from 'react';
 import { createForm } from 'rc-form';
 import { connect } from 'dva';
 import Nav from 'components/nav';
@@ -220,7 +220,7 @@ class Warning extends Component {
   mediaFileOnSuccess (blob, params) {
     const { name = '', nativeURL = '' } = params;
     let pos = name.lastIndexOf('.'),
-      key = pos == -1 ? name : name.substr(0, pos);
+      key = pos === -1 ? name : name.substr(0, pos);
     this.setState({
       mediaUploadFile: {
         voiceFile: blob,
@@ -320,9 +320,10 @@ class Warning extends Component {
 
     return (
       <div onClick={this.handleDivClick.bind(this)}>
-        <Nav title={name}
-             dispatch={this.props.dispatch}
-             renderNavRight={this.renderNav()}
+        <Nav
+          title={name}
+          dispatch={this.props.dispatch}
+          renderNavRight={this.renderNav()}
         />
         <div className={styles[`${PrefixCls}-outer`]}>
           <form>
@@ -343,12 +344,13 @@ class Warning extends Component {
               </InputItem>
             </div>
             <div className={styles[`${PrefixCls}-outer-type`]}>
-              <Picker data={appealType}
-                      cols={1}
-                      {...getFieldProps('type', {
-                        rules: [{ required: false, message: '请选择诉求类型' }],
-                      })}
-                      error={!!getFieldError('type') && Toast.fail(getFieldError('type'))}
+              <Picker
+                data={appealType}
+                cols={1}
+                {...getFieldProps('type', {
+                  rules: [{ required: false, message: '请选择诉求类型' }],
+                })}
+                error={!!getFieldError('type') && Toast.fail(getFieldError('type'))}
               >
                 <List.Item arrow="horizontal">诉求类型</List.Item>
               </Picker>
@@ -374,7 +376,7 @@ class Warning extends Component {
                 clear
                 error={!!getFieldError('positions') && Toast.fail(getFieldError('positions'))}
                 placeholder="请输入您的位置"
-                extra={currentPostions === '' ? loadPostions ? <Icon type="loading"/> :
+                extra={currentPostions === '' ? loadPostions ? <Icon type="loading" /> :
                   <span onClick={this.getCurrentLocation.bind(this)}><Icon
                     type={getLocalIcon('/others/location.svg')}
                   /></span> : ''}
@@ -409,7 +411,7 @@ class Warning extends Component {
               <div>
                 <p>添加图片</p>
                 {this.state.files.length >= 4 ? '' : <span onClick={cnTakePhoto.bind(null, this.handleCameraClick, 1)}>
-                  <Icon type={getLocalIcon('/media/camerawhite.svg')}/>
+                  <Icon type={getLocalIcon('/media/camerawhite.svg')} />
                 </span>}
               </div>
               <ImagePicker
@@ -425,7 +427,7 @@ class Warning extends Component {
               <p className={styles[`${PrefixCls}-outer-voice-title`]}>发送语音</p>
               <div className={styles[`${PrefixCls}-outer-voice-container`]}>
                 <div className={styles[`${PrefixCls}-outer-voice-container-files`]}>
-                  {mediaFile != '' ? <VociePrev mediaFileUrl={mediaFileUrl} mediaFileTimer={mediaFileLength}/> : ''}
+                  {mediaFile != '' ? <VociePrev mediaFileUrl={mediaFileUrl} mediaFileTimer={mediaFileLength} /> : ''}
                 </div>
                 <div
                   className={classNames(styles[`${PrefixCls}-outer-voice-container-button`], { [styles.active]: this.state.isVoice })}
@@ -464,7 +466,7 @@ class Warning extends Component {
           text="正在上传..."
           animating={animating}
         />
-        <NotesModal visible={notesvisible} handleClick={this.notesModalClick} content={content}/>
+        <NotesModal visible={notesvisible} handleClick={this.notesModalClick} content={content} />
       </div>
     );
   }

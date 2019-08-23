@@ -16,8 +16,9 @@ import {
   ActivityIndicator,
   WingBlank,
   Checkbox,
+  Card,
 } from 'components';
-import { getLocalIcon, replaceSystemEmoji } from 'utils';
+import { getLocalIcon, replaceSystemEmoji, pattern } from 'utils';
 import styles from './index.less';
 
 const CheckboxItem = Checkbox.CheckboxItem;
@@ -162,7 +163,6 @@ class LawApply extends Component {
             animating: true,
           },
         });
-
       } else {
         Toast.fail('请确认信息是否正确。');
       }
@@ -171,7 +171,7 @@ class LawApply extends Component {
 
   getTitle = (title) => {
     return (<div className={styles[`${PrefixCls}-title`]}>
-      <Icon type={getLocalIcon('/others/information.svg')}/>
+      <Icon type={getLocalIcon('/others/information.svg')} style={{ marginRight: '6px' }} />
       <div>{title}</div>
     </div>);
   };
@@ -201,7 +201,7 @@ class LawApply extends Component {
 
   renderCheckBox = () => {
     return (
-      <List>
+      <div>
         <div className={styles.listTitle}>受援人类别：（可交叉填写）</div>
         {manType.map(item => {
           const { value = '', label = '' } = item;
@@ -212,7 +212,7 @@ class LawApply extends Component {
             > {label}
             </CheckboxItem> : '';
         })}
-      </List>
+      </div>
     );
   };
 
@@ -221,9 +221,10 @@ class LawApply extends Component {
     const { getFieldProps, getFieldError } = this.props.form;
     return (
       <div>
-        <Nav title="申请" dispatch={this.props.dispatch}/>
+        <Nav title="申请" dispatch={this.props.dispatch} />
         <div className={styles[`${PrefixCls}-outer`]}>
           <form>
+            <WhiteSpace size="lg" />
             <div className={styles[`${PrefixCls}-applicant`]}>
               {this.getTitle('申请人基本情况')}
               <InputItem
@@ -233,8 +234,13 @@ class LawApply extends Component {
                   ],
                 })}
                 clear
-                error={!!getFieldError('FULL_NAME') && Toast.fail(getFieldError('FULL_NAME'))}
+                // error={!!getFieldError('FULL_NAME') && Toast.fail(getFieldError('FULL_NAME'))}
+                error={!!getFieldError('FULL_NAME')}
+                onErrorClick={() => {
+                  Toast.fail(getFieldError('FULL_NAME'));
+                }}
               >
+                <Icon type={getLocalIcon('/others/require.svg')} size="xxs" color="#ff5f5f" />
                 姓名
               </InputItem>
               <List>
@@ -244,9 +250,16 @@ class LawApply extends Component {
                   {...getFieldProps('SEX', {
                     rules: [{ required: true, message: '请选择性别' }],
                   })}
-                  error={!!getFieldError('SEX') && Toast.fail(getFieldError('SEX'))}
+                  // error={!!getFieldError('SEX') && Toast.fail(getFieldError('SEX'))}
+                  error={!!getFieldError('SEX')}
+                  onErrorClick={() => {
+                    Toast.fail(getFieldError('SEX'));
+                  }}
                 >
-                  <List.Item arrow="horizontal">性别</List.Item>
+                  <List.Item arrow="horizontal">
+                    <Icon type={getLocalIcon('/others/require.svg')} size="xxs" color="#ff5f5f" />
+                    性别
+                  </List.Item>
                 </Picker>
               </List>
               <InputItem
@@ -256,49 +269,96 @@ class LawApply extends Component {
                   ],
                 })}
                 clear
-                error={!!getFieldError('NATION') && Toast.fail(getFieldError('NATION'))}
-                ref={el => this.autoFocusInst = el}
+                // error={!!getFieldError('NATION') && Toast.fail(getFieldError('NATION'))}
+                error={!!getFieldError('NATION')}
+                onErrorClick={() => {
+                  Toast.fail(getFieldError('NATION'));
+                }}
               >
+                <Icon type={getLocalIcon('/others/require.svg')} size="xxs" color="#ff5f5f" />
                 民族
               </InputItem>
               <List>
                 <InputItem
                   {...getFieldProps('ID_NUMBER', {
-                    rules: [{ required: true, message: '请输入身份证号' }],
+                    rules: [
+                      { required: true, message: '请输入身份证号' },
+                      { pattern: pattern.idCard.pattern, message: pattern.idCard.message },
+                    ],
                   })}
-                  error={!!getFieldError('ID_NUMBER') && Toast.fail(getFieldError('ID_NUMBER'))}
+                  // error={!!getFieldError('ID_NUMBER') && Toast.fail(getFieldError('ID_NUMBER'))}
+                  error={!!getFieldError('ID_NUMBER')}
+                  onErrorClick={() => {
+                    Toast.fail(getFieldError('ID_NUMBER'));
+                  }}
                 >
+                  <Icon type={getLocalIcon('/others/require.svg')} size="xxs" color="#ff5f5f" />
                   身份证号
                 </InputItem>
               </List>
-              <List>
-                <Picker
-                  data={educationType}
-                  cols={1}
-                  {...getFieldProps('EDUCATION', {
-                    rules: [{ required: true, message: '请选择文化程度' }],
-                  })}
-                  error={!!getFieldError('EDUCATION') && Toast.fail(getFieldError('EDUCATION'))}
-                >
-                  <List.Item arrow="horizontal">文化程度</List.Item>
-                </Picker>
-              </List>
-              <InputItem
-                type="text"
-                {...getFieldProps('REGIST_ADDR', {
-                  initialValue: '',
+              <Picker
+                data={educationType}
+                cols={1}
+                {...getFieldProps('EDUCATION', {
+                  rules: [{ required: true, message: '请选择文化程度' }],
                 })}
+                // error={!!getFieldError('EDUCATION') && Toast.fail(getFieldError('EDUCATION'))}
+                error={!!getFieldError('EDUCATION')}
+                onErrorClick={() => {
+                  Toast.fail(getFieldError('EDUCATION'));
+                }}
               >
-                户籍所在地
-              </InputItem>
+                <List.Item arrow="horizontal">
+                  <Icon type={getLocalIcon('/others/require.svg')} size="xxs" color="#ff5f5f" />
+                  文化程度
+                </List.Item>
+              </Picker>
               <List>
+                <InputItem
+                  type="number"
+                  {...getFieldProps('PHONE', {
+                    initialValue: '',
+                    rules: [
+                      { required: true, message: '请输入联系方式' },
+                      { pattern: pattern.phone.pattern, message: pattern.phone.message },
+                    ],
+                  })}
+                  error={!!getFieldError('PHONE')}
+                  onErrorClick={() => {
+                    Toast.fail(getFieldError('PHONE'));
+                  }}
+                >
+                  <Icon type={getLocalIcon('/others/require.svg')} size="xxs" color="#ff5f5f" />
+                  联系电话
+                </InputItem>
+              </List>
+              <list>
                 <InputItem
                   type="text"
                   {...getFieldProps('ADDR', {
                     initialValue: '',
+                    rules: [
+                      { required: true, message: '请输入联系方式' },
+                      { pattern: pattern.phone.pattern, message: pattern.phone.message },
+                    ],
+                  })}
+                  error={!!getFieldError('ADDR')}
+                  onErrorClick={() => {
+                    Toast.fail(getFieldError('ADDR'));
+                  }}
+                >
+                  <Icon type={getLocalIcon('/others/require.svg')} size="xxs" color="#ff5f5f" />
+                  住所地
+                </InputItem>
+              </list>
+              <List>
+                <InputItem
+                  type="text"
+                  {...getFieldProps('REGIST_ADDR', {
+                    initialValue: '',
                   })}
                 >
-                  住所地
+                  户籍地址
                 </InputItem>
               </List>
               <InputItem
@@ -319,108 +379,127 @@ class LawApply extends Component {
                   工作单位
                 </InputItem>
               </List>
-              <InputItem
-                type="number"
-                {...getFieldProps('PHONE', {
-                  initialValue: '',
-                })}
-              >
-                联系电话
-              </InputItem>
               <div>
                 {this.renderCheckBox()}
               </div>
             </div>
-            <WhiteSpace/>
-            {this.getTitle('经济状况证明')}
-            <List>
-              <TextareaItem
-                {...getFieldProps('FAMILY_POPULATION', {
+            <WhiteSpace size="lg" />
+            <div className={styles[`${PrefixCls}-applicant`]}>
+              {this.getTitle('家庭经济状况')}
+              <List>
+                <TextareaItem
+                  {...getFieldProps('FAMILY_POPULATION', {
+                    initialValue: '',
+                    rules: [{ required: true, message: '请输入申请人家庭人口状况' }],
+                  })}
+                  clear
+                  rows={4}
+                  error={!!getFieldError('FAMILY_POPULATION') && Toast.fail(getFieldError('FAMILY_POPULATION'))}
+                  count={500}
+                  placeholder={'请在此描述家庭人口状况（必填）'}
+                />
+              </List>
+              <WhiteSpace />
+              <List>
+                <TextareaItem
+                  {...getFieldProps('JIUYEZHUANGKUANG', {
+                    initialValue: '',
+                    rules: [{ required: true, message: '请输入申请人就业状况' }],
+                  })}
+                  clear
+                  rows={4}
+                  error={!!getFieldError('JIUYEZHUANGKUANG') && Toast.fail(getFieldError('JIUYEZHUANGKUANG'))}
+                  count={500}
+                  placeholder={'请在此描就业状况（必填）'}
+                />
+              </List>
+              <InputItem
+                type="number"
+                {...getFieldProps('RENJUNSHOURU', {
                   initialValue: '',
-                  rules: [{ required: true, message: '请输入申请人家庭人口状况' }],
+                  rules: [{ required: true, message: 'RENJUNSHOURU' }],
                 })}
-                clear
-                rows={4}
-                error={!!getFieldError('FAMILY_POPULATION') && Toast.fail(getFieldError('FAMILY_POPULATION'))}
-                count={500}
-                placeholder={'请在此描述家庭人口状况'}
-              />
-            </List>
-            <WhiteSpace/>
-            <List>
-              <TextareaItem
-                {...getFieldProps('JIUYEZHUANGKUANG', {
-                  initialValue: '',
-                  rules: [{ required: true, message: '请输入申请人就业状况' }],
-                })}
-                clear
-                rows={4}
-                error={!!getFieldError('JIUYEZHUANGKUANG') && Toast.fail(getFieldError('JIUYEZHUANGKUANG'))}
-                count={500}
-                placeholder={'请在此描就业状况'}
-              />
-            </List>
-            <InputItem
-              type="number"
-              {...getFieldProps('RENJUNSHOURU', {
-                initialValue: '',
-              })}
-            >
-              家庭人均收入
-            </InputItem>
-            <List>
-              <div className={styles.listTitle}>家庭成员中有无低保户、残疾证等相关证明</div>
-              <Picker
-                data={disputeType}
-                cols={1}
-                {...getFieldProps('DIBAOCANJI', {
-                  rules: [{ required: true, message: '请选择有无证明' }],
-                })}
-                error={!!getFieldError('DIBAOCANJI') && Toast.fail(getFieldError('DIBAOCANJI'))}
+                error={!!getFieldError('RENJUNSHOURU')}
+                onErrorClick={() => {
+                  Toast.fail(getFieldError('RENJUNSHOURU'));
+                }}
               >
-                <List.Item arrow="horizontal">选择</List.Item>
-              </Picker>
-            </List>
-            <WhiteSpace/>
-            {this.getTitle('申请事项')}
-            <List>
-              <Picker
-                data={caseType}
-                cols={1}
-                {...getFieldProps('SHENQINGANJIANLEIXING', {
-                  rules: [{ required: true, message: '请选择案件类型' }],
-                })}
-                error={!!getFieldError('SHENQINGANJIANLEIXING') && Toast.fail(getFieldError('SHENQINGANJIANLEIXING'))}
-              >
-                <List.Item arrow="horizontal">案件类型</List.Item>
-              </Picker>
-            </List>
-            <InputItem
-              type="text"
-              {...getFieldProps('ANYOU', {
-                initialValue: '',
-              })}
-            >
-              案由
-            </InputItem>
-            <List>
-              <TextareaItem
-                {...getFieldProps('ANQINGMIAOSHU', {
+                <Icon type={getLocalIcon('/others/require.svg')} size="xxs" color="#ff5f5f" />
+                家庭人均收入
+              </InputItem>
+              <List>
+                <div className={styles.listTitle}>
+                  <Icon type={getLocalIcon('/others/require.svg')} size="xxs" color="#ff5f5f" />
+                  家庭成员中有无低保户、残疾证等相关证明
+                </div>
+                <Picker
+                  data={disputeType}
+                  cols={1}
+                  {...getFieldProps('DIBAOCANJI', {
+                    rules: [{ required: true, message: '请选择有无证明' }],
+                  })}
+                  error={!!getFieldError('DIBAOCANJI') && Toast.fail(getFieldError('DIBAOCANJI'))}
+                >
+                  <List.Item arrow="horizontal">选择</List.Item>
+                </Picker>
+              </List>
+            </div>
+            <div className={styles[`${PrefixCls}-applicant`]}>
+              {this.getTitle('申请事项')}
+              <List>
+                <Picker
+                  data={caseType}
+                  cols={1}
+                  {...getFieldProps('SHENQINGANJIANLEIXING', {
+                    rules: [{ required: true, message: '请选择案件类型' }],
+                  })}
+                  // error={!!getFieldError('SHENQINGANJIANLEIXING') && Toast.fail(getFieldError('SHENQINGANJIANLEIXING'))}
+                  error={!!getFieldError('SHENQINGANJIANLEIXING')}
+                  onErrorClick={() => {
+                    Toast.fail(getFieldError('SHENQINGANJIANLEIXING'));
+                  }}
+                >
+                  <List.Item arrow="horizontal">
+                    <Icon type={getLocalIcon('/others/require.svg')} size="xxs" color="#ff5f5f" />
+                    案件类型
+                  </List.Item>
+                </Picker>
+              </List>
+              <InputItem
+                type="text"
+                {...getFieldProps('ANYOU', {
                   initialValue: '',
-                  rules: [{ required: true, message: '请输入案情概述' }],
+                  rules: [{ required: true, message: '请输入案由' }],
                 })}
-                clear
-                rows={6}
-                error={!!getFieldError('ANQINGMIAOSHU') && Toast.fail(getFieldError('ANQINGMIAOSHU'))}
-                placeholder={'案情概述（200字以上）：'}
-              />
-            </List>
-            <WhiteSpace/>
+                error={!!getFieldError('ANYOU')}
+                onErrorClick={() => {
+                  Toast.fail(getFieldError('ANYOU'));
+                }}
+                placeholder="如离婚纠纷、追索劳动报酬等"
+              >
+                <Icon type={getLocalIcon('/others/require.svg')} size="xxs" color="#ff5f5f" />
+                案由
+              </InputItem>
+              <List>
+                <TextareaItem
+                  {...getFieldProps('ANQINGMIAOSHU', {
+                    initialValue: '',
+                    rules: [{ required: true, message: '请输入案情概述' }],
+                  })}
+                  clear
+                  rows={6}
+                  error={!!getFieldError('ANQINGMIAOSHU') && Toast.fail(getFieldError('ANQINGMIAOSHU'))}
+                  placeholder={'案情概述（必填）：'}
+                />
+              </List>
+            </div>
+            <WhiteSpace />
             <WingBlank>
               <Button type="primary" onClick={this.onSubmit}>提交</Button>
             </WingBlank>
           </form>
-          <WhiteSpace size="lg"/>
+          <WhiteSpace size="lg" />
+          <WhiteSpace size="lg" />
         </div>
         <ActivityIndicator
           toast

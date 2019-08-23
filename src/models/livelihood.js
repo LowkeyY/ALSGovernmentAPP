@@ -1,7 +1,7 @@
 import { parse } from 'qs';
 import modelExtend from 'dva-model-extend';
 import { model } from 'models/common';
-import { queryPartyTabs, queryRobotData, queryPartyData } from 'services/querylist';
+import { queryPartyTabs, queryRobotData, queryPartyData, queryZwfwList, getOffice } from 'services/querylist';
 import { doDecode } from 'utils';
 
 const getInfo = (info) => {
@@ -69,6 +69,9 @@ export default modelExtend(model, {
     scrollerTop: 0,
     paginations: getDefaultPaginations(),
     dataId: '',
+    serviceItems: [],
+    officeData: [],
+    activeKey: [],
   },
   subscriptions: {
     setup ({ dispatch, history }) {
@@ -86,6 +89,7 @@ export default modelExtend(model, {
               scrollerTop: 0,
               paginations: getDefaultPaginations(),
               dataId: '',
+              activeKey: [],
             },
           });
           dispatch({
@@ -110,13 +114,30 @@ export default modelExtend(model, {
           },
         });
         if (data.length > 0) {
-          const { id = '' } = data[0];
+          const { id = '', infos = '' } = data[0];
+          let { type = '' } = getInfo(infos);
           yield put({
             type: 'updateState',
             payload: {
               lanmuId: id,
             },
           });
+          if (type === 'zwzx') {
+            yield put({
+              type: 'queryService',
+              payload: {
+                dataId: id,
+              },
+            });
+          }
+          if (type === 'office') {
+            yield put({
+              type: 'queryOffice',
+              payload: {
+                dataId: id,
+              },
+            });
+          }
         }
       }
     },
@@ -158,7 +179,7 @@ export default modelExtend(model, {
         start = isRefresh ? 1 : current,
         result = yield call(queryPartyData, { dataId, nowPage: start, showCount: size });
       if (result) {
-        let { data = [], totalCount = 0} = result,
+        let { data = [], totalCount = 0 } = result,
           newLists = [];
         newLists = start === 1 ? data : [...lists, ...data];
         yield put({
@@ -177,6 +198,32 @@ export default modelExtend(model, {
         callback();
       }
     },
+
+    * queryService ({ payload }, { call, put }) {
+      const result = yield call(queryZwfwList, payload);
+      if (result) {
+        const { data } = result;
+        yield put({
+          type: 'updateState',
+          payload: {
+            serviceItems: data,
+          },
+        });
+      }
+    },
+    * queryOffice ({ payload }, { call, put }) {
+      const result = yield call(getOffice, payload);
+      if (result) {
+        const { data } = result;
+        yield put({
+          type: 'updateState',
+          payload: {
+            officeData: data,
+          },
+        });
+      }
+    },
+
   },
   reducers: {
     updateListbianmin (state, { payload }) {
