@@ -96,6 +96,17 @@ export default modelExtend(model, {
         });
       }
     },
+    * queryEventType ({ payload }, { call, put, select }) {
+      const data = yield call(queryEventType);
+      if (data.success) {
+        yield put({
+          type: 'updateState',
+          payload: {
+            noticeType: getType(data.data),
+          },
+        });
+      }
+    },
     * queryUsers ({ payload }, { call, put }) {
       const data = yield call(queryUsers);
       if (data.success) {

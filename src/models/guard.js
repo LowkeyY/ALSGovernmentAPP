@@ -20,7 +20,7 @@ const getInfo = (info) => {
     let gridDatas = [];
     data.map((item, index) => {
       const { id = '', route = '', image = '', infos = '', ...others } = item;
-      let { type, showType = '', admin = 'false' } = getInfo(infos);
+      let { type, showType = '', admin = 'false', badge = false } = getInfo(infos);
       if (isAdmin === true) {
         if (type === 'grids') {
           gridDatas.push({
@@ -28,6 +28,7 @@ const getInfo = (info) => {
             showType,
             route: route || '/',
             icon: image || '',
+            badge,
             ...others,
           });
         }

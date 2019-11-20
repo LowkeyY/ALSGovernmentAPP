@@ -167,6 +167,7 @@ function Patry ({ location, dispatch, patry }) {
           <div>
             <TitleBox title={title} more handleClick={handleMoreCilck.bind(null, id, title)} />
             <ListView
+              key={id}
               dataSource={items}
               layoutRow={(rowData, sectionID, rowID) => multipleRow(rowData, sectionID, rowID, handleListClick, dispatch, name)}
               onRefresh={onRefresh.bind(null, { id, title })}

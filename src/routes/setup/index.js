@@ -21,6 +21,11 @@ class Setup extends React.Component {
     super(props);
   }
 
+  componentWillUnmount () {
+    const { users: { username } } = this.props.app;
+
+  }
+
   handleUserNameClick = (user) => {
     prompt('修改昵称', '', [
       { text: '取消' },
@@ -89,28 +94,72 @@ class Setup extends React.Component {
       />
     );
   };
-  handleUpdateClick = (urls, appVerSion, updateInfo) => {
-    if (cnIsAndroid()) {
-      if (urls !== '') {
-        Modal.alert(`版本更新(${appVerSion})`, this.getContent(updateInfo), [
-          {
-            text: '暂不升级',
-            onPress: () => this.props.dispatch({
-              type: 'app/updateState',
-              payload: {
-                showModal: false,
-              },
-            }),
-            style: 'default',
-          },
-          { text: '立刻升级', onPress: () => cnUpdate(urls) },
-        ]);
-      } else {
-        Toast.offline('已经是最新版本啦(#^.^#)');
-      }
+  updateSuccess = () => {
+    this.props.dispatch({
+      type: 'app/updateState',
+      payload: {
+        showUpdate: false,
+      },
+    });
+  };
+  updateError = () => {
+    this.props.dispatch({
+      type: 'app/updateState',
+      payload: {
+        showUpdate: false,
+      },
+    });
+  };
+  progress = (e) => {
+    if (e.lengthComputable) {
+      let num = (e.loaded / e.total) * 100;
+      // if (parseInt(num, 10) === 100) {
+      //   dispatch({
+      //     type: 'app/updateState',
+      //     payload: {
+      //       showUpdate: false,
+      //     },
+      //   });
+      // }
+      this.props.dispatch({
+        type: 'app/updateState',
+        payload: {
+          percentage: parseInt(num, 10),
+        },
+      });
     }
   };
-
+  handerUpdate = (url) => {
+    this.props.dispatch({
+      type: 'app/updateState',
+      payload: {
+        showUpdate: true,
+      },
+    });
+    cnUpdateByDownloadAPK({
+      fileUrl: url,
+      // fileName: new Date().getTime(),
+    }, this.updateSuccess, this.updateError, this.progress);
+  };
+  handleUpdateClick = (urls, appUrl, appVerSion, updateInfo) => {
+    if (urls !== '') {
+      Modal.alert(`版本更新(${appVerSion})`, this.getContent(updateInfo), [
+        {
+          text: '暂不升级',
+          onPress: () => this.props.dispatch({
+            type: 'app/updateState',
+            payload: {
+              showModal: false,
+            },
+          }),
+          style: 'default',
+        },
+        { text: '立刻升级', onPress: () => this.handerUpdate(appUrl, appVerSion, updateInfo) },
+      ]);
+    } else {
+      Toast.offline('已经是最新版本啦(#^.^#)');
+    }
+  };
   handleLoginout = () => {
     this.props.dispatch({
       type: 'app/logout',
@@ -165,7 +214,7 @@ class Setup extends React.Component {
             });
         },
       };
-    const { users: { username, useravatar, usertype }, updates: { upgraded = false, urls = '', appVerSion = '', updateInfo = '' } } = this.props.app;
+    const { users: { username, useravatar, usertype }, updates: { upgraded = false, urls = '', appUrl = '', appVerSion = '', updateInfo = '' } } = this.props.app;
     return (
       <div>
         <Nav title={name} dispatch={this.props.dispatch} />
@@ -201,7 +250,7 @@ class Setup extends React.Component {
             <Item onClick={this.handleAboutUsClick}>
               关于我们
             </Item>
-            <Item extra={appVerSion} onClick={this.handleUpdateClick.bind(null, urls, appVerSion, updateInfo)}>
+            <Item extra={appVerSion} onClick={this.handleUpdateClick.bind(null, urls, appUrl, appVerSion, updateInfo)}>
               {urls !== '' ? <Badge dot>
                 版本信息
               </Badge> : '版本信息'}

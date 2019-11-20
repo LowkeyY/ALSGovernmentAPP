@@ -11,6 +11,7 @@ import ListView from 'components/listview';
 import HeadLine from 'components/headline';
 import { handleGridClick, handleTopLineClick, handleListClick } from 'utils/commonevent';
 import styles from './index.less';
+import NoContent from '../../components/nocontent';
 
 const PrefixCls = 'dashboard';
 
@@ -100,7 +101,6 @@ function Dashboard ({ dashboard, loading, dispatch, app }) {
       if (title !== '' && items.length > 0) {
         result.push(
           <ListView
-            key={id}
             dataSource={items}
             layoutRow={(rowData, sectionID, rowID) => multipleRow(rowData, sectionID, rowID, handleListClick, dispatch, title)}
             onRefresh={onRefresh.bind(null, { id, title })}
@@ -124,7 +124,7 @@ function Dashboard ({ dashboard, loading, dispatch, app }) {
       <div className={styles[`${PrefixCls}-outer-content`]}>{getContent()}</div>
       <WhiteSpace size="xs" />
       <div className={styles[`${PrefixCls}-container`]}>
-        {dataList.length > 0 && getContents(dataList[0], dispatch)}
+        {loading ? <NoContent isLoading={loading} /> : dataList.length > 0 && getContents(dataList[0], dispatch)}
       </div>
     </div>
   );
@@ -135,4 +135,8 @@ Dashboard.propTypes = {
   loading: PropTypes.object,
 };
 
-export default connect(({ dashboard, loading, app }) => ({ dashboard, loading, app }))(Dashboard);
+export default connect(({ dashboard, loading, app }) => ({
+  dashboard,
+  loading: loading.effects[`${PrefixCls}/query`],
+  app,
+}))(Dashboard);

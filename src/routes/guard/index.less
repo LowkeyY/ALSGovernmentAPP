@@ -48,8 +48,26 @@
   }
 }
 
-.@{PrefixCls}-tabbox-count {
-  position: absolute;
-  top: 410px;
-  right: 50px;
+.items {
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  padding: 20px 0;
+  .img {
+    width: 124px;
+    margin-top: 36px;
+    margin-bottom: 18px;
+  }
+  .text {
+    font-size: @FontSizeNm;
+    color: #888;
+  }
 }

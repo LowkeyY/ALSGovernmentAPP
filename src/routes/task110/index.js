@@ -3,8 +3,8 @@ import { connect } from 'dva';
 import { WhiteSpace, List } from 'components';
 import { routerRedux } from 'dva/router';
 import Nav from 'components/nav';
-import styles from './index.less';
 import NoMessage from 'components/nomessage';
+import styles from './index.less';
 
 const PrefixCls = 'task110',
   Item = List.Item,

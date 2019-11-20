@@ -31,6 +31,7 @@ export default modelExtend(model, {
     workCount: {},
     scrollerTop: 0,
     paginations: getDefaultPaginations(),
+    isLoading: false,
   },
   subscriptions: {
     setup ({ dispatch, history }) {
@@ -47,6 +48,7 @@ export default modelExtend(model, {
                 scrollerTop: 0,
                 paginations: getDefaultPaginations(),
                 selectedIndex: 0,
+                isLoading: false,
               },
             });
             dispatch({
@@ -89,6 +91,7 @@ export default modelExtend(model, {
               current: start + 1,
             },
             dataList: newLists,
+            isLoading: false,
           },
         });
       }
@@ -109,7 +112,7 @@ export default modelExtend(model, {
       }
     },
     * collent ({ payload }, { call, put, select }) {
-      const { id, shoucang } = payload, 
+      const { id, shoucang } = payload,
         { success } = yield call(collectAppeal, { ...payload, workId: id });
       if (success) {
         const { dataList } = yield select(_ => _[namespace]),

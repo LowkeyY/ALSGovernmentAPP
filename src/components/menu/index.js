@@ -26,8 +26,9 @@ const Menu = (props) => {
         columnNum={props.columnNum || 3}
         hasLine={false}
         isCarousel={props.isCarousel || false}
+        renderItem={props.renderItem ? (el) => props.renderItem(el) : null}
         onClick={
-          (data, index) => {
+          (data) => {
             const param = {
               pathname: data.route,
               ...data,
@@ -44,9 +45,11 @@ Menu.propTypes = {
   dispatch: PropTypes.func.isRequired,
   datas: PropTypes.array,
   columnNum: PropTypes.number,
+  renderItem: PropTypes.func,
 };
 Menu.defaultProps = {
   datas: [],
+  renderItem: null,
   isLogin: false,
 };
 export default Menu;

@@ -45,6 +45,8 @@ export default {
     guiji: {},
     showModal: false,
     noViewCount: 0,
+    showUpdate: false,
+    percentage: 0,
   },
   subscriptions: {
     setupHistory ({ dispatch, history }) {
@@ -68,6 +70,14 @@ export default {
         }
       });
       history.listen(({ pathname, query, action }) => {
+        dispatch({
+          type: 'updateState',
+          payload: {
+            showUpdate: false,
+            percentage: 0,
+            showModal: false,
+          },
+        });
         if (pathname === '/') {
           dispatch({
             type: 'updateUsers',
@@ -93,7 +103,7 @@ export default {
           },
         });
         // postCurrentPosition(guiji)
-        if (urls !== ''&& cnIsAndroid() ) {
+        if (urls !== '') {
           yield put({
             type: 'updateState',
             payload: {

@@ -224,7 +224,7 @@ class Diary extends Component {
   }
 
   mediaFileOnError (error) {
-    handleVoiceRecordingEnd();
+    this.handleVoiceRecordingEnd();
   }
 
   handleDivClick () {

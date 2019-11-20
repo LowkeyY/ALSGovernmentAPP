@@ -1,5 +1,4 @@
-import { Component } from 'react';
-import ReactDOM from 'react-dom';
+import React from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { Icon, WhiteSpace, Accordion, Button, Eventlisten, Toast, List } from 'components';
@@ -174,7 +173,6 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
           },
         }));
       }
-
     },
     handleReactClick = () => {
       dispatch(routerRedux.push({
@@ -222,14 +220,19 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
           >退回</Button>
         </div>);
       } else if (flowLeve === '3' && flowState === '3') {
-        return (<div>
-          <Button type="primary"
-                  inline
-                  size="small"
-                  style={{ marginRight: '4px' }}
-                  onClick={handleCompleteClick}
-          >完成</Button>
-        </div>);
+        return (
+          <div>
+            <Button
+              type="primary"
+              inline
+              size="small"
+              style={{ marginRight: '4px' }}
+              onClick={handleCompleteClick}
+            >
+              完成
+            </Button>
+          </div>
+        );
       } else if (complete !== '0') {
         return (<div>
           <Button type="primary"
@@ -314,13 +317,7 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
         }));
       }
     },
-    renderNav = (taskId) => {
-      if (isWork === '0' || isWork === '2') {
-        return <span onClick={handleSendClick.bind(null, taskId)}>发布任务</span>;
-      }
-      return '';
-    },
-    handleSendClick = () => {
+    callbackSuccess = () => {
       dispatch(routerRedux.push({
         pathname: '/selectmembers',
         query: {
@@ -328,9 +325,35 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
           workId,
           isWork,
           flowLeve,
+          flowId
         },
       }));
     },
+    callbackError = () => {
+      dispatch(routerRedux.push({
+        pathname: '/editortask',
+        query: {
+          taskId,
+        },
+      }));
+    },
+    handleSendClick = () => {
+      dispatch({
+        type: `${PrefixCls}/validateTask`,
+        payload: {
+          taskId,
+        },
+        callbackSuccess,
+        callbackError,
+      });
+    },
+    renderNav = (taskId) => {
+      if (isWork === '0' || isWork === '2') {
+        return <span onClick={handleSendClick.bind(null, taskId)}>发布任务</span>;
+      }
+      return '';
+    },
+
     props = {
       handlerSubmit: onSubmit,
       dispatch,
@@ -341,19 +364,20 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
     };
   return (
     <div>
-      <Nav title="任务详情"
-           dispatch={dispatch}
-           navEvent={readMessage.bind(null, taskId)}
-           renderNavRight={renderNav(taskId, isWork)}
+      <Nav
+        title="任务详情"
+        dispatch={dispatch}
+        navEvent={readMessage.bind(null, taskId)}
+        renderNavRight={renderNav(taskId, isWork)}
       />
       <div className={styles[`${PrefixCls}-outer`]}>
         <div className={styles[`${PrefixCls}-outer-title`]}>
           {taskTitle}
         </div>
-        <Accordion className={styles[`${PrefixCls}-outer-taskdetails`]}>
+        <Accordion defaultActiveKey="0" className={styles[`${PrefixCls}-outer-taskdetails`]}>
           <Accordion.Panel header={
             <div className={styles[`${PrefixCls}-outer-taskdetails-title`]}>
-              <Icon type={getLocalIcon('/others/task.svg')} size="md"/>
+              <Icon type={getLocalIcon('/others/task.svg')} size="md" />
               <span>【任务详情】</span>
             </div>
           }
@@ -393,22 +417,25 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
         {
           isShowButton
             ?
-            <div className={styles[`${PrefixCls}-outer-control`]}>
-              {getReactButtons()}
-              {getTaskButtons(flowLeve, flowState, complete, isWork)}
-              {getUpTableButtons()}
-              {getBackTaskButtons(isWork)}
-              {getEditorTaskButtons(flowLeve, isWork)}
-            </div> :
+            (
+              <div className={styles[`${PrefixCls}-outer-control`]}>
+                {getReactButtons()}
+                {getTaskButtons(flowLeve, flowState, complete, isWork)}
+                {getUpTableButtons()}
+                {getBackTaskButtons(isWork)}
+                {getEditorTaskButtons(flowLeve, isWork)}
+              </div>
+            )
+            :
             ''
         }
         <div className={styles[`${PrefixCls}-outer-chat`]}>
-          <Icon type={getLocalIcon('/others/chat.svg')} size="md"/>
+          <Icon type={getLocalIcon('/others/chat.svg')} size="md" />
           <span className={styles[`${PrefixCls}-outer-details-title`]}>【任务汇报】</span>
         </div>
       </div>
-      <ChartRoom {...props} localArr={appendItems(chartArr, userid)} useravatar={useravatar}/>
-      <Eventlisten willCallback={onCnevent}/>
+      <ChartRoom {...props} localArr={appendItems(chartArr, userid)} useravatar={useravatar} />
+      <Eventlisten willCallback={onCnevent} />
     </div>
   );
 }

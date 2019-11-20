@@ -2,50 +2,64 @@
 
 .@{PrefixCls}-outer {
   background: #fff;
-  padding: 20px;
+  padding: 20px 30px;
   min-height: 100vh;
+  :global {
+    .am-list-item {
+      padding-left: 0;
+    }
+  }
 }
 
 .@{PrefixCls}-title {
   margin-bottom: 20px;
+  padding: 20px 0 10px;
   & div {
-    font-size: 34px;
-    font-weight: bold;
-    margin-bottom: 20px;
+    font-size: @FontSizeLg;
+    margin-bottom: 10px;
   }
   & span {
-    font-size: 28px;
+    font-size: @FontSizeSm;
 
+    color: @text-content-color;
+  }
+  P {
+    margin: 10px 0 0;
+    color: @text-content-color;
   }
 }
 
 .@{PrefixCls}-info {
-  font-size: 30px;
+  font-size: @FontSizeSm;
+  padding: 0 20px;
   & div {
     margin-bottom: 20px;
   }
   &-base {
     display: flex;
     justify-content: space-between;
+    font-size: @FontSizeSm;
   }
 }
-.@{PrefixCls}-details{
-  font-size: 34px;
+
+.@{PrefixCls}-details {
+  font-size: @FontSizeNm;
   text-indent: 2em;
-  margin: 30px 0;
-  &-images{
+  margin: 10px 0;
+  color: @text-content-color;
+  &-images {
     width: 100%;
-    margin:20px 0;
+    margin: 20px 0;
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    flex-wrap:wrap;
+    flex-wrap: wrap;
     & div {
       width: 49%;
-      height:250px;
-      margin-right:1%;
+      height: 250px;
+      margin-right: 1%;
       background-size: cover;
-      margin-bottom:1%;
+      margin-bottom: 1%;
     }
   }
 }

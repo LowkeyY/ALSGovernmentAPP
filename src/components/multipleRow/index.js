@@ -62,9 +62,7 @@ const multipleRow = (rowData, sectionID, rowID, onClick, dispatch, headName, has
           </div>
           {hasDate === 'true' ? <div className={styles.date}>{time}</div> : ''}
         </div>
-        <div>
           {image !== '' ? <img src={image} alt="" /> : null}
-        </div>
       </div>
     ),
     3: (

@@ -3,6 +3,7 @@ import modelExtend from 'dva-model-extend';
 import { model } from 'models/common';
 import { Toast } from 'components';
 import { queryDetails, Praise } from 'services/querycontent';
+import { _cg, _cs } from 'utils/cookie';
 import { GetStudyTime } from 'services/app';
 
 const getViewIamges = (text) => {
@@ -29,7 +30,8 @@ export default modelExtend(model, {
     viewImages: [],
     viewImageIndex: -1,
     isPraise: false,
-    num: 0
+    num: 0,
+    uuid: null,
   },
   subscriptions: {
     setup ({ dispatch, history }) {
@@ -44,7 +46,7 @@ export default modelExtend(model, {
                 viewImages: [],
                 viewImageIndex: -1,
                 currentData: {},
-                isPraise: false
+                isPraise: false,
               },
             });
             dispatch({
@@ -60,7 +62,7 @@ export default modelExtend(model, {
   },
   effects: {
     * query ({ payload }, { call, put, select }) {
-      const data = yield call(queryDetails, { ...payload }), 
+      const data = yield call(queryDetails, { ...payload }),
         { content = '', isClick, dzSum } = data,
         viewImages = getViewIamges(content);
       yield put({
@@ -69,28 +71,32 @@ export default modelExtend(model, {
           currentData: data,
           viewImages,
           isPraise: isClick,
-          num: dzSum
+          num: dzSum,
         },
       });
     },
     * praise ({ payload }, { call, put, select }) {
-      const { isClick, message = '操作失败，请稍后尝试' } = payload;
+      const { isClick } = payload;
       let { num } = yield select(_ => _.details);
-      const data = yield call(Praise, { ...payload });
-      if (data.success) {
+      const { success, uuid = null, msg = '操作失败，请稍后尝试', gaojianId = null } = yield call(Praise, { ...payload });
+      if (success) {
+        if (gaojianId && uuid) {
+          _cs(gaojianId, uuid);
+        }
         yield put({
           type: 'updateState',
           payload: {
             isPraise: !isClick,
-            num: isClick ? --num : ++num
+            num: isClick ? --num : ++num,
+            uuid: _cg(gaojianId),
           },
         });
       } else {
-        Toast.fail(message);
+        Toast.fail(msg);
       }
     },
     * getStudyTime ({ payload }, { call, put }) {
-      const data = yield call(GetStudyTime, payload);
+      yield call(GetStudyTime, payload);
     },
-  }
+  },
 });

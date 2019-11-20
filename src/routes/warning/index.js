@@ -230,7 +230,7 @@ class Warning extends Component {
   }
 
   mediaFileOnError (error) {
-    handleVoiceRecordingEnd();
+    this.handleVoiceRecordingEnd();
   }
 
   getCurrentLocation () {

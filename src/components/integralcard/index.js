@@ -13,7 +13,7 @@ function IntegralCard (props) {
       <div className={styles[`${PrefixCls}-outer-info`]}>
         <div className={styles[`${PrefixCls}-outer-info-title`]}>{props.goodsName}</div>
         <div className={styles[`${PrefixCls}-outer-info-coin`]}>
-          <span className={styles[`${PrefixCls}-outer-info-coin-details`]}>{`${props.goodsJiFen}金币`}</span>
+          <span className={styles[`${PrefixCls}-outer-info-coin-details`]}>{`${props.goodsJiFen}`}</span>
           <span className={styles[`${PrefixCls}-outer-info-coin-button`]}>{`库存:${props.goodsKuCun}`}</span>
         </div>
       </div>

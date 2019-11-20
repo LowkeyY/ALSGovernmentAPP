@@ -131,6 +131,13 @@ module.exports = {
     GetZwfwApi: '/cphsc/interface/getZilanmuGaojian.jcp',
     GetOfficeApi: '/cphsc/interface/getZilanmuLanmu.jcp',
     GetRankApi: '/cphsc/interface/condition/getConditionRanking.jcp',
-    GetThreeApi:'/cphsc/interface/getZilanmuUpdateDate.jcp'
+    GetThreeApi: '/cphsc/interface/getZilanmuUpdateDate.jcp',
+    GetWorkFormDataApi: '/ExternalItems/policWork/interface/getWorkFromData.jcp',
+    GetWorkAppealFormDataApi: '/cphsc/interface/getWorkFromData.jcp',
+    GetWorkTaskFlowApi: '/ExternalItems/policWork/interface/getWorkTaskFlow.jcp',
+    GetPowersApi: '/cphsc/interface/fazhi/zhiquanchaxun.jcp',
+    GetPowersDetailsApi: '/cphsc/interface/fazhi/getzhiquan.jcp',
+    ValidateTaskApi: '/ExternalItems/taskRelease/validateTaskInfo.jcp',
+    PatryOpinionAPI: 'cphsc/interface/dangjian/savaFanKui.jcp',
   },
 };

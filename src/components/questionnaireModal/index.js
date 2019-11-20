@@ -52,10 +52,12 @@ const getSubmitData = (data) => {
 class QuestionNaireModal extends React.Component {
   constructor (props) {
     const { condition } = props;
-    console.log(condition);
     super(props);
     this.state = {
       visible: JSON.stringify(condition) !== '{}' && localStorage.getItem(condition.conditionId) === null,
+      descriptionError: false,
+      descriptingVal: {},
+      hasError: {},
     };
   }
 
@@ -65,27 +67,38 @@ class QuestionNaireModal extends React.Component {
         visible: JSON.stringify(nextProps.condition) !== '{}' && localStorage.getItem(nextProps.condition.conditionId) === null,
       });
     }
-
   }
+
 
   onSubmit = (subjectData, conditionId) => {
     const rankId = subjectData.find(item => item.isRankingTitle === 'Y').subjectId;
+    const must = subjectData.filter(item => item.subjectMust === 'Y' && item.subjectType === 'description' && item.subjectSpecial !== 'location');
     this.props.form.validateFields({
       force: true,
     }, (error) => {
       if (!error) {
-        this.props.dispatch({
-          type: 'survey/submitSurveyInfo',
-          payload: {
-            dataId: conditionId,
-            condtionData: JSON.stringify(getSubmitData(this.props.form.getFieldsValue())),
-            sessionData: this.props.form.getFieldsValue(),
-            isRankingTitle: this.props.form.getFieldsValue()[rankId],
-          },
-          callback: this.setState({ visible: false }),
-        });
+        const res = {
+          ...this.state.descriptingVal,
+          ...this.props.form.getFieldsValue(),
+        };
+        console.log(this.props.form.getFieldsValue());
+
+        if (this.validate(this.state.descriptingVal, must) === false) {
+          Toast.fail('请确认信息是否正确');
+        } else {
+          this.props.dispatch({
+            type: 'survey/submitSurveyInfo',
+            payload: {
+              dataId: conditionId,
+              condtionData: JSON.stringify(getSubmitData(res)),
+              sessionData: res,
+              isRankingTitle: res[rankId],
+            },
+            callback: this.setState({ visible: false }),
+          });
+        }
       } else {
-        Toast.fail('请确认信息是否正确。');
+        Toast.fail('请确认信息是否正确');
       }
     });
   };
@@ -107,6 +120,37 @@ class QuestionNaireModal extends React.Component {
     this.props.dispatch(
       routerRedux.goBack(),
     );
+  };
+
+  handlerChange = ({ subjectId, subjectMust, subjectTitle }, val) => {
+    if (val.length > 100) {
+      this.setState({
+        hasError: {
+          [subjectId]: `${subjectTitle}最多只能输入100个字符`,
+        },
+      });
+    } else if (val === '' && subjectMust === 'Y') {
+      this.setState({
+        hasError: {
+          [subjectId]: `${subjectTitle}不能为空`,
+        },
+      });
+    } else {
+      this.setState({
+        hasError: {},
+      });
+    }
+
+    this.setState({
+      descriptingVal: {
+        ...this.state.descriptingVal,
+        [subjectId]: val,
+      },
+    });
+  };
+
+  getError = (id) => {
+    return this.state.hasError[id];
   };
 
   getContent = (datas) => {
@@ -136,14 +180,10 @@ class QuestionNaireModal extends React.Component {
           result.push(
             <InputItem
               key={i}
-              {...getFieldProps(subjectId, {
-                rules: [{ required: subjectMust, message: `${subjectTitle}必须输入` },
-                  { max: 100, message: '标题最多能输入100个字' },
-                ],
-              })}
-              error={!!getFieldError(subjectId)}
+              onChange={(val) => this.handlerChange(item, val)}
+              error={this.getError(subjectId)}
               onErrorClick={() => {
-                Toast.fail(getFieldError(subjectId));
+                Toast.fail(this.getError(subjectId));
               }}
             >
               {subjectTitle}
@@ -202,11 +242,40 @@ class QuestionNaireModal extends React.Component {
     }
   };
 
+  validate = (data, must) => {
+    if (JSON.stringify(data) !== '{}') {
+      for (let i in data) {
+        const index = must.findIndex(item => item.subjectId === i);
+        must.splice(index, 1);
+      }
+      must.map(item => {
+        this.setState((state) => ({ // 同步更新state
+          hasError: {
+            ...state.hasError,
+            [item.subjectId]: `${item.subjectTitle}不能为空`,
+          },
+        }));
+      });
+      if (must.length > 0) {
+        return false;
+      }
+      return true;
+    }
+    must.map(item => {
+      this.setState((state) => ({ // 同步更新state
+        hasError: {
+          ...state.hasError,
+          [item.subjectId]: `${item.subjectTitle}不能为空`,
+        },
+      }));
+    });
+    return false;
+  };
+
   render () {
     const { visible } = this.state;
     const { condition = {} } = this.props,
       { conditionTitle = '请填写信息', conditionId = '', conditionDescribe = '', subjectData = [], buttonData = {} } = condition;
-
     return (
       <Modal
         className={styles.container}

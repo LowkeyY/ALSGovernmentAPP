@@ -17,7 +17,7 @@ const tabs = [
   PrefixCls = 'appeal';
 
 function Appeal ({ location, dispatch, appeal, app, loading }) {
-  const { paginations, scrollerTop } = appeal,
+  const { paginations, scrollerTop, isLoading } = appeal,
     { isLogin } = app,
 
     handleCollectClick = (data) => {
@@ -254,6 +254,12 @@ function Appeal ({ location, dispatch, appeal, app, loading }) {
             isRefresh: true,
           },
         });
+        dispatch({
+          type: `${PrefixCls}/updateState`,
+          payload: {
+            isLoading: true,
+          },
+        });
       } else {
         Modal.alert('您还没登陆', '请登陆后浏览', [
           { text: '稍后再说', onPress: () => console.log('cancel') },
@@ -306,7 +312,7 @@ function Appeal ({ location, dispatch, appeal, app, loading }) {
         }}
         onTabClick={handleTabClick}
       >
-        {loading ? <NoContent isLoading={loading} /> : getContents(currentDataList)}
+        {loading && isLoading ? <NoContent isLoading={loading} /> : getContents(currentDataList)}
       </Tabs>
     </div>
   );

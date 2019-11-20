@@ -1,21 +1,21 @@
-import React from 'react'
-import { connect } from 'dva'
-import { routerRedux } from 'dva/router'
-import Nav from 'components/nav'
-import ListView from 'components/listview'
-import { WhiteSpace, List, Tabs, Tag, Toast, Badge } from 'components'
-import { centerAppealRow } from 'components/row'
-import styles from './index.less'
+import React from 'react';
+import { connect } from 'dva';
+import { routerRedux } from 'dva/router';
+import Nav from 'components/nav';
+import ListView from 'components/listview';
+import { WhiteSpace, List, Tabs, Tag, Toast, Badge } from 'components';
+import { centerAppealRow } from 'components/row';
+import styles from './index.less';
 
 const PrefixCls = 'centertask',
   tabs = [
     { title: <Badge>办理中</Badge> },
     { title: <Badge>已办结</Badge> },
-  ]
+  ];
 
 function CenterTask ({ location, dispatch, centertask }) {
   const { name = '' } = location.query,
-    { paginations, scrollerTop, selectedIndex, dataList } = centertask
+    { paginations, scrollerTop, selectedIndex, dataList } = centertask;
   const handleTabClick = (tab, index) => {
       dispatch({
         type: `${PrefixCls}/queryList`,
@@ -23,7 +23,7 @@ function CenterTask ({ location, dispatch, centertask }) {
           selected: index,
           isRefresh: true,
         },
-      })
+      });
     },
     onRefresh = (callback) => {
       dispatch({
@@ -32,7 +32,7 @@ function CenterTask ({ location, dispatch, centertask }) {
           callback,
           isRefresh: true,
         },
-      })
+      });
     },
     onEndReached = (callback) => {
       dispatch({
@@ -40,7 +40,7 @@ function CenterTask ({ location, dispatch, centertask }) {
         payload: {
           callback,
         },
-      })
+      });
     },
     onScrollerTop = (top) => {
       if (typeof top !== 'undefined' && !isNaN(top * 1)) {
@@ -49,42 +49,44 @@ function CenterTask ({ location, dispatch, centertask }) {
           payload: {
             scrollerTop: top,
           },
-        })
+        });
       }
     },
-    handleCardClick = ({ id }) => {
+    handleCardClick = ({ id, state }) => {
       dispatch(routerRedux.push({
         pathname: '/centertaskdetails',
         query: {
           workId: id,
+          isComplete: parseInt(state, 10) === 5,
         },
-      }))
+      }));
     },
     getContents = (lists) => {
       const result = [],
         { current, total, size } = paginations,
         hasMore = (total > 0) && ((current > 1 ? current - 1 : 1) * size < total),
-        layoutList = (<ListView layoutHeader={''}
-                                dataSource={lists}
-                                layoutRow={(rowData, sectionID, rowID) => centerAppealRow(rowData, sectionID, rowID, handleCardClick)}
-                                onEndReached={onEndReached}
-                                onRefresh={onRefresh}
-                                hasMore={hasMore}
-                                onScrollerTop={onScrollerTop.bind(null)}
-                                scrollerTop={scrollerTop}
-        />)
+        layoutList = (<ListView
+          layoutHeader={''}
+          dataSource={lists}
+          layoutRow={(rowData, sectionID, rowID) => centerAppealRow(rowData, sectionID, rowID, handleCardClick)}
+          onEndReached={onEndReached}
+          onRefresh={onRefresh}
+          hasMore={hasMore}
+          onScrollerTop={onScrollerTop.bind(null)}
+          scrollerTop={scrollerTop}
+        />);
       for (let i = 0; i < tabs.length; i++) {
         if (i === selectedIndex) {
-          result.push(<div>{layoutList}</div>)
+          result.push(<div>{layoutList}</div>);
         } else {
-          result.push(<div/>)
+          result.push(<div />);
         }
       }
-      return result
-    }
+      return result;
+    };
   return (
     <div>
-      <Nav title={name} dispatch={dispatch}/>
+      <Nav title={name} dispatch={dispatch} />
       <Tabs
         initialPage={0}
         page={selectedIndex}
@@ -97,10 +99,10 @@ function CenterTask ({ location, dispatch, centertask }) {
         {dataList.length > 0 && getContents(dataList)}
       </Tabs>
     </div>
-  )
+  );
 }
 
 export default connect(({ loading, centertask }) => ({
   loading,
   centertask,
-}))(CenterTask)
+}))(CenterTask);

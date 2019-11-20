@@ -7,12 +7,12 @@ import TitleBox from 'components/titlecontainer';
 import styles from './index.less';
 
 
-const PrefixCls = 'selectmembers', 
+const PrefixCls = 'selectmembers',
   alert = Modal.alert;
 const CheckboxItem = Checkbox.CheckboxItem;
 
 function Selectmembers ({ location, dispatch, selectmembers }) {
-  const { name = '发布任务' } = location.query,
+  const { name = '发布任务', flowId = '' } = location.query,
     { lists = [], taskId = '', workId = '', isWork, flowLeve, currentSelect = [] } = selectmembers,
     getItems = (arr) => {
       let newArr = [];
@@ -24,12 +24,13 @@ function Selectmembers ({ location, dispatch, selectmembers }) {
     getSelectUsers = (currentSelect) => {
       return (<div>
         <div>已选择下发人员</div>
-        {getItems(currentSelect).map(data => (
-          <div style={{ color: '#108ee9' }}>{data}</div>
-        ))}
+        {getItems(currentSelect)
+          .map(data => (
+            <div style={{ color: '#108ee9' }}>{data}</div>
+          ))}
       </div>);
     },
-    
+
     submit = (currentSelect, isWork) => {
       const isBack = isWork === '2';
       let newArr = [];
@@ -44,8 +45,9 @@ function Selectmembers ({ location, dispatch, selectmembers }) {
           cldw: newArr.join(),
           taskId,
           workId,
-          taskFlowLeve: flowLeve * 1 + 1
-        }
+          flowId,
+          taskFlowLeve: flowLeve * 1 + 1,
+        },
       });
     },
     handleNavClick = (currentSelect) => {
@@ -72,8 +74,9 @@ function Selectmembers ({ location, dispatch, selectmembers }) {
       dispatch({
         type: 'selectmembers/queryUsers',
         payload: {
-          searchText: val
-        }
+          searchText: val,
+          taskId,
+        },
       });
     },
     handleCancelClick = () => {
@@ -82,15 +85,19 @@ function Selectmembers ({ location, dispatch, selectmembers }) {
       });
     },
     handleSelectClick = (key) => {
-      let newSelect = [], 
+      let newSelect = [],
         index = -1;
       if ((index = currentSelect.indexOf(key)) !==
-        -1) { newSelect = [...currentSelect.slice(0, index), ...currentSelect.slice(index + 1)]; } else { newSelect = [...currentSelect, key]; }
+        -1) {
+        newSelect = [...currentSelect.slice(0, index), ...currentSelect.slice(index + 1)];
+      } else {
+        newSelect = [...currentSelect, key];
+      }
       dispatch({
         type: `${PrefixCls}/updateState`,
         payload: {
-          currentSelect: newSelect
-        }
+          currentSelect: newSelect,
+        },
       });
     };
   return (
@@ -122,7 +129,7 @@ function Selectmembers ({ location, dispatch, selectmembers }) {
                   </List>
                 </Accordion.Panel>
               </Accordion>
-            
+
             );
           })
         }

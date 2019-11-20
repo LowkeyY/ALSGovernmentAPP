@@ -339,7 +339,6 @@ class LawApply extends Component {
                     initialValue: '',
                     rules: [
                       { required: true, message: '请输入联系方式' },
-                      { pattern: pattern.phone.pattern, message: pattern.phone.message },
                     ],
                   })}
                   error={!!getFieldError('ADDR')}

@@ -16,7 +16,24 @@ const PrefixCls = 'guard';
 function Guard ({ location, dispatch, guard, app }) {
   const { name = '' } = location.query,
     { grids, noticeData, noticeGird } = guard,
-    { noViewCount = 0 } = app;
+    { noViewCount = 0 } = app,
+    renderItem = (el) => {
+      const { icon = '', text = '', badge = false } = el;
+      return (
+        badge && noViewCount * 1 > 0 ?
+          <div className={styles.items}>
+            <Badge text={noViewCount * 1} overflowCount={99}>
+              <img className={styles.img} src={icon} alt="" />
+            </Badge>
+            <div className={styles.text}>{text}</div>
+          </div>
+          :
+          <div className={styles.items}>
+            <img className={styles.img} src={icon} alt="" />
+            <div className={styles.text}>{text}</div>
+          </div>
+      );
+    };
   return (
     <div className={styles[`${PrefixCls}-outer`]} style={{ backgroundImage: `url(${guardBg})` }}>
       <Nav title={name} dispatch={dispatch} />
@@ -44,12 +61,15 @@ function Guard ({ location, dispatch, guard, app }) {
       <WhiteSpace size="lg" />
       {
         grids.length > 0 &&
-        <Menu handleGridClick={handleGridClick} columnNum={3} dispatch={dispatch} datas={grids} />
+        <Menu
+          handleGridClick={handleGridClick}
+          columnNum={3}
+          dispatch={dispatch}
+          datas={grids}
+          renderItem={renderItem}
+        />
       }
-      <div className={styles[`${PrefixCls}-tabbox-count`]}>{noViewCount * 1 > 0 ?
-        <Badge text={noViewCount * 1} overflowCount={99} /> : ''}</div>
     </div>
-
   );
 }
 

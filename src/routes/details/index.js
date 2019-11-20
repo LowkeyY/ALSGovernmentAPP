@@ -32,7 +32,7 @@ class Details extends React.Component {
 
   render () {
     const { name = '', noPraise = false, dataId } = this.props.location.query,
-      { currentData: { content, title, date, tongjiId, isClick, dzSum = 0 }, isOpen, viewImages, viewImageIndex, isPraise, num } = this.props.details,
+      { currentData: { content, title, date, tongjiId, isClick, dzSum = 0 }, isOpen, viewImages, viewImageIndex, isPraise, num, uuid } = this.props.details,
       { isLogin } = this.props.app,
       getContents = () => {
         return {
@@ -55,26 +55,14 @@ class Details extends React.Component {
         }
       },
       handlePraiseClick = () => {
-        if (isLogin) {
-          this.props.dispatch({
-            type: 'details/praise',
-            payload: {
-              dataId,
-              isClick: isPraise,
-            },
-          });
-        } else {
-          Modal.alert('您还没登陆', '登录后才能点赞噢！', [
-            { text: '稍后再说', onPress: () => console.log('cancel') },
-            {
-              text: '立刻登陆',
-              onPress: () =>
-                this.props.dispatch(routerRedux.push({
-                  pathname: '/login',
-                })),
-            },
-          ]);
-        }
+        this.props.dispatch({
+          type: 'details/praise',
+          payload: {
+            dataId,
+            isClick: isLogin ? isPraise : false,
+            uuid,
+          },
+        });
       },
       onClose = () => {
         this.props.dispatch({

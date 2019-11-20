@@ -31,7 +31,8 @@ import {
   DatePicker,
   Drawer,
   Popover,
-  NoticeBar
+  NoticeBar,
+  Progress,
 } from 'antd-mobile';
 
 module.exports = {
@@ -67,5 +68,6 @@ module.exports = {
   DatePicker,
   Drawer,
   Popover,
-  NoticeBar
+  NoticeBar,
+  Progress,
 };

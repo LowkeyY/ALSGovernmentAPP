@@ -1,7 +1,7 @@
 import { request, config } from 'utils';
 
 const { api } = config;
-const { QueryManuscriptApi, QueryColumnTypeApi, JicengshengyinApi, LanmuAllApi, GetTaskListApi, GetAllTaskApi, GetTowStupidApi, GetPatryWorkListApi, GetTowStupidListApi, GetVolunteerOrderApi, GettongjibumenApi, GetUnreadMessageApi, QueryMembersApi, SendTaskApi, Get110TaskApi, Get110TaskDetailApi, Reply110TaskApi, GetTaskStatisticsApi, GetRobotDataApi, SearchLanmuApi, GetFairListApi, GetMyLawyerApi, GetMediateApi, GetZwfwApi, GetOfficeApi, GetRankApi,GetThreeApi } = api;
+const { QueryManuscriptApi, QueryColumnTypeApi, JicengshengyinApi, LanmuAllApi, GetTaskListApi, GetAllTaskApi, GetTowStupidApi, GetPatryWorkListApi, GetTowStupidListApi, GetVolunteerOrderApi, GettongjibumenApi, GetUnreadMessageApi, QueryMembersApi, SendTaskApi, Get110TaskApi, Get110TaskDetailApi, Reply110TaskApi, GetTaskStatisticsApi, GetRobotDataApi, SearchLanmuApi, GetFairListApi, GetMyLawyerApi, GetMediateApi, GetZwfwApi, GetOfficeApi, GetRankApi, GetThreeApi, GetPowersApi, GetPowersDetailsApi } = api;
 
 export async function queryPartyData (payload) {
   return request({
@@ -219,6 +219,22 @@ export async function queryAssistanceList (payload) {
 export async function queryMediateList (payload) {
   return request({
     url: GetMediateApi,
+    data: payload,
+  });
+}
+
+
+export async function queryPowersList (payload) {
+  return request({
+    url: GetPowersApi,
+    data: payload,
+    method: 'post',
+  });
+}
+
+export async function queryPowersDetails (payload) {
+  return request({
+    url: GetPowersDetailsApi,
     data: payload,
   });
 }

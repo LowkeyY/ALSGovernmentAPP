@@ -1,14 +1,14 @@
-import { parse } from 'qs'
-import modelExtend from 'dva-model-extend'
-import { model } from 'models/common'
-import { queryCenterAppeal } from 'services/centertask'
+import { parse } from 'qs';
+import modelExtend from 'dva-model-extend';
+import { model } from 'models/common';
+import { queryCenterAppeal } from 'services/centertask';
 
 const getDefaultPaginations = () => ({
     current: 1,
     total: 0,
     size: 10,
   }),
-  namespace = 'centertask'
+  namespace = 'centertask';
 export default modelExtend(model, {
   namespace,
   state: {
@@ -20,21 +20,23 @@ export default modelExtend(model, {
   subscriptions: {
     setup ({ dispatch, history }) {
       history.listen(location => {
-        let { pathname, action } = location
+        let { pathname, action } = location;
         if (pathname === '/centertask') {
-          dispatch({
-            type: 'updateState',
-            payload: {
-              scrollerTop: 0,
-              paginations: getDefaultPaginations(),
-            },
-          })
+          if (action === 'PUSH') {
+            dispatch({
+              type: 'updateState',
+              payload: {
+                scrollerTop: 0,
+                paginations: getDefaultPaginations(),
+              },
+            });
+          }
           dispatch({
             type: 'queryList',
             payload: {},
-          })
+          });
         }
-      })
+      });
     },
   },
   effects: {
@@ -42,19 +44,19 @@ export default modelExtend(model, {
       const { callback = '', isRefresh = false, selected = -1 } = payload,
         _this = yield select(_ => _[`${namespace}`]),
         { paginations: { current, total, size }, selectedIndex, dataList } = _this,
-        currentSelectedIndex = selected !== -1 ? selected : selectedIndex
+        currentSelectedIndex = selected !== -1 ? selected : selectedIndex;
       yield put({
         type: 'updateState',
         payload: {
           selectedIndex: currentSelectedIndex,
         },
-      })
+      });
       const start = isRefresh ? 1 : current,
-        result = yield call(queryCenterAppeal, { showType: currentSelectedIndex + 1, nowPage: start, showCount: size })
+        result = yield call(queryCenterAppeal, { showType: currentSelectedIndex + 1, nowPage: start, showCount: size });
       if (result) {
         let { data = [], sumCount = 0 } = result,
-          newLists = []
-        newLists = start === 1 ? data : [...dataList, ...data]
+          newLists = [];
+        newLists = start === 1 ? data : [...dataList, ...data];
         yield put({
           type: 'updateState',
           payload: {
@@ -65,12 +67,12 @@ export default modelExtend(model, {
             },
             dataList: newLists,
           },
-        })
+        });
       }
       if (callback) {
-        callback()
+        callback();
       }
     },
   },
 
-})
+});

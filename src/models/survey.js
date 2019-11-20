@@ -154,6 +154,8 @@ export default modelExtend(model, {
         if (callback) callback();
         const session = { ...sessionData, submitId, isRankingTitle };
         localStorage.setItem(dataId, JSON.stringify(session));
+      } else {
+        Toast.fail('提交失败');
       }
     },
     * sumbit ({ payload }, { call, put }) {

@@ -1,11 +1,19 @@
 import { request, config, formsubmit } from 'utils';
 
 const { api } = config;
-const { GetAppealTypeApi, getEventTypeApi, SendAppealInfoApi, GetAppealList, GetStreetApi, GetAppealContent, QueryWorkCountApi, CollectAppealApi, TaskurgentApi, IsAdminApi, ChooseUsersApi, CreateNewTaskApi, sendLegalMediationApi, getEducationTypeApi, getMediationTypeApi, sendEventTpyeApi, SendApplyApi } = api;
+const { GetAppealTypeApi, getEventTypeApi, SendAppealInfoApi, GetAppealList, GetStreetApi, GetAppealContent, QueryWorkCountApi, CollectAppealApi, TaskurgentApi, IsAdminApi, ChooseUsersApi, CreateNewTaskApi, sendLegalMediationApi, getEducationTypeApi, getMediationTypeApi, sendEventTpyeApi, SendApplyApi, GetWorkAppealFormDataApi } = api;
 
 export async function queryAppealType (payload) {
   return request({
     url: GetAppealTypeApi,
+    method: 'get',
+    data: payload,
+  });
+}
+
+export async function queryWorkFormData (payload) {
+  return request({
+    url: GetWorkAppealFormDataApi,
     method: 'get',
     data: payload,
   });

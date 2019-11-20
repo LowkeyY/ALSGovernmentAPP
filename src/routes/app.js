@@ -1,6 +1,7 @@
 import React from 'react';
 import NProgress from 'nprogress';
 import PropTypes from 'prop-types';
+import UpdateBar from 'components/updatebar';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { classnames, config, getLocalIcon } from 'utils';
@@ -17,7 +18,7 @@ let lastHref,
   progessStart = false;
 const App = ({ children, dispatch, app, loading, location }) => {
   let { pathname } = location;
-  const { tabBars, users, updates: { upgraded = false, urls = '', appVerSion = '', updateInfo = '' }, showModal, noViewCount = 0 } = app;
+  const { tabBars, users, updates: { upgraded = false, appUrl = '', appVerSion = '', updateInfo = '' }, showModal, noViewCount = 0, showUpdate, percentage } = app;
   pathname = pathname.startsWith('/') ? pathname : `/${pathname}`;
   pathname = pathname.endsWith('/index.html') ? '/' : pathname; // Android配置首页自启动
   const href = window.location.href,
@@ -49,14 +50,66 @@ const App = ({ children, dispatch, app, loading, location }) => {
         />
       );
     },
+    updateSuccess = () => {
+      dispatch({
+        type: 'app/updateState',
+        payload: {
+          showUpdate: false,
+        },
+      });
+    },
+    updateError = () => {
+      dispatch({
+        type: 'app/updateState',
+        payload: {
+          showUpdate: false,
+        },
+      });
+    },
+    progress = (e) => {
+      if (e.lengthComputable) {
+        let num = (e.loaded / e.total) * 100;
+        // if (parseInt(num, 10) === 100) {
+        //   dispatch({
+        //     type: 'app/updateState',
+        //     payload: {
+        //       showUpdate: false,
+        //     },
+        //   });
+        // }
+        if (parseInt(num, 10) % 10 === 5) {
+          dispatch({
+            type: 'app/updateState',
+            payload: {
+              percentage: parseInt(num, 10),
+            },
+          });
+        }
+      }
+    },
+    handerUpdate = (url) => {
+      dispatch({
+        type: 'app/updateState',
+        payload: {
+          showUpdate: true,
+        },
+      });
+      cnUpdateByDownloadAPK({
+        fileUrl: url,
+        // fileName: new Date().getTime(),
+      }, updateSuccess, updateError, progress);
+    },
     update = (url, upgraded) => {
-      if (upgraded) {
+      if (upgraded && url !== '') {
         return (<Modal
           visible
           transparent
           maskClosable={false}
           title="当前版本过低"
-          footer={[{ text: '立刻升级', onPress: () => cnUpdate(url) }]}
+          footer={[{
+            text: '立刻升级',
+            onPress: () => handerUpdate(url),
+          }]}
         >
           <div>
             <div>{`请升级${appVerSion}版本后继续访问`}</div>
@@ -76,7 +129,10 @@ const App = ({ children, dispatch, app, loading, location }) => {
             }),
             style: 'default',
           },
-          { text: '立刻升级', onPress: () => cnUpdate(url) },
+          {
+            text: '立刻升级',
+            onPress: () => handerUpdate(url),
+          },
         ]);
         isFirst = false;
       }
@@ -92,10 +148,10 @@ const App = ({ children, dispatch, app, loading, location }) => {
       <div>
         <Loader spinning={loading.effects[`${pathname.startsWith('/') ? pathname.substr(1) : pathname}/query`]} />
         {children}
+        <UpdateBar show={showUpdate} percentage={percentage} />
       </div>
     );
   }
-
   return (
     <div className="tabbarbox">
       <TabBar
@@ -103,7 +159,7 @@ const App = ({ children, dispatch, app, loading, location }) => {
         tintColor="#33A3F4"
         barTintColor="white"
         hidden={false}
-        prerenderingSiblingsNumber={0}
+        prerenderingSiblingsNumber={3}
       >
         {tabBars.map((_, index) => {
           const props = Object.assign({
@@ -114,11 +170,11 @@ const App = ({ children, dispatch, app, loading, location }) => {
             onPress: () => {
               const { appends = {}, route } = _;
               dispatch(routerRedux.push({
-                pathname: route,
-                query: {
-                  ...appends,
+                  pathname: route,
+                  query: {
+                    ...appends,
+                  },
                 },
-              },
               ));
             },
           }, _);
@@ -132,7 +188,8 @@ const App = ({ children, dispatch, app, loading, location }) => {
               }}
             />
           );
-          { /* <Icon type={getLocalIcon(props.icon)}/> */ }
+          { /* <Icon type={getLocalIcon(props.icon)}/> */
+          }
           props.selectedIcon = (
             <div
               key={index}
@@ -150,7 +207,9 @@ const App = ({ children, dispatch, app, loading, location }) => {
           );
         })}
       </TabBar>
-      {showModal ? update(urls, upgraded) : ''}
+      {showModal ? update(appUrl, upgraded) : ''}
+      <UpdateBar show={showUpdate} percentage={percentage} />
+      <div className="env" />
     </div>
   );
 };

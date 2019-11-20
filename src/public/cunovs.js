@@ -1,9 +1,10 @@
 var cunovs = {
-  cnVersion: '9.0.0',
+  cnVersion: '9.0.6',
   cnGlobalIndex: 0,
   cnhtmlSize: 0,
   cnhtmlHeight: document.documentElement.clientHeight,
   cnhtmlWidth: document.documentElement.clientWidth,
+  cnDownloadFileTag: 'tag_cunovs_download_files',
   cnId: function () {
     return cnGlobalIndex++;
   },
@@ -32,34 +33,31 @@ var cunovs = {
     if (cnIsAndroid()) {
       return 'android';
     }
+    if (cnIsiOS()) {
+      return 'iOS';
+    }
     return '';
   },
   cnSetStatusBarStyle: function (router) {
     if (typeof (StatusBar) != 'undefined') {
       if (cnIsAndroid()) {
-        StatusBar.styleDefault();
+        StatusBar.styleLightContent();
         StatusBar.backgroundColorByHexString('#258eee');
       } else {
         router = router || '/';
         switch (router) {
           case '/':
           case '/dashboard': {
-            StatusBar.styleDefault();
+            StatusBar.styleLightContent();
             StatusBar.backgroundColorByHexString('#258eee');
             break;
           }
           default: {
-            StatusBar.styleDefault();
-            StatusBar.backgroundColorByHexString('#fff');
+            StatusBar.styleLightContent();
+            StatusBar.backgroundColorByHexString('#258eee');
           }
         }
       }
-    }
-  },
-  cnPlayAudio: function (id, played) {
-    var el;
-    if (cnIsDefined(id) && (el = document.getElementById(id))) {
-      played === true ? el.pause() : el.play();
     }
   },
   cnPrn: function (ars) {
@@ -95,6 +93,9 @@ var cunovs = {
     return blob;
   },
   cnStartJiluguiji: function (serverId, entityId, onSuccess, onError, others, timeout) {
+    if (cnIsAndroid()) {
+      cordova.plugins.backgroundMode.enable();
+    }
     var onSuccess = onSuccess || cnPrn
       ,
       onErroe = onError || cnPrn
@@ -131,6 +132,9 @@ var cunovs = {
     }
   },
   cnStopJiluguiji: function (onSuccess, onError) {
+    if (cnIsAndroid()) {
+      cordova.plugins.backgroundMode.disable();
+    }
     var onSuccess = onSuccess || cnPrn
       ,
       onErroe = onError || cnPrn;
@@ -172,18 +176,23 @@ var cunovs = {
     cbError = function (err) {
       //console.log(err)
       onError = onError || cnPrn;
-      if (err.code == 3) {
+      if (err.code == 3 || err.code == 1) {
         cbSuccess();
       } else {
-        onError();
+        onError(err);
       }
     };
     timeout = timeout || 500;
-    if (cnIsDevice()) {
+    if (cnIsAndroid()) {
       navigator.geolocation.getCurrentPosition(cbSuccess, cbError, {
         timeout: timeout,
       });
-    } else {
+    } else if (cnIsiOS()) {
+      navigator.geolocation.getCurrentPosition(onSuccess, onError, {
+        timeout: timeout,
+      });
+    }
+    else {
       onSuccess();
     }
   },
@@ -209,14 +218,29 @@ var cunovs = {
     cnEvent.cneventParam = data;
     window.dispatchEvent(cnEvent);
   },
+  cnPlayAudio: function (url, state, callback) {
+    var my_media = new Media(url,
+      function () {
+        if (callback) callback();
+      },
+      function (err) {
+        if (callback) callback();
+      });
+    my_media.play();
+    return my_media;
+  },
+  cnStopPlay: function (media) {
+    if (cnIsDefined(media) && cnIsDefined(media.stop)) {
+      media.stop();
+    }
+  },
   cnStartRecord: function (id, onSuccess, onError) {
     var recordMedia = '';
     if (cnIsAndroid() || cnIsiOS() && cnIsDefined(Media)) {
       id = id || 'Media';
       onSuccess = onSuccess || cnPrn;
       onError = onError || cnPrn;
-      var mediaName = id + '_' + cnId() + '.mp3'
-        ,
+      var mediaName = id + '_' + cnId() + '.mp3',
         mediaOnSuccess = function () {
           var media = {
             name: mediaName,
@@ -238,8 +262,7 @@ var cunovs = {
 
             });
           }, onError);
-        }
-        ,
+        },
         recordMedia = new Media(mediaName, mediaOnSuccess, onError);
       recordMedia.startRecord();
     }
@@ -333,6 +356,148 @@ var cunovs = {
     target = target || '_blank';
     window.open(url, target);
   },
+  cnHasPlugin: function (key) {
+    if (cnIsDevice() && cnIsDefined(cordova) && cordova.plugins) {
+      var hasKey = cnIsDefined(key);
+      return hasKey && cordova.plugins[key] || !hasKey;
+    }
+    return false;
+  },
+  cnGetAllLocalFiles: function () {
+    var files = '';
+    return localStorage && (files = localStorage.getItem(cnDownloadFileTag)) ? JSON.parse(files) || [] : [];
+  },
+  cnSetAllLocalFiles: function (files) {
+    files = files || '';
+    return localStorage ? localStorage.setItem(cnDownloadFileTag, JSON.stringify(files)) : '';
+  },
+  cnGetLocalFile: function (fileName, options, onSuccess, onError) {
+    onError = onError || cnPrn;
+    if (!!fileName && cnHasPlugin()) {
+      options = options || {};
+      onSuccess = onSuccess || cnPrn;
+      if (options.isAPKFile === true) {
+        window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function (fs) {
+          fs.getFile(decodeURI(fileName), {
+            create: options.create === true,
+            exclusive: options.exclusive === true,
+          }, onSuccess, onError);
+        }, onError);
+      } else {
+        var size = options.size || 0;
+        window.requestFileSystem(LocalFileSystem.PERSISTENT, size, function (fs) {
+          fs.root.getFile(decodeURI(fileName), {
+            create: options.create === true,
+            exclusive: options.exclusive === true,
+          }, onSuccess, onError);
+        }, onError);
+      }
+    } else {
+      onError({ 'message': !fileName ? '需要获取的文件名必须提供。' : '无法使用文件读取插件。' });
+    }
+  },
+  cnOpener2File: function (filePath, miniType, onSuccess, onError) {
+    onError = onError || cnPrn;
+    var tag = 'fileOpener2';
+    if (cnHasPlugin(tag)) {
+      var errorMessage = '';
+      miniType = miniType || cnGetFileMiniType(filePath);
+      if (!filePath || !miniType) {
+        errorMessage = (!filePath ? '文件路径' : '文件类型') + '必须提供。';
+      }
+      if (errorMessage === '') {
+        onSuccess = onSuccess || cnPrn;
+        cordova.plugins.fileOpener2.showOpenWithDialog(
+          filePath,
+          miniType,
+          {
+            success: onSuccess,
+            error: onError,
+          },
+        );
+      } else {
+        onError({ 'message': errorMessage });
+      }
+    } else {
+      onError({ 'message': '没有找到插件[' + tag + ']' });
+    }
+  },
+  cnDownloadFile: function (fileUrl, fileName, options, onSuccess, onError, onProgress) {
+    onError = onError || cnPrn;
+    onProgress = onProgress || function (e) {
+      if (e.lengthComputable) {
+        var progress = e.loaded / e.total;
+        // 显示下载进度
+        console.log((progress * 100).toFixed(2));
+      }
+    };
+    if (cnHasPlugin() && FileTransfer) {
+      var errorMessage = '';
+      if (!fileUrl || !fileName) {
+        errorMessage = (!fileUrl ? '下载文件路径' : '文件名称') + '必须提供。';
+      }
+      if (errorMessage === '') {
+        onSuccess = onSuccess || cnPrn;
+        options = options || {};
+        options.create = true;//默认创建文件
+        cnGetLocalFile(decodeURI(fileName), options, function (fileEntry) {
+          var fileTransfer = new FileTransfer(),
+            fileUri = options.needEncode === true ? encodeURI(fileUrl) : fileUrl;
+          fileTransfer.onprogress = onProgress;
+          fileTransfer.download(
+            fileUri,         //uri网络下载路径
+            fileEntry.nativeURL,      //url本地存储路径
+            function (entry) {
+              if (localStorage && JSON) {
+                entry.file(function (file) {
+                  var files = cnGetAllLocalFiles();
+                  files.push({
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                    localURL: file.localURL,
+                    lastModified: file.lastModified,
+                  });
+                  cnSetAllLocalFiles(files);
+                });
+              }
+              onSuccess(entry);
+            },
+            onError,
+          );
+        }, onError);
+      } else {
+        onError({ 'message': errorMessage });
+      }
+    } else {
+      onError({ 'message': '无法使用文件下载插件。' });
+    }
+  },
+  cnUpdateByDownloadAPK: function (file, onSuccess, onError, onProgress) {
+    file = file || {};
+    onError = onError || cnPrn;
+    var fileName = file.fileName || cnVersion + 'MALS.apk',
+      fileUrl = file.fileUrl || '',
+      mimeType = file.mimeType || 'application/vnd.android.package-archive';
+    if (!fileName) {
+      onError({ 'message': '获取本地文件，文件名不能为空。' });
+      return;
+    }
+    var fileExistAndOpen = function (entry) {
+      window.CunovsAliasPlugin.openAPK([cnIsiOS() ? entry.nativeURL : entry.toInternalURL(), mimeType, true], onSuccess, onError);
+    };
+    cnGetLocalFile(fileName, { isAPKFile: true }, fileExistAndOpen, function (error) {
+      if (!fileUrl) {
+        onError({ 'message': '本地文件不存在，获取网络文件，网络地址不能为空。' });
+        return;
+      }
+      if (!error || !error.code || error.code !== 1) {
+        onError({ 'message': error.code === 2 ? '获取本地文件使用权限失败，请允许获取文件权限。' : '获取本地文件时发生未知错误。' });
+        return;
+      }
+      cnDownloadFile(fileUrl, fileName, { isAPKFile: true }, fileExistAndOpen, onError, onProgress);
+    });
+  },
 };
 
 window.cnApply = cunovs.cnIsDefined(Object.assign) ? Object.assign : function (target, source) {
@@ -345,6 +510,7 @@ window.cnApply = cunovs.cnIsDefined(Object.assign) ? Object.assign : function (t
   return target || {};
 };
 cnApply(window, cunovs);
+
 
 if (typeof String.prototype.startsWith != 'function') {
   // see below for better implementation!
@@ -363,8 +529,20 @@ if (typeof String.prototype.startsWith != 'function') {
         cnClearBadge();
         if (cordova.InAppBrowser) {
           cnOpen = function (url, target, params, callback) {
-            target = target || '_self';
-            params = params || 'location=yes,hideurlbar=yes,toolbarcolor=#4eaaf7,navigationbuttoncolor=#ffffff,closebuttoncolor=#ffffff';
+            var getDefaultTarget = function () {
+              if (cnIsiOS()) {
+                return '_blank';
+              }
+              return '_self';
+            };
+            var getDefaultParams = function () {
+              if (cnIsiOS()) {
+                return 'location=no,toolbarposition=top,closebuttoncaption=完成,closebuttoncolor=#ffffff,hideurlbar=yes,toolbarcolor=#4eaaf7,navigationbuttoncolor=#ffffff';
+              }
+              return 'location=yes,hideurlbar=yes,toolbarcolor=#22609c,navigationbuttoncolor=#ffffff,closebuttoncolor=#ffffff';
+            };
+            target = target || getDefaultTarget();
+            params = params || getDefaultParams();
             callback = callback || new Function();
             var ref = cordova.InAppBrowser.open(url, target, params, callback),
               spinner = '<!DOCTYPE html><html><head><meta name=\'viewport\' content=\'width=device-width,height=device-height,initial-scale=1\'><style>.loader {position: absolute;    margin-left: -2em;    left: 50%;    top: 50%;    margin-top: -2em;    border: 5px solid #f3f3f3;    border-radius: 50%;    border-top: 5px solid #3498db;    width: 50px;    height: 50px;    -webkit-animation: spin 1.5s linear infinite;    animation: spin 1.5s linear infinite;}@-webkit-keyframes spin {  0% { -webkit-transform: rotate(0deg); } 100% { -webkit-transform: rotate(360deg); }}@keyframes spin {  0% { transform: rotate(0deg); }  100% { transform:rotate(360deg); }}</style></head><body><div class=\'loader\'></div></body></html>';
@@ -372,6 +550,26 @@ if (typeof String.prototype.startsWith != 'function') {
 
           };
         }
+
+        function syncStatus (status) {
+          switch (status) {
+            case SyncStatus.DOWNLOADING_PACKAGE:
+              // Show "downloading" modal
+              break;
+            case SyncStatus.INSTALLING_UPDATE:
+              // Hide "downloading" modal
+              break;
+          }
+        }
+
+        function downloadProgress (downloadProgress) {
+          if (downloadProgress) {
+            // Update "downloading" modal with current download %
+            console.log('Downloading ' + downloadProgress.receivedBytes + ' of ' + downloadProgress.totalBytes);
+          }
+        }
+
+        window.codePush.sync(syncStatus, null, downloadProgress);
       } catch (exception) {
       }
     },
@@ -455,13 +653,13 @@ if (typeof String.prototype.startsWith != 'function') {
   document.addEventListener('backbutton', onExitApp, false);
 
   function resizeBaseFontSize () {
-    var rootHtml = document.documentElement
-      ,
+    var rootHtml = document.documentElement,
       deviceWidth = rootHtml.clientWidth;
     if (deviceWidth > 1024) {
       deviceWidth = 1024;
     }
     cnhtmlSize = deviceWidth / 7.5;
+    cnhtmlHeight = document.documentElement.clientHeight;
     rootHtml.style.fontSize = cnhtmlSize + 'px';
   }
 

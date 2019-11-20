@@ -26,7 +26,6 @@ class Opinion extends Component {
   };
   
   onSubmit = (isPatry) => {
-    console.log(isPatry);
     this.props.form.validateFields({
       force: true,
     }, (error) => {

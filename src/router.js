@@ -992,6 +992,42 @@ const Routers = function ({ history, app }) {
           },
         },
         {
+          path: 'appealflow',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/appealflow'));
+              cb(null, require('routes/appealflow/'));
+            }, 'appealflow');
+          },
+        },
+        {
+          path: 'powerlist',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/powerlist'));
+              cb(null, require('routes/powerlist/'));
+            }, 'powerlist');
+          },
+        },
+        {
+          path: 'powerdetails',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/powerdetails'));
+              cb(null, require('routes/powerdetails/'));
+            }, 'powerdetails');
+          },
+        },
+        {
+          path: 'powersearch',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/powersearch'));
+              cb(null, require('routes/powersearch/'));
+            }, 'powersearch');
+          },
+        },
+        {
           path: '*',
           getComponent (nextState, cb) {
             const { location: { pathname } } = nextState;

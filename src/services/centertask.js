@@ -1,13 +1,13 @@
-import { request, config } from 'utils'
+import { request, config } from 'utils';
 
-const { api: { GetCenterAppealApi, OpenAppealApi, CloseAppealApi, ReplyAppealApi, RefuseAppealApi, CompleteAppealApi, CenterSendTaskApi } } = config
+const { api: { GetCenterAppealApi, OpenAppealApi, CloseAppealApi, ReplyAppealApi, RefuseAppealApi, CompleteAppealApi, CenterSendTaskApi, GetWorkFormDataApi, GetWorkTaskFlowApi, ValidateTaskApi } } = config;
 
 export async function queryCenterAppeal (payload) {
   return request({
     url: GetCenterAppealApi,
     method: 'get',
     data: payload,
-  })
+  });
 }
 
 export async function queryCenterAppealDetails (payload) {
@@ -15,7 +15,7 @@ export async function queryCenterAppealDetails (payload) {
     url: GetCenterAppealApi,
     method: 'get',
     data: payload,
-  })
+  });
 }
 
 export async function openAppeal (payload) {
@@ -23,7 +23,7 @@ export async function openAppeal (payload) {
     url: OpenAppealApi,
     method: 'get',
     data: payload,
-  })
+  });
 }
 
 export async function closeAppeal (payload) {
@@ -31,7 +31,7 @@ export async function closeAppeal (payload) {
     url: CloseAppealApi,
     method: 'get',
     data: payload,
-  })
+  });
 }
 
 export async function refuseAppeal (payload) {
@@ -39,7 +39,7 @@ export async function refuseAppeal (payload) {
     url: RefuseAppealApi,
     method: 'get',
     data: payload,
-  })
+  });
 }
 
 export async function completeAppeal (payload) {
@@ -47,7 +47,7 @@ export async function completeAppeal (payload) {
     url: CompleteAppealApi,
     method: 'get',
     data: payload,
-  })
+  });
 }
 
 export async function replyAppeal (payload) {
@@ -55,12 +55,37 @@ export async function replyAppeal (payload) {
     url: ReplyAppealApi,
     method: 'get',
     data: payload,
-  })
+  });
 }
+
 export async function centerSendTask (payload) {
   return request({
     url: CenterSendTaskApi,
     method: 'post',
     data: payload,
-  })
+  });
+}
+
+export async function queryWorkFormData (payload) {
+  return request({
+    url: GetWorkFormDataApi,
+    method: 'get',
+    data: payload,
+  });
+}
+
+export async function queryFlow (payload) {
+  return request({
+    url: GetWorkTaskFlowApi,
+    method: 'get',
+    data: payload,
+  });
+}
+
+export async function validateTask (payload) {
+  return request({
+    url: ValidateTaskApi,
+    method: 'get',
+    data: payload,
+  });
 }

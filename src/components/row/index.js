@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, Badge, Icon, Tag, Card } from 'antd-mobile';
+import { List, Badge, Icon, Tag, Card, WingBlank, WhiteSpace } from 'antd-mobile';
 import { getErrorImg, getImages, getLocalIcon, doDecode } from 'utils';
 import StatusBox from 'components/statusbox';
 import Rate from 'rc-rate';
@@ -274,7 +274,7 @@ module.exports = {
         <div className={styles[`${cls}-content`]}>
           <div className={styles[`${cls}-content-title`]}>{title}</div>
           <div className={styles[`${cls}-content-content`]}>
-            <span className={styles[`${cls}-content-content-ask`]} >问：</span>
+            <span className={styles[`${cls}-content-content-ask`]}>问：</span>
             {content}
           </div>
         </div>
@@ -481,7 +481,8 @@ module.exports = {
       >
         <div className={styles[`${PrefixCls}-special-outer-img`]}>
           <div className={styles[`${PrefixCls}-special-outer-img-image`]}
-               style={{ backgroundImage: `url(${image})` }} />
+               style={{ backgroundImage: `url(${image})` }}
+          />
         </div>
       </div>
     );
@@ -599,30 +600,34 @@ module.exports = {
       result;
   },
   centerAppealRow: (rowData, sectionID, rowID, onClick) => {
+
+    const getStatus = (status) => {
+      switch (status) {
+        case '0' :
+          return <span style={{ color: '#b3b4b3' }}>●未办理</span>;
+        case '1' :
+        case '2' :
+        case '3' :
+          return <span style={{ color: '#f5a91f' }}>●已派发</span>;
+        case '4' :
+          return <span style={{ color: '#f5b90c' }}>●办理中</span>;
+        case '5' :
+          return <span style={{ color: '#29ad2e' }}>●已办理</span>;
+        case '6' :
+          return <span style={{ color: '#4cd4bf' }}>●提表单</span>;
+        case '7' :
+          return <span style={{ color: '#d48689' }}>●待确认</span>;
+        default :
+          return <span style={{ color: '#b3b4b3' }}>●未知状态</span>;
+      }
+    };
+
     const getShstate = (shtate, state) => {
-        if (shtate === '2') {
-          return <span style={{ color: '#d45b5b' }}>●已拒绝</span>;
-        }
-        return getStatus(state);
-      },
-      getStatus = (status) => {
-        switch (status) {
-          case '0' :
-            return <span style={{ color: '#b3b4b3' }}>●未办理</span>;
-          case '1' :
-          case '2' :
-          case '3' :
-            return <span style={{ color: '#f5a91f' }}>●已派发</span>;
-          case '4' :
-            return <span style={{ color: '#f5b90c' }}>●办理中</span>;
-          case '5' :
-            return <span style={{ color: '#29ad2e' }}>●已办理</span>;
-          case '6' :
-            return <span style={{ color: '#4cd4bf' }}>●提表单</span>;
-          case '7' :
-            return <span style={{ color: '#d48689' }}>●待确认</span>;
-        }
-      };
+      if (shtate === '2') {
+        return <span style={{ color: '#d45b5b' }}>●已拒绝</span>;
+      }
+      return getStatus(state);
+    };
     const { title, cdate, shState, state, id, situatton } = rowData;
     return (
       <Item
@@ -660,8 +665,8 @@ module.exports = {
     const rows = {
       0: (
         <Item
-          className={styles[`${PrefixCls}-item`]}
           key={`${PrefixCls}-${sectionID}-${rowID}`}
+          className={styles[`${PrefixCls}-item`]}
           thumb={image || ''}
           multipleLine
           wrap
@@ -745,6 +750,25 @@ module.exports = {
           ))
         }
       </div>
+    );
+  },
+  powerRow: (rowData, sectionID, rowID, onClick) => {
+    const { id = '', mingcheng = '', quanlileibies = '', zerenzhutis = '', tianjiashijian = '' } = rowData;
+    return (
+      <WingBlank size="lg" key={id + sectionID + rowID}>
+        <WhiteSpace size="md" />
+        <Card className={styles[`${PrefixCls}-power`]} onClick={onClick.bind(null, rowData)}>
+          <Card.Header
+            title={quanlileibies}
+            extra={<span>{tianjiashijian}</span>}
+          />
+          <Card.Body>
+            <div>{mingcheng}</div>
+          </Card.Body>
+          <Card.Footer extra={<span>{zerenzhutis}</span>} />
+        </Card>
+        <WhiteSpace size="md" />
+      </WingBlank>
     );
   },
 };
