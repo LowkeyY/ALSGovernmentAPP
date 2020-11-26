@@ -143,20 +143,6 @@ function Mine ({ location, dispatch, mine, app }) {
                   我的任务
                   {noViewCount > 0 ? <Badge text={'new'} style={{ marginLeft: 12 }} /> : ''}
                 </Item>
-                {/* <Item */}
-                {/* thumb={<Icon type={getLocalIcon('/mine/collection.svg')}/>} */}
-                {/* arrow="horizontal" */}
-                {/* onClick={handleCollectionClick} */}
-                {/* > */}
-                {/* 我的收藏 */}
-                {/* </Item> */}
-                {/*<Item*/}
-                {/*thumb={<Icon type={getLocalIcon('/mine/setup.svg')}/>}*/}
-                {/*arrow="horizontal"*/}
-                {/*onClick={handleSetupClick}*/}
-                {/*>*/}
-                {/*个人设置*/}
-                {/*</Item>*/}
                 <Item
                   thumb={<Icon type={getLocalIcon('/mine/aboutus.svg')} />}
                   arrow="horizontal"

@@ -10,7 +10,6 @@ const PrefixCls = 'patrydetails',
 function Patrydetails ({ location, dispatch, patrydetails }) {
   const { name = '' } = location.query;
   const { currentData, currentData: { content, date, title } } = patrydetails;
-  console.log(currentData);
   const getContents = () => {
     return {
       __html: content,

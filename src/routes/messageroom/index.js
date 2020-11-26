@@ -27,7 +27,6 @@ class Messageroom extends Component {
   }
 
   render () {
-    console.log(this.state.height);
     const { name = '' } = this.props.location.query;
     return (
       <div>

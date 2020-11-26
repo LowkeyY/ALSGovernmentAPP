@@ -1,0 +1,27 @@
+@import "../../themes/default";
+
+@PrefixCls: workprocess;
+
+.outer {
+  padding: 20px;
+  margin-bottom: 20px;
+  font-size: @FontSizeNm;
+  line-height: 1.5em;
+  background: #d6ffdd;
+}
+.images {
+    width: 100%;
+    margin: 20px 0;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    & div {
+      width: 49%;
+      height: 250px;
+      margin-right: 1%;
+      background-size: cover;
+      margin-bottom: 1%;
+    }
+}
+

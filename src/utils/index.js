@@ -185,7 +185,6 @@ const isUsefulPic = (src) => {
   if (src !== '') {
     const ImgObj = new Image();
     ImgObj.src = src;
-    console.log(ImgObj.width)
     return ImgObj.fileSize > 0 || (ImgObj.width > 0 && ImgObj.height > 0);
   }
 };

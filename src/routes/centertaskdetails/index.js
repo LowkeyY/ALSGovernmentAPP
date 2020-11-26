@@ -190,6 +190,7 @@ function CenterTaskDetails ({ location, dispatch, centertaskdetails }) {
                 dispatch={dispatch}
                 isResultActive={isResultActive}
                 resultViewImageIndex={resultViewImageIndex}
+                prefixCls={PrefixCls}
               />
             </div>
             :

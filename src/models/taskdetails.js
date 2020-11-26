@@ -198,7 +198,7 @@ export default modelExtend(model, {
     * backTask ({ payload }, { call, put, select }) {
       const data = yield call(SendTask, payload);
       if (data) {
-        yield put(routerRedux.goBack());
+        yield put(routerRedux.go(-2));
         Toast.success('任务已成功退回');
       }
     },

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 200 200" style="enable-background:new 0 0 200 200;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#707070;}
+	.st1{fill:none;stroke:#707070;stroke-width:10;}
+</style>
+<circle class="st0" cx="160.1" cy="100.2" r="22">
+<animate  accumulate="none" additive="replace" attributeName="fill-opacity" begin="0s" calcMode="linear" dur="1" fill="remove" keyTimes="0;0.2;1" repeatCount="indefinite" restart="always" values="0;1;1">
+	</animate>
+</circle>
+<path class="st1" d="M122,141.2c-22.7-21-24-56.5-2.9-79.1">
+<animate  accumulate="none" additive="replace" attributeName="stroke-opacity" begin="0.1s" calcMode="linear" dur="1" fill="remove" keyTimes="0;0.2;1" repeatCount="indefinite" restart="always" values="0;1;1">
+		</animate>
+</path>
+<path class="st1" d="M92.1,173.5C51.6,135.9,49.3,72.6,86.8,32.2">
+<animate  accumulate="none" additive="replace" attributeName="stroke-opacity" begin="0.2s" calcMode="linear" dur="1" fill="remove" keyTimes="0;0.2;1" repeatCount="indefinite" restart="always" values="0;1;1">
+		</animate>
+</path>
+</svg>

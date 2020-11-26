@@ -57,7 +57,6 @@ class EditorTask extends Component {
     });
   };
   upDateEvent = (val) => {
-    console.log(val);
     this.props.dispatch({
       type: 'editortask/updateState',
       payload: {
@@ -92,7 +91,6 @@ class EditorTask extends Component {
             integralClass: eventValue[1] || '',
             taskId,
           };
-          console.log(data);
           this.props.dispatch({
             type: 'editortask/sendEventType',
             payload: {

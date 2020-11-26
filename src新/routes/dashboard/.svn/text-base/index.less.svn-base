@@ -1,7 +1,0 @@
-@import "../../themes/default";
-@PrefixCls: dashboard;
-
-.@{PrefixCls}-outer {
-    margin-bottom:@primary-header-height+20 ;
-}
-

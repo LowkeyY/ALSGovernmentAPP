@@ -1,9 +1,0 @@
-@PrefixCls:patryworklist;
-.@{PrefixCls}-outer{
-   margin-bottom: 20px;
-
-}
-.@{PrefixCls}-organization{
-  font-size: 28px;
-  color: #000;
-}

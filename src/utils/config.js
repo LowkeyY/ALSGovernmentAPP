@@ -134,7 +134,7 @@ module.exports = {
     GetThreeApi: '/cphsc/interface/getZilanmuUpdateDate.jcp',
     GetWorkFormDataApi: '/ExternalItems/policWork/interface/getWorkFromData.jcp',
     GetWorkAppealFormDataApi: '/cphsc/interface/getWorkFromData.jcp',
-    GetWorkTaskFlowApi: '/ExternalItems/policWork/interface/getWorkTaskFlow.jcp',
+    GetWorkTaskFlowApi: '/cphsc/interface/getWorkTaskFlow.jcp',
     GetPowersApi: '/cphsc/interface/fazhi/zhiquanchaxun.jcp',
     GetPowersDetailsApi: '/cphsc/interface/fazhi/getzhiquan.jcp',
     ValidateTaskApi: '/ExternalItems/taskRelease/validateTaskInfo.jcp',

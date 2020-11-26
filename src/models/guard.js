@@ -38,6 +38,7 @@ const getInfo = (info) => {
           showType,
           route: route || '/',
           icon: image || '',
+          badge,
           ...others,
         });
       }

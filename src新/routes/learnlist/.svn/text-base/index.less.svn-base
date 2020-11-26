@@ -1,9 +1,0 @@
-@PrefixCls: learnlist;
-
-.@{PrefixCls}-iframes {
-  & iframe {
-    width: 100px;
-    height: 100px;
-  }
-}
-

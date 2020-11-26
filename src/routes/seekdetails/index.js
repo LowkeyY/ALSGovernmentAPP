@@ -155,6 +155,7 @@ function SeekDetails ({ location, dispatch, seekdetails }) {
                 dispatch={dispatch}
                 isResultActive={isResultActive}
                 resultViewImageIndex={resultViewImageIndex}
+                prefixCls={PrefixCls}
               />
             </div>
             :

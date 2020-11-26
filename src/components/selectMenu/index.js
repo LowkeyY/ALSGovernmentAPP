@@ -23,7 +23,6 @@ class SelectMenu extends React.Component {
   constructor (props) {
     super(props);
     const { items = [], values = [], multiSelect = true, targetRef = '' } = props;
-    console.log(props);
     this.state = {
       initData: [...items],
       values: Array.isArray(values) ? [...values] : [values],

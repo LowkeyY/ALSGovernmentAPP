@@ -11,6 +11,7 @@ import './app.less';
 
 let lastHref,
   isFirst = true,
+  currentDownloadProgress = 0,
   startWebSocket = ({ userid = '' }) => {
     const { wsURL = '' } = config;
     cnGetWebSocket(wsURL, userid);
@@ -18,7 +19,7 @@ let lastHref,
   progessStart = false;
 const App = ({ children, dispatch, app, loading, location }) => {
   let { pathname } = location;
-  const { tabBars, users, updates: { upgraded = false, appUrl = '', appVerSion = '', updateInfo = '' }, showModal, noViewCount = 0, showUpdate, percentage } = app;
+  const { tabBars, users, updates: { upgraded = false, appUrl = '', urls = '', appVerSion = '', updateInfo = '' }, showModal, noViewCount = 0, showUpdate, percentage } = app;
   pathname = pathname.startsWith('/') ? pathname : `/${pathname}`;
   pathname = pathname.endsWith('/index.html') ? '/' : pathname; // Android配置首页自启动
   const href = window.location.href,
@@ -26,7 +27,6 @@ const App = ({ children, dispatch, app, loading, location }) => {
   tabBars.map(_ => {
     menusArray.push(_.route);
   });
-
   cnSetStatusBarStyle(pathname);
   startWebSocket(users);
   if (lastHref !== href || loading.global) {
@@ -55,6 +55,7 @@ const App = ({ children, dispatch, app, loading, location }) => {
         type: 'app/updateState',
         payload: {
           showUpdate: false,
+          percentage: 0,
         },
       });
     },
@@ -63,41 +64,38 @@ const App = ({ children, dispatch, app, loading, location }) => {
         type: 'app/updateState',
         payload: {
           showUpdate: false,
+          percentage: 0,
         },
       });
     },
     progress = (e) => {
       if (e.lengthComputable) {
-        let num = (e.loaded / e.total) * 100;
-        // if (parseInt(num, 10) === 100) {
-        //   dispatch({
-        //     type: 'app/updateState',
-        //     payload: {
-        //       showUpdate: false,
-        //     },
-        //   });
-        // }
-        if (parseInt(num, 10) % 10 === 5) {
+        let num = ((e.loaded / e.total) * 100).toFixed();
+        if (num != currentDownloadProgress) {
+          currentDownloadProgress = num;
           dispatch({
             type: 'app/updateState',
             payload: {
-              percentage: parseInt(num, 10),
+              percentage: num,
             },
           });
         }
       }
     },
-    handerUpdate = (url) => {
+    handerUpdate = () => {
       dispatch({
         type: 'app/updateState',
         payload: {
           showUpdate: true,
         },
       });
-      cnUpdateByDownloadAPK({
-        fileUrl: url,
-        // fileName: new Date().getTime(),
-      }, updateSuccess, updateError, progress);
+      if (cnIsAndroid()) {
+        cnUpdateByDownloadAPK({
+          fileUrl: appUrl,
+        }, updateSuccess, updateError, progress);
+      } else if (cnIsiOS()) {
+        cnUpdate(urls);
+      }
     },
     update = (url, upgraded) => {
       if (upgraded && url !== '') {
@@ -108,7 +106,7 @@ const App = ({ children, dispatch, app, loading, location }) => {
           title="当前版本过低"
           footer={[{
             text: '立刻升级',
-            onPress: () => handerUpdate(url),
+            onPress: () => handerUpdate(),
           }]}
         >
           <div>
@@ -131,7 +129,7 @@ const App = ({ children, dispatch, app, loading, location }) => {
           },
           {
             text: '立刻升级',
-            onPress: () => handerUpdate(url),
+            onPress: () => handerUpdate(),
           },
         ]);
         isFirst = false;

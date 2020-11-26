@@ -151,14 +151,13 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
       });
     },
     handleBackClick = () => {
-      dispatch({
-        type: 'taskdetails/backTask',
-        payload: {
+      dispatch(routerRedux.push({
+        pathname: '/refusetaskreason',
+        query: {
           taskId,
           flowId,
-          pageType: 'back',
         },
-      });
+      }));
     },
     handleTableClick = () => {
       if (integralClass === '' && integralLargeClass === '') {
@@ -216,7 +215,7 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
                   inline
                   size="small"
                   style={{ marginRight: '4px', background: '#f3565d', borderColor: '#f3565d' }}
-                  onClick={handleTaskClick.bind(null, 'back')}
+                  onClick={handlerBackReason}
           >退回</Button>
         </div>);
       } else if (flowLeve === '3' && flowState === '3') {
@@ -325,7 +324,7 @@ function TaskDetails ({ location, dispatch, taskdetails, app }) {
           workId,
           isWork,
           flowLeve,
-          flowId
+          flowId,
         },
       }));
     },

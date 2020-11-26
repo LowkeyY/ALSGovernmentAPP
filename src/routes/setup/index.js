@@ -9,6 +9,7 @@ import { getErrorImg, getImages, getLocalIcon, config, cookie } from 'utils';
 import doUserAvatarUpload from 'utils/formsubmit';
 import styles from './index.less';
 
+let currentDownloadProgress = 0;
 const PrefixCls = 'setup',
   Item = List.Item,
   prompt = Modal.prompt,
@@ -99,6 +100,7 @@ class Setup extends React.Component {
       type: 'app/updateState',
       payload: {
         showUpdate: false,
+        percentage: 0,
       },
     });
   };
@@ -107,39 +109,44 @@ class Setup extends React.Component {
       type: 'app/updateState',
       payload: {
         showUpdate: false,
+        percentage: 0,
       },
     });
   };
   progress = (e) => {
     if (e.lengthComputable) {
-      let num = (e.loaded / e.total) * 100;
-      // if (parseInt(num, 10) === 100) {
-      //   dispatch({
-      //     type: 'app/updateState',
-      //     payload: {
-      //       showUpdate: false,
-      //     },
-      //   });
-      // }
+      let num = ((e.loaded / e.total) * 100).toFixed();
+      if (num != currentDownloadProgress) {
+        currentDownloadProgress = num;
+        this.props.dispatch({
+          type: 'app/updateState',
+          payload: {
+            percentage: num,
+          },
+        });
+      }
+    }
+  };
+  handerUpdate = (urls, appUrl) => {
       this.props.dispatch({
         type: 'app/updateState',
         payload: {
-          percentage: parseInt(num, 10),
+          showUpdate: true,
         },
       });
+    if (cnIsAndroid()) {
+      this.props.dispatch({
+        type: 'app/updateState',
+        payload: {
+          showUpdate: true,
+        },
+      });
+      cnUpdateByDownloadAPK({
+        fileUrl: appUrl,
+      }, this.updateSuccess, this.updateError, this.progress);
+    } else if (cnIsiOS()) {
+      cnUpdate(urls);
     }
-  };
-  handerUpdate = (url) => {
-    this.props.dispatch({
-      type: 'app/updateState',
-      payload: {
-        showUpdate: true,
-      },
-    });
-    cnUpdateByDownloadAPK({
-      fileUrl: url,
-      // fileName: new Date().getTime(),
-    }, this.updateSuccess, this.updateError, this.progress);
   };
   handleUpdateClick = (urls, appUrl, appVerSion, updateInfo) => {
     if (urls !== '') {
@@ -154,7 +161,7 @@ class Setup extends React.Component {
           }),
           style: 'default',
         },
-        { text: '立刻升级', onPress: () => this.handerUpdate(appUrl, appVerSion, updateInfo) },
+        { text: '立刻升级', onPress: () => this.handerUpdate(urls, appUrl) },
       ]);
     } else {
       Toast.offline('已经是最新版本啦(#^.^#)');
@@ -250,7 +257,7 @@ class Setup extends React.Component {
             <Item onClick={this.handleAboutUsClick}>
               关于我们
             </Item>
-            <Item extra={appVerSion} onClick={this.handleUpdateClick.bind(null, urls, appUrl, appVerSion, updateInfo)}>
+            <Item extra={`${cnVersion}.${cnCheckCodeVersion(cnCodeVersion, [1, 1, 1])}`} onClick={this.handleUpdateClick.bind(null, urls, appUrl, appVerSion, updateInfo)}>
               {urls !== '' ? <Badge dot>
                 版本信息
               </Badge> : '版本信息'}

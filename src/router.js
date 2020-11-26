@@ -1028,6 +1028,15 @@ const Routers = function ({ history, app }) {
           },
         },
         {
+          path: 'refusetaskreason',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('models/refusetaskreason'));
+              cb(null, require('routes/refusetaskreason/'));
+            }, 'refusetaskreason');
+          },
+        },
+        {
           path: '*',
           getComponent (nextState, cb) {
             const { location: { pathname } } = nextState;

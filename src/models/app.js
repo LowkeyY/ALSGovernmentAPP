@@ -69,15 +69,7 @@ export default {
           });
         }
       });
-      history.listen(({ pathname, query, action }) => {
-        dispatch({
-          type: 'updateState',
-          payload: {
-            showUpdate: false,
-            percentage: 0,
-            showModal: false,
-          },
-        });
+      history.listen(({ pathname }) => {
         if (pathname === '/') {
           dispatch({
             type: 'updateUsers',
@@ -87,7 +79,7 @@ export default {
     },
   },
   effects: {
-    * query ({ payload }, { call, put, select }) {
+    * query ({ payload }, { call, put }) {
       const data = yield call(queryAppbase, payload);
       if (data) {
         let { tabBars = defaultTabBars } = data;
